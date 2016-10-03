@@ -50,10 +50,6 @@ public struct BLEHelper {
         return urls[urls.count-1]
     }
     
-    /// The frameworks bundle identifier
-    static var frameworkBundle: NSBundle {
-        return NSBundle(identifier: "de.huf.sm.BLE")!
-    }
 }
 
 /// Protocol to dependency inject an external console logger
