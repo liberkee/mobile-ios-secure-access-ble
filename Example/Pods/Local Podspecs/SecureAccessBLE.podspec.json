@@ -19,6 +19,9 @@
     "ios": "8.0"
   },
   "source_files": "SecureAccessBLE/Classes/**/*",
+  "vendored_frameworks": [
+    "SecureAccessBLE/Frameworks/openssl.framework"
+  ],
   "dependencies": {
     "SwiftyJSON": [
       "~> 2.3"
