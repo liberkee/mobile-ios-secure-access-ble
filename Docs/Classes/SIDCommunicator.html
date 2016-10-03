@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>SIDCommunicator Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/SIDCommunicator" class="dashAnchor"></a>
+    <a title="SIDCommunicator Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">SecureAccessBLE Docs</a> (100% documented)</p>
+        <p class="header-right"><a href="https://github.com/hufsm/mobile-ios-ble"><img src="../img/gh.png"/>View on GitHub</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">SecureAccessBLE Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        SIDCommunicator Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/BLEComManager.html">BLEComManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/BLEScanner.html">BLEScanner</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DataFramePackage.html">DataFramePackage</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SIDCommunicator.html">SIDCommunicator</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enums</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/BLEChallengerError.html">BLEChallengerError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ConnectionState.html">ConnectionState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/DataFrameType.html">DataFrameType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/EncryptionState.html">EncryptionState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SIDMessageID.html">SIDMessageID</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ServiceGrantFeature.html">ServiceGrantFeature</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ServiceGrantID.html">ServiceGrantID</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ServiceGrantTriggerStatus.html">ServiceGrantTriggerStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TestMessageType.html">TestMessageType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions/CBCentralManagerState.html">CBCentralManagerState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/String.html">String</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Functions.html">Functions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:ZF15SecureAccessBLEoi2eeFTVS_3SIDS0__Sb">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F15SecureAccessBLE5DelayFTSd7closureFT_T__T_">Delay(_:closure:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F15SecureAccessBLE10consoleLogFSST_">consoleLog(_:)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/BLEChallengeServiceDelegate.html">BLEChallengeServiceDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/BLEManagerDelegate.html">BLEManagerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ConsoleLogger.html">ConsoleLogger</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CryptoManager.html">CryptoManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/DataTransfer.html">DataTransfer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/DataTransferDelegate.html">DataTransferDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/SIDCommunicatorDelegate.html">SIDCommunicatorDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/SIDMessagePayload.html">SIDMessagePayload</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ServiceGrant.html">ServiceGrant</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structs</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/AesCbcCryptoManager.html">AesCbcCryptoManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/AesCbcTestCryptoManager.html">AesCbcTestCryptoManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/BLEChallengeService.html">BLEChallengeService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/BLEHelper.html">BLEHelper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/BlobRequest.html">BlobRequest</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/CryptoHeader.html">CryptoHeader</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/CryptoHeader/CryptoMessageDirection.html">– CryptoMessageDirection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DataFrame.html">DataFrame</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/EmptyPayload.html">EmptyPayload</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Handshake.html">Handshake</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LTBlobPayload.html">LTBlobPayload</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/MTUSize.html">MTUSize</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NoPadding.html">NoPadding</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/PhoneToSidChallenge.html">PhoneToSidChallenge</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/PhoneToSidResponse.html">PhoneToSidResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SID.html">SID</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SIDMessage.html">SIDMessage</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ServiceGrantRequest.html">ServiceGrantRequest</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ServiceGrantTrigger.html">ServiceGrantTrigger</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ServiceGrantTrigger/ServiceGrantStatus.html">– ServiceGrantStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ServiceGrantTrigger/ServiceGrantResult.html">– ServiceGrantResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SidToPhoneResponse.html">SidToPhoneResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TestMessage.html">TestMessage</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ZeroByte.html">ZeroByte</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ZeroByteWithLength.html">ZeroByteWithLength</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ZeroSecurityManager.html">ZeroSecurityManager</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>SIDCommunicator</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight"><code><span class="kd">class</span> <span class="kt">SIDCommunicator</span><span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="../Protocols/DataTransferDelegate.html">DataTransferDelegate</a></span></code></pre>
+
+                </div>
+              </div>
+            <p>Sid communicator</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC15SecureAccessBLE15SIDCommunicator16messageFrameSizeSi"></a>
+                    <a name="//apple_ref/swift/Property/messageFrameSize" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC15SecureAccessBLE15SIDCommunicator16messageFrameSizeSi">messageFrameSize</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The netto message size (MTU minus frame header information)</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">messageFrameSize</span><span class="p">:</span> <span class="kt">Int</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC15SecureAccessBLE15SIDCommunicator8delegateGSqPS_23SIDCommunicatorDelegate__"></a>
+                    <a name="//apple_ref/swift/Property/delegate" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC15SecureAccessBLE15SIDCommunicator8delegateGSqPS_23SIDCommunicatorDelegate__">delegate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The Communicator delegate object</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">delegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/SIDCommunicatorDelegate.html">SIDCommunicatorDelegate</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC15SecureAccessBLE15SIDCommunicator14currentPackageGSqCS_16DataFramePackage_"></a>
+                    <a name="//apple_ref/swift/Property/currentPackage" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC15SecureAccessBLE15SIDCommunicator14currentPackageGSqCS_16DataFramePackage_">currentPackage</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Sending data package</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">currentPackage</span><span class="p">:</span> <span class="kt"><a href="../Classes/DataFramePackage.html">DataFramePackage</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC15SecureAccessBLE15SIDCommunicator18currentFoundSidIdsGVs3SetVS_3SID_"></a>
+                    <a name="//apple_ref/swift/Property/currentFoundSidIds" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC15SecureAccessBLE15SIDCommunicator18currentFoundSidIdsGVs3SetVS_3SID_">currentFoundSidIds</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A set of discovered Sid IDs</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">currentFoundSidIds</span> <span class="o">=</span> <span class="kt">Set</span><span class="o">&lt;</span><span class="kt"><a href="../Structs/SID.html">SID</a></span><span class="o">&gt;</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC15SecureAccessBLE15SIDCommunicator11transporterPS_12DataTransfer_"></a>
+                    <a name="//apple_ref/swift/Property/transporter" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC15SecureAccessBLE15SIDCommunicator11transporterPS_12DataTransfer_">transporter</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A object that must confirm to the DataTransfer protocol</p>
+
+<p>Normally the transporter is a BLEScanner object</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">transporter</span><span class="p">:</span> <span class="kt"><a href="../Protocols/DataTransfer.html">DataTransfer</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC15SecureAccessBLE15SIDCommunicator12connectedSidGSqVS_3SID_"></a>
+                    <a name="//apple_ref/swift/Property/connectedSid" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC15SecureAccessBLE15SIDCommunicator12connectedSidGSqVS_3SID_">connectedSid</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Current connected SID object</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">connectedSid</span><span class="p">:</span> <span class="kt"><a href="../Structs/SID.html">SID</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE15SIDCommunicatorcFT_S0_"></a>
+                    <a name="//apple_ref/swift/Method/init()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE15SIDCommunicatorcFT_S0_">init()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Init point</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">required</span> <span class="k">override</span> <span class="nf">init</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>self as communicator object</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE15SIDCommunicatorcFT11transporterCS_10BLEScanner8delegatePS_23SIDCommunicatorDelegate__S0_"></a>
+                    <a name="//apple_ref/swift/Method/init(transporter:delegate:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE15SIDCommunicatorcFT11transporterCS_10BLEScanner8delegatePS_23SIDCommunicatorDelegate__S0_">init(transporter:delegate:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Convenience init point with transporter</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="nv">transporter</span><span class="p">:</span> <span class="kt"><a href="../Classes/BLEScanner.html">BLEScanner</a></span><span class="p">,</span> <span class="nv">delegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/SIDCommunicatorDelegate.html">SIDCommunicatorDelegate</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>transporter</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>transporter object</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>delegate</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the communicator delegate object</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>self as communicator object</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE15SIDCommunicator8sendDataFCSo6NSDataT7successSb5errorGSqSS__"></a>
+                    <a name="//apple_ref/swift/Method/sendData(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE15SIDCommunicator8sendDataFCSo6NSDataT7successSb5errorGSqSS__">sendData(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Sendign data to connected SID</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">sendData</span><span class="p">(</span><span class="nv">sendData</span><span class="p">:</span> <span class="kt">NSData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nv">success</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sendData</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the message data, that will be sent to SID</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>if sending successful, if not the error description</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE15SIDCommunicator12connectToSidFSST_"></a>
+                    <a name="//apple_ref/swift/Method/connectToSid(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE15SIDCommunicator12connectToSidFSST_">connectToSid(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Let transporter connect to SID-Peripheral with comming SID-ID</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">connectToSid</span><span class="p">(</span><span class="nv">sidId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sidId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>sidId as String that transporter should connect to</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE15SIDCommunicator19resetCurrentPackageFT_T_"></a>
+                    <a name="//apple_ref/swift/Method/resetCurrentPackage()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE15SIDCommunicator19resetCurrentPackageFT_T_">resetCurrentPackage()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Reset sending package to nil</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">resetCurrentPackage</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE15SIDCommunicator20resetReceivedPackageFT_T_"></a>
+                    <a name="//apple_ref/swift/Method/resetReceivedPackage()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE15SIDCommunicator20resetReceivedPackageFT_T_">resetReceivedPackage()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Reset received package to nil</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">resetReceivedPackage</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE15SIDCommunicator14resetFoundSidsFT_T_"></a>
+                    <a name="//apple_ref/swift/Method/resetFoundSids()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE15SIDCommunicator14resetFoundSidsFT_T_">resetFoundSids()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Empty found sids list</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">resetFoundSids</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE15SIDCommunicator8hasSidIDFSSSb"></a>
+                    <a name="//apple_ref/swift/Method/hasSidID(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE15SIDCommunicator8hasSidIDFSSSb">hasSidID(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Checks if a SID ID is already discovered.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">hasSidID</span><span class="p">(</span><span class="nv">sidId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sidId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A SID ID string</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>When already in list it returns true, otherwise false.</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/DataTransferDelegate"></a>
+                <a name="//apple_ref/swift/Section/DataTransferDelegate" class="dashAnchor"></a>
+                <a href="#/DataTransferDelegate">
+                  <h3 class="section-name">DataTransferDelegate</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE15SIDCommunicator19transferDidSendDataFTPS_12DataTransfer_4dataCSo6NSData_T_"></a>
+                    <a name="//apple_ref/swift/Method/transferDidSendData(_:data:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE15SIDCommunicator19transferDidSendDataFTPS_12DataTransfer_4dataCSo6NSData_T_">transferDidSendData(_:data:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Datatransger reports when message to SID did send</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">transferDidSendData</span><span class="p">(</span><span class="nv">dataTransferObject</span><span class="p">:</span> <span class="kt"><a href="../Protocols/DataTransfer.html">DataTransfer</a></span><span class="p">,</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">NSData</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>dataTransferObject</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the BLEScanner object as datatransfer</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>data</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the sent message as NSData</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE15SIDCommunicator23transferDidReceivedDataFTPS_12DataTransfer_4dataCSo6NSData_T_"></a>
+                    <a name="//apple_ref/swift/Method/transferDidReceivedData(_:data:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE15SIDCommunicator23transferDidReceivedDataFTPS_12DataTransfer_4dataCSo6NSData_T_">transferDidReceivedData(_:data:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Datatransfer reports when new SID message was received</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">transferDidReceivedData</span><span class="p">(</span><span class="nv">dataTransferObject</span><span class="p">:</span> <span class="kt"><a href="../Protocols/DataTransfer.html">DataTransfer</a></span><span class="p">,</span> <span class="nv">data</span><span class="p">:</span> <span class="kt">NSData</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>dataTransferObject</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the BLEScanner object as datatransfer</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>data</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the received data as NSData</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE15SIDCommunicator33transferDidChangedConnectionStateFTPS_12DataTransfer_11isConnectedSb_T_"></a>
+                    <a name="//apple_ref/swift/Method/transferDidChangedConnectionState(_:isConnected:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE15SIDCommunicator33transferDidChangedConnectionStateFTPS_12DataTransfer_11isConnectedSb_T_">transferDidChangedConnectionState(_:isConnected:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Datatransfer reports if connection status to SID did changed</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">transferDidChangedConnectionState</span><span class="p">(</span><span class="nv">dataTransferObject</span><span class="p">:</span> <span class="kt"><a href="../Protocols/DataTransfer.html">DataTransfer</a></span><span class="p">,</span> <span class="nv">isConnected</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>dataTransferObject</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>BLEScanner object as dataTransfer</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>isConnected</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>didConnected or not as Bool</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE15SIDCommunicator26transferDidDiscoveredSidIdFTPS_12DataTransfer_6newSidVS_3SID_T_"></a>
+                    <a name="//apple_ref/swift/Method/transferDidDiscoveredSidId(_:newSid:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE15SIDCommunicator26transferDidDiscoveredSidIdFTPS_12DataTransfer_6newSidVS_3SID_T_">transferDidDiscoveredSidId(_:newSid:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Datatransfer reports discovered SID object</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">transferDidDiscoveredSidId</span><span class="p">(</span><span class="nv">dataTransferObject</span><span class="p">:</span> <span class="kt"><a href="../Protocols/DataTransfer.html">DataTransfer</a></span><span class="p">,</span> <span class="nv">newSid</span><span class="p">:</span> <span class="kt"><a href="../Structs/SID.html">SID</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>dataTransferObject</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>current used data transfer</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>newSid</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>discovered new SID object</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE15SIDCommunicator26transferShouldFilterOldIdsFPS_12DataTransfer_T_"></a>
+                    <a name="//apple_ref/swift/Method/transferShouldFilterOldIds(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE15SIDCommunicator26transferShouldFilterOldIdsFPS_12DataTransfer_T_">transferShouldFilterOldIds(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>In transporter runs a timer, it reports wenn all saved SIDs must be filtered</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">transferShouldFilterOldIds</span><span class="p">(</span><span class="nv">dataTransferObject</span><span class="p">:</span> <span class="kt"><a href="../Protocols/DataTransfer.html">DataTransfer</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>dataTransferObject</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Scanner instance</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE15SIDCommunicator15filterOldSidIdsFT_T_"></a>
+                    <a name="//apple_ref/swift/Method/filterOldSidIds()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE15SIDCommunicator15filterOldSidIdsFT_T_">filterOldSidIds()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Check all saved sids with discovery date (time), all older (discovered before 5 seconds)
+sids will be deleted from List. Scanner will be started after delete old sids and the deletion
+will be informed</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">filterOldSidIds</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE15SIDCommunicator23transferDidconnectedSidFTPS_12DataTransfer_3sidVS_3SID_T_"></a>
+                    <a name="//apple_ref/swift/Method/transferDidconnectedSid(_:sid:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE15SIDCommunicator23transferDidconnectedSidFTPS_12DataTransfer_3sidVS_3SID_T_">transferDidconnectedSid(_:sid:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Transporter reports if that was successfully connected with a SID</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">transferDidconnectedSid</span><span class="p">(</span><span class="nv">dataTransferObject</span><span class="p">:</span> <span class="kt"><a href="../Protocols/DataTransfer.html">DataTransfer</a></span><span class="p">,</span> <span class="nv">sid</span><span class="p">:</span> <span class="kt"><a href="../Structs/SID.html">SID</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>dataTransferObject</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>transporter instance</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sid</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>connected SID instance</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2016 <a class="link" href="" target="_blank" rel="external">Huf Secure Mobile GmbH</a>. All rights reserved. (Last updated: 2016-10-03)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.2</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>

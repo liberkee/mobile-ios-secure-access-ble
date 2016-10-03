@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>CryptoManager Protocol Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Protocol/CryptoManager" class="dashAnchor"></a>
+    <a title="CryptoManager Protocol Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">SecureAccessBLE Docs</a> (100% documented)</p>
+        <p class="header-right"><a href="https://github.com/hufsm/mobile-ios-ble"><img src="../img/gh.png"/>View on GitHub</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">SecureAccessBLE Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        CryptoManager Protocol Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/BLEComManager.html">BLEComManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/BLEScanner.html">BLEScanner</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DataFramePackage.html">DataFramePackage</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SIDCommunicator.html">SIDCommunicator</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enums</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/BLEChallengerError.html">BLEChallengerError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ConnectionState.html">ConnectionState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/DataFrameType.html">DataFrameType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/EncryptionState.html">EncryptionState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SIDMessageID.html">SIDMessageID</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ServiceGrantFeature.html">ServiceGrantFeature</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ServiceGrantID.html">ServiceGrantID</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ServiceGrantTriggerStatus.html">ServiceGrantTriggerStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TestMessageType.html">TestMessageType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions/CBCentralManagerState.html">CBCentralManagerState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/String.html">String</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Functions.html">Functions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:ZF15SecureAccessBLEoi2eeFTVS_3SIDS0__Sb">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F15SecureAccessBLE5DelayFTSd7closureFT_T__T_">Delay(_:closure:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F15SecureAccessBLE10consoleLogFSST_">consoleLog(_:)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/BLEChallengeServiceDelegate.html">BLEChallengeServiceDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/BLEManagerDelegate.html">BLEManagerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ConsoleLogger.html">ConsoleLogger</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CryptoManager.html">CryptoManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/DataTransfer.html">DataTransfer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/DataTransferDelegate.html">DataTransferDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/SIDCommunicatorDelegate.html">SIDCommunicatorDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/SIDMessagePayload.html">SIDMessagePayload</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ServiceGrant.html">ServiceGrant</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structs</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/AesCbcCryptoManager.html">AesCbcCryptoManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/AesCbcTestCryptoManager.html">AesCbcTestCryptoManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/BLEChallengeService.html">BLEChallengeService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/BLEHelper.html">BLEHelper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/BlobRequest.html">BlobRequest</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/CryptoHeader.html">CryptoHeader</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/CryptoHeader/CryptoMessageDirection.html">– CryptoMessageDirection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DataFrame.html">DataFrame</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/EmptyPayload.html">EmptyPayload</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Handshake.html">Handshake</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LTBlobPayload.html">LTBlobPayload</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/MTUSize.html">MTUSize</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NoPadding.html">NoPadding</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/PhoneToSidChallenge.html">PhoneToSidChallenge</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/PhoneToSidResponse.html">PhoneToSidResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SID.html">SID</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SIDMessage.html">SIDMessage</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ServiceGrantRequest.html">ServiceGrantRequest</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ServiceGrantTrigger.html">ServiceGrantTrigger</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ServiceGrantTrigger/ServiceGrantStatus.html">– ServiceGrantStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ServiceGrantTrigger/ServiceGrantResult.html">– ServiceGrantResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SidToPhoneResponse.html">SidToPhoneResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TestMessage.html">TestMessage</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ZeroByte.html">ZeroByte</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ZeroByteWithLength.html">ZeroByteWithLength</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ZeroSecurityManager.html">ZeroSecurityManager</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>CryptoManager</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">CryptoManager</span></code></pre>
+
+                </div>
+              </div>
+            <p>All Transport layer messages shall be encrypted. Crypto manager will be used for endryting and decrypting
+the SID messages</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vP15SecureAccessBLE13CryptoManager3keyGSaVs5UInt8_"></a>
+                    <a name="//apple_ref/swift/Property/key" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vP15SecureAccessBLE13CryptoManager3keyGSaVs5UInt8_">key</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>cryption key</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">key</span><span class="p">:</span> <span class="p">[</span><span class="kt">UInt8</span><span class="p">]</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FP15SecureAccessBLE13CryptoManager14encryptMessageFVS_10SIDMessageCSo6NSData"></a>
+                    <a name="//apple_ref/swift/Method/encryptMessage(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FP15SecureAccessBLE13CryptoManager14encryptMessageFVS_10SIDMessageCSo6NSData">encryptMessage(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Encryption message to message Data</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">mutating</span> <span class="kd">func</span> <span class="nf">encryptMessage</span><span class="p">(</span><span class="nv">message</span><span class="p">:</span> <span class="kt"><a href="../Structs/SIDMessage.html">SIDMessage</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSData</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>message</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>incomming SIDMessage</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>encrypted message data</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FP15SecureAccessBLE13CryptoManager11decryptDataFCSo6NSDataVS_10SIDMessage"></a>
+                    <a name="//apple_ref/swift/Method/decryptData(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FP15SecureAccessBLE13CryptoManager11decryptDataFCSo6NSDataVS_10SIDMessage">decryptData(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>To decrypte incomming data to SID Message</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">mutating</span> <span class="kd">func</span> <span class="nf">decryptData</span><span class="p">(</span><span class="nv">data</span><span class="p">:</span> <span class="kt">NSData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt"><a href="../Structs/SIDMessage.html">SIDMessage</a></span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>data</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>incomming Data, that will be decryted</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>SID message object decryted from incomming data</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FP15SecureAccessBLE13CryptoManager14decryptRawDataFCSo6NSDataS1_"></a>
+                    <a name="//apple_ref/swift/Method/decryptRawData(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FP15SecureAccessBLE13CryptoManager14decryptRawDataFCSo6NSDataS1_">decryptRawData(_:)</a>
+                    </code>
+                      <span class="declaration-note">
+                        Default implementation
+                      </span>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>To decrypte incomming data to SID data</p>
+
+                      </div>
+                      <h4>Default Implementation</h4>
+                      <div class="default_impl abstract">
+                        <p>To decrypte incomming data to SID data</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">decryptRawData</span><span class="p">(</span><span class="nv">data</span><span class="p">:</span> <span class="kt">NSData</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">NSData</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>data</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>incomming Data, that will be decryted</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>SID Data object decryted from incomming data</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2016 <a class="link" href="" target="_blank" rel="external">Huf Secure Mobile GmbH</a>. All rights reserved. (Last updated: 2016-10-03)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.2</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>
