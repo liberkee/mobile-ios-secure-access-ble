@@ -1,0 +1,40 @@
+//
+//  ZeroSecurityManager.swift
+//  HSM
+//
+//  Created by Sebastian Stüssel on 18.09.15.
+//  Copyright © 2015 Sebastian Stüssel. All rights reserved.
+//
+
+import Foundation
+
+/**
+ *  Default Cryptomanager with 'Zero' key, if encryption was not estabilisched
+ */
+struct ZeroSecurityManager: CryptoManager {
+    /// default key [Zero] for zero security Cryptor
+    var key: [UInt8] = [0x00] as [UInt8]
+    /**
+     Encryption message to message Data
+     
+     - parameter message: incomming SIDMessage
+     
+     - returns: encrypted message data
+     */
+    mutating func encryptMessage(message: SIDMessage) -> NSData {
+        return message.data
+    }
+    
+    /**
+     To decrypte incomming data to SID Message
+     
+     - parameter data: incomming Data, that will be decryted
+     
+     - returns: SID message object decryted from incomming data
+     */
+    mutating func decryptData(data: NSData) -> SIDMessage {
+        return SIDMessage(rawData: data)
+    }
+    
+
+}
