@@ -1,5 +1,7 @@
 PODS:
-  - SecureAccessBLE (0.1.0)
+  - SecureAccessBLE (0.1.0):
+    - SwiftyJSON (~> 2.3)
+  - SwiftyJSON (2.4.0)
 
 DEPENDENCIES:
   - SecureAccessBLE (from `../`)
@@ -9,7 +11,8 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  SecureAccessBLE: 1d9c62714d88dae24c1ab4516e0b43d4996366ff
+  SecureAccessBLE: a79ec5058f9e1f3c8f99f9f4426fa73aa937662b
+  SwiftyJSON: 96918c1bf505efa50c4f72957018dd3452090c9c
 
 PODFILE CHECKSUM: 642a2547eb06eaa1f3197d94bbcc9837368a9bc5
 

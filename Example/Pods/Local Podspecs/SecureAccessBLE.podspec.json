@@ -18,5 +18,10 @@
   "platforms": {
     "ios": "8.0"
   },
-  "source_files": "SecureAccessBLE/Classes/**/*"
+  "source_files": "SecureAccessBLE/Classes/**/*",
+  "dependencies": {
+    "SwiftyJSON": [
+      "~> 2.3"
+    ]
+  }
 }
