@@ -8,6 +8,13 @@
 
 import Foundation
 
+/// Writes the textual representations of an object into the standard output.
+func print(object: Any) {
+    #if DEBUG
+        Swift.print(object)
+    #endif
+}
+
 /// Logs the message to an external console
 func consoleLog(message: String) {
     if let logger = BLEHelper.consoleLogger {
