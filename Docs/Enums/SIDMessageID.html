@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>SIDMessageID Enum Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Enum/SIDMessageID" class="dashAnchor"></a>
+    <a title="SIDMessageID Enum Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">SecureAccessBLE Docs</a> (100% documented)</p>
+        <p class="header-right"><a href="https://github.com/hufsm/mobile-ios-ble"><img src="../img/gh.png"/>View on GitHub</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">SecureAccessBLE Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        SIDMessageID Enum Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/BLEComManager.html">BLEComManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/BLEScanner.html">BLEScanner</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DataFramePackage.html">DataFramePackage</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SIDCommunicator.html">SIDCommunicator</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enums</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/BLEChallengerError.html">BLEChallengerError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ConnectionState.html">ConnectionState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/DataFrameType.html">DataFrameType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/EncryptionState.html">EncryptionState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SIDMessageID.html">SIDMessageID</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ServiceGrantFeature.html">ServiceGrantFeature</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ServiceGrantID.html">ServiceGrantID</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ServiceGrantTriggerStatus.html">ServiceGrantTriggerStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TestMessageType.html">TestMessageType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions/CBCentralManagerState.html">CBCentralManagerState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/String.html">String</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Functions.html">Functions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:ZF15SecureAccessBLEoi2eeFTVS_3SIDS0__Sb">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F15SecureAccessBLE5DelayFTSd7closureFT_T__T_">Delay(_:closure:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F15SecureAccessBLE10consoleLogFSST_">consoleLog(_:)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/BLEChallengeServiceDelegate.html">BLEChallengeServiceDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/BLEManagerDelegate.html">BLEManagerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ConsoleLogger.html">ConsoleLogger</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CryptoManager.html">CryptoManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/DataTransfer.html">DataTransfer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/DataTransferDelegate.html">DataTransferDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/SIDCommunicatorDelegate.html">SIDCommunicatorDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/SIDMessagePayload.html">SIDMessagePayload</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ServiceGrant.html">ServiceGrant</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structs</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/AesCbcCryptoManager.html">AesCbcCryptoManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/AesCbcTestCryptoManager.html">AesCbcTestCryptoManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/BLEChallengeService.html">BLEChallengeService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/BLEHelper.html">BLEHelper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/BlobRequest.html">BlobRequest</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/CryptoHeader.html">CryptoHeader</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/CryptoHeader/CryptoMessageDirection.html">– CryptoMessageDirection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DataFrame.html">DataFrame</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/EmptyPayload.html">EmptyPayload</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Handshake.html">Handshake</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LTBlobPayload.html">LTBlobPayload</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/MTUSize.html">MTUSize</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NoPadding.html">NoPadding</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/PhoneToSidChallenge.html">PhoneToSidChallenge</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/PhoneToSidResponse.html">PhoneToSidResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SID.html">SID</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SIDMessage.html">SIDMessage</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ServiceGrantRequest.html">ServiceGrantRequest</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ServiceGrantTrigger.html">ServiceGrantTrigger</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ServiceGrantTrigger/ServiceGrantStatus.html">– ServiceGrantStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ServiceGrantTrigger/ServiceGrantResult.html">– ServiceGrantResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SidToPhoneResponse.html">SidToPhoneResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TestMessage.html">TestMessage</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ZeroByte.html">ZeroByte</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ZeroByteWithLength.html">ZeroByteWithLength</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ZeroSecurityManager.html">ZeroSecurityManager</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>SIDMessageID</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight"><code><span class="kd">enum</span> <span class="kt">SIDMessageID</span><span class="p">:</span> <span class="kt">UInt8</span></code></pre>
+
+                </div>
+              </div>
+            <p>Defines the message type as enumerating, for application layer, session layer and also for testing</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO15SecureAccessBLE12SIDMessageID14ChallengePhoneFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/ChallengePhone" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO15SecureAccessBLE12SIDMessageID14ChallengePhoneFMS0_S0_">ChallengePhone</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Challenge message from mobile to SID</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">case</span> <span class="kt">ChallengePhone</span> <span class="o">=</span> <span class="mh">0x01</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO15SecureAccessBLE12SIDMessageID20ChallengeSidResponseFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/ChallengeSidResponse" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO15SecureAccessBLE12SIDMessageID20ChallengeSidResponseFMS0_S0_">ChallengeSidResponse</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Response challenge message from SID to mobile</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">case</span> <span class="kt">ChallengeSidResponse</span> <span class="o">=</span> <span class="mh">0x02</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO15SecureAccessBLE12SIDMessageID23BadChallengeSidResponseFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/BadChallengeSidResponse" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO15SecureAccessBLE12SIDMessageID23BadChallengeSidResponseFMS0_S0_">BadChallengeSidResponse</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Response message for bad response from SID to mobile</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">case</span> <span class="kt">BadChallengeSidResponse</span> <span class="o">=</span> <span class="mh">0x03</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO15SecureAccessBLE12SIDMessageID21ChallengePhoneResonseFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/ChallengePhoneResonse" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO15SecureAccessBLE12SIDMessageID21ChallengePhoneResonseFMS0_S0_">ChallengePhoneResonse</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Response message from mobile to SID</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">case</span> <span class="kt">ChallengePhoneResonse</span> <span class="o">=</span> <span class="mh">0x04</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO15SecureAccessBLE12SIDMessageID25BadChallengePhoneResponseFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/BadChallengePhoneResponse" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO15SecureAccessBLE12SIDMessageID25BadChallengePhoneResponseFMS0_S0_">BadChallengePhoneResponse</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Response message for bad response from mobile to SID</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">case</span> <span class="kt">BadChallengePhoneResponse</span> <span class="o">=</span> <span class="mh">0x05</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO15SecureAccessBLE12SIDMessageID10MTURequestFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/MTURequest" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO15SecureAccessBLE12SIDMessageID10MTURequestFMS0_S0_">MTURequest</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Request to get negotiated MTU Size</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">case</span> <span class="kt">MTURequest</span> <span class="o">=</span> <span class="mh">0x06</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO15SecureAccessBLE12SIDMessageID10MTUReceiveFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/MTUReceive" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO15SecureAccessBLE12SIDMessageID10MTUReceiveFMS0_S0_">MTUReceive</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>To provide negotiated MTU size</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">case</span> <span class="kt">MTUReceive</span> <span class="o">=</span> <span class="mh">0x07</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO15SecureAccessBLE12SIDMessageID5LTAckFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/LTAck" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO15SecureAccessBLE12SIDMessageID5LTAckFMS0_S0_">LTAck</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>To transfer blob or lease token</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">case</span> <span class="kt">LTAck</span> <span class="o">=</span> <span class="mh">0x09</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO15SecureAccessBLE12SIDMessageID9PhoneTestFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/PhoneTest" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO15SecureAccessBLE12SIDMessageID9PhoneTestFMS0_S0_">PhoneTest</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Test message from mobile to SID</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">case</span> <span class="kt">PhoneTest</span> <span class="o">=</span> <span class="mh">0x10</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO15SecureAccessBLE12SIDMessageID7SidTestFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/SidTest" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO15SecureAccessBLE12SIDMessageID7SidTestFMS0_S0_">SidTest</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Response message from SID for testing message</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">case</span> <span class="kt">SidTest</span> <span class="o">=</span> <span class="mh">0x13</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO15SecureAccessBLE12SIDMessageID13LTBlobRequestFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/LTBlobRequest" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO15SecureAccessBLE12SIDMessageID13LTBlobRequestFMS0_S0_">LTBlobRequest</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Deprecated only for testing</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">case</span> <span class="kt">LTBlobRequest</span> <span class="o">=</span> <span class="mh">0x0A</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO15SecureAccessBLE12SIDMessageID6LTBlobFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/LTBlob" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO15SecureAccessBLE12SIDMessageID6LTBlobFMS0_S0_">LTBlob</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Deprecated ??</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">case</span> <span class="kt">LTBlob</span> <span class="o">=</span> <span class="mh">0x0B</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO15SecureAccessBLE12SIDMessageID16HeartBeatRequestFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/HeartBeatRequest" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO15SecureAccessBLE12SIDMessageID16HeartBeatRequestFMS0_S0_">HeartBeatRequest</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>HeartBeat Request</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">case</span> <span class="kt">HeartBeatRequest</span> <span class="o">=</span> <span class="mh">0x0C</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO15SecureAccessBLE12SIDMessageID17HeartBeatResponseFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/HeartBeatResponse" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO15SecureAccessBLE12SIDMessageID17HeartBeatResponseFMS0_S0_">HeartBeatResponse</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>HeartBeat Response</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">case</span> <span class="kt">HeartBeatResponse</span> <span class="o">=</span> <span class="mh">0x0D</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO15SecureAccessBLE12SIDMessageID12ServiceGrantFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/ServiceGrant" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO15SecureAccessBLE12SIDMessageID12ServiceGrantFMS0_S0_">ServiceGrant</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Service grant message</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">case</span> <span class="kt">ServiceGrant</span> <span class="o">=</span> <span class="mh">0x20</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO15SecureAccessBLE12SIDMessageID19ServiceGrantTriggerFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/ServiceGrantTrigger" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO15SecureAccessBLE12SIDMessageID19ServiceGrantTriggerFMS0_S0_">ServiceGrantTrigger</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Service grant trigger message</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">case</span> <span class="kt">ServiceGrantTrigger</span> <span class="o">=</span> <span class="mh">0x30</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FO15SecureAccessBLE12SIDMessageID8NotValidFMS0_S0_"></a>
+                    <a name="//apple_ref/swift/Element/NotValid" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FO15SecureAccessBLE12SIDMessageID8NotValidFMS0_S0_">NotValid</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Not valid</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">case</span> <span class="kt">NotValid</span> <span class="o">=</span> <span class="mh">0xC8</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2016 <a class="link" href="" target="_blank" rel="external">Huf Secure Mobile GmbH</a>. All rights reserved. (Last updated: 2016-10-03)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.2</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>
