@@ -1,0 +1,19 @@
+PODS:
+  - CryptoSwift (0.0.16)
+  - SecureAccessBLE (1.0.2):
+    - CryptoSwift (= 0.0.16)
+
+DEPENDENCIES:
+  - SecureAccessBLE (from `../`)
+
+EXTERNAL SOURCES:
+  SecureAccessBLE:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  CryptoSwift: 05b7e813763fc7a0e8726e962365d6e09f091098
+  SecureAccessBLE: e4098bf650712471c1525e919fb8f8738af4f998
+
+PODFILE CHECKSUM: 642a2547eb06eaa1f3197d94bbcc9837368a9bc5
+
+COCOAPODS: 1.0.1

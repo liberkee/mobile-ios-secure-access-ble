@@ -1,0 +1,27 @@
+{
+  "name": "SecureAccessBLE",
+  "version": "1.0.2",
+  "summary": "SecureAccess BLE framework",
+  "description": "Framework for communicating with the SecureAccess BLE hardware.",
+  "homepage": "https://github.com/hufsm/mobile-ios-ble",
+  "authors": {
+    "Ke Song": "ke.song@excellence.ag",
+    "Lars Hosemann": "lars.hosemann@gmail.com"
+  },
+  "source": {
+    "git": "https://github.com/hufsm/mobile-ios-ble.git",
+    "tag": "1.0.2"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "SecureAccessBLE/Classes/**/*",
+  "vendored_frameworks": [
+    "SecureAccessBLE/Frameworks/openssl.framework"
+  ],
+  "dependencies": {
+    "CryptoSwift": [
+      "0.0.16"
+    ]
+  }
+}

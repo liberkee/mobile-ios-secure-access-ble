@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>BLEComManager Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/BLEComManager" class="dashAnchor"></a>
+    <a title="BLEComManager Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">SecureAccessBLE Docs</a> (100% documented)</p>
+        <p class="header-right"><a href="https://github.com/hufsm/mobile-ios-ble"><img src="../img/gh.png"/>View on GitHub</a></p>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">SecureAccessBLE Reference</a>
+        <img id="carat" src="../img/carat.png" />
+        BLEComManager Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/BLEComManager.html">BLEComManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/BLEScanner.html">BLEScanner</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/DataFramePackage.html">DataFramePackage</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/SIDCommunicator.html">SIDCommunicator</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enums</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/BLEChallengerError.html">BLEChallengerError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ConnectionState.html">ConnectionState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/DataFrameType.html">DataFrameType</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/EncryptionState.html">EncryptionState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/SIDMessageID.html">SIDMessageID</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ServiceGrantFeature.html">ServiceGrantFeature</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ServiceGrantID.html">ServiceGrantID</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/ServiceGrantTriggerStatus.html">ServiceGrantTriggerStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/TestMessageType.html">TestMessageType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions/CBCentralManagerState.html">CBCentralManagerState</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Extensions/String.html">String</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Functions.html">Functions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:ZF15SecureAccessBLEoi2eeFTVS_3SIDS0__Sb">==(_:_:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F15SecureAccessBLE5DelayFTSd7closureFT_T__T_">Delay(_:closure:)</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Functions.html#/s:F15SecureAccessBLE10consoleLogFSST_">consoleLog(_:)</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/BLEChallengeServiceDelegate.html">BLEChallengeServiceDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/BLEManagerDelegate.html">BLEManagerDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ConsoleLogger.html">ConsoleLogger</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CryptoManager.html">CryptoManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/DataTransfer.html">DataTransfer</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/DataTransferDelegate.html">DataTransferDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/SIDCommunicatorDelegate.html">SIDCommunicatorDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/SIDMessagePayload.html">SIDMessagePayload</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/ServiceGrant.html">ServiceGrant</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structs</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/AesCbcCryptoManager.html">AesCbcCryptoManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/AesCbcTestCryptoManager.html">AesCbcTestCryptoManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/BLEChallengeService.html">BLEChallengeService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/BLEHelper.html">BLEHelper</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/BlobRequest.html">BlobRequest</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/CryptoHeader.html">CryptoHeader</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/CryptoHeader/CryptoMessageDirection.html">– CryptoMessageDirection</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/DataFrame.html">DataFrame</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/EmptyPayload.html">EmptyPayload</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/Handshake.html">Handshake</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/LTBlobPayload.html">LTBlobPayload</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/MTUSize.html">MTUSize</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/NoPadding.html">NoPadding</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/PhoneToSidChallenge.html">PhoneToSidChallenge</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/PhoneToSidResponse.html">PhoneToSidResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SID.html">SID</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SIDMessage.html">SIDMessage</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ServiceGrantRequest.html">ServiceGrantRequest</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ServiceGrantTrigger.html">ServiceGrantTrigger</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ServiceGrantTrigger/ServiceGrantStatus.html">– ServiceGrantStatus</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ServiceGrantTrigger/ServiceGrantResult.html">– ServiceGrantResult</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/SidToPhoneResponse.html">SidToPhoneResponse</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/TestMessage.html">TestMessage</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ZeroByte.html">ZeroByte</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ZeroByteWithLength.html">ZeroByteWithLength</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/ZeroSecurityManager.html">ZeroSecurityManager</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>BLEComManager</h1>
+              <div class="declaration">
+                <div class="language">
+                  <pre class="highlight"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">BLEComManager</span><span class="p">:</span> <span class="kt">NSObject</span><span class="p">,</span> <span class="kt"><a href="../Protocols/BLEChallengeServiceDelegate.html">BLEChallengeServiceDelegate</a></span><span class="p">,</span> <span class="kt"><a href="../Protocols/SIDCommunicatorDelegate.html">SIDCommunicatorDelegate</a></span></code></pre>
+
+                </div>
+              </div>
+            <p>The BLEManager represents the TransportLayer</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:ZvC15SecureAccessBLE13BLEComManager7mtuSizeSi"></a>
+                    <a name="//apple_ref/swift/Variable/mtuSize" class="dashAnchor"></a>
+                    <a class="token" href="#/s:ZvC15SecureAccessBLE13BLEComManager7mtuSizeSi">mtuSize</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The Default MTU Size</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">static</span> <span class="k">var</span> <span class="nv">mtuSize</span> <span class="o">=</span> <span class="mi">20</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC15SecureAccessBLE13BLEComManager16messageFrameSizeSi"></a>
+                    <a name="//apple_ref/swift/Property/messageFrameSize" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC15SecureAccessBLE13BLEComManager16messageFrameSizeSi">messageFrameSize</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The netto message size (MTU minus frame header information)</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">messageFrameSize</span><span class="p">:</span> <span class="kt">Int</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC15SecureAccessBLE13BLEComManager11isConnectedSb"></a>
+                    <a name="//apple_ref/swift/Property/isConnected" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC15SecureAccessBLE13BLEComManager11isConnectedSb">isConnected</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The connection state</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">isConnected</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC15SecureAccessBLE13BLEComManager8deviceIdSS"></a>
+                    <a name="//apple_ref/swift/Property/deviceId" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC15SecureAccessBLE13BLEComManager8deviceIdSS">deviceId</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>DeviceId as String came from Userspace.Booking</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">deviceId</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">""</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC15SecureAccessBLE13BLEComManager12leaseTokenIdSS"></a>
+                    <a name="//apple_ref/swift/Property/leaseTokenId" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC15SecureAccessBLE13BLEComManager12leaseTokenIdSS">leaseTokenId</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>LeaseToken Id as String came from SecureAccess.blob</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">leaseTokenId</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">""</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC15SecureAccessBLE13BLEComManager12sidAccessKeySS"></a>
+                    <a name="//apple_ref/swift/Property/sidAccessKey" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC15SecureAccessBLE13BLEComManager12sidAccessKeySS">sidAccessKey</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Sid AccessKey as String came from SecureAccess.blob</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">sidAccessKey</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">""</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC15SecureAccessBLE13BLEComManager5sidIdSS"></a>
+                    <a name="//apple_ref/swift/Property/sidId" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC15SecureAccessBLE13BLEComManager5sidIdSS">sidId</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>SidId as String came from SecureAccess.leaseToken</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">sidId</span><span class="p">:</span> <span class="kt">String</span>  <span class="o">=</span> <span class="s">""</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC15SecureAccessBLE13BLEComManager17heartbeatIntervalSd"></a>
+                    <a name="//apple_ref/swift/Property/heartbeatInterval" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC15SecureAccessBLE13BLEComManager17heartbeatIntervalSd">heartbeatInterval</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>time interval Ble should send heartbeat to SID</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">heartbeatInterval</span><span class="p">:</span><span class="kt">Double</span> <span class="o">=</span> <span class="mf">2000.0</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC15SecureAccessBLE13BLEComManager16heartbeatTimeoutSd"></a>
+                    <a name="//apple_ref/swift/Property/heartbeatTimeout" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC15SecureAccessBLE13BLEComManager16heartbeatTimeoutSd">heartbeatTimeout</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>time out the ble should waite for heartbeat response</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">heartbeatTimeout</span><span class="p">:</span><span class="kt">Double</span> <span class="o">=</span> <span class="mf">4000.0</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC15SecureAccessBLE13BLEComManager11transporterPS_12DataTransfer_"></a>
+                    <a name="//apple_ref/swift/Property/transporter" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC15SecureAccessBLE13BLEComManager11transporterPS_12DataTransfer_">transporter</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>A object that must confirm to the DataTransfer protocol</p>
+
+<p>Normally the transporter is a BLEScanner object</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="k">var</span> <span class="nv">transporter</span><span class="p">:</span> <span class="kt"><a href="../Protocols/DataTransfer.html">DataTransfer</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:vC15SecureAccessBLE13BLEComManager8delegateXwGSqPS_18BLEManagerDelegate__"></a>
+                    <a name="//apple_ref/swift/Property/delegate" class="dashAnchor"></a>
+                    <a class="token" href="#/s:vC15SecureAccessBLE13BLEComManager8delegateXwGSqPS_18BLEManagerDelegate__">delegate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The delegate must confirm to the BLEManagerDelegate Protocol</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">delegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/BLEManagerDelegate.html">BLEManagerDelegate</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE13BLEComManagercFT6cryptoSb5sidIDCSo8NSString_S0_"></a>
+                    <a name="//apple_ref/swift/Method/init(crypto:sidID:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE13BLEComManagercFT6cryptoSb5sidIDCSo8NSString_S0_">init(crypto:sidID:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Initial point for BLE-Manager</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">required</span> <span class="kd">public</span> <span class="nf">init</span><span class="p">(</span><span class="nv">crypto</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span> <span class="nv">sidID</span><span class="p">:</span> <span class="kt">NSString</span> <span class="o">=</span> <span class="s">""</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>crypto</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>if should be nedded cryption service</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sidID</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>sid id, that BLE connecting to</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>ble-manager object</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE13BLEComManagercFT11transporterCS_10BLEScanner8delegatePS_18BLEManagerDelegate_6cryptoSb17heartbeatIntervalSi16heartbeatTimeoutSi_S0_"></a>
+                    <a name="//apple_ref/swift/Method/init(transporter:delegate:crypto:heartbeatInterval:heartbeatTimeout:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE13BLEComManagercFT11transporterCS_10BLEScanner8delegatePS_18BLEManagerDelegate_6cryptoSb17heartbeatIntervalSi16heartbeatTimeoutSi_S0_">init(transporter:delegate:crypto:heartbeatInterval:heartbeatTimeout:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Convenience Init with more parameters</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="n">convenience</span> <span class="nf">init</span><span class="p">(</span><span class="nv">transporter</span><span class="p">:</span> <span class="kt"><a href="../Classes/BLEScanner.html">BLEScanner</a></span><span class="p">,</span> <span class="nv">delegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/BLEManagerDelegate.html">BLEManagerDelegate</a></span><span class="p">,</span> <span class="nv">crypto</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span> <span class="nv">heartbeatInterval</span><span class="p">:</span> <span class="kt">Int</span><span class="p">,</span> <span class="nv">heartbeatTimeout</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>transporter</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>transfer object</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>delegate</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>delegate object</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>crypto</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>if cryption service needed</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>BLE-Manager object</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE13BLEComManagerd"></a>
+                    <a name="//apple_ref/swift/Method/deinit" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE13BLEComManagerd">deinit</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Deinit point</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">deinit</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE13BLEComManager14transferIsBusyFT_Sb"></a>
+                    <a name="//apple_ref/swift/Method/transferIsBusy()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE13BLEComManager14transferIsBusyFT_Sb">transferIsBusy()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Helper function repots if the transfer currently busy</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">transferIsBusy</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Transfer busy</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Private%20and%20public%20used%20functions"></a>
+                <a name="//apple_ref/swift/Section/Private and public used functions" class="dashAnchor"></a>
+                <a href="#/Private%20and%20public%20used%20functions">
+                  <h3 class="section-name">Private and public used functions</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE13BLEComManager12connectToSidFTSS8blobDataGSqSS_11blobCounterSi_T_"></a>
+                    <a name="//apple_ref/swift/Method/connectToSid(_:blobData:blobCounter:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE13BLEComManager12connectToSidFTSS8blobDataGSqSS_11blobCounterSi_T_">connectToSid(_:blobData:blobCounter:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Connects to a spefific SID</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">connectToSid</span><span class="p">(</span><span class="nv">sidId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">blobData</span><span class="p">:</span> <span class="kt">String</span><span class="p">?,</span> <span class="nv">blobCounter</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sidId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The Id of the SID, it should be connected to</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>blobData</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>blobdata as String see also SecureAccess.Blob</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>blobCounter</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>blobs messageCounter see also SecureAccess.Blob</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE13BLEComManager21startSendingHeartbeatFT_T_"></a>
+                    <a name="//apple_ref/swift/Method/startSendingHeartbeat()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE13BLEComManager21startSendingHeartbeatFT_T_">startSendingHeartbeat()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Sending heartbeats message to SID</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">startSendingHeartbeat</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE13BLEComManager26checkoutHeartbeatsResponseFT_T_"></a>
+                    <a name="//apple_ref/swift/Method/checkoutHeartbeatsResponse()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE13BLEComManager26checkoutHeartbeatsResponseFT_T_">checkoutHeartbeatsResponse()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>check out connection state if timer for checkheartbeat response fired</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">checkoutHeartbeatsResponse</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE13BLEComManager10disconnectFT_T_"></a>
+                    <a name="//apple_ref/swift/Method/disconnect()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE13BLEComManager10disconnectFT_T_">disconnect()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Disconnects from current sid</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">disconnect</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE13BLEComManager21disconnectTransporterFT_T_"></a>
+                    <a name="//apple_ref/swift/Method/disconnectTransporter()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE13BLEComManager21disconnectTransporterFT_T_">disconnectTransporter()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>To disconnect dataTransfer</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">disconnectTransporter</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE13BLEComManager8hasSidIDFSSSb"></a>
+                    <a name="//apple_ref/swift/Method/hasSidID(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE13BLEComManager8hasSidIDFSSSb">hasSidID(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Checks if a SID ID is already discovered.</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">hasSidID</span><span class="p">(</span><span class="nv">sidId</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sidId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A SID ID string</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>When already in list it returns true, otherwise false.</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/Communication%20with%20SID%20Peripheral"></a>
+                <a name="//apple_ref/swift/Section/Communication with SID Peripheral" class="dashAnchor"></a>
+                <a href="#/Communication%20with%20SID%20Peripheral">
+                  <h3 class="section-name">Communication with SID Peripheral</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE13BLEComManager26sendServiceGrantForFeatureFOS_19ServiceGrantFeatureT_"></a>
+                    <a name="//apple_ref/swift/Method/sendServiceGrantForFeature(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE13BLEComManager26sendServiceGrantForFeatureFOS_19ServiceGrantFeatureT_">sendServiceGrantForFeature(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Communicating connected SID with sending messages, that was builed from serviceGrant request with
+id as messages payload</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">sendServiceGrantForFeature</span><span class="p">(</span><span class="nv">feature</span><span class="p">:</span> <span class="kt"><a href="../Enums/ServiceGrantFeature.html">ServiceGrantFeature</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>feature</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>defined features to identifier the target SidMessage id</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE13BLEComManager11sendMessageFVS_10SIDMessageT7successSb5errorGSqSS__"></a>
+                    <a name="//apple_ref/swift/Method/sendMessage(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE13BLEComManager11sendMessageFVS_10SIDMessageT7successSb5errorGSqSS__">sendMessage(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Sends data over the transporter
+When previous data is still in a sending state, the method will return <strong>false</strong> and an error message.
+Otherwise it will return <strong>true</strong> and a no error string (nil)</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">sendMessage</span><span class="p">(</span><span class="nv">message</span><span class="p">:</span> <span class="kt"><a href="../Structs/SIDMessage.html">SIDMessage</a></span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">(</span><span class="nv">success</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>message</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The SIDMessage which should be send</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>(success: Bool, error: String?) A Tuple containing a success boolean and a error string or nil</p>
+
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE13BLEComManager25handleServiceGrantTriggerFTGSqVS_10SIDMessage_5errorGSqSS__T_"></a>
+                    <a name="//apple_ref/swift/Method/handleServiceGrantTrigger(_:error:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE13BLEComManager25handleServiceGrantTriggerFTGSqVS_10SIDMessage_5errorGSqSS__T_">handleServiceGrantTrigger(_:error:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Response message from SID will be handled with reporting ServiceGrantTriggerStatus</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">handleServiceGrantTrigger</span><span class="p">(</span><span class="nv">message</span><span class="p">:</span> <span class="kt"><a href="../Structs/SIDMessage.html">SIDMessage</a></span><span class="p">?,</span> <span class="nv">error</span><span class="p">:</span> <span class="kt">String</span><span class="p">?)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>message</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the Response message came from SID</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>error</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>error description if that not nil</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/SIDChallengerDelegate"></a>
+                <a name="//apple_ref/swift/Section/SIDChallengerDelegate" class="dashAnchor"></a>
+                <a href="#/SIDChallengerDelegate">
+                  <h3 class="section-name">SIDChallengerDelegate</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE13BLEComManager26challengerWantsSendMessageFVS_10SIDMessageT_"></a>
+                    <a name="//apple_ref/swift/Method/challengerWantsSendMessage(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE13BLEComManager26challengerWantsSendMessageFVS_10SIDMessageT_">challengerWantsSendMessage(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>SID challenger reports to send SID a message</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">challengerWantsSendMessage</span><span class="p">(</span><span class="nv">message</span><span class="p">:</span> <span class="kt"><a href="../Structs/SIDMessage.html">SIDMessage</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>message</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the message that will be sent to SID peripheral</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE13BLEComManager32challengerFinishedWithSessionKeyFGSaVs5UInt8_T_"></a>
+                    <a name="//apple_ref/swift/Method/challengerFinishedWithSessionKey(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE13BLEComManager32challengerFinishedWithSessionKeyFGSaVs5UInt8_T_">challengerFinishedWithSessionKey(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>SID challenger reports finished with extablishing SessionKey</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">challengerFinishedWithSessionKey</span><span class="p">(</span><span class="nv">sessionKey</span><span class="p">:</span> <span class="p">[</span><span class="kt">UInt8</span><span class="p">])</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sessionKey</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Crypto key for initializing CryptoManager</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE13BLEComManager15challengerAbortFOS_18BLEChallengerErrorT_"></a>
+                    <a name="//apple_ref/swift/Method/challengerAbort(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE13BLEComManager15challengerAbortFOS_18BLEChallengerErrorT_">challengerAbort(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>SID challenger reports abort with challenge</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">challengerAbort</span><span class="p">(</span><span class="nv">error</span><span class="p">:</span> <span class="kt"><a href="../Enums/BLEChallengerError.html">BLEChallengerError</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>error</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>error descriptiong for Cram Unit</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE13BLEComManager23challengerNeedsSendBlobFT_T_"></a>
+                    <a name="//apple_ref/swift/Method/challengerNeedsSendBlob()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE13BLEComManager23challengerNeedsSendBlobFT_T_">challengerNeedsSendBlob()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>SID challenger reports to need send Blob to SID peripheral</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">challengerNeedsSendBlob</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="task-group">
+              <div class="task-name-container">
+                <a name="/SIDCommunicatorDelegate"></a>
+                <a name="//apple_ref/swift/Section/SIDCommunicatorDelegate" class="dashAnchor"></a>
+                <a href="#/SIDCommunicatorDelegate">
+                  <h3 class="section-name">SIDCommunicatorDelegate</h3>
+                </a>
+              </div>
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE13BLEComManager26communicatorDidRecivedDataFTCSo6NSData5countSi_T_"></a>
+                    <a name="//apple_ref/swift/Method/communicatorDidRecivedData(_:count:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE13BLEComManager26communicatorDidRecivedDataFTCSo6NSData5countSi_T_">communicatorDidRecivedData(_:count:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Communicator reports did received response data</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">communicatorDidRecivedData</span><span class="p">(</span><span class="nv">messageData</span><span class="p">:</span> <span class="kt">NSData</span><span class="p">,</span> <span class="nv">count</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>messageData</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>received data</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>count</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>received data length</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE13BLEComManager37communicatorDidChangedConnectionStateFSbT_"></a>
+                    <a name="//apple_ref/swift/Method/communicatorDidChangedConnectionState(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE13BLEComManager37communicatorDidChangedConnectionStateFSbT_">communicatorDidChangedConnectionState(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Communicator reports if connection state did changed</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">communicatorDidChangedConnectionState</span><span class="p">(</span><span class="nv">connected</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>connected</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>is connected or not</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE13BLEComManager30comminicatorDidDiscoveredSidIdFVS_3SIDT_"></a>
+                    <a name="//apple_ref/swift/Method/comminicatorDidDiscoveredSidId(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE13BLEComManager30comminicatorDidDiscoveredSidIdFVS_3SIDT_">comminicatorDidDiscoveredSidId(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Communicator reports if new SID was discovered</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">comminicatorDidDiscoveredSidId</span><span class="p">(</span><span class="nv">newSid</span><span class="p">:</span> <span class="kt"><a href="../Structs/SID.html">SID</a></span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>newSid</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>the found SID object</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:FC15SecureAccessBLE13BLEComManager25communicatorDidLostSidIdsFGSaVS_3SID_T_"></a>
+                    <a name="//apple_ref/swift/Method/communicatorDidLostSidIds(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:FC15SecureAccessBLE13BLEComManager25communicatorDidLostSidIdsFGSaVS_3SID_T_">communicatorDidLostSidIds(_:)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Communicator reports if there are SIDs longer as 5 seconds not reported</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight"><code><span class="kd">func</span> <span class="nf">communicatorDidLostSidIds</span><span class="p">(</span><span class="nv">oldSids</span><span class="p">:</span> <span class="p">[</span><span class="kt"><a href="../Structs/SID.html">SID</a></span><span class="p">])</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>oldSid</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>did lost SIDs as Array</p>
+
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2016 <a class="link" href="" target="_blank" rel="external">Huf Secure Mobile GmbH</a>. All rights reserved. (Last updated: 2016-10-03)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external">jazzy ♪♫ v0.7.2</a>, a <a class="link" href="http://realm.io" target="_blank" rel="external">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</div>
+</html>
