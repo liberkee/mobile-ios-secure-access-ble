@@ -18,10 +18,11 @@ Pod::Spec.new do |s|
   s.source           = { :git => 'https://github.com/hufsm/mobile-ios-ble.git', :tag => s.version.to_s }
 
   s.ios.deployment_target = '8.0'
-  
+
   s.source_files = 'SecureAccessBLE/Classes/**/*'
-  
+
   s.vendored_frameworks = [ 'SecureAccessBLE/Frameworks/openssl.framework' ]
-  
+
+  s.frameworks = 'CoreBluetooth'
   s.dependency 'CryptoSwift', '0.0.16'
 end
