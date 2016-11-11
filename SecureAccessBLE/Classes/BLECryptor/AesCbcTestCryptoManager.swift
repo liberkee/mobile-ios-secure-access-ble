@@ -35,7 +35,7 @@ struct AesCbcTestCryptoManager: CryptoManager {
     /// The session key after successful established cryption
     internal var key = [0x42,0xe8,0x44,0x7a,0xa1,0x94,0x4e,0x9c,0x49,0xcf,0xca,0xa0,0x53,0x63,0x11,0xc8] as [UInt8]
     /// The default IV [Zero] as UInt8 bytes
-    private var iv =  [0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00] as [UInt8]
+    fileprivate var iv =  [0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00] as [UInt8]
     
     /**
      To encrypt incomming message
@@ -44,11 +44,11 @@ struct AesCbcTestCryptoManager: CryptoManager {
      
      - returns: sending data encrypted from SID Message
      */
-    func encryptMessage(message: SIDMessage) -> NSData {
+    func encryptMessage(_ message: SIDMessage) -> Data {
         do {
-            let bytes: [UInt8] = try AES(key: key, iv: iv,blockMode: CipherBlockMode.CBC)!.encrypt(message.data.arrayOfBytes(), padding: ZeroByte())
+            let bytes: [UInt8] = try AES(key: key, iv: iv,blockMode: .CBC, padding: ZeroByte()).encrypt((message.data as Data).bytes)
             
-            let data = NSData.withBytes(bytes)
+            let data = Data(bytes:bytes)
             return data
         } catch {
             fatalError("Can not encrypt SIDMessage")
@@ -62,10 +62,10 @@ struct AesCbcTestCryptoManager: CryptoManager {
      
      - returns: encrypted out put NSData object
      */
-    func encryptRawMessage(message: NSData) -> NSData {
+    func encryptRawMessage(_ message: Data) -> Data {
         do {
-            let bytes: [UInt8] = try AES(key: key, iv: iv,blockMode: CipherBlockMode.CBC)!.encrypt(message.arrayOfBytes(), padding: ZeroByte())
-            let data = NSData.withBytes(bytes)
+            let bytes: [UInt8] = try AES(key: key, iv: iv,blockMode: .CBC, padding: ZeroByte()).encrypt((message as Data).bytes)
+            let data = Data(bytes: bytes)
             return data
         } catch {
             fatalError("Can not encrypt SIDMessage")
@@ -79,10 +79,10 @@ struct AesCbcTestCryptoManager: CryptoManager {
      
      - returns: SID message object decryted from incomming data
      */
-    func decryptData(data: NSData) -> SIDMessage {
+    func decryptData(_ data: Data) -> SIDMessage {
         do {
-            let bytes: [UInt8] = try AES(key: key,iv: iv, blockMode: CipherBlockMode.CBC)!.decrypt(data.arrayOfBytes(), padding: ZeroByte())
-            let data = NSData.withBytes(bytes)
+            let bytes: [UInt8] = try AES(key: key,iv: iv, blockMode: .CBC, padding: ZeroByte()).decrypt((data as Data).bytes)
+            let data = Data(bytes: bytes)
             let message = SIDMessage(rawData: data)
             return message
         } catch {
@@ -97,10 +97,10 @@ struct AesCbcTestCryptoManager: CryptoManager {
      
      - returns: decrypted NSData object as out put
      */
-    func decryptRawData(data: NSData) -> NSData {
+    func decryptRawData(_ data: Data) -> Data {
         do {
-            let bytes: [UInt8] = try AES(key: key,iv: iv, blockMode: CipherBlockMode.CBC)!.decrypt(data.arrayOfBytes(), padding: ZeroByte())
-            let data = NSData.withBytes(bytes)
+            let bytes: [UInt8] = try AES(key: key,iv: iv, blockMode: .CBC, padding: ZeroByte()).decrypt((data as Data).bytes)
+            let data = Data(bytes: bytes)
             return data
         } catch {
             fatalError("Can not decrypt SIDMessage")

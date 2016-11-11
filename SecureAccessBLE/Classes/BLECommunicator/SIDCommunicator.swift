@@ -19,28 +19,28 @@ protocol SIDCommunicatorDelegate {
      - parameter messageData: received data
      - parameter count:       received data length
      */
-    func communicatorDidRecivedData(messageData: NSData, count: Int)
+    func communicatorDidRecivedData(_ messageData: Data, count: Int)
     
     /**
      Communicator reports if connection state did changed
      
      - parameter connected: is connected or not
      */
-    func communicatorDidChangedConnectionState(connected: Bool)
+    func communicatorDidChangedConnectionState(_ connected: Bool)
     
     /**
      Communicator reports if new SID was discovered
      
      - parameter newSid: the found SID object
      */
-    func comminicatorDidDiscoveredSidId(newSid: SID)
+    func comminicatorDidDiscoveredSidId(_ newSid: SID)
     
     /**
      Communicator reports if there are SIDs longer as 5 seconds not reported
      
      - parameter oldSid: did lost SIDs as Array
      */
-    func communicatorDidLostSidIds(oldSid: [SID])
+    func communicatorDidLostSidIds(_ oldSid: [SID])
 }
 
 /// Sid communicator
@@ -61,7 +61,7 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
     var currentFoundSidIds = Set<SID>()
     
     /// The receiveing package
-    private var currentReceivingPackage: DataFramePackage?
+    fileprivate var currentReceivingPackage: DataFramePackage?
     
     /**
      A object that must confirm to the DataTransfer protocol
@@ -105,7 +105,7 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
      
      - returns: if sending successful, if not the error description
      */
-    func sendData(sendData: NSData) -> (success: Bool, error: String?) {
+    func sendData(_ sendData: Data) -> (success: Bool, error: String?) {
         if self.currentPackage != nil {
             return (false, "Sending in progress")
         } else {
@@ -132,7 +132,7 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
      
      - parameter sidId: sidId as String that transporter should connect to
      */
-    func connectToSid(sidId: String) {
+    func connectToSid(_ sidId: String) {
         self.transporter.delegate = self
         self.transporter.connectToSidWithId(sidId)
     }
@@ -163,7 +163,7 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
      
      - parameter frame: Dataframe that will be sent to SID
      */
-    private func sendFrame(frame: DataFrame) {
+    fileprivate func sendFrame(_ frame: DataFrame) {
         self.transporter.sendData(frame.data)
     }
     
@@ -174,10 +174,10 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
      
      - returns: When already in list it returns true, otherwise false.
      */
-    func hasSidID(sidId: String) -> Bool {
+    func hasSidID(_ sidId: String) -> Bool {
         let savedSameSids = self.currentFoundSidIds.filter { (commingSid) -> Bool in
             let sidString = commingSid.sidID
-            if sidString.lowercaseString == sidId.lowercaseString {
+            if sidString.lowercased() == sidId.lowercased() {
                 return true
             } else {
                 return false
@@ -195,7 +195,7 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
      - parameter dataTransferObject: the BLEScanner object as datatransfer
      - parameter data:               the sent message as NSData
      */
-    func transferDidSendData(dataTransferObject: DataTransfer, data: NSData) {
+    func transferDidSendData(_ dataTransferObject: DataTransfer, data: Data) {
         self.currentPackage?.currentIndex += 1
         if let currentFrame = self.currentPackage?.currentFrame {
             self.sendFrame(currentFrame)
@@ -212,18 +212,18 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
      - parameter dataTransferObject: the BLEScanner object as datatransfer
      - parameter data:               the received data as NSData
      */
-    func transferDidReceivedData(dataTransferObject: DataTransfer, data: NSData) {
+    func transferDidReceivedData(_ dataTransferObject: DataTransfer, data: Data) {
         if self.currentReceivingPackage == nil {
             self.currentReceivingPackage = DataFramePackage()
         }
         let frame = DataFrame(rawData: data)
         self.currentReceivingPackage?.frames.append(frame)
         
-        if frame.type == .Single || frame.type == .Eop {
+        if frame.type == .single || frame.type == .eop {
             if let messageData = self.currentReceivingPackage?.message {
-                self.delegate?.communicatorDidRecivedData(messageData, count: data.length / 4)
+                self.delegate?.communicatorDidRecivedData(messageData as Data, count: data.count / 4)
             }  else {
-                self.delegate?.communicatorDidRecivedData(NSData(), count: 0)
+                self.delegate?.communicatorDidRecivedData(Data(), count: 0)
             }
         }
     }
@@ -234,7 +234,7 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
      - parameter dataTransferObject: BLEScanner object as dataTransfer
      - parameter isConnected:        didConnected or not as Bool
      */
-    func transferDidChangedConnectionState(dataTransferObject: DataTransfer, isConnected: Bool) {
+    func transferDidChangedConnectionState(_ dataTransferObject: DataTransfer, isConnected: Bool) {
         self.delegate?.communicatorDidChangedConnectionState(isConnected)
     }
     
@@ -244,7 +244,7 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
      - parameter dataTransferObject: current used data transfer
      - parameter newSid:             discovered new SID object
      */
-    func transferDidDiscoveredSidId(dataTransferObject: DataTransfer, newSid: SID) {
+    func transferDidDiscoveredSidId(_ dataTransferObject: DataTransfer, newSid: SID) {
         let savedSameSids = self.currentFoundSidIds.filter { (commingSid) -> Bool in
             let sidString = commingSid.sidID
             if sidString == newSid.sidID {
@@ -276,7 +276,7 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
      
      - parameter dataTransferObject: Scanner instance
      */
-    func transferShouldFilterOldIds(dataTransferObject: DataTransfer) {
+    func transferShouldFilterOldIds(_ dataTransferObject: DataTransfer) {
         self.filterOldSidIds()
     }
     /**
@@ -312,7 +312,7 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
      - parameter dataTransferObject: transporter instance
      - parameter sid:                connected SID instance
      */
-    func transferDidconnectedSid(dataTransferObject: DataTransfer, sid: SID) {
+    func transferDidconnectedSid(_ dataTransferObject: DataTransfer, sid: SID) {
         print ("sid: \(sid.sidID) did connected")
         self.connectedSid = sid
     }

@@ -13,21 +13,21 @@ import CryptoSwift
  Defines errors for Challenge and (en)decryption
  
  */
-enum BLEChallengerError: ErrorType {
+enum BLEChallengerError: Error {
     /// wrong resonse donot match
-    case ChallengeResponseDoNotMatch
+    case challengeResponseDoNotMatch
     /// Response was not accepted
-    case ChallengeResponseWasNotAccepted
+    case challengeResponseWasNotAccepted
     /// Response currupted
-    case ChallengeResponseIsCorrupt
+    case challengeResponseIsCorrupt
     /// AES Cryption failed No crypto
-    case AESCryptoNotInitialised
+    case aesCryptoNotInitialised
     /// AES Encryption failed
-    case AESEncryptionFailed
+    case aesEncryptionFailed
     /// AES Decryption failed
-    case AESDecryptionFailed
+    case aesDecryptionFailed
     /// No Message
-    case NoChallengeMessage
+    case noChallengeMessage
 }
 
 /**
@@ -39,21 +39,21 @@ protocol BLEChallengeServiceDelegate {
      
      - parameter message: the sending message object
      */
-    func challengerWantsSendMessage(message: SIDMessage)
+    func challengerWantsSendMessage(_ message: SIDMessage)
     
     /**
      Challenger did finished
      
      - parameter sessionKey: The encryption key for further cryption
      */
-    func challengerFinishedWithSessionKey(sessionKey: [UInt8])
+    func challengerFinishedWithSessionKey(_ sessionKey: [UInt8])
     
     /**
      Challenger aborted
      
      - parameter error: error description
      */
-    func challengerAbort(error: BLEChallengerError)
+    func challengerAbort(_ error: BLEChallengerError)
     
     /**
      Challenger will send blob
@@ -95,32 +95,32 @@ protocol BLEChallengeServiceDelegate {
  */
 struct BLEChallengeService {
     /// random generated
-    private var nc: [UInt8]
+    fileprivate var nc: [UInt8]
     /// original data
-    private var b0 = [UInt8]()
+    fileprivate var b0 = [UInt8]()
     /// encrypted from b0
-    private var b1 = [UInt8]()
+    fileprivate var b1 = [UInt8]()
     /// encrypted from b1
-    private var b2 = [UInt8]()
+    fileprivate var b2 = [UInt8]()
     /// decrypted from b1 b2
-    private var b3 = [UInt8]()
+    fileprivate var b3 = [UInt8]()
     /// nr calculated from b
-    private var nr = [UInt8]()
+    fileprivate var nr = [UInt8]()
     /// r3 must equal to nc
-    private var r3 = [UInt8]()
+    fileprivate var r3 = [UInt8]()
     /// iverse of nr
-    private var r5 = [UInt8]()
+    fileprivate var r5 = [UInt8]()
     
     /// DeviceId as string
-    private let deviceId: String
+    fileprivate let deviceId: String
     /// Sid id as String
-    private let sidId: String
+    fileprivate let sidId: String
     /// Lease token id as String
-    private let leaseTokenId: String
+    fileprivate let leaseTokenId: String
     /// Sid access Key as String
-    private let sidAccessKey: String
+    fileprivate let sidAccessKey: String
     /// Default cryptor
-    private let crypto: AES
+    fileprivate let crypto: AES
     /// Challenger Service Delegate object
     var delegate: BLEChallengeServiceDelegate?
     
@@ -140,18 +140,21 @@ struct BLEChallengeService {
         self.leaseTokenId = leaseTokenId
         self.sidAccessKey = sidAccessKey
         
-        //self.nc = [0x0F,0x0E,0x0D,0x0C,0x0B,0x0A,0x09,0x08,0x07,0x06,0x05,0x04,0x03,0x02,0x01,0x01] as [UInt8]
-        self.nc = Cipher.randomIV(16)
+        self.nc = [0x0F,0x0E,0x0D,0x0C,0x0B,0x0A,0x09,0x08,0x07,0x06,0x05,0x04,0x03,0x02,0x01,0x01] as [UInt8]
+        //self.nc = Cipher.randomIV(16)
         
         guard let sharedKey = self.sidAccessKey.dataFromHexadecimalString() else {
             return nil
         }
         
-        let key = sharedKey.arrayOfBytes()
-        guard let crypto = AES(key: key) else {
+        let key = sharedKey.bytes//.arrayOfBytes()
+        
+        do {
+            let aesCrypto = try AES(key: key)
+            self.crypto = aesCrypto
+        } catch {
             return nil
         }
-        self.crypto = crypto
     }
     
     /**
@@ -161,15 +164,15 @@ struct BLEChallengeService {
      */
     mutating func beginChallenge() throws {
         do {
-            print ("begin to challenge with nc: \(NSData.withBytes(self.nc))")
-            try self.b0 = self.crypto.encrypt(self.nc, padding: ZeroByte())
+//            print ("begin to challenge with nc: \(Data.withBytes(self.nc))")
+            try self.b0 = self.crypto.encrypt(self.nc)
             let payload = PhoneToSidChallenge(deviceID: self.deviceId, sidID: self.sidId, leaseTokenID: self.leaseTokenId, challenge: self.b0)
             
-            let message = SIDMessage(id: .ChallengePhone, payload: payload)
+            let message = SIDMessage(id: .challengePhone, payload: payload)
             self.delegate?.challengerWantsSendMessage(message)
         } catch {
             print ("AES Encryption failed!")
-            throw BLEChallengerError.AESEncryptionFailed
+            throw BLEChallengerError.aesEncryptionFailed
         }
     }
     
@@ -180,18 +183,18 @@ struct BLEChallengeService {
      
      - throws:
      */
-    mutating func handleReceivedChallengerMessage(response: SIDMessage) throws {
+    mutating func handleReceivedChallengerMessage(_ response: SIDMessage) throws {
         print("Resonse message with id:\(response.id)")
         switch response.id {
-        case .LTAck:
+        case .ltAck:
             try self.beginChallenge()
-        case .BadChallengeSidResponse:
+        case .badChallengeSidResponse:
             print("BLE Challenge needs send blob!")
             self.delegate?.challengerNeedsSendBlob()
-        case .ChallengeSidResponse:
+        case .challengeSidResponse:
             try self.continueChallenge(response)
         default:
-            self.delegate?.challengerAbort(BLEChallengerError.NoChallengeMessage)
+            self.delegate?.challengerAbort(BLEChallengerError.noChallengeMessage)
         }
     }
     
@@ -202,10 +205,10 @@ struct BLEChallengeService {
      
      - throws: nothing
      */
-    mutating private func continueChallenge(response: SIDMessage) throws {
+    mutating fileprivate func continueChallenge(_ response: SIDMessage) throws {
         let message = SidToPhoneResponse(rawData: response.message)
         if message.b1.count == 0 || message.b2.count == 0 {
-            throw BLEChallengerError.ChallengeResponseIsCorrupt
+            throw BLEChallengerError.challengeResponseIsCorrupt
         }
         self.b1 = message.b1
         self.b2 = message.b2
@@ -214,7 +217,7 @@ struct BLEChallengeService {
         try self.b3 = self.calculateB3(self.r5, b2: self.b2)
         
         let payload = PhoneToSidResponse(response: self.b3)
-        let responseMessage = SIDMessage(id: SIDMessageID.ChallengePhoneResonse, payload: payload)
+        let responseMessage = SIDMessage(id: SIDMessageID.challengePhoneResonse, payload: payload)
         self.delegate?.challengerWantsSendMessage(responseMessage)
         if nr.count > 15 && nc.count > 15 {
             let sessionKey = [
@@ -223,7 +226,7 @@ struct BLEChallengeService {
                 nr[12],nr[13],nr[14],nr[15],
                 nc[12],nc[13],nc[14],nc[15]
             ]
-            print("challenger finished with session key: \(NSData.withBytes(sessionKey))")
+            print("challenger finished with session key: \(Data(bytes:sessionKey))")
             self.delegate?.challengerFinishedWithSessionKey(sessionKey)
         }
     }
@@ -236,7 +239,7 @@ struct BLEChallengeService {
      
      - returns: new rotated bytes (Matrix)
      */
-    func rotate(bytes: [UInt8], inverse: Bool) -> [UInt8] {
+    func rotate(_ bytes: [UInt8], inverse: Bool) -> [UInt8] {
         var permutedBytes = bytes
         if inverse {
             let temp = permutedBytes.first
@@ -245,7 +248,7 @@ struct BLEChallengeService {
         } else {
             let temp = permutedBytes.last
             permutedBytes.removeLast()
-            permutedBytes.insert(temp!, atIndex: 0)
+            permutedBytes.insert(temp!, at: 0)
         }
         return permutedBytes
     }
@@ -258,8 +261,8 @@ struct BLEChallengeService {
      
      - returns: result
      */
-    private func xor(a: [UInt8], b:[UInt8]) -> [UInt8] {
-        var xored = [UInt8](count: a.count, repeatedValue: 0)
+    fileprivate func xor(_ a: [UInt8], b:[UInt8]) -> [UInt8] {
+        var xored = [UInt8](repeating: 0, count: a.count)
         for i in 0..<xored.count {
             xored[i] = a[i] ^ b[i]
         }
@@ -276,22 +279,22 @@ struct BLEChallengeService {
      
      - returns: r3
      */
-    private func calculateR3(b1: [UInt8], b2: [UInt8]) throws -> [UInt8] {
+    fileprivate func calculateR3(_ b1: [UInt8], b2: [UInt8]) throws -> [UInt8] {
         do {
-            let r3Temp = try crypto.decrypt(b2, padding: ZeroByte())
+            let r3Temp = try crypto.decrypt(b2)//, padding: ZeroByte())
             let r3 = xor(r3Temp, b: b1)
             
             let permutatedR3 = rotate(r3, inverse: true)
             
             //  check if P(invert)(r3) = nc, if not the protocol is aborted
             if self.nc != permutatedR3 {
-                self.delegate?.challengerWantsSendMessage(SIDMessage(id: SIDMessageID.BadChallengePhoneResponse, payload: EmptyPayload()))
-                throw BLEChallengerError.ChallengeResponseDoNotMatch
+                self.delegate?.challengerWantsSendMessage(SIDMessage(id: SIDMessageID.badChallengePhoneResponse, payload: EmptyPayload()))
+                throw BLEChallengerError.challengeResponseDoNotMatch
             }
             return r3
             
         } catch {
-            throw BLEChallengerError.AESEncryptionFailed
+            throw BLEChallengerError.aesEncryptionFailed
         }
     }
     
@@ -305,15 +308,15 @@ struct BLEChallengeService {
      
      - returns: [r4 r5]
      */
-    private func calculateN5(b0: [UInt8], b1: [UInt8]) throws -> (nr: [UInt8], n5: [UInt8]) {
+    fileprivate func calculateN5(_ b0: [UInt8], b1: [UInt8]) throws -> (nr: [UInt8], n5: [UInt8]) {
         do {
-            let decryptedB1 =  try crypto.decrypt(b1, padding: ZeroByte())
+            let decryptedB1 =  try crypto.decrypt(b1)//, padding: ZeroByte())
             let nr = xor(decryptedB1, b: b0)    //  r4
             let n5 = rotate(nr, inverse: false) //  r5
             return (nr, n5)
             
         } catch {
-            throw BLEChallengerError.AESDecryptionFailed
+            throw BLEChallengerError.aesDecryptionFailed
         }
     }
     
@@ -327,13 +330,13 @@ struct BLEChallengeService {
      
      - returns: sending message b3, for required session key
      */
-    private func calculateB3(r5: [UInt8], b2:[UInt8]) throws -> [UInt8] {
+    fileprivate func calculateB3(_ r5: [UInt8], b2:[UInt8]) throws -> [UInt8] {
         let b3Temp = xor(r5, b: b2)
         do {
-            let b3 = try crypto.encrypt(b3Temp, padding: ZeroByte())
+            let b3 = try crypto.encrypt(b3Temp)///, padding: ZeroByte())
             return b3
         } catch {
-            throw BLEChallengerError.AESEncryptionFailed
+            throw BLEChallengerError.aesEncryptionFailed
         }
     }
     

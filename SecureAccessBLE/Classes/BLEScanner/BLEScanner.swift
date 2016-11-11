@@ -18,7 +18,7 @@ public struct SID: Hashable {
     /// Peripheral, that SID object inclusive
     var peripheral: CBPeripheral?
     /// Date that the sid was discovered
-    var discoveryDate: NSDate
+    var discoveryDate: Date
     /// If currently connected
     var isConnected: Bool
     /// has value as Int fo SID id
@@ -47,19 +47,19 @@ extension CBCentralManagerState {
     /// Externsion point for Central manager connection state
     var description: String {
         switch self {
-        case .Unknown: return "Unknown"
-        case .Resetting: return "Resetting"
-        case .Unsupported: return "Unsupported"
-        case .Unauthorized: return "Unauthorized"
-        case .PoweredOff: return "PoweredOff"
-        case .PoweredOn: return "PoweredOn"
+        case .unknown: return "Unknown"
+        case .resetting: return "Resetting"
+        case .unsupported: return "Unsupported"
+        case .unauthorized: return "Unauthorized"
+        case .poweredOff: return "PoweredOff"
+        case .poweredOn: return "PoweredOn"
         }
     }
 }
 
 /// BLEScanner implaments the secure BLE session between mobile devices and SID. The communication manager can only send / receive
 /// messages over a secure BLE connection, i.e. a valid session context must exist.
-public class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPeripheralDelegate {
+open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPeripheralDelegate {
     
     /// delegate for message tranfer
     weak var delegate: DataTransferDelegate?
@@ -68,21 +68,21 @@ public class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPer
     /// if central manager powered on
     var centralManagerPoweredOn : Bool!
     /// Device id as String
-    private var deviceId = "EF82084D-BFAD-4ABE-90EE-2552C20C5765"
+    fileprivate var deviceId = "EF82084D-BFAD-4ABE-90EE-2552C20C5765"
     /// Device id as String
-    private var serviceId = "d1cf0603-b501-4569-a4b9-e47ad3f628a5"
+    fileprivate var serviceId = "d1cf0603-b501-4569-a4b9-e47ad3f628a5"
     /// notify characteristic id as String
-    private var notifyCharacteristicId = "d1d7a6b6-457e-458a-b237-a9df99b3d98b"
+    fileprivate var notifyCharacteristicId = "d1d7a6b6-457e-458a-b237-a9df99b3d98b"
     /// write characteristic id as String
-    private var writeCharacteristicId = "c8e58f23-9417-41c6-97a8-70f6b2c8cab9"
+    fileprivate var writeCharacteristicId = "c8e58f23-9417-41c6-97a8-70f6b2c8cab9"
     /// the saved SIDs list, manager did found
-    private var sids = Set<SID>()
+    fileprivate var sids = Set<SID>()
     /// Timer to filter old SIDs
-    private var filterTimer: NSTimer?
+    fileprivate var filterTimer: Timer?
     /// central mananger object defined in Core Bluetooth
     var centralManager: CBCentralManager!
     /// Peripheral object defined in core bluetooth
-    public var sidPeripheral: CBPeripheral?
+    open var sidPeripheral: CBPeripheral?
     /// write characteristice object defined in Core Bluetooth
     var writeCharacteristic: CBCharacteristic?
     /// Notify characteristic object defined in Core Bluetooth
@@ -100,7 +100,7 @@ public class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPer
     required public init(sidID: NSString = "") {
         super.init()
         centralManager = CBCentralManager(delegate: self, queue: nil, options: [CBPeripheralManagerOptionShowPowerAlertKey: 0])
-        filterTimer = NSTimer.scheduledTimerWithTimeInterval(1.31, target: self, selector: #selector(BLEScanner.shouldFilterOldSidIds), userInfo: nil, repeats: true)
+        filterTimer = Timer.scheduledTimer(timeInterval: 1.31, target: self, selector: #selector(BLEScanner.shouldFilterOldSidIds), userInfo: nil, repeats: true)
     }
     
     /**
@@ -136,9 +136,9 @@ public class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPer
      
      - returns: Central manager state is powered on or notas bool
      */
-    public func isPoweredOn() -> Bool {
+    open func isPoweredOn() -> Bool {
         //print("central manager has \(self.centralManager!.state.description)")
-        return self.centralManager!.state == .PoweredOn
+        return self.centralManager!.state == .poweredOn
     }
     
     /**
@@ -146,12 +146,12 @@ public class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPer
      
      - parameter sidId: the sidId as String that current peripheral has
      */
-    func connectToSidWithId(sidId: String) {
-        if let sid = self.sids.filter({$0.sidID.lowercaseString == sidId.stringByReplacingOccurrencesOfString("-", withString: "").lowercaseString}).first {
+    func connectToSidWithId(_ sidId: String) {
+        if let sid = self.sids.filter({$0.sidID.lowercased() == sidId.replacingOccurrences(of: "-", with: "").lowercased()}).first {
             print("connecting to sid:\(sid.sidID)")
             self.connectingdSid = sid
             self.sidPeripheral = sid.peripheral!
-            self.centralManager.connectPeripheral(sid.peripheral!, options: nil)
+            self.centralManager.connect(sid.peripheral!, options: nil)
         }
     }
     
@@ -171,9 +171,9 @@ public class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPer
      
      - parameter data: NSData that will be sended to SID
      */
-    func sendData(data: NSData) {
-        if let characteristic = self.writeCharacteristic, peripheral = self.sidPeripheral {
-            peripheral.writeValue(data, forCharacteristic: characteristic, type: CBCharacteristicWriteType.WithResponse)
+    func sendData(_ data: Data) {
+        if let characteristic = self.writeCharacteristic, let peripheral = self.sidPeripheral {
+            peripheral.writeValue(data, for: characteristic, type: CBCharacteristicWriteType.withResponse)
             //self.delegate?.didSendData(self, data: NSData())
         }
     }
@@ -182,21 +182,21 @@ public class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPer
      Start BLE-Scanner to scan perihperals with allowing duplicatesKey options
      */
     func begineToScan() {
-        self.centralManager.scanForPeripheralsWithServices(nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: 1])
+        self.centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: 1])
     }
     
     //MARK: - Helper
     /**
      To empty (reset) all local saved SIDs
      */
-    private func cleanUpSIDs() {
+    fileprivate func cleanUpSIDs() {
         sids = Set<SID>()
     }
     
     /**
      Reset current peripheral
      */
-    private func resetPeripheral() {
+    fileprivate func resetPeripheral() {
         self.sidPeripheral = nil
         self.connectingdSid = nil
         //self.delegate?.transferDidconnectedSid(self, sid: self.connectingdSid!)
@@ -215,12 +215,11 @@ public class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPer
     /**
      See CBCentralManager documentation from coreBluetooth
      */
-    public func centralManagerDidUpdateState(central: CBCentralManager) {
-        consoleLog("Central updated state: \(central.state.description)")
+    open func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        consoleLog("Central updated state: \(central.state)")
         
-        self.centralManagerPoweredOn = central.state == CBCentralManagerState.PoweredOn
-        if central.state != CBCentralManagerState.PoweredOn {
-            //self.cleanUpSIDs()
+        self.centralManagerPoweredOn = central.state == .poweredOn//CBManagerState.poweredOn
+        if central.state != .poweredOn {
             self.resetPeripheral()
             self.isConnected = false
             self.delegate?.transferDidChangedConnectionState(self, isConnected: self.isConnected)
@@ -233,12 +232,12 @@ public class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPer
     /**
      See CBCentralManager documentation from coreBluetooth
      */
-    public func centralManager(central: CBCentralManager, didDiscoverPeripheral peripheral: CBPeripheral, advertisementData: [String : AnyObject], RSSI: NSNumber) {
-        guard let manufacturerData = advertisementData[CBAdvertisementDataManufacturerDataKey] as? NSData else {
+    open func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String : Any], rssi RSSI: NSNumber) {
+        guard let manufacturerData = advertisementData[CBAdvertisementDataManufacturerDataKey] as? Data else {
             return
         }
         let sidID = manufacturerData.toHexString()
-        let foundSid = SID(sidID: sidID, peripheral: peripheral, discoveryDate: NSDate(), isConnected: false)
+        let foundSid = SID(sidID: sidID, peripheral: peripheral, discoveryDate: Date(), isConnected: false)
         self.sids.insert(foundSid)
         self.delegate?.transferDidDiscoveredSidId(self, newSid:foundSid)
     }
@@ -246,10 +245,10 @@ public class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPer
     /**
      See CBCentralManager documentation from coreBluetooth
      */
-    public func centralManager(central: CBCentralManager, didFailToConnectPeripheral peripheral: CBPeripheral, error: NSError?) {
+    open func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
         consoleLog("Central failed connecting to peripheral: \(error?.localizedDescription ?? "Unkown error")")
         
-        print(error!.description)
+        print(error!.localizedDescription)
         self.cleanUpSIDs()
         self.resetPeripheral()
     }
@@ -257,8 +256,8 @@ public class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPer
     /**
      See CBCentralManager documentation from coreBluetooth
      */
-    public func centralManager(central: CBCentralManager, didConnectPeripheral peripheral: CBPeripheral) {
-        consoleLog("Central connected to peripheral: \(peripheral.identifier.UUIDString)")
+    open func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        consoleLog("Central connected to peripheral: \(peripheral.identifier.uuidString)")
         
         self.isConnected = true
         self.sidPeripheral = peripheral
@@ -270,8 +269,8 @@ public class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPer
     /**
      See CBCentralManager documentation from coreBluetooth
      */
-    public func centralManager(central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: NSError?) {
-        consoleLog("Central disconnected from peripheral: \(peripheral.identifier.UUIDString)")
+    open func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        consoleLog("Central disconnected from peripheral: \(peripheral.identifier.uuidString)")
         
         self.isConnected = false
         self.cleanUpSIDs()
@@ -285,14 +284,14 @@ public class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPer
     /**
      See CBPeripharalDelegate documentation from coreBluetooth
      */
-    public func peripheral(peripheral: CBPeripheral, didDiscoverServices error: NSError?) {
+    open func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         if error != nil {
-            print("Error: \(error!.description)")
+            print("Error: \(error!.localizedDescription)")
             self.cleanUpSIDs()
             self.resetPeripheral()
         } else {
             for service in peripheral.services! {
-                peripheral.discoverCharacteristics([CBUUID(string: self.writeCharacteristicId), CBUUID(string: self.notifyCharacteristicId)], forService: service )
+                peripheral.discoverCharacteristics([CBUUID(string: self.writeCharacteristicId), CBUUID(string: self.notifyCharacteristicId)], for: service )
             }
         }
     }
@@ -300,17 +299,17 @@ public class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPer
     /**
      See CBPeripharalDelegate documentation from coreBluetooth
      */
-    public func peripheral(peripheral: CBPeripheral, didDiscoverCharacteristicsForService service: CBService, error: NSError?) {
+    open func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         if error != nil {
-            print("Error: \(error!.description)")
+            print("Error: \(error!.localizedDescription)")
             self.cleanUpSIDs()
             self.resetPeripheral()
         } else {
             for characteristic in service.characteristics! {
-                if characteristic.UUID == CBUUID(string: self.notifyCharacteristicId) {
+                if characteristic.uuid == CBUUID(string: self.notifyCharacteristicId) {
                     self.notifyCharacteristic = characteristic
-                    peripheral.setNotifyValue(true, forCharacteristic: characteristic)
-                } else if characteristic.UUID == CBUUID(string: self.writeCharacteristicId) {
+                    peripheral.setNotifyValue(true, for: characteristic)
+                } else if characteristic.uuid == CBUUID(string: self.writeCharacteristicId) {
                     self.writeCharacteristic = characteristic
                 }
             }
@@ -328,7 +327,7 @@ public class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPer
     /**
      See CBPeripharalDelegate documentation from coreBluetooth
      */
-    public func peripheral(peripheral: CBPeripheral, didUpdateValueForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
+    open func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         if characteristic == self.notifyCharacteristic {
             //            print("Received Package at time: \(CACurrentMediaTime())")
             self.delegate?.transferDidReceivedData(self, data: characteristic.value!)
@@ -338,9 +337,9 @@ public class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPer
     /**
      See CBPeripharalDelegate documentation from coreBluetooth
      */
-    public func peripheral(peripheral: CBPeripheral, didWriteValueForCharacteristic characteristic: CBCharacteristic, error: NSError?) {
+    open func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
         //        print("Did send Package at time: \(CACurrentMediaTime())")
-        self.delegate?.transferDidSendData(self, data: NSData())
+        self.delegate?.transferDidSendData(self, data: Data())
     }
 }
 

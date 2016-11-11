@@ -13,13 +13,15 @@ import Foundation
  */
 struct MTUSize: SIDMessagePayload {
     /// start value as NSData
-    var data = NSData()
+    var data = Data()
     /// size as Int
     var mtuSize: Int? {
         var mtu: UInt16 = 0
-        data.getBytes(&mtu, length: sizeof(UInt16))
+        var receiver = UInt8(mtu)
+        
+        (data as Data).copyBytes(to: &receiver, count: MemoryLayout<UInt16>.size)
         //print("mtu size:\(mtu)")
-        return Int(mtu)
+        return Int(receiver)
     }
     /**
      Initialization point
@@ -36,7 +38,7 @@ struct MTUSize: SIDMessagePayload {
      
      - returns: MTUSize(request message to SID) instance as sid message payload
      */
-    init(rawData: NSData) {
+    init(rawData: Data) {
         self.init()
         data = rawData
     }

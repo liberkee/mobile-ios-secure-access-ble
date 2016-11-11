@@ -13,7 +13,7 @@ import Foundation
  */
 struct Handshake: SIDMessagePayload {
     /// start value as NSData
-    var data: NSData
+    var data: Data
     /**
      Initialization point for handshake
      
@@ -25,12 +25,12 @@ struct Handshake: SIDMessagePayload {
      */
     init(deviceId: String, sidId: String, leaseId: String) {
         let frameData = NSMutableData()
-        frameData.appendData(deviceId.dataUsingEncoding(NSASCIIStringEncoding)!)
-        frameData.appendData(sidId.dataUsingEncoding(NSASCIIStringEncoding)!)
+        frameData.append(deviceId.data(using: String.Encoding.ascii)!)
+        frameData.append(sidId.data(using: String.Encoding.ascii)!)
         
-        frameData.appendData(leaseId.dataUsingEncoding(NSASCIIStringEncoding)!)
-        let challenge = [UInt8](count: 16, repeatedValue: 0x0)
-        frameData.appendData(NSData(bytes: challenge, length: challenge.count))
-        self.data = frameData
+        frameData.append(leaseId.data(using: String.Encoding.ascii)!)
+        let challenge = [UInt8](repeating: 0x0, count: 16)
+        frameData.append(Data(bytes: UnsafePointer<UInt8>(challenge), count: challenge.count))
+        self.data = frameData as Data
     }
 }

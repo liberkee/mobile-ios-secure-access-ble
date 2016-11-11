@@ -12,19 +12,19 @@ import UIKit
  */
 enum DataFrameType: UInt8 {
     /// Has fraements length
-    case Frag = 0x00
+    case frag = 0x00
     /// Has total length
-    case Sop = 0x01
+    case sop = 0x01
     /// Has fraements length
-    case Eop = 0x02
+    case eop = 0x02
     /// Single frame
-    case Single = 0x03
+    case single = 0x03
     /// does not need to be acked: special SOP|EOP
-    case Ack = 0x0b
+    case ack = 0x0b
     /// special SOP|EOP
-    case NoAck = 0x07
+    case noAck = 0x07
     /// NotValid
-    case NotValid = 0xFF
+    case notValid = 0xFF
 }
 
 /**
@@ -37,20 +37,20 @@ struct DataFrame {
     
     /// Data frame type, see definition obove
     var type: DataFrameType {
-        var byteArray = [UInt8](count: 1, repeatedValue: 0x0)
-        data.getBytes(&byteArray, length:1)
+        var byteArray = [UInt8](repeating: 0x0, count: 1)
+        (data as Data).copyBytes(to: &byteArray, count:1)
         if let validValue = DataFrameType(rawValue: byteArray[0]>>4) {
             return validValue
         } else {
-            return .NotValid
+            return .notValid
         }
     }
     
     /// If ACKnowledgement need or not as Bool
     var ackNeeded: Bool {
         let ackFlag:UInt8 = 0x01<<1
-        var byteArray = [UInt8](count: 1, repeatedValue: 0x0)
-        data.getBytes(&byteArray, length:1)
+        var byteArray = [UInt8](repeating: 0x0, count: 1)
+        (data as Data).copyBytes(to: &byteArray, count:1)
         guard let flag = byteArray.first else {
             return false
         }
@@ -64,29 +64,32 @@ struct DataFrame {
     /// Sequence Number (SN) needed to handle retransmissions and lost TL_ACK, NACK
     /// SN will be limited to 1 byte so that it will wrap around after 255 back to 0
     var sequenceNumber: UInt8 {
-        var byteArray = [UInt8](count: 1, repeatedValue: 0x0)
-        data.getBytes(&byteArray, range: NSMakeRange(1, 1))
+        var byteArray = [UInt8](repeating: 0x0, count: 1)
+        (data as Data).copyBytes(to: &byteArray, from: 1..<2)
         return byteArray[0]
     }
     
     /// The length as UInt16
     var length: UInt16 {
-        var byteArray = [UInt8](count: 1, repeatedValue: 0x0)
-        data.getBytes(&byteArray, range: NSMakeRange(2, 2))
-        return UnsafePointer<UInt16>(byteArray).memory
+        var byteArray = [UInt8](repeating: 0x0, count: 1)
+        (data as Data).copyBytes(to: &byteArray, from: 2..<4)
+        let u16 = UnsafePointer(byteArray).withMemoryRebound(to: UInt16.self, capacity: 1) {
+            $0.pointee
+        }
+        return u16//(UnsafePointer<UInt16>(byteArray)).pointee
     }
     
     /// Message data that will be ranported through TL-frame
-    var message: NSData {
-        if data.length < 4 {
-            return NSData()
+    var message: Data {
+        if data.count < 4 {
+            return Data()
         }
-        let msg = data.subdataWithRange(NSMakeRange(4, data.length-4))
+        let msg = data.subdata(in: 4..<data.count)// NSMakeRange(4, data.count-4))
         return msg
     }
     
     /// Start data as NSData
-    let data: NSData
+    let data: Data
     
     /**
      Initialization point
@@ -95,7 +98,7 @@ struct DataFrame {
      
      - returns: data frame object
      */
-    init(rawData: NSData) {
+    init(rawData: Data) {
         data = rawData
     }
     
@@ -109,22 +112,22 @@ struct DataFrame {
      
      - returns: self object as Transport layer message fragments
      */
-    init(message: NSData, type: DataFrameType, sequenceNumber: UInt8, completeMessageLength:UInt16) {
+    init(message: Data, type: DataFrameType, sequenceNumber: UInt8, completeMessageLength:UInt16) {
         let frameData = NSMutableData()
         var typeByte = type.rawValue << 4
         var sequence = sequenceNumber
         var messageLength : UInt16!
-        if type == .Sop {
+        if type == .sop {
             messageLength = UInt16(completeMessageLength)
         } else {
-            messageLength = UInt16(message.length)
+            messageLength = UInt16(message.count)
         }
         
-        frameData.appendBytes(&typeByte, length: 1)
-        frameData.appendBytes(&sequence, length: 1)
-        frameData.appendBytes(&messageLength, length: 2)
-        frameData.appendData(message)
-        self.data = frameData
+        frameData.append(&typeByte, length: 1)
+        frameData.append(&sequence, length: 1)
+        frameData.append(&messageLength, length: 2)
+        frameData.append(message)
+        self.data = frameData as Data
         
     }
 }

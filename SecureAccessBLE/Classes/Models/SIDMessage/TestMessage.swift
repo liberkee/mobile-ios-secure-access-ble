@@ -17,9 +17,9 @@ import UIKit
  */
 enum TestMessageType: UInt8 {
     /// test message type for push
-    case Push = 0x00
+    case push = 0x00
     /// test message type for loop
-    case Loop = 0x01
+    case loop = 0x01
 }
 
 /**
@@ -27,7 +27,7 @@ enum TestMessageType: UInt8 {
  */
 struct TestMessage: SIDMessagePayload {
     ///  start value defined as NSData
-    var data: NSData
+    var data: Data
     
     /**
      Initialization point for test message
@@ -37,14 +37,14 @@ struct TestMessage: SIDMessagePayload {
      
      - returns: new Test message instance as Sid messag payload
      */
-    init(message: NSData, commandType: TestMessageType) {
+    init(message: Data, commandType: TestMessageType) {
         let frameData = NSMutableData()
         var commandType = commandType.rawValue
-        var messageLength = UInt16(message.length)
-        frameData.appendBytes(&commandType, length: 1)
-        frameData.appendBytes(&messageLength, length: 2)
-        frameData.appendData(message)
-        self.data = frameData
+        var messageLength = UInt16(message.count)
+        frameData.append(&commandType, length: 1)
+        frameData.append(&messageLength, length: 2)
+        frameData.append(message)
+        self.data = frameData as Data
     }
     
     /**
@@ -54,13 +54,13 @@ struct TestMessage: SIDMessagePayload {
      
      - returns: new test message instance as SID messag payload
      */
-    init(rawData: NSData) {
+    init(rawData: Data) {
         data = rawData
     }
     
     /// message data, that test message should contain
-    var message: NSData {
-        return data.subdataWithRange(NSMakeRange(4, data.length-4))
+    var message: Data {
+        return data.subdata(in: 4..<data.count)//NSMakeRange(4, data.count-4))
     }
     
 }

@@ -54,7 +54,7 @@ class BLEManagerTests: XCTestCase {
         XCTAssertFalse(self.bleManager.isConnected, "BLE manager has wrong connection state")
         
         /// Mock session key for crypto
-        let mockSessionKey = Cipher.randomIV(16) as [UInt8]
+        let mockSessionKey = [0xa9,0xba,0x14,0xa1,0x50,0x20,0x9f,0xe2,0x30,0xe7,0x1a,0x2b,0x78,0x0f,0x06,0x45] as [UInt8]
         
         /// To change crypto status in blemanager
         self.bleManager.challengerFinishedWithSessionKey(mockSessionKey)
@@ -69,7 +69,7 @@ class BLEManagerTests: XCTestCase {
      */
     func testSendingAndReceivingMessage() {
         /// MTURequest message
-        let mtuMessage = SIDMessage(id: SIDMessageID.MTURequest, payload: MTUSize())
+        let mtuMessage = SIDMessage(id: SIDMessageID.mtuRequest, payload: MTUSize())
         
         /// Sending the MTURequest message
         let sendingSuccess = self.bleManager.sendMessage(mtuMessage)
@@ -84,7 +84,8 @@ class BLEManagerTests: XCTestCase {
         self.bleCommunicator.delegate = self.bleManager
         
         /// MTU response data with size
-        self.bleCommunicator.delegate?.communicatorDidRecivedData(NSData.withBytes([0x07, 0x9b, 0x00] as [UInt8]), count: 1)
+        let bytes = [0x07, 0x9b, 0x00] as [UInt8]
+        self.bleCommunicator.delegate?.communicatorDidRecivedData(NSData(bytes: bytes, length: bytes.count) as Data, count: 1)
         
         /// MTU size for ios device is default 155
         XCTAssertEqual(BLEComManager.mtuSize, 155, "BLE manager has wrong MTU Size number!")
@@ -102,8 +103,8 @@ class BLEManagerTests: XCTestCase {
         self.bleManager.challengerFinishedWithSessionKey(mockSessionKey)
         
         /// Service grant for .Lockstatus will sent to SID
-        let payload = ServiceGrantRequest(grantID: ServiceGrantID.LockStatus)
-        let message = SIDMessage(id: SIDMessageID.ServiceGrant, payload: payload)
+        let payload = ServiceGrantRequest(grantID: ServiceGrantID.lockStatus)
+        let message = SIDMessage(id: SIDMessageID.serviceGrant, payload: payload)
         
         /// Sending is success or not
         let sendingSuccess = self.bleManager.sendMessage(message)
@@ -117,21 +118,22 @@ class BLEManagerTests: XCTestCase {
         self.bleCommunicator.delegate = self.bleManager
         
         /// Mock data with service trigger status Locked
-        let mockReceivedData = NSData.withBytes([0xd3,0x7d,0x36,0x92,0xbe,0xb0,0xf2,0xde,0x36,0xd8,0x75,0xf9,0xbb,0x4c,0xf3,0x00,0xf5,0xf9,0x54,0x83,0x62,0x54,0xbf,0xaf] as [UInt8])
+        let mockBytes = [0xd3,0x7d,0x36,0x92,0xbe,0xb0,0xf2,0xde,0x36,0xd8,0x75,0xf9,0xbb,0x4c,0xf3,0x00,0xf5,0xf9,0x54,0x83,0x62,0x54,0xbf,0xaf] as [UInt8]
+        let mockReceivedData = NSData(bytes: mockBytes, length: mockBytes.count)
         
         /// ble manager will be reported for receiving data
-        self.bleCommunicator.delegate?.communicatorDidRecivedData(mockReceivedData, count: mockReceivedData.length / 4)
+        self.bleCommunicator.delegate?.communicatorDidRecivedData(mockReceivedData as Data, count: mockReceivedData.length / 4)
         
         /// AES cryptor will initialized
         var cryptor = AesCbcCryptoManager(key: mockSessionKey)
         /// The received data must be decrpted
-        let receivedMessage = cryptor.decryptData(mockReceivedData)
+        let receivedMessage = cryptor.decryptData(mockReceivedData as Data)
         
         /// service grant trigger builded from received message
         let serviceGrantTrigger = ServiceGrantTrigger(rawData: receivedMessage.message)
         
         /// Testing if service grant trigger has ID .Lockstatus
-        XCTAssertEqual(serviceGrantTrigger.id, ServiceGrantID.LockStatus, "BLE manager received wrong service grant ID!")
+        XCTAssertEqual(serviceGrantTrigger.id, ServiceGrantID.lockStatus, "BLE manager received wrong service grant ID!")
         
         /// Testing if service grant trigger has result .Locked
         XCTAssertEqual(serviceGrantTrigger.result, ServiceGrantTrigger.ServiceGrantResult.Locked, "BLE manager received wrong service grant result!")
@@ -141,7 +143,8 @@ class BLEManagerTests: XCTestCase {
     
     func testSendingBlob() {
         /// Mock session key for crypto
-        let mockSessionKey = Cipher.randomIV(16) as [UInt8]
+        
+        let mockSessionKey = [0x11,0x78,0x78,0x78,0x3c,0x13,0xb2,0x86,0x78,0x78,0x58,0x78,0x23,0xab,0x78] as [UInt8]
         
         /// Ble manager with established AES crypto manager
         self.bleManager.challengerFinishedWithSessionKey(mockSessionKey)
@@ -151,7 +154,7 @@ class BLEManagerTests: XCTestCase {
         
         /// To build sending blob message
         let payload = LTBlobPayload(blobData: mockBlobData)
-        let blobMessage = SIDMessage(id: .LTBlob, payload: payload!)
+        let blobMessage = SIDMessage(id: .ltBlob, payload: payload!)
         
         /// Sending success
         let sendingSuccess = self.bleManager.sendMessage(blobMessage)
@@ -165,8 +168,10 @@ class BLEManagerTests: XCTestCase {
     
     
     func testPerformanceExample() {
-        self.measureBlock {
+        self.measure {
         }
     }
     
+    
+        
 }

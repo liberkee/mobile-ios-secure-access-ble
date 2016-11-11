@@ -13,7 +13,7 @@ import UIKit
  */
 struct LTBlobPayload: SIDMessagePayload {
     /// start Payload as NSData
-    var data: NSData
+    var data: Data
     /**
      Initialization point for Lease token blob payload
      
@@ -22,6 +22,6 @@ struct LTBlobPayload: SIDMessagePayload {
      - returns: message payload as lease token blob data
      */
     init?(blobData: String) {
-        self.data = NSData(base64EncodedString: blobData, options: NSDataBase64DecodingOptions())!
+        self.data = Data(base64Encoded: blobData, options: Data.Base64DecodingOptions())!
     }
 }

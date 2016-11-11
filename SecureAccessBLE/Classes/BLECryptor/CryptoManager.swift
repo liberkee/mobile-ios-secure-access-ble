@@ -22,7 +22,7 @@ protocol CryptoManager {
      
      - returns: encrypted message data
      */
-    mutating func encryptMessage(message: SIDMessage) -> NSData
+    mutating func encryptMessage(_ message: SIDMessage) -> Data
     
     /**
      To decrypte incomming data to SID Message
@@ -31,7 +31,7 @@ protocol CryptoManager {
      
      - returns: SID message object decryted from incomming data
      */
-    mutating func decryptData(data: NSData) -> SIDMessage
+    mutating func decryptData(_ data: Data) -> SIDMessage
     
     /**
      To decrypte incomming data to SID data
@@ -40,7 +40,7 @@ protocol CryptoManager {
      
      - returns: SID Data object decryted from incomming data
      */
-    func decryptRawData(data: NSData) -> NSData
+    func decryptRawData(_ data: Data) -> Data
 }
 
 /// Extension endpoint
@@ -52,7 +52,7 @@ extension CryptoManager {
      
      - returns: SID Data object decryted from incomming data
      */
-    func decryptRawData(data: NSData) -> NSData {
+    func decryptRawData(_ data: Data) -> Data {
         return data
     }
 }

@@ -14,7 +14,7 @@ import Foundation
 protocol SIDMessagePayload {
     
     /// message payload defined as NSData
-    var data: NSData { set get }
+    var data: Data { set get }
 }
 
 // MARK: - Extension end point
@@ -26,14 +26,14 @@ extension SIDMessagePayload {
  */
 struct EmptyPayload: SIDMessagePayload {
     /// start value as NSData
-    var data: NSData
+    var data: Data
     /**
      Initialization point
      
      - returns: new message payload instance
      */
     init() {
-        self.data = NSData.withBytes([0x00])
+        self.data = Data(bytes:[0x00])
     }
     
 }

@@ -25,7 +25,7 @@ class BLECryptorTests: XCTestCase {
         var zeroCryptor = ZeroSecurityManager()
         
         /// Testing message with get MTU request
-        let mtuRequestMessage = SIDMessage(id: SIDMessageID.MTURequest, payload: MTUSize())
+        let mtuRequestMessage = SIDMessage(id: SIDMessageID.mtuRequest, payload: MTUSize())
         
         /// Mock data from SID with response MTU Receive Data
         let mtuReceiveData = [0x07, 0x9b, 0x00] as [UInt8]
@@ -33,7 +33,7 @@ class BLECryptorTests: XCTestCase {
         /// testing with encrypting message
         XCTAssertNotNil(zeroCryptor.encryptMessage(mtuRequestMessage), "Crypto manager returned NIL for encrpting message")
         
-        let mtuReceivMessage = zeroCryptor.decryptData(NSData.withBytes(mtuReceiveData))
+        let mtuReceivMessage = zeroCryptor.decryptData(NSData(bytes:mtuReceiveData, length: mtuReceiveData.count) as Data)
         /// testing with decrypting received message data
         XCTAssertNotNil(mtuReceivMessage, "Crypto manager returned NIL for decrpting message")
         
@@ -63,7 +63,7 @@ class BLECryptorTests: XCTestCase {
         var aesCryptor = AesCbcCryptoManager(key: sessionKey)
         
         /// Sending message for service grant .LockStatus
-        let sendingMessage = SIDMessage(id: SIDMessageID.ServiceGrant, payload: ServiceGrantRequest(grantID: ServiceGrantID.LockStatus))
+        let sendingMessage = SIDMessage(id: SIDMessageID.serviceGrant, payload: ServiceGrantRequest(grantID: ServiceGrantID.lockStatus))
         
         /// Received data from SID, for Servicetrigger results "LOCKED"
         let receivedServiceTrigerData = [0xd3,0x7d,0x36,0x92,0xbe,0xb0,0xf2,0xde,0x36,0xd8,0x75,0xf9,0xbb,0x4c,0xf3,0x00,0xf5,0xf9,0x54,0x83,0x62,0x54,0xbf,0xaf] as [UInt8]
@@ -72,7 +72,7 @@ class BLECryptorTests: XCTestCase {
         XCTAssertNotNil(aesCryptor.encryptMessage(sendingMessage), "Crypto manager returned NIL for encrpting message!")
         
         /// Received data will decrypted to SID message object with AES crypto manager
-        let receivedMessage = aesCryptor.decryptData(NSData.withBytes(receivedServiceTrigerData))
+        let receivedMessage = aesCryptor.decryptData(NSData(bytes:receivedServiceTrigerData, length:receivedServiceTrigerData.count) as Data)
         
         /// Testing if received message will be correctly decrypted
         XCTAssertNotNil(receivedMessage, "Crypto manager returned NIL for decrpting message!")
@@ -81,7 +81,7 @@ class BLECryptorTests: XCTestCase {
         let serviceGrantTrigger = ServiceGrantTrigger(rawData: receivedMessage.message)
         
         /// Testing if service grant trigger has ID .Lockstatus
-        XCTAssertEqual(serviceGrantTrigger.id, ServiceGrantID.LockStatus, "Crypto manager returned wrong service grant ID!")
+        XCTAssertEqual(serviceGrantTrigger.id, ServiceGrantID.lockStatus, "Crypto manager returned wrong service grant ID!")
         
         /// Testing if service grant trigger has result .Locked
         XCTAssertEqual(serviceGrantTrigger.result, ServiceGrantTrigger.ServiceGrantResult.Locked, "Crypto manager returned wrong service grant result!")
@@ -89,7 +89,7 @@ class BLECryptorTests: XCTestCase {
     
     func testPerformanceExample() {
         // This is an example of a performance test case.
-        self.measureBlock {
+        self.measure {
             
         }
     }

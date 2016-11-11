@@ -13,18 +13,18 @@ import UIKit
  */
 struct SidToPhoneResponse: SIDMessagePayload {
     /// Initialized Payload as NSData
-    var data: NSData
+    var data: Data
     /// First bytes to challenge
     var b1: [UInt8] {
-        let part = self.data.subdataWithRange(NSMakeRange(0, 16))
-        let challenge = part.arrayOfBytes()
+        let part = self.data.subdata(in: 0..<16)//NSMakeRange(0, 16))
+        let challenge = (part as Data).bytes
         return challenge
     }
     
     /// Another bytes to challenge
     var b2: [UInt8] {
-        let part = self.data.subdataWithRange(NSMakeRange(16, 16))
-        let challenge = part.arrayOfBytes()
+        let part = self.data.subdata(in: 16..<32)//NSMakeRange(16, 16))
+        let challenge = (part as Data).bytes
         return challenge
     }
     
@@ -35,7 +35,7 @@ struct SidToPhoneResponse: SIDMessagePayload {
      
      - returns: Message payload for response from SID
      */
-    init(rawData: NSData) {
+    init(rawData: Data) {
         self.data = rawData
     }
 }

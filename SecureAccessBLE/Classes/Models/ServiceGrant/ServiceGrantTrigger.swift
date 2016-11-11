@@ -21,10 +21,10 @@ struct ServiceGrantTrigger: ServiceGrant {
      - NotAllowed: Not allowed status
      */
     enum ServiceGrantStatus: UInt8 {
-        case Success = 0x00
-        case Pending = 0x01
-        case Failure = 0x02
-        case NotAllowed = 0x03
+        case success = 0x00
+        case pending = 0x01
+        case failure = 0x02
+        case notAllowed = 0x03
     }
     
     /**
@@ -45,7 +45,7 @@ struct ServiceGrantTrigger: ServiceGrant {
     }
     
     /// start value as NSData
-    var data: NSData
+    var data: Data
     
     /**
      Initialization point
@@ -53,7 +53,7 @@ struct ServiceGrantTrigger: ServiceGrant {
      - returns: service grant trigger
      */
     init () {
-        data = NSData()
+        data = Data()
     }
     
     /**
@@ -69,32 +69,32 @@ struct ServiceGrantTrigger: ServiceGrant {
         self.init(grantID: grantID)
         let frameData = NSMutableData()
         var statusByte = status.rawValue
-        frameData.appendBytes(&statusByte, length: 1)
-        if let data = message?.dataUsingEncoding(NSASCIIStringEncoding) {
-            frameData.appendData(data)
+        frameData.append(&statusByte, length: 1)
+        if let data = message?.data(using: String.Encoding.ascii) {
+            frameData.append(data)
         }
-        data = frameData
+        data = frameData as Data
     }
     
     /// Returns one from ServiceGrantStatus
     var status: ServiceGrantStatus {
-        var byteArray = [UInt8](count: 1, repeatedValue: 0x0)
-        data.getBytes(&byteArray, range: NSMakeRange(2, 1))
+        var byteArray = [UInt8](repeating: 0x0, count: 1)
+        (data as Data).copyBytes(to: &byteArray, from: 2..<3)//NSMakeRange(2, 1))
         if let status = ServiceGrantStatus(rawValue: byteArray[0]) {
             return status
         } else {
-            return .NotAllowed
+            return .notAllowed
         }
     }
     
     /// Returns one from ServiceGrantStatus
     var result: ServiceGrantResult {
-        if data.length > 3 {
-            let messageData = data.subdataWithRange(NSMakeRange(3, data.length-3))
-            guard let string = NSString(data: messageData, encoding: NSASCIIStringEncoding) as? String else {
+        if data.count > 3 {
+            let messageData = data.subdata(in: 3..<data.count)//NSMakeRange(3, data.count-3))
+            guard let string = NSString(data: messageData, encoding: String.Encoding.ascii.rawValue) as? String else {
                 return .Unknown
             }
-            let cleanString = string.stringByTrimmingCharactersInSet(NSCharacterSet.controlCharacterSet())
+            let cleanString = string.trimmingCharacters(in: CharacterSet.controlCharacters)
             if let resultCode  = ServiceGrantResult(rawValue: cleanString) {
                 return resultCode
             } else {

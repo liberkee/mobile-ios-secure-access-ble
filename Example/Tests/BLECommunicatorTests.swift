@@ -86,17 +86,17 @@ class BLECommunicatorTests: XCTestCase {
         for _ in 0..<100 {
             intervals.append(Double(arc4random_uniform(UInt32(1000))))
         }
-        intervals.sortInPlace({ $0 > $1 })
+        intervals.sort(by: { $0 > $1 })
         
         let mockPeripheral = BLEScanner().sidPeripheral
         for interval in intervals {
-            let mockSid = SID(sidID: mockSidId, peripheral: mockPeripheral, discoveryDate: reference.dateByAddingTimeInterval(-interval), isConnected: false)
+            let mockSid = SID(sidID: mockSidId, peripheral: mockPeripheral, discoveryDate: reference.addingTimeInterval(-interval) as Date, isConnected: false)
             self.communicator.transferDidDiscoveredSidId(self.communicator.transporter, newSid: mockSid)
         }
         
         let savedSameSids = self.communicator.currentFoundSidIds.filter { (commingSid) -> Bool in
             let sidString = commingSid.sidID
-            if sidString.lowercaseString == mockSidId.lowercaseString {
+            if sidString.lowercased() == mockSidId.lowercased() {
                 return true
             } else {
                 return false
@@ -107,12 +107,12 @@ class BLECommunicatorTests: XCTestCase {
         XCTAssert(savedSameSids.count == 1, "The old Sid will be not replaced with new one!")
         
         let justOneSid = savedSameSids[0] as SID
-        let smallestTimeInterval = intervals.minElement()
+        let smallestTimeInterval = intervals.min()
         let sidTime = justOneSid.discoveryDate
-        let mustTime = reference.dateByAddingTimeInterval(-smallestTimeInterval!)
+        let mustTime = reference.addingTimeInterval(-smallestTimeInterval!)
         
         /// To test if the one saved SID has newest found time
-        XCTAssertEqual(sidTime, mustTime, "The old Sid will be not replaced with new one!")
+        XCTAssertEqual(sidTime, mustTime as Date, "The old Sid will be not replaced with new one!")
         
     }
     
@@ -121,16 +121,16 @@ class BLECommunicatorTests: XCTestCase {
      */
     func refillMockSids() {
         let mockPeripheral = BLEScanner().sidPeripheral
-        self.communicator.transferDidDiscoveredSidId(self.communicator.transporter, newSid: SID(sidID: "bb28d13fdcab416b85b7cec28c26add7", peripheral: mockPeripheral, discoveryDate: NSDate().dateByAddingTimeInterval(-0.8), isConnected: false))
-        self.communicator.transferDidDiscoveredSidId(self.communicator.transporter, newSid: SID(sidID: "550e8400e29b11d4a716446655440003", peripheral: mockPeripheral, discoveryDate: NSDate().dateByAddingTimeInterval(-1.8), isConnected: false))
-        self.communicator.transferDidDiscoveredSidId(self.communicator.transporter, newSid: SID(sidID: "1a1092e99f824187af92d92029b28cdc", peripheral: mockPeripheral, discoveryDate: NSDate().dateByAddingTimeInterval(-2.5), isConnected: false))
-        self.communicator.transferDidDiscoveredSidId(self.communicator.transporter, newSid: SID(sidID: "2c6088153bc7434f9c2b2e3272596adc", peripheral: mockPeripheral, discoveryDate: NSDate().dateByAddingTimeInterval(-3.0), isConnected: false))
-        self.communicator.transferDidDiscoveredSidId(self.communicator.transporter, newSid: SID(sidID: "250bf2429d8c4f2896e2030dfe601bd8", peripheral: mockPeripheral, discoveryDate: NSDate().dateByAddingTimeInterval(-4.8), isConnected: false))
+        self.communicator.transferDidDiscoveredSidId(self.communicator.transporter, newSid: SID(sidID: "bb28d13fdcab416b85b7cec28c26add7", peripheral: mockPeripheral, discoveryDate: NSDate().addingTimeInterval(-0.8) as Date, isConnected: false))
+        self.communicator.transferDidDiscoveredSidId(self.communicator.transporter, newSid: SID(sidID: "550e8400e29b11d4a716446655440003", peripheral: mockPeripheral, discoveryDate: NSDate().addingTimeInterval(-1.8) as Date, isConnected: false))
+        self.communicator.transferDidDiscoveredSidId(self.communicator.transporter, newSid: SID(sidID: "1a1092e99f824187af92d92029b28cdc", peripheral: mockPeripheral, discoveryDate: NSDate().addingTimeInterval(-2.5) as Date, isConnected: false))
+        self.communicator.transferDidDiscoveredSidId(self.communicator.transporter, newSid: SID(sidID: "2c6088153bc7434f9c2b2e3272596adc", peripheral: mockPeripheral, discoveryDate: NSDate().addingTimeInterval(-3.0) as Date, isConnected: false))
+        self.communicator.transferDidDiscoveredSidId(self.communicator.transporter, newSid: SID(sidID: "250bf2429d8c4f2896e2030dfe601bd8", peripheral: mockPeripheral, discoveryDate: NSDate().addingTimeInterval(-4.8) as Date, isConnected: false))
     }
     
     func testPerformanceExample() {
         // This is an example of a performance test case.
-        self.measureBlock {
+        self.measure {
             // Put the code you want to measure the time of here.
         }
     }

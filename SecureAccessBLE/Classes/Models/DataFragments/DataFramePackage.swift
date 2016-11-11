@@ -25,13 +25,13 @@ class DataFramePackage: NSObject {
     }
     
     /// The message data the SIDMessage contains
-    var message: NSData {
+    var message: Data {
         let data = NSMutableData()
         
         for frame in frames {
-            data.appendData(frame.message)
+            data.append(frame.message as Data)
         }
-        return data
+        return data as Data
     }
     
     /**
@@ -42,9 +42,9 @@ class DataFramePackage: NSObject {
      
      - returns: Data frame package objec
      */
-    convenience init(messageData: NSData, frameSize: Int) {
+    convenience init(messageData: Data, frameSize: Int) {
         var frameStack = [DataFrame]()
-        let messageSize = messageData.length
+        let messageSize = messageData.count
         var numberOfFrames = messageSize / frameSize
         if numberOfFrames == 0 || messageSize % frameSize != 0 {
             numberOfFrames += 1
@@ -64,8 +64,8 @@ class DataFramePackage: NSObject {
                 }
                 }()
             
-            let messagePart = messageData.subdataWithRange(NSMakeRange(location, frameLength))
-            let frame = DataFrame(message: messagePart, type: type, sequenceNumber: UInt8(sequence), completeMessageLength: UInt16(messageData.length))
+            let messagePart = messageData.subdata(in: location..<location+frameLength)//NSMakeRange(location, frameLength))
+            let frame = DataFrame(message: messagePart, type: type, sequenceNumber: UInt8(sequence), completeMessageLength: UInt16(messageData.count))
             frameStack.append(frame)
         }
 
@@ -74,17 +74,17 @@ class DataFramePackage: NSObject {
     }
     
 //MARK: - Helper
-    private class func configureType(sequence: Int, numberOfFrames: Int) -> DataFrameType {
+    fileprivate class func configureType(_ sequence: Int, numberOfFrames: Int) -> DataFrameType {
         /// Start type as NotValid
-        var type = DataFrameType.NotValid
+        var type = DataFrameType.notValid
         if sequence == 0 && numberOfFrames == 1 {
-            type = .Single
+            type = .single
         } else if sequence == 0 {
-            type = .Sop
+            type = .sop
         } else if sequence == numberOfFrames - 1 {
-            type = .Eop
+            type = .eop
         } else {
-            type = .Frag
+            type = .frag
         }
         return type
     }

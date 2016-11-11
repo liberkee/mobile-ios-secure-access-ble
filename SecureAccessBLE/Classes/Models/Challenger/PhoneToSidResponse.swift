@@ -14,10 +14,10 @@ import UIKit
  */
 struct PhoneToSidResponse: SIDMessagePayload {
     /// Initialized Payload as NSData
-    var data: NSData
+    var data: Data
     /// challenge bytes
     var challenge: [UInt8] {
-        let challenge = self.data.arrayOfBytes()
+        let challenge = self.data.bytes//arrayOfBytes()
         return challenge
     }
     /**
@@ -28,7 +28,7 @@ struct PhoneToSidResponse: SIDMessagePayload {
      - returns: payload object to SID as NSData
      */
     init(response: [UInt8]) {
-        self.data = NSData.withBytes(response)
+        self.data = Data(bytes: response)//Data.withBytes(response)
     }
     
 }

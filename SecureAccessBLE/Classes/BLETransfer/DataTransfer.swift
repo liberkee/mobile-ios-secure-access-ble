@@ -19,7 +19,7 @@ protocol DataTransferDelegate: class {
      - parameter dataTransferObject: The DataTransfer object.
      - parameter data: The data which was send.
     */
-    func transferDidSendData(dataTransferObject: DataTransfer, data: NSData)
+    func transferDidSendData(_ dataTransferObject: DataTransfer, data: Data)
     
     /**
      Tells the delegate that data was received.
@@ -27,7 +27,7 @@ protocol DataTransferDelegate: class {
      - parameter dataTransferObject: The DataTransfer object.
      - parameter data: The data which was received.
     */
-    func transferDidReceivedData(dataTransferObject: DataTransfer, data: NSData)
+    func transferDidReceivedData(_ dataTransferObject: DataTransfer, data: Data)
     
     /**
      Tells the delegate that a connection was established.
@@ -35,7 +35,7 @@ protocol DataTransferDelegate: class {
      - parameter dataTransferObject: The DataTransfer object.
      - parameter data: The data which was received.
     */
-    func transferDidChangedConnectionState(dataTransferObject: DataTransfer, isConnected: Bool)
+    func transferDidChangedConnectionState(_ dataTransferObject: DataTransfer, isConnected: Bool)
     
     /**
      Tells the delegate that a SID was discovered.
@@ -43,7 +43,7 @@ protocol DataTransferDelegate: class {
      - parameter dataTransferObject: The DataTransfer object.
      - parameter sidId: The id of the discovered SID.
     */
-    func transferDidDiscoveredSidId(dataTransferObject: DataTransfer, newSid: SID)
+    func transferDidDiscoveredSidId(_ dataTransferObject: DataTransfer, newSid: SID)
     
     /**
      Tells the delegate that a SID was vanished.
@@ -58,7 +58,7 @@ protocol DataTransferDelegate: class {
      
      - parameter dataTransferObject: Scanner instance
      */
-    func transferShouldFilterOldIds(dataTransferObject: DataTransfer)
+    func transferShouldFilterOldIds(_ dataTransferObject: DataTransfer)
     
     /**
      Transporter reports if that was successfully connected with a SID
@@ -66,7 +66,7 @@ protocol DataTransferDelegate: class {
      - parameter dataTransferObject: transporter instance
      - parameter sid:                connected SID instance
      */
-    func transferDidconnectedSid(dataTransferObject: DataTransfer, sid: SID)
+    func transferDidconnectedSid(_ dataTransferObject: DataTransfer, sid: SID)
     
 }
 
@@ -86,14 +86,14 @@ protocol DataTransferDelegate: class {
     
      - parameter data: The data package which should be send.
     */
-    func sendData(data: NSData)
+    func sendData(_ data: Data)
     
     /**
      A method to connecting to a specified sid.
     
      - parameter data: The sid id.
     */
-    func connectToSidWithId(sidId: String)
+    func connectToSidWithId(_ sidId: String)
     
     ///Disconnect the current connected sid.
     func disconnect()

@@ -13,19 +13,19 @@ import Foundation
  */
 enum ServiceGrantID: UInt16 {
     /// To unlock vehicles door
-    case Unlock = 0x01
+    case unlock = 0x01
     /// To lock vehicles door
-    case Lock = 0x02
+    case lock = 0x02
     /// To call up vehicles lock status
-    case LockStatus = 0x03
+    case lockStatus = 0x03
     /// To enable Ignition
-    case EnableIgnition = 0x04
+    case enableIgnition = 0x04
     /// To disable Ignition
-    case DisableIgnition = 0x05
+    case disableIgnition = 0x05
     /// To call up Ignition status
-    case IgnitionStatus = 0x06
+    case ignitionStatus = 0x06
     /// Others
-    case NotValid = 0xFF
+    case notValid = 0xFF
 }
 
 /**
@@ -55,7 +55,7 @@ protocol ServiceGrant: SIDMessagePayload {
      
      - returns: new service grant object
      */
-    init(rawData: NSData)
+    init(rawData: Data)
 }
 
 // MARK: - extension endpoint
@@ -70,9 +70,9 @@ extension ServiceGrant {
     init(grantID: ServiceGrantID) {
         let frameData = NSMutableData()
         var grantIDValue = grantID.rawValue
-        frameData.appendBytes(&grantIDValue, length: 2)
+        frameData.append(&grantIDValue, length: 2)
         self.init()
-        self.data = frameData
+        self.data = frameData as Data
     }
     
     /**
@@ -82,21 +82,21 @@ extension ServiceGrant {
      
      - returns: Service grant object
      */
-    init(rawData: NSData) {
+    init(rawData: Data) {
         self.init()
         data = rawData
     }
     
     ///  service grant id, see definition for ServiceGrantID above
     var id: ServiceGrantID {
-        var byteArray = [UInt8](count: 2, repeatedValue: 0x0)
-        data.getBytes(&byteArray, range: NSMakeRange(0, 2))
+        var byteArray = [UInt8](repeating: 0x0, count: 2)
+        (data as Data).copyBytes(to: &byteArray, from: 0..<2)//NSMakeRange(0, 2))
         let rawValue = UInt16(byteArray[0])
         
         if let validValue = ServiceGrantID(rawValue: rawValue) {
             return validValue
         } else {
-            return .NotValid
+            return .notValid
         }
     }
 }
@@ -105,7 +105,7 @@ extension ServiceGrant {
 /// corresponding action is executed
 struct ServiceGrantRequest: ServiceGrant {
     /// start value as NSData
-    var data: NSData
+    var data: Data
     
     /**
      Initialization point
@@ -113,6 +113,6 @@ struct ServiceGrantRequest: ServiceGrant {
      - returns: Service grant object for service grant request
     */
     init () {
-        data = NSData()
+        data = Data()
     }
 }

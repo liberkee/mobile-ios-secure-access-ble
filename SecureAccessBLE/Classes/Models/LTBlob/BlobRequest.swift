@@ -13,13 +13,14 @@ import Foundation
  */
 struct BlobRequest: SIDMessagePayload {
     /// Start message payload as NSData for blob request
-    var data: NSData
+    var data: Data
     /// The message id as Int
     var blobMessageId: Int {
         var type: UInt32 = 0
-        data.getBytes(&type, length: sizeof(UInt32))
-        print(type)
-        return Int(type)
+        var receiveData = UInt8(type)
+        (data as Data).copyBytes(to: &receiveData, count: MemoryLayout<UInt32>.size)
+        print(receiveData)
+        return Int(receiveData)
     }
     
     /**
@@ -29,7 +30,7 @@ struct BlobRequest: SIDMessagePayload {
      
      - returns: Messag payload object
      */
-    init(rawData: NSData) {
+    init(rawData: Data) {
         data = rawData
     }
 }

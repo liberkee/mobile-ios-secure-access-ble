@@ -21,8 +21,8 @@ struct ZeroSecurityManager: CryptoManager {
      
      - returns: encrypted message data
      */
-    mutating func encryptMessage(message: SIDMessage) -> NSData {
-        return message.data
+    mutating func encryptMessage(_ message: SIDMessage) -> Data {
+        return message.data as Data
     }
     
     /**
@@ -32,7 +32,7 @@ struct ZeroSecurityManager: CryptoManager {
      
      - returns: SID message object decryted from incomming data
      */
-    mutating func decryptData(data: NSData) -> SIDMessage {
+    mutating func decryptData(_ data: Data) -> SIDMessage {
         return SIDMessage(rawData: data)
     }
     

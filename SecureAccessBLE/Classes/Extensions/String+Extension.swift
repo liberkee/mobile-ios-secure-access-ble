@@ -19,24 +19,24 @@ extension String {
      
      - returns: NSData represented by this hexadecimal string. Returns nil if string contains characters outside the 0-9 and a-f range.
      */
-    func dataFromHexadecimalString() -> NSData? {
-        let trimmedString = self.stringByTrimmingCharactersInSet(NSCharacterSet(charactersInString: "<> ")).stringByReplacingOccurrencesOfString(" ", withString: "")
+    func dataFromHexadecimalString() -> Data? {
+        let trimmedString = self.trimmingCharacters(in: CharacterSet(charactersIn: "<> ")).replacingOccurrences(of: " ", with: "")
         // make sure the cleaned up string consists solely of hex digits, and that we have even number of them
         
-        let regex = try! NSRegularExpression(pattern: "^[0-9a-f]*$", options: .CaseInsensitive)
+        let regex = try! NSRegularExpression(pattern: "^[0-9a-f]*$", options: .caseInsensitive)
         
-        let found = regex.firstMatchInString(trimmedString, options: [], range: NSMakeRange(0, trimmedString.characters.count))
+        let found = regex.firstMatch(in: trimmedString, options: [], range: NSMakeRange(0, trimmedString.characters.count))
         if found == nil || found?.range.location == NSNotFound || trimmedString.characters.count % 2 != 0 {
             return nil
         }
         // everything ok, so now let's build NSData
         let data = NSMutableData(capacity: trimmedString.characters.count / 2)
-        for index in 0.stride(to: trimmedString.startIndex.distanceTo(trimmedString.endIndex), by: 2) {
-            let subStringRange = trimmedString.startIndex.advancedBy(index) ..< trimmedString.startIndex.advancedBy(index+2)
-            let byteString = trimmedString.substringWithRange(subStringRange)
+        for index in stride(from: 0, to: trimmedString.characters.distance(from: trimmedString.startIndex, to: trimmedString.endIndex), by: 2) {
+            let subStringRange = trimmedString.characters.index(trimmedString.startIndex, offsetBy: index) ..< trimmedString.characters.index(trimmedString.startIndex, offsetBy: index+2)
+            let byteString = trimmedString.substring(with: subStringRange)
             let num = UInt8(byteString.withCString { strtoul($0, nil, 16) })
-            data?.appendBytes([num] as [UInt8], length: 1)
+            data?.append([num] as [UInt8], length: 1)
         }
-        return data
+        return data as Data?
     }
 }
