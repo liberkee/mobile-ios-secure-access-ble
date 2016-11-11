@@ -78,7 +78,7 @@ class BLECommunicatorTests: XCTestCase {
         /// Mock sid id
         let mockSidId = "250bf2429d8c4f2896e2030dfe601bd8"
         
-        let reference = NSDate()
+        let reference = Date()
         print("reference time: \(reference)")
         
         
@@ -121,11 +121,11 @@ class BLECommunicatorTests: XCTestCase {
      */
     func refillMockSids() {
         let mockPeripheral = BLEScanner().sidPeripheral
-        self.communicator.transferDidDiscoveredSidId(self.communicator.transporter, newSid: SID(sidID: "bb28d13fdcab416b85b7cec28c26add7", peripheral: mockPeripheral, discoveryDate: NSDate().addingTimeInterval(-0.8) as Date, isConnected: false))
-        self.communicator.transferDidDiscoveredSidId(self.communicator.transporter, newSid: SID(sidID: "550e8400e29b11d4a716446655440003", peripheral: mockPeripheral, discoveryDate: NSDate().addingTimeInterval(-1.8) as Date, isConnected: false))
-        self.communicator.transferDidDiscoveredSidId(self.communicator.transporter, newSid: SID(sidID: "1a1092e99f824187af92d92029b28cdc", peripheral: mockPeripheral, discoveryDate: NSDate().addingTimeInterval(-2.5) as Date, isConnected: false))
-        self.communicator.transferDidDiscoveredSidId(self.communicator.transporter, newSid: SID(sidID: "2c6088153bc7434f9c2b2e3272596adc", peripheral: mockPeripheral, discoveryDate: NSDate().addingTimeInterval(-3.0) as Date, isConnected: false))
-        self.communicator.transferDidDiscoveredSidId(self.communicator.transporter, newSid: SID(sidID: "250bf2429d8c4f2896e2030dfe601bd8", peripheral: mockPeripheral, discoveryDate: NSDate().addingTimeInterval(-4.8) as Date, isConnected: false))
+        self.communicator.transferDidDiscoveredSidId(self.communicator.transporter, newSid: SID(sidID: "bb28d13fdcab416b85b7cec28c26add7", peripheral: mockPeripheral, discoveryDate: Date().addingTimeInterval(-0.8) as Date, isConnected: false))
+        self.communicator.transferDidDiscoveredSidId(self.communicator.transporter, newSid: SID(sidID: "550e8400e29b11d4a716446655440003", peripheral: mockPeripheral, discoveryDate: Date().addingTimeInterval(-1.8) as Date, isConnected: false))
+        self.communicator.transferDidDiscoveredSidId(self.communicator.transporter, newSid: SID(sidID: "1a1092e99f824187af92d92029b28cdc", peripheral: mockPeripheral, discoveryDate: Date().addingTimeInterval(-2.5) as Date, isConnected: false))
+        self.communicator.transferDidDiscoveredSidId(self.communicator.transporter, newSid: SID(sidID: "2c6088153bc7434f9c2b2e3272596adc", peripheral: mockPeripheral, discoveryDate: Date().addingTimeInterval(-3.0) as Date, isConnected: false))
+        self.communicator.transferDidDiscoveredSidId(self.communicator.transporter, newSid: SID(sidID: "250bf2429d8c4f2896e2030dfe601bd8", peripheral: mockPeripheral, discoveryDate: Date().addingTimeInterval(-4.8) as Date, isConnected: false))
     }
     
     func testPerformanceExample() {

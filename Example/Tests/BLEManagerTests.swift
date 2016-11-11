@@ -85,7 +85,7 @@ class BLEManagerTests: XCTestCase {
         
         /// MTU response data with size
         let bytes = [0x07, 0x9b, 0x00] as [UInt8]
-        self.bleCommunicator.delegate?.communicatorDidRecivedData(NSData(bytes: bytes, length: bytes.count) as Data, count: 1)
+        self.bleCommunicator.delegate?.communicatorDidRecivedData(Data(bytes: bytes), count: 1)
         
         /// MTU size for ios device is default 155
         XCTAssertEqual(BLEComManager.mtuSize, 155, "BLE manager has wrong MTU Size number!")
@@ -119,10 +119,10 @@ class BLEManagerTests: XCTestCase {
         
         /// Mock data with service trigger status Locked
         let mockBytes = [0xd3,0x7d,0x36,0x92,0xbe,0xb0,0xf2,0xde,0x36,0xd8,0x75,0xf9,0xbb,0x4c,0xf3,0x00,0xf5,0xf9,0x54,0x83,0x62,0x54,0xbf,0xaf] as [UInt8]
-        let mockReceivedData = NSData(bytes: mockBytes, length: mockBytes.count)
+        let mockReceivedData = Data(bytes: UnsafePointer<UInt8>(mockBytes), count: mockBytes.count)
         
         /// ble manager will be reported for receiving data
-        self.bleCommunicator.delegate?.communicatorDidRecivedData(mockReceivedData as Data, count: mockReceivedData.length / 4)
+        self.bleCommunicator.delegate?.communicatorDidRecivedData(mockReceivedData as Data, count: mockReceivedData.count / 4)
         
         /// AES cryptor will initialized
         var cryptor = AesCbcCryptoManager(key: mockSessionKey)

@@ -32,7 +32,7 @@ class BLEChallengerTests: XCTestCase {
      
      - returns: results of calculation
      */
-    func xor(a: [UInt8], b:[UInt8]) -> [UInt8] {
+    func xor(_ a: [UInt8], b:[UInt8]) -> [UInt8] {
         var xored = [UInt8](repeating: 0, count: a.count)
         for i in 0..<xored.count {
             xored[i] = a[i] ^ b[i]
@@ -48,7 +48,7 @@ class BLEChallengerTests: XCTestCase {
      
      - returns: results bytes after rotation
      */
-    func rotate(bytes: [UInt8], inverse: Bool) -> [UInt8] {
+    func rotate(_ bytes: [UInt8], inverse: Bool) -> [UInt8] {
         
         var permutedBytes = bytes
         if inverse {
@@ -79,13 +79,13 @@ class BLEChallengerTests: XCTestCase {
         ///  the real SID response message from device
         let b1 = [0xb9,0x6a,0xf1,0x31,0xb9,0x69,0x06,0xdc,0x68,0x61,0x99,0x2c,0xf4,0x2e,0x36,0x03] as [UInt8]
         let b2 = [0x8b,0x30,0x4e,0xde,0x05,0x9b,0xfb,0xb4,0x52,0x92,0x51,0x53,0xe0,0xae,0x8b,0x87] as [UInt8]
-        let b2data = NSData(bytes:b2, length: b2.count)
+        let b2data = Data(bytes: UnsafePointer<UInt8>(b2), count: b2.count)
         
         let b2decData = crypto.decryptRawData(b2data as Data) as Data
-        let r3 = xor(a: b1, b: b2decData.bytes)
+        let r3 = xor(b1, b: b2decData.bytes)
         ///  app calculation results
-        let permutatedR3 = rotate(bytes:r3, inverse: true)
-        let ncData = NSData(bytes: nc, length: nc.count)
+        let permutatedR3 = rotate(r3, inverse: true)
+        let ncData = Data(bytes: UnsafePointer<UInt8>(nc), count: nc.count)
         let b0Data = crypto.encryptRawMessage(ncData as Data) as Data
         
         /// the calculation from app functions
@@ -94,7 +94,7 @@ class BLEChallengerTests: XCTestCase {
         /// check if the encryted results between BLE-functions and online tool the same
         XCTAssertEqual(checkB0, b0, "Tests with encrypting SidMessage failed")
         
-        let checkB0Data = NSData(bytes:checkB0, length: checkB0.count) as Data
+        let checkB0Data = Data(bytes:checkB0)
         let checkNc = crypto.decryptRawData(checkB0Data) as Data
         
         ///  check decrypted message from web tool identical with original message

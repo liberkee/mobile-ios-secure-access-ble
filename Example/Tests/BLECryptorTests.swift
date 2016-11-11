@@ -33,7 +33,7 @@ class BLECryptorTests: XCTestCase {
         /// testing with encrypting message
         XCTAssertNotNil(zeroCryptor.encryptMessage(mtuRequestMessage), "Crypto manager returned NIL for encrpting message")
         
-        let mtuReceivMessage = zeroCryptor.decryptData(NSData(bytes:mtuReceiveData, length: mtuReceiveData.count) as Data)
+        let mtuReceivMessage = zeroCryptor.decryptData(Data(bytes:mtuReceiveData))
         /// testing with decrypting received message data
         XCTAssertNotNil(mtuReceivMessage, "Crypto manager returned NIL for decrpting message")
         
@@ -72,7 +72,7 @@ class BLECryptorTests: XCTestCase {
         XCTAssertNotNil(aesCryptor.encryptMessage(sendingMessage), "Crypto manager returned NIL for encrpting message!")
         
         /// Received data will decrypted to SID message object with AES crypto manager
-        let receivedMessage = aesCryptor.decryptData(NSData(bytes:receivedServiceTrigerData, length:receivedServiceTrigerData.count) as Data)
+        let receivedMessage = aesCryptor.decryptData(Data(bytes:receivedServiceTrigerData))
         
         /// Testing if received message will be correctly decrypted
         XCTAssertNotNil(receivedMessage, "Crypto manager returned NIL for decrpting message!")

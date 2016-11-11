@@ -16,7 +16,7 @@ struct MTUSize: SIDMessagePayload {
     var data = Data()
     /// size as Int
     var mtuSize: Int? {
-        var mtu: UInt16 = 0
+        let mtu: UInt16 = 0
         var receiver = UInt8(mtu)
         
         (data as Data).copyBytes(to: &receiver, count: MemoryLayout<UInt16>.size)
