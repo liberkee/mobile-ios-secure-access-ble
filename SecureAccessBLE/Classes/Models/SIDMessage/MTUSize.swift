@@ -20,7 +20,7 @@ struct MTUSize: SIDMessagePayload {
         var receiver = UInt8(mtu)
         
         (data as Data).copyBytes(to: &receiver, count: MemoryLayout<UInt16>.size)
-        //print("mtu size:\(mtu)")
+        //debugPrint("mtu size:\(mtu)")
         return Int(receiver)
     }
     /**

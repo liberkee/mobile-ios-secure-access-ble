@@ -110,12 +110,12 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
             return (false, "Sending in progress")
         } else {
             let data = sendData
-            //print("----------------------------------------")
-            //print("Send Encrypted Message: \(data.toHexString())")
-            //print("Same message decrypted: \(self.cryptoManager.decryptData(data).data.toHexString())")
+            //debugPrint("----------------------------------------")
+            //debugPrint("Send Encrypted Message: \(data.toHexString())")
+            //debugPrint("Same message decrypted: \(self.cryptoManager.decryptData(data).data.toHexString())")
             //let key = NSData.withBytes(self.cryptoManager.key)
-            //print("With key: \(key.toHexString())")
-            //print("-----------  sended message with id: \(message.id) -------------")
+            //debugPrint("With key: \(key.toHexString())")
+            //debugPrint("-----------  sended message with id: \(message.id) -------------")
             
             self.currentPackage = DataFramePackage(messageData: data, frameSize: self.messageFrameSize)
             if let currentFrame = self.currentPackage?.currentFrame {

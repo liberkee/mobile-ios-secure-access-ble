@@ -184,12 +184,12 @@ struct BLEChallengeService {
      - throws:
      */
     mutating func handleReceivedChallengerMessage(_ response: SIDMessage) throws {
-        print("Resonse message with id:\(response.id)")
+        debugPrint("Resonse message with id:\(response.id)")
         switch response.id {
         case .ltAck:
             try self.beginChallenge()
         case .badChallengeSidResponse:
-            print("BLE Challenge needs send blob!")
+            debugPrint("BLE Challenge needs send blob!")
             self.delegate?.challengerNeedsSendBlob()
         case .challengeSidResponse:
             try self.continueChallenge(response)
@@ -226,7 +226,7 @@ struct BLEChallengeService {
                 nr[12],nr[13],nr[14],nr[15],
                 nc[12],nc[13],nc[14],nc[15]
             ]
-            print("challenger finished with session key: \(Data(bytes:sessionKey))")
+            debugPrint("challenger finished with session key: \(Data(bytes:sessionKey))")
             self.delegate?.challengerFinishedWithSessionKey(sessionKey)
         }
     }

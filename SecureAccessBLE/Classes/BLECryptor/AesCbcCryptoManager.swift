@@ -68,7 +68,7 @@ struct AesCbcCryptoManager: CryptoManager {
     mutating func decryptData(_ data: Data) -> SIDMessage {
         do {
             if self.checkMac(data) == false {
-                print("Huihuihui")
+                debugPrint("Huihuihui")
             }
             
             let dataWithoutMac = data.subdata(in: 0..<data.count-8)//NSMakeRange(0, data.count-8))

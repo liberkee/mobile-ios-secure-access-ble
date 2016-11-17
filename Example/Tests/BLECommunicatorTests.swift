@@ -79,7 +79,7 @@ class BLECommunicatorTests: XCTestCase {
         let mockSidId = "250bf2429d8c4f2896e2030dfe601bd8"
         
         let reference = Date()
-        print("reference time: \(reference)")
+        debugPrint("reference time: \(reference)")
         
         
         var intervals : [Double] = []// = Array(count: 10, repeatedValue: Double(arc4random_uniform(UInt32(1000))))

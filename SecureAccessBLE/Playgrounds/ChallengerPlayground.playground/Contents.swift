@@ -214,7 +214,7 @@ if nc == permutatedR3 {
         //return UInt16(data.count)
         //return UnsafePointer<UInt16>(byteArray).pointee
     //}
-    print("Correct")
+    debugPrint("Correct")
 }
 
 
@@ -244,7 +244,4 @@ let sessionKey = [
     nc[12],nc[13],nc[14],nr[15]
 ]
 
-let sessionKeyData = NSData(bytes: sessionKey, length: sessionKey.count)
-
-
-
+let sessionKeyData = NSData(bytes: sessionKey, length: sessionKey.count

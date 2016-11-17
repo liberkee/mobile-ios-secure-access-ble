@@ -9,9 +9,9 @@
 import Foundation
 
 /// Writes the textual representations of an object into the standard output.
-func print(_ object: Any) {
+func debugPrint(_ object: Any) {
     #if DEBUG
-        Swift.print(object)
+        Swift.debugPrint(object)
     #endif
 }
 

@@ -137,7 +137,7 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
      - returns: Central manager state is powered on or notas bool
      */
     open func isPoweredOn() -> Bool {
-        //print("central manager has \(self.centralManager!.state.description)")
+        //debugPrint("central manager has \(self.centralManager!.state.description)")
         return self.centralManager!.state == .poweredOn
     }
     
@@ -148,7 +148,7 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
      */
     func connectToSidWithId(_ sidId: String) {
         if let sid = self.sids.filter({$0.sidID.lowercased() == sidId.replacingOccurrences(of: "-", with: "").lowercased()}).first {
-            print("connecting to sid:\(sid.sidID)")
+            debugPrint("connecting to sid:\(sid.sidID)")
             self.connectingdSid = sid
             self.sidPeripheral = sid.peripheral!
             self.centralManager.connect(sid.peripheral!, options: nil)
@@ -160,7 +160,7 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
      */
     func disconnect() {
         if let peripheral = self.sidPeripheral {
-            print("BLE will be disconnected at: \(CACurrentMediaTime())")
+            debugPrint("BLE will be disconnected at: \(CACurrentMediaTime())")
             self.centralManager.cancelPeripheralConnection(peripheral)
         }
         self.cleanUpSIDs()
@@ -248,7 +248,7 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
     open func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
         consoleLog("Central failed connecting to peripheral: \(error?.localizedDescription ?? "Unkown error")")
         
-        print(error!.localizedDescription)
+        debugPrint(error!.localizedDescription)
         self.cleanUpSIDs()
         self.resetPeripheral()
     }
@@ -261,7 +261,7 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
         
         self.isConnected = true
         self.sidPeripheral = peripheral
-        //print("Peripheral did Connected")
+        //debugPrint("Peripheral did Connected")
         peripheral.delegate = self
         peripheral.discoverServices([CBUUID(string: self.serviceId)])
     }
@@ -286,7 +286,7 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
      */
     open func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         if error != nil {
-            print("Error: \(error!.localizedDescription)")
+            debugPrint("Error: \(error!.localizedDescription)")
             self.cleanUpSIDs()
             self.resetPeripheral()
         } else {
@@ -301,7 +301,7 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
      */
     open func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         if error != nil {
-            print("Error: \(error!.localizedDescription)")
+            debugPrint("Error: \(error!.localizedDescription)")
             self.cleanUpSIDs()
             self.resetPeripheral()
         } else {
@@ -329,7 +329,7 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
      */
     open func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
         if characteristic == self.notifyCharacteristic {
-            //            print("Received Package at time: \(CACurrentMediaTime())")
+            //            debugPrint("Received Package at time: \(CACurrentMediaTime())")
             self.delegate?.transferDidReceivedData(self, data: characteristic.value!)
         }
     }
@@ -338,7 +338,7 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
      See CBPeripharalDelegate documentation from coreBluetooth
      */
     open func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
-        //        print("Did send Package at time: \(CACurrentMediaTime())")
+        //        debugPrint("Did send Package at time: \(CACurrentMediaTime())")
         self.delegate?.transferDidSendData(self, data: Data())
     }
 }

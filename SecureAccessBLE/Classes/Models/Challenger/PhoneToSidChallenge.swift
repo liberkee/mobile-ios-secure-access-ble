@@ -88,7 +88,7 @@ struct PhoneToSidChallenge: SIDMessagePayload {
         }
         data.append(challenge, length: challenge.count)
         self.data = data as Data
-        //        print("data:\(data) with length:\(self.data.length)")
+        //        debugPrint("data:\(data) with length:\(self.data.length)")
     }
     
 }

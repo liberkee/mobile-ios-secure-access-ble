@@ -19,7 +19,7 @@ struct BlobRequest: SIDMessagePayload {
         let type: UInt32 = 0
         var receiveData = UInt8(type)
         (data as Data).copyBytes(to: &receiveData, count: MemoryLayout<UInt32>.size)
-        print(receiveData)
+        debugPrint(receiveData)
         return Int(receiveData)
     }
     
