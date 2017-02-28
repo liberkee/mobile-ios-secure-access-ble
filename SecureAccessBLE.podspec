@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'SecureAccessBLE'
-  s.version          = '1.0.2'
+  s.version          = '1.0.3'
   s.summary          = 'SecureAccess BLE framework'
   s.description      = 'Framework for communicating with the SecureAccess BLE hardware.'
 
@@ -18,10 +18,10 @@ Pod::Spec.new do |s|
   s.source           = { :git => 'https://github.com/hufsm/mobile-ios-ble.git', :tag => s.version.to_s }
 
   s.ios.deployment_target = '8.0'
-  
+
   s.source_files = 'SecureAccessBLE/Classes/**/*'
-  
+
   s.vendored_frameworks = [ 'SecureAccessBLE/Frameworks/openssl.framework' ]
-  
+
   s.dependency 'CryptoSwift'
 end
