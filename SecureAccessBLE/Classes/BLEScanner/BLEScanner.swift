@@ -226,6 +226,7 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
     open func centralManagerDidUpdateState(_ central: CBCentralManager) {
         consoleLog("Central updated state: \(central.state)")
         
+        bleScannerDelegate?.didUpdateState()
         self.centralManagerPoweredOn = central.state == .poweredOn//CBManagerState.poweredOn
         if central.state != .poweredOn {
             self.resetPeripheral()
@@ -234,7 +235,6 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
             return
         }
         self.delegate?.transferDidChangedConnectionState(self, isConnected: self.isConnected)
-        bleScannerDelegate?.didUpdateState()
         self.begineToScan()
     }
     
