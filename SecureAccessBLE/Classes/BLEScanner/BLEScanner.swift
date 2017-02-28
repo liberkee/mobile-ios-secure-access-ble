@@ -9,6 +9,11 @@
 import UIKit
 import CoreBluetooth
 
+/// Delegatation of CBManager state changes.
+protocol BLEScannerDelegate {
+    func didUpdateState(_ state: CBManagerState)
+}
+
 /**
  *  Definition for SID object
  */
@@ -60,6 +65,9 @@ extension CBCentralManagerState {
 /// BLEScanner implaments the secure BLE session between mobile devices and SID. The communication manager can only send / receive
 /// messages over a secure BLE connection, i.e. a valid session context must exist.
 open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPeripheralDelegate {
+    
+    /// delegate to handle CBManager state changes.
+    weak var bleScannerDelegate: BLEScannerDelegate?
     
     /// delegate for message tranfer
     weak var delegate: DataTransferDelegate?
