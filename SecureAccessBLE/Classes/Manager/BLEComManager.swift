@@ -318,7 +318,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
     func startSendingHeartbeat() {
         //print("sending heartbeat!")
         let message = SIDMessage(id: SIDMessageID.heartBeatRequest, payload: MTUSize())
-        self.sendMessage(message)
+        let _ = self.sendMessage(message)
     }
     
     /**
@@ -416,12 +416,12 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
             }
             
             let message = SIDMessage(id: SIDMessageID.serviceGrant, payload: payload)
-            self.sendMessage(message)
+            let _ = self.sendMessage(message)
             
             if let stop = stopPayload {
                 Delay(0.5, closure: { () -> () in
                     let message = SIDMessage(id: SIDMessageID.serviceGrant, payload: stop)
-                    self.sendMessage(message)
+                    let _ = self.sendMessage(message)
                 })
             }
         }
@@ -432,7 +432,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
      */
     fileprivate func sendMtuRequest() {
         let message = SIDMessage(id: SIDMessageID.mtuRequest, payload: MTUSize())
-        self.sendMessage(message)
+        let _ = self.sendMessage(message)
     }
     
     /**
@@ -443,7 +443,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
             if let payload = LTBlobPayload(blobData: blobData!)
             {
                 let message = SIDMessage(id: .ltBlob, payload: payload)
-                self.sendMessage(message)
+                let _ = self.sendMessage(message)
             } else {
                 print("Blob data error")
             }
@@ -468,7 +468,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
             return (false, "Sending in progress")
         } else {
             let data = self.cryptoManager.encryptMessage(message)
-            self.communicator?.sendData(data)
+            let _ = self.communicator?.sendData(data)
             //print("----------------------------------------")
 //            print("Send Encrypted Message: \(data.toHexString())")
 //            print("Same message decrypted: \(self.cryptoManager.decryptData(data).data.toHexString())")
@@ -524,7 +524,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
      */
     func challengerWantsSendMessage(_ message: SIDMessage) {
         //print ("cram send message!")
-        self.sendMessage(message)
+        let _ = self.sendMessage(message)
     }
     
     /**
@@ -571,7 +571,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
             let pointer = (messageData as NSData).bytes.bindMemory(to: UInt32.self, capacity: messageData.count)
             let count = count
             let buffer = UnsafeBufferPointer<UInt32>(start:pointer, count:count)
-            let array = [UInt32](buffer)
+            _ = [UInt32](buffer)
             //print ("received Data array:\(array) for message id:\(message.id)")
             
             switch message.id {

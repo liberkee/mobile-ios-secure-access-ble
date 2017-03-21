@@ -127,12 +127,4 @@ class BLECommunicatorTests: XCTestCase {
         self.communicator.transferDidDiscoveredSidId(self.communicator.transporter, newSid: SID(sidID: "2c6088153bc7434f9c2b2e3272596adc", peripheral: mockPeripheral, discoveryDate: Date().addingTimeInterval(-3.0) as Date, isConnected: false))
         self.communicator.transferDidDiscoveredSidId(self.communicator.transporter, newSid: SID(sidID: "250bf2429d8c4f2896e2030dfe601bd8", peripheral: mockPeripheral, discoveryDate: Date().addingTimeInterval(-4.8) as Date, isConnected: false))
     }
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-    
 }

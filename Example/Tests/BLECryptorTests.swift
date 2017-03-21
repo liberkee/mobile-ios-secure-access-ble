@@ -86,11 +86,4 @@ class BLECryptorTests: XCTestCase {
         /// Testing if service grant trigger has result .Locked
         XCTAssertEqual(serviceGrantTrigger.result, ServiceGrantTrigger.ServiceGrantResult.Locked, "Crypto manager returned wrong service grant result!")
     }
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            
-        }
-    }
 }

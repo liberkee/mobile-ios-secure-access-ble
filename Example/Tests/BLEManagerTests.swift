@@ -144,7 +144,7 @@ class BLEManagerTests: XCTestCase {
     func testSendingBlob() {
         /// Mock session key for crypto
         
-        let mockSessionKey = [0x11,0x78,0x78,0x78,0x3c,0x13,0xb2,0x86,0x78,0x78,0x58,0x78,0x23,0xab,0x78] as [UInt8]
+        let mockSessionKey = [0xa9,0xba,0x14,0xa1,0x50,0x20,0x9f,0xe2,0x30,0xe7,0x1a,0x2b,0x78,0x0f,0x06,0x45] as [UInt8]
         
         /// Ble manager with established AES crypto manager
         self.bleManager.challengerFinishedWithSessionKey(mockSessionKey)
@@ -165,13 +165,4 @@ class BLEManagerTests: XCTestCase {
         /// Test if sending if success
         XCTAssertTrue(sendingSuccess.success, "Sending Lease token blob message did failed!")
     }
-    
-    
-    func testPerformanceExample() {
-        self.measure {
-        }
-    }
-    
-    
-        
 }

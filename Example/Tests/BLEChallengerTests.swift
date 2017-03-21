@@ -103,12 +103,4 @@ class BLEChallengerTests: XCTestCase {
         ///  decrypted message from app function identical with original message
         XCTAssertEqual(permutatedR3, nc, "Tests with Chalenge SidMessage failed")
     }
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-    
 }

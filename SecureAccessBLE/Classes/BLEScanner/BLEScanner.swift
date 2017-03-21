@@ -330,7 +330,7 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
             }
             self.delegate?.transferDidChangedConnectionState(self, isConnected: isConnected)
             
-            guard let connectingdSid = connectingdSid else {
+            guard connectingdSid != nil else {
                 print("The user left the application for some time, BLE connection lost")
                 return
             }
