@@ -163,10 +163,9 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
     ///The connection state
     open var isConnected: Bool {
         let connectedState = self.currentConnectionState == .connected
-        //let encryptionNoState = self.currentEncryptionState == .NoEncryption
         let encryptionEstablished = self.currentEncryptionState == .encryptionEstablished
-        //print("connected? \(self.currentConnectionState) NoEncryption?: \(encryptionNoState) EncryptionEstablished?: \(encryptionEstablished)")
-        return connectedState && encryptionEstablished//(encryptionNoState || encryptionEstablished)
+        print("connected? \(self.currentConnectionState) EncryptionEstablished?: \(encryptionEstablished)")
+        return connectedState && encryptionEstablished
     }
     
     /// Connection state, default as .Notconnected
@@ -316,7 +315,6 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
      Sending heartbeats message to SID
      */
     func startSendingHeartbeat() {
-        //print("sending heartbeat!")
         let message = SIDMessage(id: SIDMessageID.heartBeatRequest, payload: MTUSize())
         let _ = self.sendMessage(message)
     }
@@ -469,12 +467,13 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
         } else {
             let data = self.cryptoManager.encryptMessage(message)
             let _ = self.communicator?.sendData(data)
-            //print("----------------------------------------")
-//            print("Send Encrypted Message: \(data.toHexString())")
-//            print("Same message decrypted: \(self.cryptoManager.decryptData(data).data.toHexString())")
-            //let key = NSData.withBytes(self.cryptoManager.key)
-            //print("With key: \(key.toHexString())")
-            //print("-----------  sended message with id: \(message.id) -------------")
+            
+            /*
+            print("Send Encrypted Message: \(data.toHexString())")
+            print("Same message decrypted: \(self.cryptoManager.decryptData(data).data.toHexString())")
+            let key = NSData.withBytes(self.cryptoManager.key)
+            print("With key: \(key.toHexString())")
+            */
         }
         return (true, nil)
     }
@@ -523,7 +522,6 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
      - parameter message: the message that will be sent to SID peripheral
      */
     func challengerWantsSendMessage(_ message: SIDMessage) {
-        //print ("cram send message!")
         let _ = self.sendMessage(message)
     }
     
@@ -572,7 +570,6 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
             let count = count
             let buffer = UnsafeBufferPointer<UInt32>(start:pointer, count:count)
             _ = [UInt32](buffer)
-            //print ("received Data array:\(array) for message id:\(message.id)")
             
             switch message.id {
             //MTU Size
@@ -629,10 +626,8 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
             self.sendMtuRequest()
         } else {
             print("Will be both BLE and Comm. disconnected!")
-            //self.disconnect()
             self.currentConnectionState = .notConnected
         }
-        //self.delegate?.bleDidChangedConnectionState(connected)
     }
     
     /**

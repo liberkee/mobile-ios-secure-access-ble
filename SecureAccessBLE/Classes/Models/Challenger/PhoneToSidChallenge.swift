@@ -22,7 +22,7 @@ struct PhoneToSidChallenge: SIDMessagePayload {
      Read-only, can be only set through a initializer.
      */
     var leaseId: String {
-        let part = self.data.subdata(in: 0..<36)//NSMakeRange(0, 36))
+        let part = self.data.subdata(in: 0..<36) // 36 chars
         if let deviceId = NSString(data: part, encoding: String.Encoding.utf8.rawValue) {
             return deviceId as String
         } else {
@@ -35,7 +35,7 @@ struct PhoneToSidChallenge: SIDMessagePayload {
      Read-only, can be only set through a initializer.
      */
     var sidID: String {
-        let part = self.data.subdata(in: 36..<72)//NSMakeRange(36, 36))
+        let part = self.data.subdata(in: 36..<72) // 36 chars
         if let sidId = NSString(data: part, encoding: String.Encoding.utf8.rawValue) {
             return sidId as String
         } else {
@@ -48,7 +48,7 @@ struct PhoneToSidChallenge: SIDMessagePayload {
      Read-only, can be only set through a initializer.
      */
     var leaseTokenID: String {
-        let part = self.data.subdata(in: 72 ..< 108)  //(in: 72..<152)//NSMakeRange(72, 80))
+        let part = self.data.subdata(in: 72 ..< 108) // 36 chars
         if let sidId = NSString(data: part, encoding: String.Encoding.utf8.rawValue) {
             return sidId as String
         } else {
@@ -59,8 +59,8 @@ struct PhoneToSidChallenge: SIDMessagePayload {
      The challenge that should be send.
      */
     var challenge: [UInt8] {
-        let part = self.data.subdata(in: 108..<124)//NSMakeRange(152, 16))
-        let challenge = part.bytes//.arrayOfBytes()
+        let part = self.data.subdata(in: 108..<124) // 128 bits
+        let challenge = part.bytes
         return challenge
     }
     
@@ -88,7 +88,6 @@ struct PhoneToSidChallenge: SIDMessagePayload {
         }
         data.append(challenge, length: challenge.count)
         self.data = data as Data
-        //        debugPrint("data:\(data) with length:\(self.data.length)")
     }
     
 }
