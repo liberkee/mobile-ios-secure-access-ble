@@ -163,16 +163,15 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
     ///The connection state
     open var isConnected: Bool {
         let connectedState = self.currentConnectionState == .connected
-        //let encryptionNoState = self.currentEncryptionState == .NoEncryption
         let encryptionEstablished = self.currentEncryptionState == .encryptionEstablished
-        //debugPrint("connected? \(self.currentConnectionState) NoEncryption?: \(encryptionNoState) EncryptionEstablished?: \(encryptionEstablished)")
-        return connectedState && encryptionEstablished//(encryptionNoState || encryptionEstablished)
+        print("connected? \(self.currentConnectionState) EncryptionEstablished?: \(encryptionEstablished)")
+        return connectedState && encryptionEstablished
     }
     
     /// Connection state, default as .Notconnected
     fileprivate var currentConnectionState = ConnectionState.notConnected {
         didSet {
-            debugPrint("State changed now: \(currentConnectionState)")
+            print("State changed now: \(currentConnectionState)")
         }
     }
     
@@ -183,7 +182,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
     ///  The communicator objec
     fileprivate var communicator: SIDCommunicator?
     /// DeviceId as String came from Userspace.Booking
-    open var deviceId: String = ""
+    open var leaseId: String = ""
     
     /// LeaseToken Id as String came from SecureAccess.blob
     open var leaseTokenId: String = ""
@@ -264,7 +263,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
      Deinit point
      */
     deinit {
-        debugPrint("Will be both BLE and Comm. disconnected!")
+        print("Will be both BLE and Comm. disconnected!")
         self.disconnect()
         self.disconnectTransporter()
     }
@@ -276,7 +275,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
      */
     open func transferIsBusy() -> Bool {
         let transferIsBusy = self.communicator?.currentPackage != nil
-        debugPrint("The transfer is busy: \(transferIsBusy)")
+        print("The transfer is busy: \(transferIsBusy)")
         return transferIsBusy
     }
     
@@ -316,16 +315,15 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
      Sending heartbeats message to SID
      */
     func startSendingHeartbeat() {
-        //debugPrint("sending heartbeat!")
         let message = SIDMessage(id: SIDMessageID.heartBeatRequest, payload: MTUSize())
-        self.sendMessage(message)
+        let _ = self.sendMessage(message)
     }
     
     /**
      check out connection state if timer for checkheartbeat response fired
      */
     func checkoutHeartbeatsResponse() {
-        debugPrint("check heartbeats Response!")
+        print("check heartbeats Response!")
         if (self.lastHeartbeatResponseDate.timeIntervalSinceNow + self.heartbeatTimeout/1000) < 0 {
             self.currentConnectionState = .notConnected
         }
@@ -336,7 +334,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
      Disconnects from current sid
      */
     open func disconnect() {
-        debugPrint("COM-Manager will be disconnected!")
+        print("COM-Manager will be disconnected!")
         self.communicator?.resetCurrentPackage()
         self.communicator?.resetFoundSids()
         self.currentEncryptionState = .shouldEncrypt
@@ -370,19 +368,19 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
      */
     fileprivate func establishCrypto() {
         if self.sidId.isEmpty || self.sidAccessKey.isEmpty {
-            debugPrint("Not found sidId or access key for cram")
+            print("Not found sidId or access key for cram")
             return
         }
-        self.challenger = BLEChallengeService(deviceId: self.deviceId, sidId: self.sidId, leaseTokenId: self.leaseTokenId, sidAccessKey: self.sidAccessKey)
+        self.challenger = BLEChallengeService(leaseId: self.leaseId, sidId: self.sidId, leaseTokenId: self.leaseTokenId, sidAccessKey: self.sidAccessKey)
         self.challenger?.delegate = self
         if self.challenger == nil {
-            debugPrint("Cram could not be initialized")
+            print("Cram could not be initialized")
             return
         }
         do {
             try self.challenger?.beginChallenge()
         } catch {
-            debugPrint("Will be both BLE and Comm. disconnected!")
+            print("Will be both BLE and Comm. disconnected!")
             self.disconnect()
             self.disconnectTransporter()
         }
@@ -416,12 +414,12 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
             }
             
             let message = SIDMessage(id: SIDMessageID.serviceGrant, payload: payload)
-            self.sendMessage(message)
+            let _ = self.sendMessage(message)
             
             if let stop = stopPayload {
                 Delay(0.5, closure: { () -> () in
                     let message = SIDMessage(id: SIDMessageID.serviceGrant, payload: stop)
-                    self.sendMessage(message)
+                    let _ = self.sendMessage(message)
                 })
             }
         }
@@ -432,7 +430,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
      */
     fileprivate func sendMtuRequest() {
         let message = SIDMessage(id: SIDMessageID.mtuRequest, payload: MTUSize())
-        self.sendMessage(message)
+        let _ = self.sendMessage(message)
     }
     
     /**
@@ -443,12 +441,12 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
             if let payload = LTBlobPayload(blobData: blobData!)
             {
                 let message = SIDMessage(id: .ltBlob, payload: payload)
-                self.sendMessage(message)
+                let _ = self.sendMessage(message)
             } else {
-                debugPrint("Blob data error")
+                print("Blob data error")
             }
         } else {
-            debugPrint("Blob data error")
+            print("Blob data error")
         }
     }
     
@@ -463,18 +461,19 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
      */
     func sendMessage(_ message: SIDMessage) -> (success: Bool, error: String?) {
         if self.communicator?.currentPackage != nil {
-            debugPrint("Sending package not empty!! Message \(message.id) will not be sent!!")
-            debugPrint("Package: \(self.communicator?.currentPackage?.message)")
+            print("Sending package not empty!! Message \(message.id) will not be sent!!")
+            print("Package: \(self.communicator?.currentPackage?.message)")
             return (false, "Sending in progress")
         } else {
             let data = self.cryptoManager.encryptMessage(message)
-            self.communicator?.sendData(data)
-            //debugPrint("----------------------------------------")
-//            debugPrint("Send Encrypted Message: \(data.toHexString())")
-//            debugPrint("Same message decrypted: \(self.cryptoManager.decryptData(data).data.toHexString())")
-            //let key = NSData.withBytes(self.cryptoManager.key)
-            //debugPrint("With key: \(key.toHexString())")
-            //debugPrint("-----------  sended message with id: \(message.id) -------------")
+            let _ = self.communicator?.sendData(data)
+            
+            /*
+            print("Send Encrypted Message: \(data.toHexString())")
+            print("Same message decrypted: \(self.cryptoManager.decryptData(data).data.toHexString())")
+            let key = NSData.withBytes(self.cryptoManager.key)
+            print("With key: \(key.toHexString())")
+            */
         }
         return (true, nil)
     }
@@ -511,7 +510,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
         }
         let error = error
         if theStatus == .triggerStatusUnkown {
-            debugPrint("Trigger status unkown!!")
+            print("Trigger status unkown!!")
         }
         self.delegate?.bleDidReceivedServiceTriggerForStatus(theStatus, error: error)
     }
@@ -523,8 +522,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
      - parameter message: the message that will be sent to SID peripheral
      */
     func challengerWantsSendMessage(_ message: SIDMessage) {
-        //print ("cram send message!")
-        self.sendMessage(message)
+        let _ = self.sendMessage(message)
     }
     
     /**
@@ -571,8 +569,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
             let pointer = (messageData as NSData).bytes.bindMemory(to: UInt32.self, capacity: messageData.count)
             let count = count
             let buffer = UnsafeBufferPointer<UInt32>(start:pointer, count:count)
-            let array = [UInt32](buffer)
-            //print ("received Data array:\(array) for message id:\(message.id)")
+            _ = [UInt32](buffer)
             
             switch message.id {
             //MTU Size
@@ -592,7 +589,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
                 do {
                     try self.challenger?.handleReceivedChallengerMessage(message)
                 } catch {
-                    debugPrint("Will be both BLE and Comm. disconnected!")
+                    print("Will be both BLE and Comm. disconnected!")
                     self.disconnect()
                     self.disconnectTransporter()
                 }
@@ -628,11 +625,9 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
             self.currentConnectionState = .connected
             self.sendMtuRequest()
         } else {
-            debugPrint("Will be both BLE and Comm. disconnected!")
-            //self.disconnect()
+            print("Will be both BLE and Comm. disconnected!")
             self.currentConnectionState = .notConnected
         }
-        //self.delegate?.bleDidChangedConnectionState(connected)
     }
     
     /**
