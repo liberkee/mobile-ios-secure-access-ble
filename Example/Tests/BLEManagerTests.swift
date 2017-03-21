@@ -7,12 +7,9 @@
 //
 
 import XCTest
-
+import CryptoSwift
 @testable import SecureAccessBLE
 
-import CryptoSwift
-
-/// Testing for BLE manager
 class BLEManagerTests: XCTestCase {
     /// blescanner instance
     let bleScanner = BLEScanner()
@@ -20,17 +17,6 @@ class BLEManagerTests: XCTestCase {
     let bleCommunicator = SIDCommunicator()
     /// ble manager instance
     let bleManager = BLEComManager(crypto: false)
-    
-    
-    override func setUp() {
-        super.setUp()
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
-    
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
     
     /**
      To test changing connection state in scanner and communicator, and corresposing changed connetion states for BLE-manager
@@ -140,7 +126,9 @@ class BLEManagerTests: XCTestCase {
         
     }
     
-    
+    /**
+     To test ble manager sending blob data
+     */
     func testSendingBlob() {
         /// Mock session key for crypto
         

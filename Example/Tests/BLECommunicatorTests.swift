@@ -7,23 +7,15 @@
 //
 
 import XCTest
-
 @testable import SecureAccessBLE
 
 class BLECommunicatorTests: XCTestCase {
     
     var communicator = SIDCommunicator.init()
     
-    override func setUp() {
-        super.setUp()
-    }
-    
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-        super.tearDown()
-    }
-    
-    /// To test if the from Scanner found new SIDs will be added to found list
+    /**
+     To test if the from Scanner found new SIDs will be added to found list
+     */
     func testFindNewSidID() {
         /// reset all foundsids
         self.communicator.resetFoundSids()
@@ -43,7 +35,9 @@ class BLECommunicatorTests: XCTestCase {
         XCTAssert(self.communicator.hasSidID("2c6088153bc7434f9c2b2e3272596adc"), "Communicator has not found NEW Sid")
     }
     
-    /// To test the sids older as 5.1 seconds will be filtered
+    /**
+     To test the sids older as 5.1 seconds will be filtered
+     */
     func testFilterOldSids() {
         /// reset all foundsids
         self.communicator.resetFoundSids()
@@ -67,7 +61,9 @@ class BLECommunicatorTests: XCTestCase {
         
     }
     
-    /// To test old sid will be replaced with new incomming sid
+    /**
+     To test old sid will be replaced with new incomming sid
+     */
     func testReplaceSameNewSid() {
         /// reset all foundsids
         self.communicator.resetFoundSids()
@@ -80,7 +76,6 @@ class BLECommunicatorTests: XCTestCase {
         
         let reference = Date()
         debugPrint("reference time: \(reference)")
-        
         
         var intervals : [Double] = []// = Array(count: 10, repeatedValue: Double(arc4random_uniform(UInt32(1000))))
         for _ in 0..<100 {
@@ -117,7 +112,7 @@ class BLECommunicatorTests: XCTestCase {
     }
     
     /**
-     For tests
+     Mocked data used for testing purpose
      */
     func refillMockSids() {
         let mockPeripheral = BLEScanner().sidPeripheral
