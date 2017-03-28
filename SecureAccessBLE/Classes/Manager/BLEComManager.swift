@@ -550,8 +550,13 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
     /**
      SID challenger reports to need send Blob to SID peripheral
      */
-    func challengerNeedsSendBlob() {
-       self.sendBlob()
+    func challengerNeedsSendBlob(latestBlobCounter:Int?) {
+        
+        guard latestBlobCounter == nil || blobCounter >= latestBlobCounter!  else {
+            print("Ask user to get latest blob")
+            return
+        }
+        self.sendBlob()
     }
     
 //MARK: - SIDCommunicatorDelegate
