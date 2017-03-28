@@ -190,18 +190,12 @@ struct BLEChallengeService {
             try self.beginChallenge()
         case .badChallengeSidResponse:
             if message.data.count >= 5 {
-                
-                let part = message.data.subdata(in: 2..<6) // 36 chars
-                if let blobMessageCounter = NSString(data: part, encoding: String.Encoding.utf8.rawValue) {
-                    print("Box is asking for a newer blob version then: \(blobMessageCounter)")
-                }
-                
                 var blobMessageCounter = Int(0xFF & message.data[2]) << 24;
                 blobMessageCounter += Int(0xFF & message.data[3]) << 16;
                 blobMessageCounter += Int(0xFF & message.data[4]) << 8;
                 blobMessageCounter += Int(0xFF & message.data[5]);
-                print("Box is asking for a newer blob version then: \(blobMessageCounter)")
                 
+                print("Box is asking for a newer blob version then: \(blobMessageCounter)")
                 self.delegate?.challengerNeedsSendBlob(latestBlobCounter: Int(blobMessageCounter))
             }
             else {

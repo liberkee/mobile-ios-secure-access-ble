@@ -39,6 +39,11 @@ public protocol BLEManagerDelegate: class {
      - parameter oldSids: the lost old sids as array
      */
     func bleDidLostSidIds(_ oldSids: [SID])
+    
+    /**
+     BLE reports blob needs to be updated, because the user is sending an out of date blob token
+     */
+    func blobItOutdated()
 }
 
 // MARK: - Extension point for BLEmanager delegate
@@ -554,6 +559,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
         
         guard latestBlobCounter == nil || blobCounter >= latestBlobCounter!  else {
             print("Ask user to get latest blob")
+            self.delegate?.blobItOutdated()
             return
         }
         self.sendBlob()
