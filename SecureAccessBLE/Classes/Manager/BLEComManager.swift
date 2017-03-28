@@ -20,6 +20,23 @@ public protocol BLEManagerDelegate: class {
     func bleDidReceivedServiceTriggerForStatus(_ status: ServiceGrantTriggerStatus?, error: String?)
     
     /**
+     BLE reports if a connection attempt succeeded
+     
+     - parameter communicator: The communicator object
+     - parameter sid: The SID the connection is made to
+     */
+    func bleDidConnectSid(_ manager: BLEComManager, sid: SID)
+    
+    /**
+     BLE reports if a connection attempt failed
+     
+     - parameter manager: The manager object
+     - parameter sid: The SID the connection should have made to
+     - parameter error: Describes the error
+     */
+    func bleDidFailToConnectSid(_ manager: BLEComManager, sid: SID, error: Error?)
+    
+    /**
      BLE changed connection status
      
      - parameter isConnected: currently connected or not
@@ -52,6 +69,23 @@ public extension BLEManagerDelegate {
     func bleDidReceivedServiceTriggerForStatus(_ status: ServiceGrantTriggerStatus?, error: String?) {}
     
     /**
+     BLE reports if a connection attempt succeeded
+     
+     - parameter communicator: The communicator object
+     - parameter sid: The SID the connection is made to
+     */
+    func bleDidConnectSid(_ manager: BLEComManager, sid: SID) {}
+    
+    /**
+     BLE reports if a connection attempt failed
+     
+     - parameter manager: The manager object
+     - parameter sid: The SID the connection should have made to
+     - parameter error: Describes the error
+     */
+    func bleDidFailToConnectSid(_ manager: BLEComManager, sid: SID, error: Error?) {}
+    
+    /**
      BLE changed connection status
      
      - parameter isConnected: currently connected or not
@@ -71,6 +105,7 @@ public extension BLEManagerDelegate {
      - parameter oldSids: the lost old sids as array
      */
     func bleDidLostSidIds(_ oldSids: [SID]) {}
+
 }
 
 /**
@@ -180,7 +215,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
     /// Chanllenger object
     fileprivate var challenger: BLEChallengeService?
     ///  The communicator objec
-    fileprivate var communicator: SIDCommunicator?
+    private let communicator: SIDCommunicator
     /// DeviceId as String came from Userspace.Booking
     open var leaseId: String = ""
     
@@ -236,11 +271,11 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
             self.currentEncryptionState = .shouldEncrypt
         }
         self.transporter = BLEScanner()
-        super.init()
         self.communicator = SIDCommunicator.init()
-        self.communicator?.transporter = self.transporter
-        self.communicator?.resetFoundSids()
-        self.communicator?.delegate = self
+        self.communicator.transporter = self.transporter
+        self.communicator.resetFoundSids()
+        super.init()
+        self.communicator.delegate = self
     }
     
     /**
@@ -274,7 +309,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
      - returns: Transfer busy
      */
     open func transferIsBusy() -> Bool {
-        let transferIsBusy = self.communicator?.currentPackage != nil
+        let transferIsBusy = self.communicator.currentPackage != nil
         print("The transfer is busy: \(transferIsBusy)")
         return transferIsBusy
     }
@@ -292,7 +327,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
         self.sidId = sidId
         self.blobData = blobData
         self.blobCounter = blobCounter
-        self.communicator?.connectToSid(sidId)
+        self.communicator.connectToSid(sidId)
     }
     
     /**
@@ -316,6 +351,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
      */
     func startSendingHeartbeat() {
         let message = SIDMessage(id: SIDMessageID.heartBeatRequest, payload: MTUSize())
+        // TODO: handle error
         let _ = self.sendMessage(message)
     }
     
@@ -335,8 +371,8 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
      */
     open func disconnect() {
         print("COM-Manager will be disconnected!")
-        self.communicator?.resetCurrentPackage()
-        self.communicator?.resetFoundSids()
+        self.communicator.resetCurrentPackage()
+        self.communicator.resetFoundSids()
         self.currentEncryptionState = .shouldEncrypt
         self.cryptoManager = ZeroSecurityManager()
         self.sendHeartbeatsTimer?.invalidate()
@@ -360,7 +396,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
      - returns: When already in list it returns true, otherwise false.
      */
     open func hasSidID(_ sidId: String) -> Bool {
-        return (self.communicator?.hasSidID(sidId))!
+        return self.communicator.hasSidID(sidId)
     }
     
     /**
@@ -441,7 +477,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
             if let payload = LTBlobPayload(blobData: blobData!)
             {
                 let message = SIDMessage(id: .ltBlob, payload: payload)
-                let _ = self.sendMessage(message)
+                let _ = sendMessage(message)
             } else {
                 print("Blob data error")
             }
@@ -460,13 +496,13 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
      - returns:  (success: Bool, error: String?) A Tuple containing a success boolean and a error string or nil
      */
     func sendMessage(_ message: SIDMessage) -> (success: Bool, error: String?) {
-        if self.communicator?.currentPackage != nil {
+        if communicator.currentPackage != nil {
             print("Sending package not empty!! Message \(message.id) will not be sent!!")
-            print("Package: \(self.communicator?.currentPackage?.message)")
+            print("Package: \(communicator.currentPackage?.message)")
             return (false, "Sending in progress")
         } else {
-            let data = self.cryptoManager.encryptMessage(message)
-            let _ = self.communicator?.sendData(data)
+            let data = cryptoManager.encryptMessage(message)
+            return communicator.sendData(data)
             
             /*
             print("Send Encrypted Message: \(data.toHexString())")
@@ -612,7 +648,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
                 }
             }
         }
-        self.communicator?.resetReceivedPackage()
+        self.communicator.resetReceivedPackage()
     }
     
     /**
@@ -646,5 +682,30 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
      */
     func communicatorDidLostSidIds(_ oldSids: [SID]) {
         self.delegate?.bleDidLostSidIds(oldSids)
+    }
+    
+    /**
+     Communicator reports if a connection attempt succeeded
+     
+     - parameter communicator: The communicator object
+     - parameter sid: The SID the connection is made to
+     */
+    func communicatorDidConnectSid(_ communicator: SIDCommunicator, sid: SID) {
+        // TODO: this has to be advanced to cover further communication between device and sid
+        // it is only used for metrics at the moment
+        delegate?.bleDidConnectSid(self, sid: sid)
+    }
+    
+    /**
+     Communicator reports if a connection attempt failed
+     
+     - parameter communicator: The communicator object
+     - parameter sid: The SID the connection should have made to
+     - parameter error: Describes the error
+     */
+    func communicatorDidFailToConnectSid(_ communicator: SIDCommunicator, sid: SID, error: Error?) {
+        // TODO: this has to be advanced to cover further communication between device and sid
+        // it is only used for metrics at the moment
+        delegate?.bleDidFailToConnectSid(self, sid: sid, error: error)
     }
 }

@@ -66,7 +66,16 @@ protocol DataTransferDelegate: class {
      - parameter dataTransferObject: transporter instance
      - parameter sid:                connected SID instance
      */
-    func transferDidconnectedSid(_ dataTransferObject: DataTransfer, sid: SID)
+    func transferDidConnectSid(_ dataTransferObject: DataTransfer, sid: SID)
+    
+    /**
+     Tells the delegate if a connection attempt failed
+     
+     - parameter dataTransferObject: Transporter instance
+     - parameter sid: The SID the connection should have made to
+     - parameter error: Describes the error
+     */
+    func transferDidFailToConnectSid(_ dataTransferObject: DataTransfer, sid: SID, error: Error?)
     
 }
 

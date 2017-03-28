@@ -22,6 +22,23 @@ protocol SIDCommunicatorDelegate {
     func communicatorDidRecivedData(_ messageData: Data, count: Int)
     
     /**
+     Communicator reports if a connection attempt succeeded
+     
+     - parameter communicator: The communicator object
+     - parameter sid: The SID the connection is made to
+     */
+    func communicatorDidConnectSid(_ communicator: SIDCommunicator, sid: SID)
+    
+    /**
+     Communicator reports if a connection attempt failed
+     
+     - parameter communicator: The communicator object
+     - parameter sid: The SID the connection should have made to
+     - parameter error: Describes the error
+     */
+    func communicatorDidFailToConnectSid(_ communicator: SIDCommunicator, sid: SID, error: Error?)
+    
+    /**
      Communicator reports if connection state did changed
      
      - parameter connected: is connected or not
@@ -41,6 +58,7 @@ protocol SIDCommunicatorDelegate {
      - parameter oldSid: did lost SIDs as Array
      */
     func communicatorDidLostSidIds(_ oldSid: [SID])
+    
 }
 
 /// Sid communicator
@@ -247,14 +265,10 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
     func transferDidDiscoveredSidId(_ dataTransferObject: DataTransfer, newSid: SID) {
         let savedSameSids = self.currentFoundSidIds.filter { (commingSid) -> Bool in
             let sidString = commingSid.sidID
-            if sidString == newSid.sidID {
-                return true
-            } else {
-                return false
-            }
+            return sidString == newSid.sidID
         }
         let replaceOldSids = savedSameSids.count > 0
-        if replaceOldSids == true {
+        if replaceOldSids {
             let oldSidArray = Array(savedSameSids)
             for oldSid in oldSidArray {
                 self.currentFoundSidIds.remove(oldSid)
@@ -266,7 +280,7 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
             newcommingSid.peripheral = (self.connectedSid?.peripheral)!
         }
         self.currentFoundSidIds.insert(newSid)
-        if replaceOldSids == false {
+        if !replaceOldSids {
             self.delegate?.comminicatorDidDiscoveredSidId(newSid)
         }
     }
@@ -312,9 +326,22 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
      - parameter dataTransferObject: transporter instance
      - parameter sid:                connected SID instance
      */
-    func transferDidconnectedSid(_ dataTransferObject: DataTransfer, sid: SID) {
+    func transferDidConnectSid(_ dataTransferObject: DataTransfer, sid: SID) {
         print ("sid: \(sid.sidID) did connected")
         self.connectedSid = sid
+        delegate?.communicatorDidConnectSid(self, sid: sid)
     }
-
+    
+    /**
+     Tells the delegate if a connection attempt failed
+     
+     - parameter dataTransferObject: Transporter instance
+     - parameter sid: The SID the connection should have made to
+     - parameter error: Describes the error
+     */
+    func transferDidFailToConnectSid(_ dataTransferObject: DataTransfer, sid: SID, error: Error?) {
+        // TODO: check if something has to be cleaned up in this instance
+        delegate?.communicatorDidFailToConnectSid(self, sid: sid, error: error)
+    }
+    
 }
