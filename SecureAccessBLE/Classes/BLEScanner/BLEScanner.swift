@@ -26,6 +26,8 @@ public struct SID: Hashable {
     var discoveryDate: Date
     /// If currently connected
     var isConnected: Bool
+    /// The rssi on discovery in dbm
+    public var rssi: Int
     /// has value as Int fo SID id
     public var hashValue: Int {
         return sidID.hashValue
@@ -217,7 +219,7 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
         self.delegate?.transferShouldFilterOldIds(self)
     }
     
-    //MARK: CBCentralDelegate
+    // MARK: - CBCentralDelegate
     /**
      See CBCentralManager documentation from coreBluetooth
      */
@@ -244,20 +246,9 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
             return
         }
         let sidID = manufacturerData.toHexString()
-        let foundSid = SID(sidID: sidID, peripheral: peripheral, discoveryDate: Date(), isConnected: false)
+        let foundSid = SID(sidID: sidID, peripheral: peripheral, discoveryDate: Date(), isConnected: false, rssi: RSSI.intValue)
         self.sids.insert(foundSid)
         self.delegate?.transferDidDiscoveredSidId(self, newSid:foundSid)
-    }
-    
-    /**
-     See CBCentralManager documentation from coreBluetooth
-     */
-    open func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-        consoleLog("Central failed connecting to peripheral: \(error?.localizedDescription ?? "Unkown error")")
-        
-        print(error!.localizedDescription)
-        self.cleanUpSIDs()
-        self.resetPeripheral()
     }
     
     /**
@@ -276,6 +267,19 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
     /**
      See CBCentralManager documentation from coreBluetooth
      */
+    open func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+        consoleLog("Central failed connecting to peripheral: \(error?.localizedDescription ?? "Unkown error")")
+        
+        print(error!.localizedDescription)
+        let sid = connectingdSid!
+        self.cleanUpSIDs()
+        self.resetPeripheral()
+        delegate?.transferDidFailToConnectSid(self, sid: sid, error: error)
+    }
+    
+    /**
+     See CBCentralManager documentation from coreBluetooth
+     */
     open func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         consoleLog("Central disconnected from peripheral: \(peripheral.identifier.uuidString)")
         
@@ -287,15 +291,17 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
         
     }
     
-    //MARK - CBPeripharalDelegate
+    // MARK: - CBPeripheralDelegate
     /**
-     See CBPeripharalDelegate documentation from coreBluetooth
+     See CBPeripheralDelegate documentation from coreBluetooth
      */
     open func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         if error != nil {
             print("Error: \(error!.localizedDescription)")
+            let sid = connectingdSid!
             self.cleanUpSIDs()
             self.resetPeripheral()
+            delegate?.transferDidFailToConnectSid(self, sid: sid, error: error)
         } else {
             for service in peripheral.services! {
                 peripheral.discoverCharacteristics([CBUUID(string: self.writeCharacteristicId), CBUUID(string: self.notifyCharacteristicId)], for: service )
@@ -304,13 +310,15 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
     }
     
     /**
-     See CBPeripharalDelegate documentation from coreBluetooth
+     See CBPeripheralDelegate documentation from coreBluetooth
      */
     open func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
         if error != nil {
             print("Error: \(error!.localizedDescription)")
+            let sid = connectingdSid!
             self.cleanUpSIDs()
             self.resetPeripheral()
+            delegate?.transferDidFailToConnectSid(self, sid: sid, error: error)
         } else {
             for characteristic in service.characteristics! {
                 if characteristic.uuid == CBUUID(string: self.notifyCharacteristicId) {
@@ -332,14 +340,15 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
                 print("The user left the application for some time, BLE connection lost")
                 return
             }
-            self.delegate?.transferDidconnectedSid(self, sid: self.connectingdSid!)
+            self.delegate?.transferDidConnectSid(self, sid: self.connectingdSid!)
         }
     }
     
     /**
-     See CBPeripharalDelegate documentation from coreBluetooth
+     See CBPeripheralDelegate documentation from coreBluetooth
      */
     open func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        // TODO: handle error
         if characteristic == self.notifyCharacteristic {
             print("Received Package at time: \(CACurrentMediaTime())")
             self.delegate?.transferDidReceivedData(self, data: characteristic.value!)
@@ -347,11 +356,11 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
     }
     
     /**
-     See CBPeripharalDelegate documentation from coreBluetooth
+     See CBPeripheralDelegate documentation from coreBluetooth
      */
     open func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
+        // TODO: handle error
         print("Did send Package at time: \(CACurrentMediaTime())")
         self.delegate?.transferDidSendData(self, data: Data())
     }
 }
-

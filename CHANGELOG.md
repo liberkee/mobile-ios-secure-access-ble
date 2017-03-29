@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+- 2017-03-28 : (PLAM-576)   : Added possibility to record connection setup success and error
 
 ### Changed
 - 2017-03-21 : (PLAM-570)   : Changed to secure access api/ble v4
