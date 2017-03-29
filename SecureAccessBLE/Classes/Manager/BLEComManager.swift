@@ -43,7 +43,7 @@ public protocol BLEManagerDelegate: class {
     /**
      BLE reports blob needs to be updated, because the user is sending an out of date blob token
      */
-    func blobItOutdated()
+    func blobIsOutdated()
 }
 
 // MARK: - Extension point for BLEmanager delegate
@@ -559,7 +559,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
         
         guard latestBlobCounter == nil || blobCounter >= latestBlobCounter!  else {
             print("Ask user to get latest blob")
-            self.delegate?.blobItOutdated()
+            self.delegate?.blobIsOutdated()
             return
         }
         self.sendBlob()

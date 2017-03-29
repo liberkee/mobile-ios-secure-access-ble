@@ -195,7 +195,7 @@ struct BLEChallengeService {
                 blobMessageCounter += Int(0xFF & message.data[4]) << 8;
                 blobMessageCounter += Int(0xFF & message.data[5]);
                 
-                print("Box is asking for a newer blob version then: \(blobMessageCounter)")
+                print("Box is asking for a newer blob version than: \(blobMessageCounter)")
                 self.delegate?.challengerNeedsSendBlob(latestBlobCounter: Int(blobMessageCounter))
             }
             else {
