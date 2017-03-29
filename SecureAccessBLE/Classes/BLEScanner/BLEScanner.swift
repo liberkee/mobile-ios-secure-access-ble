@@ -363,7 +363,4 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
         print("Did send Package at time: \(CACurrentMediaTime())")
         self.delegate?.transferDidSendData(self, data: Data())
     }
-    
-    
 }
-
