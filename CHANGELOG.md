@@ -7,7 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 ### Fixed
 
-## [Unreleased]
+## [1.0.5] - 2016-04-12
 ### Added
 - 2017-03-28 : (PLAM-576)   : Added possibility to record connection setup success and error
 
