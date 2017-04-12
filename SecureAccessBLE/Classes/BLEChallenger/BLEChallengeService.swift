@@ -58,7 +58,7 @@ protocol BLEChallengeServiceDelegate {
     /**
      Challenger will send blob
      */
-    func challengerNeedsSendBlob()
+    func challengerNeedsSendBlob(latestBlobCounter:Int?)
 }
 
 /**
@@ -112,7 +112,7 @@ struct BLEChallengeService {
     fileprivate var r5 = [UInt8]()
     
     /// DeviceId as string
-    fileprivate let deviceId: String
+    fileprivate let leaseId: String
     /// Sid id as String
     fileprivate let sidId: String
     /// Lease token id as String
@@ -134,8 +134,8 @@ struct BLEChallengeService {
      
      - returns: new object for BLE Challenger
      */
-    init?(deviceId: String, sidId: String, leaseTokenId: String, sidAccessKey: String) {
-        self.deviceId = deviceId
+    init?(leaseId: String, sidId: String, leaseTokenId: String, sidAccessKey: String) {
+        self.leaseId = leaseId
         self.sidId = sidId
         self.leaseTokenId = leaseTokenId
         self.sidAccessKey = sidAccessKey
@@ -166,7 +166,7 @@ struct BLEChallengeService {
         do {
 //            print ("begin to challenge with nc: \(Data.withBytes(self.nc))")
             try self.b0 = self.crypto.encrypt(self.nc)
-            let payload = PhoneToSidChallenge(deviceID: self.deviceId, sidID: self.sidId, leaseTokenID: self.leaseTokenId, challenge: self.b0)
+            let payload = PhoneToSidChallenge(leaseId: self.leaseId, sidID: self.sidId, leaseTokenID: self.leaseTokenId, challenge: self.b0)
             
             let message = SIDMessage(id: .challengePhone, payload: payload)
             self.delegate?.challengerWantsSendMessage(message)
@@ -183,16 +183,27 @@ struct BLEChallengeService {
      
      - throws:
      */
-    mutating func handleReceivedChallengerMessage(_ response: SIDMessage) throws {
-        debugPrint("Resonse message with id:\(response.id)")
-        switch response.id {
+    mutating func handleReceivedChallengerMessage(_ message: SIDMessage) throws {
+        print("Resonse message with id:\(message.id)")
+        switch message.id {
         case .ltAck:
             try self.beginChallenge()
         case .badChallengeSidResponse:
-            debugPrint("BLE Challenge needs send blob!")
-            self.delegate?.challengerNeedsSendBlob()
+            if message.data.count >= 5 {
+                var blobMessageCounter = Int(0xFF & message.data[2]) << 24;
+                blobMessageCounter += Int(0xFF & message.data[3]) << 16;
+                blobMessageCounter += Int(0xFF & message.data[4]) << 8;
+                blobMessageCounter += Int(0xFF & message.data[5]);
+                
+                print("Box is asking for a newer blob version than: \(blobMessageCounter)")
+                self.delegate?.challengerNeedsSendBlob(latestBlobCounter: Int(blobMessageCounter))
+            }
+            else {
+                print("BLE Challenge needs send blob!")
+                self.delegate?.challengerNeedsSendBlob(latestBlobCounter:nil)
+            }
         case .challengeSidResponse:
-            try self.continueChallenge(response)
+            try self.continueChallenge(message)
         default:
             self.delegate?.challengerAbort(BLEChallengerError.noChallengeMessage)
         }
@@ -226,7 +237,7 @@ struct BLEChallengeService {
                 nr[12],nr[13],nr[14],nr[15],
                 nc[12],nc[13],nc[14],nc[15]
             ]
-            debugPrint("challenger finished with session key: \(Data(bytes:sessionKey))")
+            print("challenger finished with session key: \(Data(bytes:sessionKey))")
             self.delegate?.challengerFinishedWithSessionKey(sessionKey)
         }
     }

@@ -1,19 +1,19 @@
 PODS:
-  - CryptoSwift (0.6.6)
-  - SecureAccessBLE (1.0.2):
-    - CryptoSwift
+  - CryptoSwift (0.6.7)
+  - SecureAccessBLE (1.0.4):
+    - CryptoSwift (= 0.6.7)
 
 DEPENDENCIES:
   - SecureAccessBLE (from `../`)
 
 EXTERNAL SOURCES:
   SecureAccessBLE:
-    :path: "../"
+    :path: ../
 
 SPEC CHECKSUMS:
-  CryptoSwift: 88592381b73f36e192124539390a7c9bacda76af
-  SecureAccessBLE: a4430f9c93db19b1df99af96faf410f23804469e
+  CryptoSwift: 685ae257941e5447474348a2b545583e1a16b573
+  SecureAccessBLE: d5cbad8e17a3d4054e87efd2df77661405528309
 
 PODFILE CHECKSUM: 642a2547eb06eaa1f3197d94bbcc9837368a9bc5
 
-COCOAPODS: 1.1.1
+COCOAPODS: 1.2.0

@@ -6,7 +6,23 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 ### Changed
 ### Fixed
-### Removed
+
+## [1.0.5] - 2016-04-12
+### Added
+- 2017-03-28 : (PLAM-576)   : Added possibility to record connection setup success and error
+
+### Changed
+- 2017-03-21 : (PLAM-570)   : Changed to secure access api/ble v4
+
+### Fixed
+
+## [1.0.4] - 2016-02-28
+### Fixed
+- 2017-02-28 : (PLAM-464)   : Fixed bluetooth delegate
+
+## [1.0.3] - 2012-02-28
+### Added
+- 2017-02-28 : (PLAM-464)   : Added bluetooth delegate
 
 ## [1.0.2] - 2016-08-02
 ### Changed
