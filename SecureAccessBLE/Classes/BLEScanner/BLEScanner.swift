@@ -10,7 +10,7 @@ import UIKit
 import CoreBluetooth
 
 /// Delegatation of CBManager state changes.
-public protocol BLEScannerDelegate {
+protocol BLEScannerDelegate: class {
     func didUpdateState()
 }
 
@@ -69,7 +69,7 @@ extension CBCentralManagerState {
 open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPeripheralDelegate {
 
     /// delegate to handle CBManager state changes.
-    public var bleScannerDelegate: BLEScannerDelegate?
+    weak var bleScannerDelegate: BLEScannerDelegate?
 
     /// delegate for message tranfer
     weak var delegate: DataTransferDelegate?

@@ -63,6 +63,10 @@ public protocol BLEManagerDelegate: class {
     func blobIsOutdated()
 }
 
+public protocol BLEManagerStateDelegate: class {
+    func didUpdateState()
+}
+
 // MARK: - Extension point for BLEmanager delegate
 public extension BLEManagerDelegate {
     /**
@@ -262,6 +266,8 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
     /// The delegate must confirm to the BLEManagerDelegate Protocol
     open weak var delegate: BLEManagerDelegate?
 
+    open weak var stateDelegate: BLEManagerStateDelegate?
+
     open var isPoweredOn: Bool {
         return scanner.isPoweredOn()
     }
@@ -285,6 +291,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
         communicator.transporter = transporter
         communicator.resetFoundSids()
         super.init()
+        scanner.bleScannerDelegate = self
         communicator.delegate = self
     }
 
@@ -722,5 +729,12 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
         // TODO: this has to be advanced to cover further communication between device and sid
         // it is only used for metrics at the moment
         delegate?.bleDidFailToConnectSid(self, sid: sid, error: error)
+    }
+}
+
+extension BLEComManager: BLEScannerDelegate {
+
+    public func didUpdateState() {
+        stateDelegate?.didUpdateState()
     }
 }
