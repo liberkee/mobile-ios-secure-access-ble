@@ -244,6 +244,8 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
 
     fileprivate var lastHeartbeatResponseDate = Date()
 
+    private let scanner = BLEScanner()
+
     /**
      A object that must confirm to the DataTransfer protocol
 
@@ -260,6 +262,10 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
     /// The delegate must confirm to the BLEManagerDelegate Protocol
     open weak var delegate: BLEManagerDelegate?
 
+    open var isPoweredOn: Bool {
+        return scanner.isPoweredOn()
+    }
+
     /**
      Initial point for BLE-Manager
 
@@ -274,7 +280,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
         } else {
             currentEncryptionState = .shouldEncrypt
         }
-        transporter = BLEScanner()
+        transporter = scanner
         communicator = SIDCommunicator.init()
         communicator.transporter = transporter
         communicator.resetFoundSids()
