@@ -14,7 +14,7 @@ import Foundation
 struct ServiceGrantTrigger: ServiceGrant {
     /**
      Defines the Service Grant Status as enumerating, answered from SID peripheral
-     
+
      - Success:    Success status
      - Pending:    Pending status
      - Failure:    Did failed status
@@ -26,10 +26,10 @@ struct ServiceGrantTrigger: ServiceGrant {
         case failure = 0x02
         case notAllowed = 0x03
     }
-    
+
     /**
      Is the Service Grant response to a Trigger service Grant request message defined as enumerating
-     
+
      - Locked:   Door was Locked
      - Unlocked: Door was Unlocked
      - Enabled:  Ignition was enabled
@@ -43,26 +43,26 @@ struct ServiceGrantTrigger: ServiceGrant {
         case Disabled = "DISABLED"
         case Unknown = "UNKNOWN"
     }
-    
+
     /// start value as NSData
     var data: Data
-    
+
     /**
      Initialization point
-     
+
      - returns: service grant trigger
      */
-    init () {
+    init() {
         data = Data()
     }
-    
+
     /**
      Optional initialization point
-     
+
      - parameter grantID: ID, service grant trigger should habe
      - parameter status:  the trigger status defined as ServiceGrantStatus
      - parameter message: message as String
-     
+
      - returns: service grant trigger object
      */
     init(grantID: ServiceGrantID, status: ServiceGrantStatus, message: String?) {
@@ -75,27 +75,27 @@ struct ServiceGrantTrigger: ServiceGrant {
         }
         data = frameData as Data
     }
-    
+
     /// Returns one from ServiceGrantStatus
     var status: ServiceGrantStatus {
         var byteArray = [UInt8](repeating: 0x0, count: 1)
-        (data as Data).copyBytes(to: &byteArray, from: 2..<3)//NSMakeRange(2, 1))
+        (data as Data).copyBytes(to: &byteArray, from: 2 ..< 3) // NSMakeRange(2, 1))
         if let status = ServiceGrantStatus(rawValue: byteArray[0]) {
             return status
         } else {
             return .notAllowed
         }
     }
-    
+
     /// Returns one from ServiceGrantStatus
     var result: ServiceGrantResult {
         if data.count > 3 {
-            let messageData = data.subdata(in: 3..<data.count)//NSMakeRange(3, data.count-3))
+            let messageData = data.subdata(in: 3 ..< data.count) // NSMakeRange(3, data.count-3))
             guard let string = NSString(data: messageData, encoding: String.Encoding.ascii.rawValue) as? String else {
                 return .Unknown
             }
             let cleanString = string.trimmingCharacters(in: CharacterSet.controlCharacters)
-            if let resultCode  = ServiceGrantResult(rawValue: cleanString) {
+            if let resultCode = ServiceGrantResult(rawValue: cleanString) {
                 return resultCode
             } else {
                 return .Unknown

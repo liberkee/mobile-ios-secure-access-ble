@@ -8,7 +8,6 @@
 
 import UIKit
 
-
 /**
  *  SID message payload for second step Challenge responses to SID
  */
@@ -17,18 +16,18 @@ struct PhoneToSidResponse: SIDMessagePayload {
     var data: Data
     /// challenge bytes
     var challenge: [UInt8] {
-        let challenge = self.data.bytes//arrayOfBytes()
+        let challenge = data.bytes // arrayOfBytes()
         return challenge
     }
+
     /**
      Initialization end point
-     
+
      - parameter response: response bytes
-     
+
      - returns: payload object to SID as NSData
      */
     init(response: [UInt8]) {
-        self.data = Data(bytes: response)//Data.withBytes(response)
+        data = Data(bytes: response) // Data.withBytes(response)
     }
-    
 }

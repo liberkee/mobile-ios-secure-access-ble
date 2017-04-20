@@ -5,17 +5,17 @@
 //  Created by Marcin Krzyzanowski on 12/03/15.
 //  Copyright (c) 2015 Marcin Krzyzanowski. All rights reserved.
 //
-//  PKCS is a group of public-key cryptography standards devised 
+//  PKCS is a group of public-key cryptography standards devised
 //  and published by RSA Security Inc, starting in the early 1990s.
 //
 //  PKCS#5 http://tools.ietf.org/html/rfc2898
 
 import Foundation
 
-//public struct PKCS5 {
-//}
+// public struct PKCS5 {
+// }
 //
-//extension PKCS5 {
+// extension PKCS5 {
 //    //
 //    // PBKDF2 - Password-Based Key Derivation Function 2. Key stretching technique.
 //    //          DK = PBKDF2(PRF, Password, Salt, c, dkLen)
@@ -49,4 +49,4 @@ import Foundation
 //            return nil
 //        }
 //    }
-//}
+// }

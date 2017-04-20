@@ -12,7 +12,7 @@ import Foundation
  *  General defined SID message payload, with NSData object type
  */
 protocol SIDMessagePayload {
-    
+
     /// message payload defined as NSData
     var data: Data { set get }
 }
@@ -29,11 +29,10 @@ struct EmptyPayload: SIDMessagePayload {
     var data: Data
     /**
      Initialization point
-     
+
      - returns: new message payload instance
      */
     init() {
-        self.data = Data(bytes:[0x00])
+        data = Data(bytes: [0x00])
     }
-    
 }

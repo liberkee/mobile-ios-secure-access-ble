@@ -16,25 +16,23 @@ struct ZeroSecurityManager: CryptoManager {
     var key: [UInt8] = [0x00] as [UInt8]
     /**
      Encryption message to message Data
-     
+
      - parameter message: incomming SIDMessage
-     
+
      - returns: encrypted message data
      */
     mutating func encryptMessage(_ message: SIDMessage) -> Data {
         return message.data as Data
     }
-    
+
     /**
      To decrypte incomming data to SID Message
-     
+
      - parameter data: incomming Data, that will be decryted
-     
+
      - returns: SID message object decryted from incomming data
      */
     mutating func decryptData(_ data: Data) -> SIDMessage {
         return SIDMessage(rawData: data)
     }
-    
-
 }
