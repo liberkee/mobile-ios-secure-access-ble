@@ -7,7 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 ### Fixed
 
-## [Unreleased]
+## [1.0.5] - 2017-04-12
 ### Added
 - 2017-03-28 : (PLAM-576)   : Added possibility to record connection setup success and error
 
@@ -16,7 +16,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-## [1.0.4] - 2016-02-28
+## [1.0.4] - 2017-02-28
 ### Fixed
 - 2017-02-28 : (PLAM-464)   : Fixed bluetooth delegate
 
