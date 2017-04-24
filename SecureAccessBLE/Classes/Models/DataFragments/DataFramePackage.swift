@@ -8,7 +8,7 @@
 
 import UIKit
 
-///Creates and holds data Frames for a SIDMessage
+/// Creates and holds data Frames for a SIDMessage
 class DataFramePackage: NSObject {
     /// Date frame list
     var frames = [DataFrame]()
@@ -16,30 +16,30 @@ class DataFramePackage: NSObject {
     var currentIndex = 0
     /// Dateframe current used
     var currentFrame: DataFrame? {
-        if frames.isEmpty || currentIndex > frames.count-1 {
+        if frames.isEmpty || currentIndex > frames.count - 1 {
             return nil
         } else {
             let frame = frames[currentIndex]
             return frame
         }
     }
-    
+
     /// The message data the SIDMessage contains
     var message: Data {
         let data = NSMutableData()
-        
+
         for frame in frames {
             data.append(frame.message as Data)
         }
         return data as Data
     }
-    
+
     /**
      convenience initialization point
-     
+
      - parameter messageData: the message data SIDMessage contains
      - parameter frameSize:   the data frame size
-     
+
      - returns: Data frame package objec
      */
     convenience init(messageData: Data, frameSize: Int) {
@@ -49,10 +49,10 @@ class DataFramePackage: NSObject {
         if numberOfFrames == 0 || messageSize % frameSize != 0 {
             numberOfFrames += 1
         }
-        
-        //Create the frames
+
+        // Create the frames
         for i in 0 ..< numberOfFrames {
-            //Configure frame type
+            // Configure frame type
             let type = DataFramePackage.configureType(i, numberOfFrames: numberOfFrames)
             let sequence = i
             let location = i * frameSize
@@ -62,18 +62,18 @@ class DataFramePackage: NSObject {
                 } else {
                     return frameSize
                 }
-                }()
-            
-            let messagePart = messageData.subdata(in: location..<location+frameLength)//NSMakeRange(location, frameLength))
+            }()
+
+            let messagePart = messageData.subdata(in: location ..< location + frameLength) // NSMakeRange(location, frameLength))
             let frame = DataFrame(message: messagePart, type: type, sequenceNumber: UInt8(sequence), completeMessageLength: UInt16(messageData.count))
             frameStack.append(frame)
         }
 
         self.init()
-        self.frames = frameStack
+        frames = frameStack
     }
-    
-//MARK: - Helper
+
+    // MARK: - Helper
     fileprivate class func configureType(_ sequence: Int, numberOfFrames: Int) -> DataFrameType {
         /// Start type as NotValid
         var type = DataFrameType.notValid

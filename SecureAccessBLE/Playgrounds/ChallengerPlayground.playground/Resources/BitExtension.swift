@@ -11,14 +11,14 @@ import Foundation
 extension Bit {
 
     func inverted() -> Bit {
-        if (self == Bit.Zero) {
+        if self == Bit.Zero {
             return Bit.One
         }
 
         return Bit.Zero
     }
 
-    mutating func invert()  {
-        self = self.inverted()
+    mutating func invert() {
+        self = inverted()
     }
 }

@@ -11,7 +11,7 @@ import UIKit
 
 /**
  The test message types defined as enumerating
- 
+
  - Push: for push
  - Loop: for loop
  */
@@ -28,13 +28,13 @@ enum TestMessageType: UInt8 {
 struct TestMessage: SIDMessagePayload {
     ///  start value defined as NSData
     var data: Data
-    
+
     /**
      Initialization point for test message
-     
+
      - parameter message:     the message data defined as NSData
      - parameter commandType: message type for testing, see definition for TestMessageType above
-     
+
      - returns: new Test message instance as Sid messag payload
      */
     init(message: Data, commandType: TestMessageType) {
@@ -44,23 +44,22 @@ struct TestMessage: SIDMessagePayload {
         frameData.append(&commandType, length: 1)
         frameData.append(&messageLength, length: 2)
         frameData.append(message)
-        self.data = frameData as Data
+        data = frameData as Data
     }
-    
+
     /**
      Initializatio point with raw data
-     
+
      - parameter rawData: the data test message should habe
-     
+
      - returns: new test message instance as SID messag payload
      */
     init(rawData: Data) {
         data = rawData
     }
-    
+
     /// message data, that test message should contain
     var message: Data {
-        return data.subdata(in: 4..<data.count)//NSMakeRange(4, data.count-4))
+        return data.subdata(in: 4 ..< data.count) // NSMakeRange(4, data.count-4))
     }
-    
 }
