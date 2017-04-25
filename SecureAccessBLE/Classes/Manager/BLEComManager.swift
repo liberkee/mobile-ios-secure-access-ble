@@ -9,16 +9,23 @@
 import UIKit
 import CryptoSwift
 
-/// All delegate functions, BLE manager offers
+/// A protocol to get notified of BLEManager changes
 public protocol BLEManagerDelegate: class {
+
     /**
-     BLE reports, received service grant trgger
-
-     - parameter status: service grant trigger status
-     - parameter error:  error description
+     BLE discovered new sid
+     
+     - parameter newSid: new found SID object
      */
-    func bleDidReceivedServiceTriggerForStatus(_ status: ServiceGrantTriggerStatus?, error: String?)
-
+    func bleDidDiscoveredSidId(_ newSid: SID)
+    
+    /**
+     BLE reports lost of old sids
+     
+     - parameter oldSids: the lost old sids as array
+     */
+    func bleDidLostSidIds(_ oldSids: [SID])
+    
     /**
      BLE reports if a connection attempt succeeded
 
@@ -37,83 +44,49 @@ public protocol BLEManagerDelegate: class {
     func bleDidFailToConnectSid(_ manager: BLEComManager, sid: SID, error: Error?)
 
     /**
+     BLE reports blob needs to be updated, because the user is sending an out of date blob token
+     */
+    func blobIsOutdated()
+    
+    /**
      BLE changed connection status
 
      - parameter isConnected: currently connected or not
      */
     func bleDidChangedConnectionState(_ isConnected: Bool)
 
+    // TODO: SID is missing here
     /**
-     BLE discovered new sid
-
-     - parameter newSid: new found SID object
+     BLE reports, received service grant trgger
+     
+     - parameter status: service grant trigger status
+     - parameter error:  error description
      */
-    func bleDidDiscoveredSidId(_ newSid: SID)
-
-    /**
-     BLE reports lost of old sids
-
-     - parameter oldSids: the lost old sids as array
-     */
-    func bleDidLostSidIds(_ oldSids: [SID])
-
-    /**
-     BLE reports blob needs to be updated, because the user is sending an out of date blob token
-     */
-    func blobIsOutdated()
+    func bleDidReceivedServiceTriggerForStatus(_ status: ServiceGrantTriggerStatus?, error: String?)
+    
 }
 
+/// Another protocol to get notified of BLEManager changes
 public protocol BLEManagerStateDelegate: class {
     func didUpdateState()
 }
 
-// MARK: - Extension point for BLEmanager delegate
+
+/// Default empty implementations making delegate method implementations optional
 public extension BLEManagerDelegate {
-    /**
-     BLE reports, received service grant trgger
+    
+    func bleDidDiscoveredSidId(_: SID) {}
+    
+    func bleDidLostSidIds(_: [SID]) {}
 
-     - parameter status: service grant trigger status
-     - parameter error:  error description
-     */
-    func bleDidReceivedServiceTriggerForStatus(_: ServiceGrantTriggerStatus?, error _: String?) {}
-
-    /**
-     BLE reports if a connection attempt succeeded
-
-     - parameter communicator: The communicator object
-     - parameter sid: The SID the connection is made to
-     */
     func bleDidConnectSid(_: BLEComManager, sid _: SID) {}
 
-    /**
-     BLE reports if a connection attempt failed
-
-     - parameter manager: The manager object
-     - parameter sid: The SID the connection should have made to
-     - parameter error: Describes the error
-     */
     func bleDidFailToConnectSid(_: BLEComManager, sid _: SID, error _: Error?) {}
 
-    /**
-     BLE changed connection status
-
-     - parameter isConnected: currently connected or not
-     */
     func bleDidChangedConnectionState(_: Bool) {}
+    
+    func bleDidReceivedServiceTriggerForStatus(_: ServiceGrantTriggerStatus?, error _: String?) {}
 
-    /**
-     BLE discovered new sid
-
-     - parameter newSid: new found SID object
-     */
-    func bleDidDiscoveredSidId(_: SID) {}
-
-    /**
-     BLE reports lost of old sids
-
-     - parameter oldSids: the lost old sids as array
-     */
-    func bleDidLostSidIds(_: [SID]) {}
 }
 
 /**
@@ -191,7 +164,7 @@ enum ConnectionState {
 }
 
 /**
- The BLEManager represents the TransportLayer
+ The BLEManager manages the communication with BLE peripherals
  */
 open class BLEComManager: NSObject {
 
