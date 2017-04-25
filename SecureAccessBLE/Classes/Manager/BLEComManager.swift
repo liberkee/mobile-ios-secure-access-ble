@@ -193,7 +193,7 @@ enum ConnectionState {
 /**
  The BLEManager represents the TransportLayer
  */
-open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicatorDelegate {
+open class BLEComManager: NSObject {
 
     /// The Default MTU Size
     static var mtuSize = 20
@@ -223,7 +223,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
     /// Chanllenger object
     fileprivate var challenger: BLEChallengeService?
     ///  The communicator objec
-    private let communicator: SIDCommunicator
+    fileprivate let communicator: SIDCommunicator
     /// DeviceId as String came from Userspace.Booking
     open var leaseId: String = ""
 
@@ -271,7 +271,11 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
     open var isPoweredOn: Bool {
         return scanner.isPoweredOn()
     }
+    
 
+    // MARK: - Inits and deinit
+
+    
     /**
      Initial point for BLE-Manager
 
@@ -317,25 +321,16 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
      */
     deinit {
         print("Will be both BLE and Comm. disconnected!")
-        self.disconnect()
-        self.disconnectTransporter()
+        disconnect()
     }
 
-    /**
-     Helper function repots if the transfer currently busy
+    
+    // MARK: - Public methods
 
-     - returns: Transfer busy
-     */
-    open func transferIsBusy() -> Bool {
-        let transferIsBusy = communicator.currentPackage != nil
-        print("The transfer is busy: \(transferIsBusy)")
-        return transferIsBusy
-    }
-
-    // MARK: - Private and public used functions
+    
     /**
      Connects to a spefific SID
-
+     
      - parameter sidId:       The Id of the SID, it should be connected to
      - parameter blobData:    blobdata as String see also SecureAccess.Blob
      - parameter blobCounter: blobs messageCounter see also SecureAccess.Blob
@@ -345,6 +340,87 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
         self.blobData = blobData
         self.blobCounter = blobCounter
         communicator.connectToSid(sidId)
+    }
+    
+    /**
+     Disconnects from current sid
+     */
+    open func disconnect() {
+        print("COM-Manager will be disconnected!")
+        communicator.resetCurrentPackage()
+        communicator.resetFoundSids()
+        currentEncryptionState = .shouldEncrypt
+        cryptoManager = ZeroSecurityManager()
+        sendHeartbeatsTimer?.invalidate()
+        checkHeartbeatsResponseTimer?.invalidate()
+        
+        if transporter.isConnected {
+            transporter.disconnect()
+        }
+    }
+
+    /**
+     Checks if a SID ID is already discovered.
+
+     - parameter sidId: A SID ID string
+
+     - returns: When already in list it returns true, otherwise false.
+     */
+    open func hasSidID(_ sidId: String) -> Bool {
+        return communicator.hasSidID(sidId)
+    }
+
+    /**
+     Communicating connected SID with sending messages, that was builed from serviceGrant request with
+     id as messages payload
+
+     - parameter feature: defined features to identifier the target SidMessage id
+     */
+    open func sendServiceGrantForFeature(_ feature: ServiceGrantFeature) {
+        if currentEncryptionState == .encryptionEstablished && transferIsBusy() == false {
+            let payload: SIDMessagePayload
+            var stopPayload: SIDMessagePayload?
+            switch feature {
+            case .open:
+                payload = ServiceGrantRequest(grantID: ServiceGrantID.unlock)
+            case .close:
+                payload = ServiceGrantRequest(grantID: ServiceGrantID.lock)
+                stopPayload = ServiceGrantRequest(grantID: ServiceGrantID.disableIgnition)
+            case .ignitionStart:
+                payload = ServiceGrantRequest(grantID: ServiceGrantID.enableIgnition)
+            case .ignitionStop:
+                payload = ServiceGrantRequest(grantID: ServiceGrantID.disableIgnition)
+            case .lockStatus:
+                payload = ServiceGrantRequest(grantID: ServiceGrantID.lockStatus)
+            case .ignitionStatus:
+                payload = ServiceGrantRequest(grantID: ServiceGrantID.ignitionStatus)
+            }
+
+            let message = SIDMessage(id: SIDMessageID.serviceGrant, payload: payload)
+            _ = sendMessage(message)
+
+            if let stop = stopPayload {
+                Delay(0.5, closure: { () -> Void in
+                    let message = SIDMessage(id: SIDMessageID.serviceGrant, payload: stop)
+                    _ = self.sendMessage(message)
+                })
+            }
+        }
+    }
+    
+
+    // MARK: - Private methods
+    
+    
+    /**
+     Helper function repots if the transfer currently busy
+
+     - returns: Transfer busy
+     */
+    private func transferIsBusy() -> Bool {
+        let transferIsBusy = communicator.currentPackage != nil
+        print("The transfer is busy: \(transferIsBusy)")
+        return transferIsBusy
     }
 
     /**
@@ -384,39 +460,6 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
     }
 
     /**
-     Disconnects from current sid
-     */
-    open func disconnect() {
-        print("COM-Manager will be disconnected!")
-        communicator.resetCurrentPackage()
-        communicator.resetFoundSids()
-        currentEncryptionState = .shouldEncrypt
-        cryptoManager = ZeroSecurityManager()
-        sendHeartbeatsTimer?.invalidate()
-        checkHeartbeatsResponseTimer?.invalidate()
-    }
-
-    /**
-     To disconnect dataTransfer
-     */
-    open func disconnectTransporter() {
-        if transporter.isConnected {
-            transporter.disconnect()
-        }
-    }
-
-    /**
-     Checks if a SID ID is already discovered.
-
-     - parameter sidId: A SID ID string
-
-     - returns: When already in list it returns true, otherwise false.
-     */
-    open func hasSidID(_ sidId: String) -> Bool {
-        return communicator.hasSidID(sidId)
-    }
-
-    /**
      Initialize SID challenger to establish Crypto
      */
     fileprivate func establishCrypto() {
@@ -435,46 +478,6 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
         } catch {
             print("Will be both BLE and Comm. disconnected!")
             disconnect()
-            disconnectTransporter()
-        }
-    }
-
-    // MARK: - Communication with SID Peripheral
-    /**
-     Communicating connected SID with sending messages, that was builed from serviceGrant request with
-     id as messages payload
-
-     - parameter feature: defined features to identifier the target SidMessage id
-     */
-    open func sendServiceGrantForFeature(_ feature: ServiceGrantFeature) {
-        if currentEncryptionState == .encryptionEstablished && transferIsBusy() == false {
-            let payload: SIDMessagePayload
-            var stopPayload: SIDMessagePayload?
-            switch feature {
-            case .open:
-                payload = ServiceGrantRequest(grantID: ServiceGrantID.unlock)
-            case .close:
-                payload = ServiceGrantRequest(grantID: ServiceGrantID.lock)
-                stopPayload = ServiceGrantRequest(grantID: ServiceGrantID.disableIgnition)
-            case .ignitionStart:
-                payload = ServiceGrantRequest(grantID: ServiceGrantID.enableIgnition)
-            case .ignitionStop:
-                payload = ServiceGrantRequest(grantID: ServiceGrantID.disableIgnition)
-            case .lockStatus:
-                payload = ServiceGrantRequest(grantID: ServiceGrantID.lockStatus)
-            case .ignitionStatus:
-                payload = ServiceGrantRequest(grantID: ServiceGrantID.ignitionStatus)
-            }
-
-            let message = SIDMessage(id: SIDMessageID.serviceGrant, payload: payload)
-            _ = sendMessage(message)
-
-            if let stop = stopPayload {
-                Delay(0.5, closure: { () -> Void in
-                    let message = SIDMessage(id: SIDMessageID.serviceGrant, payload: stop)
-                    _ = self.sendMessage(message)
-                })
-            }
         }
     }
 
@@ -502,6 +505,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
         }
     }
 
+    // TODO: It is only internal because of tests
     /**
      Sends data over the transporter
      When previous data is still in a sending state, the method will return **false** and an error message.
@@ -536,7 +540,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
      - parameter message: the Response message came from SID
      - parameter error:   error description if that not nil
      */
-    func handleServiceGrantTrigger(_ message: SIDMessage?, error: String?) {
+    fileprivate func handleServiceGrantTrigger(_ message: SIDMessage?, error: String?) {
         let trigger = ServiceGrantTrigger(rawData: message!.message)
         var theStatus = ServiceGrantTriggerStatus.triggerStatusUnkown
 
@@ -566,8 +570,22 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
         }
         delegate?.bleDidReceivedServiceTriggerForStatus(theStatus, error: error)
     }
+    
+}
 
-    // MARK: - SIDChallengerDelegate
+// MARK: - BLEScannerDelegate
+
+extension BLEComManager: BLEScannerDelegate {
+
+    public func didUpdateState() {
+        stateDelegate?.didUpdateState()
+    }
+}
+
+// MARK: - BLEChallengeServiceDelegate
+
+extension BLEComManager: BLEChallengeServiceDelegate {
+
     /**
      SID challenger reports to send SID a message
 
@@ -596,7 +614,6 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
      */
     func challengerAbort(_: BLEChallengerError) {
         disconnect()
-        disconnectTransporter()
     }
 
     /**
@@ -611,8 +628,12 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
         }
         sendBlob()
     }
+}
 
-    // MARK: - SIDCommunicatorDelegate
+// MARK: - SIDCommunicatorDelegate
+
+extension BLEComManager: SIDCommunicatorDelegate {
+
     /**
      Communicator reports did received response data
 
@@ -649,7 +670,6 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
                 } catch {
                     print("Will be both BLE and Comm. disconnected!")
                     disconnect()
-                    disconnectTransporter()
                 }
 
             case .ltBlobRequest:
@@ -689,6 +709,7 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
     }
 
     /**
+
      Communicator reports if new SID was discovered
 
      - parameter newSid: the found SID object
@@ -729,12 +750,5 @@ open class BLEComManager: NSObject, BLEChallengeServiceDelegate, SIDCommunicator
         // TODO: this has to be advanced to cover further communication between device and sid
         // it is only used for metrics at the moment
         delegate?.bleDidFailToConnectSid(self, sid: sid, error: error)
-    }
-}
-
-extension BLEComManager: BLEScannerDelegate {
-
-    public func didUpdateState() {
-        stateDelegate?.didUpdateState()
     }
 }
