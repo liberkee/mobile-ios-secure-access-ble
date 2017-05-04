@@ -9,14 +9,14 @@
 import Foundation
 
 struct NSDataSequence: SequenceType {
-    
+
     let chunkSize: Int
     let data: NSData
-    
+
     func generate() -> AnyGenerator<NSData> {
-        
-        var offset:Int = 0
-        
+
+        var offset: Int = 0
+
         return anyGenerator {
             let result = self.data.subdataWithRange(NSRange(location: offset, length: min(self.chunkSize, self.data.length - offset)))
             offset += result.length

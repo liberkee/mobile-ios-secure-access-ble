@@ -9,7 +9,7 @@
 import Foundation
 
 /**
- *  To build MessagePayload as Blob request sending to SID 
+ *  To build MessagePayload as Blob request sending to SID
  */
 struct BlobRequest: SIDMessagePayload {
     /// Start message payload as NSData for blob request
@@ -22,12 +22,12 @@ struct BlobRequest: SIDMessagePayload {
         debugPrint(receiveData)
         return Int(receiveData)
     }
-    
+
     /**
      Initialization point for Blob request pasyload
-     
+
      - parameter rawData: the message data
-     
+
      - returns: Messag payload object
      */
     init(rawData: Data) {

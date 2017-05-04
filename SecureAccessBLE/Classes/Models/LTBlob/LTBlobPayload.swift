@@ -16,12 +16,12 @@ struct LTBlobPayload: SIDMessagePayload {
     var data: Data
     /**
      Initialization point for Lease token blob payload
-     
+
      - parameter blobData: the incomming blob data as String
-     
+
      - returns: message payload as lease token blob data
      */
     init?(blobData: String) {
-        self.data = Data(base64Encoded: blobData, options: Data.Base64DecodingOptions())!
+        data = Data(base64Encoded: blobData, options: Data.Base64DecodingOptions())!
     }
 }

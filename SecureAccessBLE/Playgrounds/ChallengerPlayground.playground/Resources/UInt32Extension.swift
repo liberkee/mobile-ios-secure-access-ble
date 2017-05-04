@@ -26,26 +26,26 @@ extension UInt32 {
 
 /** Shift bits */
 extension UInt32 {
-    
+
     /** Shift bits to the left. All bits are shifted (including sign bit) */
     private mutating func shiftLeft(count: UInt32) -> UInt32 {
-        if (self == 0) {
-            return self;
+        if self == 0 {
+            return self
         }
-        
+
         let bitsCount = UInt32(sizeof(UInt32) * 8)
         let shiftCount = Swift.min(count, bitsCount - 1)
-        var shiftedValue:UInt32 = 0;
-        
-        for bitIdx in 0..<bitsCount {
+        var shiftedValue: UInt32 = 0
+
+        for bitIdx in 0 ..< bitsCount {
             // if bit is set then copy to result and shift left 1
             let bit = 1 << bitIdx
-            if ((self & bit) == bit) {
+            if (self & bit) == bit {
                 shiftedValue = shiftedValue | (bit << shiftCount)
             }
         }
-        
-        if (shiftedValue != 0 && count >= bitsCount) {
+
+        if shiftedValue != 0 && count >= bitsCount {
             // clear last bit that couldn't be shifted out of range
             shiftedValue = shiftedValue & (~(1 << (bitsCount - 1)))
         }
@@ -53,34 +53,33 @@ extension UInt32 {
         self = shiftedValue
         return self
     }
-    
+
     /** Shift bits to the right. All bits are shifted (including sign bit) */
     private mutating func shiftRight(count: UInt32) -> UInt32 {
-        if (self == 0) {
-            return self;
+        if self == 0 {
+            return self
         }
-        
+
         let bitsCount = UInt32(sizeofValue(self) * 8)
 
-        if (count >= bitsCount) {
+        if count >= bitsCount {
             return 0
         }
 
         let maxBitsForValue = UInt32(floor(log2(Double(self)) + 1))
         let shiftCount = Swift.min(count, maxBitsForValue - 1)
-        var shiftedValue:UInt32 = 0;
-        
-        for bitIdx in 0..<bitsCount {
+        var shiftedValue: UInt32 = 0
+
+        for bitIdx in 0 ..< bitsCount {
             // if bit is set then copy to result and shift left 1
             let bit = 1 << bitIdx
-            if ((self & bit) == bit) {
+            if (self & bit) == bit {
                 shiftedValue = shiftedValue | (bit >> shiftCount)
             }
         }
         self = shiftedValue
         return self
     }
-
 }
 
 /** shift left and assign with bits truncation */
@@ -90,7 +89,7 @@ public func &<<= (inout lhs: UInt32, rhs: UInt32) {
 
 /** shift left with bits truncation */
 public func &<< (lhs: UInt32, rhs: UInt32) -> UInt32 {
-    var l = lhs;
+    var l = lhs
     l.shiftLeft(rhs)
     return l
 }
@@ -102,7 +101,7 @@ func &>>= (inout lhs: UInt32, rhs: UInt32) {
 
 /** shift right and assign with bits truncation */
 func &>> (lhs: UInt32, rhs: UInt32) -> UInt32 {
-    var l = lhs;
+    var l = lhs
     l.shiftRight(rhs)
     return l
 }

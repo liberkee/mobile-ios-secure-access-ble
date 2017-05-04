@@ -16,21 +16,21 @@ struct Handshake: SIDMessagePayload {
     var data: Data
     /**
      Initialization point for handshake
-     
+
      - parameter deviceId: device id as String
      - parameter sidId:    sid id as String
      - parameter leaseId:  lease token id as String
-     
+
      - returns: Hand shake object as Sid message payload
      */
     init(deviceId: String, sidId: String, leaseId: String) {
         let frameData = NSMutableData()
         frameData.append(deviceId.data(using: String.Encoding.ascii)!)
         frameData.append(sidId.data(using: String.Encoding.ascii)!)
-        
+
         frameData.append(leaseId.data(using: String.Encoding.ascii)!)
         let challenge = [UInt8](repeating: 0x0, count: 16)
         frameData.append(Data(bytes: UnsafePointer<UInt8>(challenge), count: challenge.count))
-        self.data = frameData as Data
+        data = frameData as Data
     }
 }
