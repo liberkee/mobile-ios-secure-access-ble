@@ -271,11 +271,9 @@ open class BLEComManager: NSObject {
     open var isPoweredOn: Bool {
         return scanner.isPoweredOn()
     }
-    
 
     // MARK: - Inits and deinit
 
-    
     /**
      Initial point for BLE-Manager
 
@@ -324,13 +322,11 @@ open class BLEComManager: NSObject {
         disconnect()
     }
 
-    
     // MARK: - Public methods
 
-    
     /**
      Connects to a spefific SID
-     
+
      - parameter sidId:       The Id of the SID, it should be connected to
      - parameter blobData:    blobdata as String see also SecureAccess.Blob
      - parameter blobCounter: blobs messageCounter see also SecureAccess.Blob
@@ -341,7 +337,7 @@ open class BLEComManager: NSObject {
         self.blobCounter = blobCounter
         communicator.connectToSid(sidId)
     }
-    
+
     /**
      Disconnects from current sid
      */
@@ -353,7 +349,7 @@ open class BLEComManager: NSObject {
         cryptoManager = ZeroSecurityManager()
         sendHeartbeatsTimer?.invalidate()
         checkHeartbeatsResponseTimer?.invalidate()
-        
+
         if transporter.isConnected {
             transporter.disconnect()
         }
@@ -407,11 +403,9 @@ open class BLEComManager: NSObject {
             }
         }
     }
-    
 
     // MARK: - Private methods
-    
-    
+
     /**
      Helper function repots if the transfer currently busy
 
@@ -570,7 +564,6 @@ open class BLEComManager: NSObject {
         }
         delegate?.bleDidReceivedServiceTriggerForStatus(theStatus, error: error)
     }
-    
 }
 
 // MARK: - BLEScannerDelegate
