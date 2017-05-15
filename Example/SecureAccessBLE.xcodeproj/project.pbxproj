@@ -298,6 +298,7 @@
 			buildConfigurationList = 607FACF21AFB9204008FA782 /* Build configuration list for PBXNativeTarget "SecureAccessBLE_Tests" */;
 			buildPhases = (
 				38C8987EFFF32CC3A7192573 /* [CP] Check Pods Manifest.lock */,
+				E58008D51EC9A8020000F40D /* Run SwiftFormat */,
 				607FACE11AFB9204008FA782 /* Sources */,
 				607FACE21AFB9204008FA782 /* Frameworks */,
 				607FACE31AFB9204008FA782 /* Resources */,
@@ -404,6 +405,20 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		E58008D51EC9A8020000F40D /* Run SwiftFormat */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Run SwiftFormat";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "Pods/SwiftFormat/CommandLineTool/swiftformat ../SecureAccessBLE\nPods/SwiftFormat/CommandLineTool/swiftformat ../Example/Tests";
 		};
 /* End PBXShellScriptBuildPhase section */
 
