@@ -1,7 +1,10 @@
 platform :ios, '9.0'
 use_frameworks!
+
 target 'SecureAccessBLE_Tests' do
+
+  pod 'SwiftFormat/CLI'
+
   pod 'SecureAccessBLE', :path => '../'
-  
   
 end
