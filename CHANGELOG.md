@@ -7,6 +7,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 ### Fixed
 
+## [1.0.7] - 2017-05-17
+
+### Fixed
+
 - 2017-05-17 : (PLAM-820)   : MTU size was read out wrong in release versions
 
 
