@@ -375,13 +375,11 @@ open class BLEComManager: NSObject {
     open func sendServiceGrantForFeature(_ feature: ServiceGrantFeature) {
         if currentEncryptionState == .encryptionEstablished && transferIsBusy() == false {
             let payload: SIDMessagePayload
-            var stopPayload: SIDMessagePayload?
             switch feature {
             case .open:
                 payload = ServiceGrantRequest(grantID: ServiceGrantID.unlock)
             case .close:
                 payload = ServiceGrantRequest(grantID: ServiceGrantID.lock)
-                stopPayload = ServiceGrantRequest(grantID: ServiceGrantID.disableIgnition)
             case .ignitionStart:
                 payload = ServiceGrantRequest(grantID: ServiceGrantID.enableIgnition)
             case .ignitionStop:
@@ -394,13 +392,6 @@ open class BLEComManager: NSObject {
 
             let message = SIDMessage(id: SIDMessageID.serviceGrant, payload: payload)
             _ = sendMessage(message)
-
-            if let stop = stopPayload {
-                Delay(0.5, closure: { () -> Void in
-                    let message = SIDMessage(id: SIDMessageID.serviceGrant, payload: stop)
-                    _ = self.sendMessage(message)
-                })
-            }
         }
     }
 
