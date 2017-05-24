@@ -68,8 +68,9 @@ struct AesCbcCryptoManager: CryptoManager {
      */
     mutating func decryptData(_ data: Data) -> SIDMessage {
         do {
-            if checkMac(data) == false {
-                debugPrint("Huihuihui")
+            guard checkMac(data) else {
+                debugPrint("MAC is invalid.")
+                return SIDMessage(id: SIDMessageID.notValid, payload: EmptyPayload())
             }
 
             let dataWithoutMac = data.subdata(in: 0 ..< data.count - 8) // NSMakeRange(0, data.count-8))
