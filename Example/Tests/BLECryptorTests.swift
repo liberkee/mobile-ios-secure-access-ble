@@ -80,4 +80,18 @@ class BLECryptorTests: XCTestCase {
         /// Testing if service grant trigger has result .Locked
         XCTAssertEqual(serviceGrantTrigger.result, ServiceGrantTrigger.ServiceGrantResult.Locked, "Crypto manager returned wrong service grant result!")
     }
+
+    func test_AesCbcCryptoManager_decryptData_ifMacIsInvalid_messageIdIsNotValid() {
+
+        // Given
+        let sessionKey = [0x00, 0xBA, 0x14, 0xA1, 0x50, 0x20, 0x9F, 0xE2, 0x30, 0xE7, 0x1A, 0x2B, 0x78, 0x0F, 0x06, 0x45] as [UInt8]
+        var aesCryptor = AesCbcCryptoManager(key: sessionKey)
+        let receivedServiceTriggerData = Data(bytes: [0x30, 0x02, 0x00, 0x00] as [UInt8])
+
+        // When
+        let receivedMessage = aesCryptor.decryptData(receivedServiceTriggerData)
+
+        // Then
+        XCTAssertEqual(receivedMessage.id, .notValid)
+    }
 }
