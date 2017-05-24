@@ -7,6 +7,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 ### Fixed
 
+## [1.0.8] - 2017-05-24
+### Added
+### Changed
+### Fixed
+
 - 2017-05-24 : (PLAM-898)   : Fixed crash on decrypting messages with no MAC
 
 ## [1.0.7] - 2017-05-17
