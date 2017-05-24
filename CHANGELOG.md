@@ -7,6 +7,25 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 ### Fixed
 
+## [1.0.8] - 2017-05-24
+### Added
+### Changed
+### Fixed
+
+- 2017-05-24 : (PLAM-898)   : Fixed crash on decrypting messages with no MAC
+
+## [1.0.7] - 2017-05-17
+
+### Fixed
+
+- 2017-05-17 : (PLAM-820)   : MTU size was read out wrong in release versions
+
+
+## [1.0.6] - 2017-05-04
+
+### Changed
+- 2017-04-25 : (PLAM-749)   : Changed parts of the public API
+
 ## [1.0.5] - 2017-04-12
 ### Added
 - 2017-03-28 : (PLAM-576)   : Added possibility to record connection setup success and error

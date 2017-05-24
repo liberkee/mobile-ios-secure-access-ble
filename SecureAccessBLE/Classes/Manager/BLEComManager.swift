@@ -244,11 +244,9 @@ open class BLEComManager: NSObject {
     open var isPoweredOn: Bool {
         return scanner.isPoweredOn()
     }
-    
 
     // MARK: - Inits and deinit
 
-    
     /**
      Initial point for BLE-Manager
 
@@ -297,13 +295,11 @@ open class BLEComManager: NSObject {
         disconnect()
     }
 
-    
     // MARK: - Public methods
 
-    
     /**
      Connects to a spefific SID
-     
+
      - parameter sidId:       The Id of the SID, it should be connected to
      - parameter blobData:    blobdata as String see also SecureAccess.Blob
      - parameter blobCounter: blobs messageCounter see also SecureAccess.Blob
@@ -314,7 +310,7 @@ open class BLEComManager: NSObject {
         self.blobCounter = blobCounter
         communicator.connectToSid(sidId)
     }
-    
+
     /**
      Disconnects from current sid
      */
@@ -326,7 +322,7 @@ open class BLEComManager: NSObject {
         cryptoManager = ZeroSecurityManager()
         sendHeartbeatsTimer?.invalidate()
         checkHeartbeatsResponseTimer?.invalidate()
-        
+
         if transporter.isConnected {
             transporter.disconnect()
         }
@@ -352,13 +348,11 @@ open class BLEComManager: NSObject {
     open func sendServiceGrantForFeature(_ feature: ServiceGrantFeature) {
         if currentEncryptionState == .encryptionEstablished && transferIsBusy() == false {
             let payload: SIDMessagePayload
-            var stopPayload: SIDMessagePayload?
             switch feature {
             case .open:
                 payload = ServiceGrantRequest(grantID: ServiceGrantID.unlock)
             case .close:
                 payload = ServiceGrantRequest(grantID: ServiceGrantID.lock)
-                stopPayload = ServiceGrantRequest(grantID: ServiceGrantID.disableIgnition)
             case .ignitionStart:
                 payload = ServiceGrantRequest(grantID: ServiceGrantID.enableIgnition)
             case .ignitionStop:
@@ -371,20 +365,11 @@ open class BLEComManager: NSObject {
 
             let message = SIDMessage(id: SIDMessageID.serviceGrant, payload: payload)
             _ = sendMessage(message)
-
-            if let stop = stopPayload {
-                Delay(0.5, closure: { () -> Void in
-                    let message = SIDMessage(id: SIDMessageID.serviceGrant, payload: stop)
-                    _ = self.sendMessage(message)
-                })
-            }
         }
     }
-    
 
     // MARK: - Private methods
-    
-    
+
     /**
      Helper function repots if the transfer currently busy
 
@@ -514,8 +499,12 @@ open class BLEComManager: NSObject {
      - parameter error:   error description if that not nil
      */
     fileprivate func handleServiceGrantTrigger(_ message: SIDMessage?, error: String?) {
-        let trigger = ServiceGrantTrigger(rawData: message!.message)
-        var theStatus = ServiceGrantTriggerStatus.triggerStatusUnkown
+
+        var theStatus: ServiceGrantTriggerStatus = .triggerStatusUnkown
+        guard let trigger = message.map({ ServiceGrantTrigger(rawData: $0.message) }) else {
+            delegate?.bleDidReceivedServiceTriggerForStatus(theStatus, error: error)
+            return
+        }
 
         switch trigger.id {
         case .lock: theStatus = (trigger.status == .success) ? .lockSuccess : .lockFailed
@@ -543,7 +532,6 @@ open class BLEComManager: NSObject {
         }
         delegate?.bleDidReceivedServiceTriggerForStatus(theStatus, error: error)
     }
-    
 }
 
 // MARK: - BLEScannerDelegate
@@ -614,53 +602,64 @@ extension BLEComManager: SIDCommunicatorDelegate {
      - parameter count:       received data length
      */
     func communicatorDidRecivedData(_ messageData: Data, count: Int) {
-        if messageData.count == 0 {
-            handleServiceGrantTrigger(nil, error: "No valid data was received")
-        } else {
-            let message = cryptoManager.decryptData(messageData)
-            let pointer = (messageData as NSData).bytes.bindMemory(to: UInt32.self, capacity: messageData.count)
-            let count = count
-            let buffer = UnsafeBufferPointer<UInt32>(start: pointer, count: count)
-            _ = [UInt32](buffer)
 
-            switch message.id {
-                // MTU Size
-            case .mtuReceive:
-                let payload = MTUSize(rawData: message.message)
-                if let mtu = payload.mtuSize {
-                    BLEComManager.mtuSize = mtu
-                }
-                if currentEncryptionState == .shouldEncrypt {
-                    establishCrypto()
-                } else {
-                    delegate?.bleDidChangedConnectionState(true)
-                }
+        let noValidDataErrorMessage = "No valid data was received"
 
-                // Challenger Message
-            case .challengeSidResponse, .badChallengeSidResponse, .ltAck:
-                do {
-                    try challenger?.handleReceivedChallengerMessage(message)
-                } catch {
-                    print("Will be both BLE and Comm. disconnected!")
-                    disconnect()
-                }
+        guard messageData.count > 0 else {
+            handleServiceGrantTrigger(nil, error: noValidDataErrorMessage)
+            communicator.resetReceivedPackage()
+            return
+        }
 
-            case .ltBlobRequest:
-                let payload = BlobRequest(rawData: message.message)
-                if blobCounter > payload.blobMessageId {
-                    sendBlob()
-                }
+        let message = cryptoManager.decryptData(messageData)
+        guard message.id != .notValid else {
+            handleServiceGrantTrigger(nil, error: noValidDataErrorMessage)
+            communicator.resetReceivedPackage()
+            return
+        }
 
-            case .heartBeatResponse:
-                lastHeartbeatResponseDate = Date()
-                checkHeartbeatsResponseTimer?.fireDate = Date().addingTimeInterval(heartbeatTimeout / 1000)
+        let pointer = (messageData as NSData).bytes.bindMemory(to: UInt32.self, capacity: messageData.count)
+        let count = count
+        let buffer = UnsafeBufferPointer<UInt32>(start: pointer, count: count)
+        _ = [UInt32](buffer)
 
-            default:
-                // Normal Message. E.g. ServiceGrant
-                let messageID = message.id
-                if messageID == SIDMessageID.serviceGrantTrigger {
-                    handleServiceGrantTrigger(message, error: nil)
-                }
+        switch message.id {
+            // MTU Size
+        case .mtuReceive:
+            let payload = MTUSize(rawData: message.message)
+            if let mtu = payload.mtuSize {
+                BLEComManager.mtuSize = mtu
+            }
+            if currentEncryptionState == .shouldEncrypt {
+                establishCrypto()
+            } else {
+                delegate?.bleDidChangedConnectionState(true)
+            }
+
+            // Challenger Message
+        case .challengeSidResponse, .badChallengeSidResponse, .ltAck:
+            do {
+                try challenger?.handleReceivedChallengerMessage(message)
+            } catch {
+                print("Will be both BLE and Comm. disconnected!")
+                disconnect()
+            }
+
+        case .ltBlobRequest:
+            let payload = BlobRequest(rawData: message.message)
+            if blobCounter > payload.blobMessageId {
+                sendBlob()
+            }
+
+        case .heartBeatResponse:
+            lastHeartbeatResponseDate = Date()
+            checkHeartbeatsResponseTimer?.fireDate = Date().addingTimeInterval(heartbeatTimeout / 1000)
+
+        default:
+            // Normal Message. E.g. ServiceGrant
+            let messageID = message.id
+            if messageID == SIDMessageID.serviceGrantTrigger {
+                handleServiceGrantTrigger(message, error: nil)
             }
         }
         communicator.resetReceivedPackage()
