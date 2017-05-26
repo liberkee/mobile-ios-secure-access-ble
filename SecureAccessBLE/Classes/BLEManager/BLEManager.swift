@@ -415,7 +415,7 @@ public class BLEManager: NSObject, BLEManagerType {
     func sendMessage(_ message: SIDMessage) -> (success: Bool, error: String?) {
         if communicator.currentPackage != nil {
             print("Sending package not empty!! Message \(message.id) will not be sent!!")
-            print("Package: \(communicator.currentPackage?.message)")
+            print("Package: \(String(describing: communicator.currentPackage?.message))")
             return (false, "Sending in progress")
         } else {
             let data = cryptoManager.encryptMessage(message)
@@ -428,7 +428,6 @@ public class BLEManager: NSObject, BLEManagerType {
              print("With key: \(key.toHexString())")
              */
         }
-        return (true, nil)
     }
 
     /**

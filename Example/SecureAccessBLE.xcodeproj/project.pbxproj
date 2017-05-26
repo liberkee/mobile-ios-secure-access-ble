@@ -53,6 +53,8 @@
 		BDD2935451DD295A50BFBCF1 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		C28A7D5203261E30CA436EC3 /* SecureAccessBLE.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = SecureAccessBLE.podspec; path = ../SecureAccessBLE.podspec; sourceTree = "<group>"; };
 		D955D40F7C47731B2AA178ED /* Pods_SecureAccessBLE_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SecureAccessBLE_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E54F97841ED834E200911309 /* MockBLEManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockBLEManager.swift; sourceTree = "<group>"; };
+		E54F97851ED83CDE00911309 /* SimulatableBLEManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatableBLEManager.swift; sourceTree = "<group>"; };
 		E5AE2F4E1ED5CAD700580405 /* BLEManagerType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEManagerType.swift; sourceTree = "<group>"; };
 		E5AE2F521ED622E200580405 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		E5AE2F531ED622E200580405 /* Subjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subjects.swift; sourceTree = "<group>"; };
@@ -153,6 +155,8 @@
 			children = (
 				E5AE2F4E1ED5CAD700580405 /* BLEManagerType.swift */,
 				46B760791DA2637D003ADDB1 /* BLEManager.swift */,
+				E54F97851ED83CDE00911309 /* SimulatableBLEManager.swift */,
+				E54F97841ED834E200911309 /* MockBLEManager.swift */,
 				E5AE2F521ED622E200580405 /* Extensions.swift */,
 				E5AE2F531ED622E200580405 /* Subjects.swift */,
 			);
