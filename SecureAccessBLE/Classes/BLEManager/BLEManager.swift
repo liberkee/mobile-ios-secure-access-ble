@@ -86,17 +86,12 @@ enum ConnectionState {
 /**
  The BLEManager manages the communication with BLE peripherals
  */
-public class BLEComManager: NSObject, SorcInterface {
+public class BLEManager: NSObject, BLEManagerType {
 
-    public static let shared = BLEComManager()
+    public static let shared = BLEManager()
 
     /// The Default MTU Size
     static var mtuSize = 20
-
-    /// The netto message size (MTU minus frame header information)
-    private var messageFrameSize: Int {
-        return BLEComManager.mtuSize - 4
-    }
 
     /// Connection state, default as .Notconnected
     fileprivate var currentConnectionState = ConnectionState.notConnected {
@@ -161,7 +156,7 @@ public class BLEComManager: NSObject, SorcInterface {
 
      - returns: ble-manager object
      */
-    private init(crypto: Bool = false, sidID _: NSString = "") {
+    init(crypto: Bool = false, sidID _: NSString = "") {
         if crypto == true {
             currentEncryptionState = .noEncryption
         } else {
@@ -329,8 +324,8 @@ public class BLEComManager: NSObject, SorcInterface {
      start timers for sending heartbeat and checking heartbeat response
      */
     fileprivate func bleSchouldSendHeartbeat() {
-        sendHeartbeatsTimer = Timer.scheduledTimer(timeInterval: heartbeatInterval / 1000, target: self, selector: #selector(BLEComManager.startSendingHeartbeat), userInfo: nil, repeats: true)
-        checkHeartbeatsResponseTimer = Timer.scheduledTimer(timeInterval: heartbeatTimeout / 1000, target: self, selector: #selector(BLEComManager.checkoutHeartbeatsResponse), userInfo: nil, repeats: true)
+        sendHeartbeatsTimer = Timer.scheduledTimer(timeInterval: heartbeatInterval / 1000, target: self, selector: #selector(BLEManager.startSendingHeartbeat), userInfo: nil, repeats: true)
+        checkHeartbeatsResponseTimer = Timer.scheduledTimer(timeInterval: heartbeatTimeout / 1000, target: self, selector: #selector(BLEManager.checkoutHeartbeatsResponse), userInfo: nil, repeats: true)
     }
 
     /**
@@ -480,7 +475,7 @@ public class BLEComManager: NSObject, SorcInterface {
 
 // MARK: - BLEScannerDelegate
 
-extension BLEComManager: BLEScannerDelegate {
+extension BLEManager: BLEScannerDelegate {
 
     public func didUpdateState() {
         updatedState.onNext()
@@ -489,7 +484,7 @@ extension BLEComManager: BLEScannerDelegate {
 
 // MARK: - BLEChallengeServiceDelegate
 
-extension BLEComManager: BLEChallengeServiceDelegate {
+extension BLEManager: BLEChallengeServiceDelegate {
 
     /**
      SID challenger reports to send SID a message
@@ -537,7 +532,7 @@ extension BLEComManager: BLEChallengeServiceDelegate {
 
 // MARK: - SIDCommunicatorDelegate
 
-extension BLEComManager: SIDCommunicatorDelegate {
+extension BLEManager: SIDCommunicatorDelegate {
 
     /**
      Communicator reports did received response data
@@ -572,7 +567,7 @@ extension BLEComManager: SIDCommunicatorDelegate {
         case .mtuReceive:
             let payload = MTUSize(rawData: message.message)
             if let mtu = payload.mtuSize {
-                BLEComManager.mtuSize = mtu
+                BLEManager.mtuSize = mtu
             }
             if currentEncryptionState == .shouldEncrypt {
                 establishCrypto()

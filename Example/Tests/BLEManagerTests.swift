@@ -16,7 +16,7 @@ class BLEManagerTests: XCTestCase {
     /// ble communicator instance
     let bleCommunicator = SIDCommunicator()
     /// ble manager instance
-    let bleManager = BLEComManager(crypto: false)
+    let bleManager = BLEManager(crypto: false)
 
     /**
      To test changing connection state in scanner and communicator, and corresposing changed connetion states for BLE-manager
@@ -73,7 +73,7 @@ class BLEManagerTests: XCTestCase {
         bleCommunicator.delegate?.communicatorDidRecivedData(Data(bytes: bytes), count: 1)
 
         /// MTU size for ios device is default 155
-        XCTAssertEqual(BLEComManager.mtuSize, 155, "BLE manager has wrong MTU Size number!")
+        XCTAssertEqual(BLEManager.mtuSize, 155, "BLE manager has wrong MTU Size number!")
     }
 
     /**

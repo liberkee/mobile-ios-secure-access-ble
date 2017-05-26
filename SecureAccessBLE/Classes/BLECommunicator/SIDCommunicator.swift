@@ -65,7 +65,7 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
 
     /// The netto message size (MTU minus frame header information)
     var messageFrameSize: Int {
-        return BLEComManager.mtuSize - 4
+        return BLEManager.mtuSize - 4
     }
 
     /// The Communicator delegate object

@@ -25,7 +25,7 @@
 		46B760731DA2637D003ADDB1 /* DataTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTransfer.swift; sourceTree = "<group>"; };
 		46B760751DA2637D003ADDB1 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		46B760771DA2637D003ADDB1 /* BLEHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEHelper.swift; sourceTree = "<group>"; };
-		46B760791DA2637D003ADDB1 /* BLEComManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEComManager.swift; sourceTree = "<group>"; };
+		46B760791DA2637D003ADDB1 /* BLEManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEManager.swift; sourceTree = "<group>"; };
 		46B7607C1DA2637D003ADDB1 /* PhoneToSidChallenge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneToSidChallenge.swift; sourceTree = "<group>"; };
 		46B7607D1DA2637D003ADDB1 /* PhoneToSidResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneToSidResponse.swift; sourceTree = "<group>"; };
 		46B7607E1DA2637D003ADDB1 /* SidToPhoneResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidToPhoneResponse.swift; sourceTree = "<group>"; };
@@ -53,7 +53,7 @@
 		BDD2935451DD295A50BFBCF1 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		C28A7D5203261E30CA436EC3 /* SecureAccessBLE.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = SecureAccessBLE.podspec; path = ../SecureAccessBLE.podspec; sourceTree = "<group>"; };
 		D955D40F7C47731B2AA178ED /* Pods_SecureAccessBLE_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SecureAccessBLE_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E5AE2F4E1ED5CAD700580405 /* SorcInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SorcInterface.swift; sourceTree = "<group>"; };
+		E5AE2F4E1ED5CAD700580405 /* BLEManagerType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEManagerType.swift; sourceTree = "<group>"; };
 		E5AE2F521ED622E200580405 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		E5AE2F531ED622E200580405 /* Subjects.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subjects.swift; sourceTree = "<group>"; };
 		EE99F13EBAEE0CDC40DBE8F5 /* Pods-SecureAccessBLE_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -74,7 +74,7 @@
 		46B760651DA2637D003ADDB1 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				46B760781DA2637D003ADDB1 /* Manager */,
+				46B760781DA2637D003ADDB1 /* BLEManager */,
 				46B760671DA2637D003ADDB1 /* BLEChallenger */,
 				46B760691DA2637D003ADDB1 /* BLECommunicator */,
 				46B7606B1DA2637D003ADDB1 /* BLECryptor */,
@@ -148,15 +148,15 @@
 			path = Helper;
 			sourceTree = "<group>";
 		};
-		46B760781DA2637D003ADDB1 /* Manager */ = {
+		46B760781DA2637D003ADDB1 /* BLEManager */ = {
 			isa = PBXGroup;
 			children = (
-				46B760791DA2637D003ADDB1 /* BLEComManager.swift */,
-				E5AE2F4E1ED5CAD700580405 /* SorcInterface.swift */,
+				E5AE2F4E1ED5CAD700580405 /* BLEManagerType.swift */,
+				46B760791DA2637D003ADDB1 /* BLEManager.swift */,
 				E5AE2F521ED622E200580405 /* Extensions.swift */,
 				E5AE2F531ED622E200580405 /* Subjects.swift */,
 			);
-			path = Manager;
+			path = BLEManager;
 			sourceTree = "<group>";
 		};
 		46B7607A1DA2637D003ADDB1 /* Models */ = {

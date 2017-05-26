@@ -1,5 +1,5 @@
 //
-//  SorcInterface.swift
+//  BLEManagerType.swift
 //  SecureAccessBLE
 //
 //  Created by Torsten Lehmann on 24.05.17.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol SorcInterface {
+public protocol BLEManagerType: class {
 
     /// Configuration ///
 
@@ -52,7 +52,7 @@ public protocol SorcInterface {
     //// Observables
 
     var connectedToSorc: PublishSubject<SID> { get }
-    
+
     var failedConnectingToSorc: PublishSubject<(sorc: SID, error: Error?)> { get }
 
     var receivedServiceGrantTriggerForStatus: PublishSubject<(status: ServiceGrantTriggerStatus?, error: String?)> { get }
