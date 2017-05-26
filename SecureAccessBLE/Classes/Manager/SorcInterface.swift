@@ -52,23 +52,18 @@ public protocol SorcInterface {
     //// Observables
 
     var connectedToSorc: PublishSubject<SID> { get }
-    // var connectedToSorc: (SID) -> Void { get set }
-    var failedConnectingToSorc: PublishSubject<(sorcId: SID, error: Error)> { get }
-    // var failedConnectingToSorc: (sorcId: SID, error: Error) { get set }
+    
+    var failedConnectingToSorc: PublishSubject<(sorc: SID, error: Error?)> { get }
 
     var receivedServiceGrantTriggerForStatus: PublishSubject<(status: ServiceGrantTriggerStatus?, error: String?)> { get }
-    // var receivedServiceGrantTriggerForStatus: (_ status: ServiceGrantTriggerStatus?, _ error: String?) -> Void { get set }
 
     var sorcDiscovered: PublishSubject<SID> { get }
-    // var sorcDiscovered: (SID) -> Void { get set }
+
     var sorcsLost: PublishSubject<[SID]> { get }
-    //    var sorcsLost: (_ lostSorcIds: [SID]) -> Void { get set }
 
     var blobOutdated: PublishSubject<()> { get }
-    // var blobOutdated: () -> Void { get set }
 
     var connected: BehaviorSubject<Bool> { get }
-    // var changedConnectionState: (_ isConnected: Bool) -> Void { get set }
 
     var updatedState: PublishSubject<()> { get }
 

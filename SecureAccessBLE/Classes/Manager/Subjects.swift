@@ -12,7 +12,7 @@ public protocol Disposable: class {
     func dispose()
 }
 
-public class Disposer: Disposable {
+class Disposer: Disposable {
 
     private let disposeAction: () -> Void
 
@@ -28,6 +28,8 @@ public class Disposer: Disposable {
 public class DisposeBag {
 
     private var disposables = [Disposable]()
+
+    public init() {}
 
     func add(disposable: Disposable) {
         disposables.append(disposable)
@@ -55,17 +57,17 @@ class Subscriber<Value> {
 
 public class BehaviorSubject<Value> {
 
-    private var currentValue: Value
+    private var value: Value
     private var subscribers = [Subscriber<Value>]()
 
-    public init(currentValue: Value) {
-        self.currentValue = currentValue
+    public init(value: Value) {
+        self.value = value
     }
 
     public func subscribeNext(_ next: @escaping (Value) -> Void) -> Disposable {
         let subscriber = Subscriber(next: next)
         subscribers.append(subscriber)
-        subscriber.next(currentValue)
+        subscriber.next(value)
         return Disposer { [weak self] in
             guard let strongSelf = self else { return }
             strongSelf.subscribers.removeObject(subscriber)
@@ -73,7 +75,7 @@ public class BehaviorSubject<Value> {
     }
 
     public func onNext(_ value: Value) {
-        currentValue = value
+        self.value = value
         let subscribersCopy = subscribers
         subscribersCopy.forEach { $0.next(value) }
     }

@@ -9,83 +9,6 @@
 import UIKit
 import CryptoSwift
 
-/// A protocol to get notified of BLEManager changes
-public protocol BLEManagerDelegate: class {
-
-    /**
-     BLE discovered new sid
-
-     - parameter newSid: new found SID object
-     */
-    func bleDidDiscoveredSidId(_ newSid: SID)
-
-    /**
-     BLE reports lost of old sids
-
-     - parameter oldSids: the lost old sids as array
-     */
-    func bleDidLostSidIds(_ oldSids: [SID])
-
-    /**
-     BLE reports if a connection attempt succeeded
-
-     - parameter communicator: The communicator object
-     - parameter sid: The SID the connection is made to
-     */
-    func bleDidConnectSid(_ manager: BLEComManager, sid: SID)
-
-    /**
-     BLE reports if a connection attempt failed
-
-     - parameter manager: The manager object
-     - parameter sid: The SID the connection should have made to
-     - parameter error: Describes the error
-     */
-    func bleDidFailToConnectSid(_ manager: BLEComManager, sid: SID, error: Error?)
-
-    /**
-     BLE reports blob needs to be updated, because the user is sending an out of date blob token
-     */
-    func blobIsOutdated()
-
-    /**
-     BLE changed connection status
-
-     - parameter isConnected: currently connected or not
-     */
-    func bleDidChangedConnectionState(_ isConnected: Bool)
-
-    // TODO: SID is missing here
-    /**
-     BLE reports, received service grant trgger
-
-     - parameter status: service grant trigger status
-     - parameter error:  error description
-     */
-    func bleDidReceivedServiceTriggerForStatus(_ status: ServiceGrantTriggerStatus?, error: String?)
-}
-
-/// Another protocol to get notified of BLEManager changes
-public protocol BLEManagerStateDelegate: class {
-    func didUpdateState()
-}
-
-/// Default empty implementations making delegate method implementations optional
-public extension BLEManagerDelegate {
-
-    func bleDidDiscoveredSidId(_: SID) {}
-
-    func bleDidLostSidIds(_: [SID]) {}
-
-    func bleDidConnectSid(_: BLEComManager, sid _: SID) {}
-
-    func bleDidFailToConnectSid(_: BLEComManager, sid _: SID, error _: Error?) {}
-
-    func bleDidChangedConnectionState(_: Bool) {}
-
-    func bleDidReceivedServiceTriggerForStatus(_: ServiceGrantTriggerStatus?, error _: String?) {}
-}
-
 /**
  Defines the ServiceGrantTriggersStatus anwered from SID, see also the definations for
  ServiceGrantID, ServiceGrantStatus and ServiceGrantResult defined in 'ServiceGrantTrigger.swift'
@@ -163,7 +86,9 @@ enum ConnectionState {
 /**
  The BLEManager manages the communication with BLE peripherals
  */
-public class BLEComManager: NSObject {
+public class BLEComManager: NSObject, SorcInterface {
+
+    public static let shared = BLEComManager()
 
     /// The Default MTU Size
     static var mtuSize = 20
@@ -236,7 +161,7 @@ public class BLEComManager: NSObject {
 
      - returns: ble-manager object
      */
-    public required init(crypto: Bool = false, sidID _: NSString = "") {
+    private init(crypto: Bool = false, sidID _: NSString = "") {
         if crypto == true {
             currentEncryptionState = .noEncryption
         } else {
@@ -260,12 +185,11 @@ public class BLEComManager: NSObject {
 
      - returns: BLE-Manager object
      */
-    convenience init(transporter: BLEScanner, delegate: BLEManagerDelegate, crypto: Bool = false, heartbeatInterval: Int, heartbeatTimeout: Int) {
+    convenience init(transporter: BLEScanner, crypto: Bool = false, heartbeatInterval: Int, heartbeatTimeout: Int) {
         self.init(crypto: crypto)
         self.transporter = transporter
         self.heartbeatInterval = Double(heartbeatInterval)
         self.heartbeatTimeout = Double(heartbeatTimeout)
-        self.delegate = delegate
     }
 
     /**
@@ -284,11 +208,6 @@ public class BLEComManager: NSObject {
     /// time out the ble should waite for heartbeat response
     public var heartbeatTimeout: Double = 4000.0
 
-    /// The delegate must confirm to the BLEManagerDelegate Protocol
-    public weak var delegate: BLEManagerDelegate?
-
-    public weak var stateDelegate: BLEManagerStateDelegate?
-
     public var isPoweredOn: Bool {
         return scanner.isPoweredOn()
     }
@@ -299,6 +218,17 @@ public class BLEComManager: NSObject {
         let encryptionEstablished = currentEncryptionState == .encryptionEstablished
         print("connected? \(self.currentConnectionState) EncryptionEstablished?: \(encryptionEstablished)")
         return connectedState && encryptionEstablished
+    }
+
+    /**
+     Checks if a SID ID is already discovered.
+
+     - parameter sidId: A SID ID string
+
+     - returns: When already in list it returns true, otherwise false.
+     */
+    public func hasSorcId(_ sorcId: String) -> Bool {
+        return communicator.hasSidID(sorcId)
     }
 
     /**
@@ -335,17 +265,6 @@ public class BLEComManager: NSObject {
     }
 
     /**
-     Checks if a SID ID is already discovered.
-
-     - parameter sidId: A SID ID string
-
-     - returns: When already in list it returns true, otherwise false.
-     */
-    public func hasSorcId(_ sorcId: String) -> Bool {
-        return communicator.hasSidID(sorcId)
-    }
-
-    /**
      Communicating connected SID with sending messages, that was builed from serviceGrant request with
      id as messages payload
 
@@ -373,6 +292,25 @@ public class BLEComManager: NSObject {
             _ = sendMessage(message)
         }
     }
+
+    public var connectedToSorc = PublishSubject<SID>()
+
+    public var failedConnectingToSorc = PublishSubject<(sorc: SID, error: Error?)>()
+
+    public var receivedServiceGrantTriggerForStatus = PublishSubject<(status: ServiceGrantTriggerStatus?, error: String?)>()
+
+    public var sorcDiscovered = PublishSubject<SID>()
+
+    public var sorcsLost = PublishSubject<[SID]>()
+
+    public var blobOutdated = PublishSubject<()>()
+
+    public var connected = BehaviorSubject<Bool>(value: false)
+
+    public var updatedState = PublishSubject<()>()
+
+    // TODO: PLAM-749 implement
+    public var discoveredSorcs = BehaviorSubject<[SID]>(value: [])
 
     // MARK: - Private methods
 
@@ -420,7 +358,7 @@ public class BLEComManager: NSObject {
         if (lastHeartbeatResponseDate.timeIntervalSinceNow + heartbeatTimeout / 1000) < 0 {
             currentConnectionState = .notConnected
         }
-        delegate?.bleDidChangedConnectionState(currentConnectionState == .connected)
+        connected.onNext(currentConnectionState == .connected)
     }
 
     /**
@@ -508,7 +446,7 @@ public class BLEComManager: NSObject {
 
         var theStatus: ServiceGrantTriggerStatus = .triggerStatusUnkown
         guard let trigger = message.map({ ServiceGrantTrigger(rawData: $0.message) }) else {
-            delegate?.bleDidReceivedServiceTriggerForStatus(theStatus, error: error)
+            receivedServiceGrantTriggerForStatus.onNext((status: theStatus, error: error))
             return
         }
 
@@ -536,7 +474,7 @@ public class BLEComManager: NSObject {
         if theStatus == .triggerStatusUnkown {
             print("Trigger status unkown!!")
         }
-        delegate?.bleDidReceivedServiceTriggerForStatus(theStatus, error: error)
+        receivedServiceGrantTriggerForStatus.onNext((status: theStatus, error: error))
     }
 }
 
@@ -545,7 +483,7 @@ public class BLEComManager: NSObject {
 extension BLEComManager: BLEScannerDelegate {
 
     public func didUpdateState() {
-        stateDelegate?.didUpdateState()
+        updatedState.onNext()
     }
 }
 
@@ -570,7 +508,7 @@ extension BLEComManager: BLEChallengeServiceDelegate {
     func challengerFinishedWithSessionKey(_ sessionKey: [UInt8]) {
         cryptoManager = AesCbcCryptoManager(key: sessionKey)
         currentEncryptionState = .encryptionEstablished
-        delegate?.bleDidChangedConnectionState(true)
+        connected.onNext(true)
         bleSchouldSendHeartbeat()
     }
 
@@ -590,7 +528,7 @@ extension BLEComManager: BLEChallengeServiceDelegate {
 
         guard latestBlobCounter == nil || blobCounter >= latestBlobCounter! else {
             print("Ask user to get latest blob")
-            delegate?.blobIsOutdated()
+            blobOutdated.onNext()
             return
         }
         sendBlob()
@@ -639,7 +577,7 @@ extension BLEComManager: SIDCommunicatorDelegate {
             if currentEncryptionState == .shouldEncrypt {
                 establishCrypto()
             } else {
-                delegate?.bleDidChangedConnectionState(true)
+                connected.onNext(true)
             }
 
             // Challenger Message
@@ -693,7 +631,7 @@ extension BLEComManager: SIDCommunicatorDelegate {
      - parameter newSid: the found SID object
      */
     func comminicatorDidDiscoveredSidId(_ newSid: SID) {
-        delegate?.bleDidDiscoveredSidId(newSid)
+        sorcDiscovered.onNext(newSid)
     }
 
     /**
@@ -702,7 +640,7 @@ extension BLEComManager: SIDCommunicatorDelegate {
      - parameter oldSid: did lost SIDs as Array
      */
     func communicatorDidLostSidIds(_ oldSids: [SID]) {
-        delegate?.bleDidLostSidIds(oldSids)
+        sorcsLost.onNext(oldSids)
     }
 
     /**
@@ -714,7 +652,7 @@ extension BLEComManager: SIDCommunicatorDelegate {
     func communicatorDidConnectSid(_: SIDCommunicator, sid: SID) {
         // TODO: this has to be advanced to cover further communication between device and sid
         // it is only used for metrics at the moment
-        delegate?.bleDidConnectSid(self, sid: sid)
+        connectedToSorc.onNext(sid)
     }
 
     /**
@@ -727,6 +665,6 @@ extension BLEComManager: SIDCommunicatorDelegate {
     func communicatorDidFailToConnectSid(_: SIDCommunicator, sid: SID, error: Error?) {
         // TODO: this has to be advanced to cover further communication between device and sid
         // it is only used for metrics at the moment
-        delegate?.bleDidFailToConnectSid(self, sid: sid, error: error)
+        failedConnectingToSorc.onNext((sorc: sid, error: error))
     }
 }
