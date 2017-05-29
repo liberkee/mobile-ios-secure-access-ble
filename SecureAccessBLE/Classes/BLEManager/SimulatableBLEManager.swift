@@ -20,6 +20,10 @@ public class SimulatableBLEManager: BLEManagerType {
 
     private let disposeBag = DisposeBag()
 
+    private var currentManager: BLEManagerType {
+        return isSimulating ? mockManager : realManager
+    }
+
     init(realManager: BLEManagerType, mockManager: BLEManagerType) {
         self.realManager = realManager
         self.mockManager = mockManager
@@ -28,14 +32,10 @@ public class SimulatableBLEManager: BLEManagerType {
         setUpManager(self.mockManager)
     }
 
-    var isSimulating: Bool = true {
+    public var isSimulating: Bool = false {
         willSet {
             currentManager.disconnect()
         }
-    }
-
-    private var currentManager: BLEManagerType {
-        return isSimulating ? mockManager : realManager
     }
 
     public var heartbeatInterval: Double {
