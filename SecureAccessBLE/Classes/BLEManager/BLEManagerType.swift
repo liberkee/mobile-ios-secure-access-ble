@@ -22,8 +22,6 @@ public protocol BLEManagerType: class {
 
     var isPoweredOn: Bool { get }
 
-    var isConnected: Bool { get }
-
     func hasSorcId(_ sorcId: String) -> Bool
 
     /// Actions ///

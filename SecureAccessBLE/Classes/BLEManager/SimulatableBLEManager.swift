@@ -81,10 +81,6 @@ public class SimulatableBLEManager: BLEManagerType {
         return currentManager.isPoweredOn
     }
 
-    public var isConnected: Bool {
-        return currentManager.isConnected
-    }
-
     public func hasSorcId(_ sordId: String) -> Bool {
         return currentManager.hasSorcId(sordId)
     }

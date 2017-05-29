@@ -207,14 +207,6 @@ public class BLEManager: NSObject, BLEManagerType {
         return scanner.isPoweredOn()
     }
 
-    /// The connection state
-    public var isConnected: Bool {
-        let connectedState = currentConnectionState == .connected
-        let encryptionEstablished = currentEncryptionState == .encryptionEstablished
-        print("connected? \(self.currentConnectionState) EncryptionEstablished?: \(encryptionEstablished)")
-        return connectedState && encryptionEstablished
-    }
-
     /**
      Checks if a SID ID is already discovered.
 
@@ -309,6 +301,14 @@ public class BLEManager: NSObject, BLEManagerType {
 
     // MARK: - Private methods
 
+    /// The connection state
+    fileprivate var isConnected: Bool {
+        let connectedState = currentConnectionState == .connected
+        let encryptionEstablished = currentEncryptionState == .encryptionEstablished
+        print("connected? \(self.currentConnectionState) EncryptionEstablished?: \(encryptionEstablished)")
+        return connectedState && encryptionEstablished
+    }
+
     /**
      Helper function repots if the transfer currently busy
 
@@ -353,7 +353,7 @@ public class BLEManager: NSObject, BLEManagerType {
         if (lastHeartbeatResponseDate.timeIntervalSinceNow + heartbeatTimeout / 1000) < 0 {
             currentConnectionState = .notConnected
         }
-        connected.onNext(currentConnectionState == .connected)
+        connected.onNext(isConnected)
     }
 
     /**
@@ -502,7 +502,7 @@ extension BLEManager: BLEChallengeServiceDelegate {
     func challengerFinishedWithSessionKey(_ sessionKey: [UInt8]) {
         cryptoManager = AesCbcCryptoManager(key: sessionKey)
         currentEncryptionState = .encryptionEstablished
-        connected.onNext(true)
+        connected.onNext(isConnected)
         bleSchouldSendHeartbeat()
     }
 
@@ -571,7 +571,7 @@ extension BLEManager: SIDCommunicatorDelegate {
             if currentEncryptionState == .shouldEncrypt {
                 establishCrypto()
             } else {
-                connected.onNext(true)
+                connected.onNext(isConnected)
             }
 
             // Challenger Message

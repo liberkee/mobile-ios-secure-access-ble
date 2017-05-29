@@ -57,7 +57,7 @@ class Subscriber<Value> {
 
 public class BehaviorSubject<Value> {
 
-    private var value: Value
+    private(set) public var value: Value
     private var subscribers = [Subscriber<Value>]()
 
     public init(value: Value) {
