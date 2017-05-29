@@ -221,9 +221,6 @@ public class BLEManager: NSObject, BLEManagerType {
 
     public var sorcsLost = PublishSubject<[SID]>()
 
-    // TODO: PLAM-749 implement
-    public var discoveredSorcs = BehaviorSubject<[SID]>(value: [])
-
     // MARK: - Connection
 
     public var connected = BehaviorSubject<Bool>(value: false)

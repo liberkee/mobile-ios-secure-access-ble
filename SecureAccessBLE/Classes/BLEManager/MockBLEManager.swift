@@ -44,9 +44,6 @@ class MockBLEManager: BLEManagerType {
     // Not mocked
     public var sorcsLost = PublishSubject<[SID]>()
 
-    // Not mocked
-    public var discoveredSorcs = BehaviorSubject<[SID]>(value: [])
-
     // MARK: - Connection
 
     public var connected = BehaviorSubject<Bool>(value: false)

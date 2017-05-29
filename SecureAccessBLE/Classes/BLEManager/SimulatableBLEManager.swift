@@ -8,8 +8,10 @@
 
 import Foundation
 
+/// A BLEManager that can switch between simulated and real BLE communication
 public class SimulatableBLEManager: BLEManagerType {
 
+    /// The single shared instance
     public static let shared = SimulatableBLEManager(
         realManager: BLEManager.shared,
         mockManager: MockBLEManager()
@@ -24,6 +26,11 @@ public class SimulatableBLEManager: BLEManagerType {
         return isSimulating ? mockManager : realManager
     }
 
+    /**
+     Initializes the manager
+     - parameter realManager: The manager for real BLE communication
+     - parameter mockManager: The manager for simulated BLE communication
+     */
     init(realManager: BLEManagerType, mockManager: BLEManagerType) {
         self.realManager = realManager
         self.mockManager = mockManager
@@ -32,6 +39,7 @@ public class SimulatableBLEManager: BLEManagerType {
         setUpManager(self.mockManager)
     }
 
+    /// If BLE is simulated currently
     public var isSimulating: Bool = false {
         willSet {
             currentManager.disconnect()
@@ -73,9 +81,6 @@ public class SimulatableBLEManager: BLEManagerType {
     public var connected = BehaviorSubject<Bool>(value: false)
 
     public var updatedState = PublishSubject<()>()
-
-    // TODO: PLAM-749 implement
-    public var discoveredSorcs = BehaviorSubject<[SID]>(value: [])
 
     public var isPoweredOn: Bool {
         return currentManager.isPoweredOn
@@ -161,14 +166,6 @@ public class SimulatableBLEManager: BLEManagerType {
             guard let strongSelf = self else { return }
             if strongSelf.currentManager === manager {
                 strongSelf.updatedState.onNext()
-            }
-        }
-        .disposed(by: disposeBag)
-
-        manager.discoveredSorcs.subscribeNext { [weak self] sorcs in
-            guard let strongSelf = self else { return }
-            if strongSelf.currentManager === manager {
-                strongSelf.discoveredSorcs.onNext(sorcs)
             }
         }
         .disposed(by: disposeBag)

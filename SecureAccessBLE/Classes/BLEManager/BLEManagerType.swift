@@ -38,9 +38,6 @@ public protocol BLEManagerType: class {
     /// SORCs were lost
     var sorcsLost: PublishSubject<[SID]> { get }
 
-    /// The current discovered SORCs
-    var discoveredSorcs: BehaviorSubject<[SID]> { get }
-
     // MARK: - Connection
 
     /// The connection status
