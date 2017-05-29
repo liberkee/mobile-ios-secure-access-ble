@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// Mocks the communication with a BLE device
 class MockBLEManager: BLEManagerType {
 
     // MARK: - Configuration
@@ -15,8 +16,10 @@ class MockBLEManager: BLEManagerType {
     public let connectionTimeSeconds = 17
     public let serviceTimeSeconds = 2
 
+    // Unused
     public var heartbeatInterval: Double = 2000.0
 
+    // Unused
     public var heartbeatTimeout: Double = 4000.0
 
     // MARK: - Interface
@@ -90,7 +93,7 @@ class MockBLEManager: BLEManagerType {
 
     public func sendServiceGrantForFeature(_ feature: ServiceGrantFeature) {
         let deadline = DispatchTime.now() + DispatchTimeInterval.seconds(serviceTimeSeconds)
-        
+
         let workItem = DispatchWorkItem { [weak self] in
             guard let strongSelf = self else { return }
 
@@ -115,7 +118,7 @@ class MockBLEManager: BLEManagerType {
             }
             strongSelf.receivedServiceGrantTriggerForStatus.onNext((status: triggerStatus, error: nil))
         }
-        
+
         DispatchQueue.main.asyncAfter(deadline: deadline, execute: workItem)
         serviceWorkItem = workItem
     }

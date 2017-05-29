@@ -195,35 +195,51 @@ public class BLEManager: NSObject, BLEManagerType {
         disconnect()
     }
 
-    // MARK: - Public methods
+    // MARK: - Public
 
-    /// time interval Ble should send heartbeat to SID
+    // MARK: Configuration
+
     public var heartbeatInterval: Double = 2000.0
 
-    /// time out the ble should waite for heartbeat response
     public var heartbeatTimeout: Double = 4000.0
+
+    // MARK: Interface
 
     public var isPoweredOn: Bool {
         return scanner.isPoweredOn()
     }
 
-    /**
-     Checks if a SID ID is already discovered.
+    public var updatedState = PublishSubject<()>()
 
-     - parameter sidId: A SID ID string
+    // MARK: Discovery
 
-     - returns: When already in list it returns true, otherwise false.
-     */
     public func hasSorcId(_ sorcId: String) -> Bool {
         return communicator.hasSidID(sorcId)
     }
 
-    /**
-     Connects to a SORC
+    public var sorcDiscovered = PublishSubject<SID>()
 
-     - parameter leaseToken: The lease token for the SORC
-     - parameter blob: The blob for the SORC
-     */
+    public var sorcsLost = PublishSubject<[SID]>()
+
+    // TODO: PLAM-749 implement
+    public var discoveredSorcs = BehaviorSubject<[SID]>(value: [])
+
+    // MARK: - Connection
+
+    public var connected = BehaviorSubject<Bool>(value: false)
+
+    public var connectedToSorc = PublishSubject<SID>()
+
+    public var failedConnectingToSorc = PublishSubject<(sorc: SID, error: Error?)>()
+
+    public var blobOutdated = PublishSubject<()>()
+
+    // MARK: Service
+
+    public var receivedServiceGrantTriggerForStatus = PublishSubject<(status: ServiceGrantTriggerStatus?, error: String?)>()
+
+    // MARK: Actions
+
     public func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob) {
         sidId = leaseToken.sorcId
         leaseTokenId = leaseToken.id
@@ -234,9 +250,6 @@ public class BLEManager: NSObject, BLEManagerType {
         communicator.connectToSid(sidId)
     }
 
-    /**
-     Disconnects from current SORC
-     */
     public func disconnect() {
         print("COM-Manager will be disconnected!")
         communicator.resetCurrentPackage()
@@ -251,12 +264,6 @@ public class BLEManager: NSObject, BLEManagerType {
         }
     }
 
-    /**
-     Communicating connected SID with sending messages, that was builed from serviceGrant request with
-     id as messages payload
-
-     - parameter feature: defined features to identifier the target SidMessage id
-     */
     public func sendServiceGrantForFeature(_ feature: ServiceGrantFeature) {
         if currentEncryptionState == .encryptionEstablished && transferIsBusy() == false {
             let payload: SIDMessagePayload
@@ -279,25 +286,6 @@ public class BLEManager: NSObject, BLEManagerType {
             _ = sendMessage(message)
         }
     }
-
-    public var connectedToSorc = PublishSubject<SID>()
-
-    public var failedConnectingToSorc = PublishSubject<(sorc: SID, error: Error?)>()
-
-    public var receivedServiceGrantTriggerForStatus = PublishSubject<(status: ServiceGrantTriggerStatus?, error: String?)>()
-
-    public var sorcDiscovered = PublishSubject<SID>()
-
-    public var sorcsLost = PublishSubject<[SID]>()
-
-    public var blobOutdated = PublishSubject<()>()
-
-    public var connected = BehaviorSubject<Bool>(value: false)
-
-    public var updatedState = PublishSubject<()>()
-
-    // TODO: PLAM-749 implement
-    public var discoveredSorcs = BehaviorSubject<[SID]>(value: [])
 
     // MARK: - Private methods
 

@@ -8,9 +8,10 @@
 
 import Foundation
 
+/// Declares the contract a BLEManagerType has to follow
 public protocol BLEManagerType: class {
 
-    /// Configuration ///
+    // MARK: - Configuration
 
     /// The interval a heartbeat is sent to the SORC
     var heartbeatInterval: Double { get set }
@@ -18,19 +19,54 @@ public protocol BLEManagerType: class {
     /// The duration to wait for a heartbeat response from the SORC
     var heartbeatTimeout: Double { get set }
 
-    /// Getters ///
+    // MARK: - Interface
 
+    /// If bluetooth is enabled
     var isPoweredOn: Bool { get }
 
+    /// The state of the manager has updated
+    var updatedState: PublishSubject<()> { get }
+
+    // MARK: - Discovery
+
+    /// If the SORC is discovered
     func hasSorcId(_ sorcId: String) -> Bool
 
-    /// Actions ///
+    /// A SORC was discovered
+    var sorcDiscovered: PublishSubject<SID> { get }
+
+    /// SORCs were lost
+    var sorcsLost: PublishSubject<[SID]> { get }
+
+    /// The current discovered SORCs
+    var discoveredSorcs: BehaviorSubject<[SID]> { get }
+
+    // MARK: - Connection
+
+    /// The connection status
+    var connected: BehaviorSubject<Bool> { get }
+
+    /// A connection was established to a SORC
+    var connectedToSorc: PublishSubject<SID> { get }
+
+    /// A connection attempt to a SORC failed
+    var failedConnectingToSorc: PublishSubject<(sorc: SID, error: Error?)> { get }
+
+    /// A blob became outdated
+    var blobOutdated: PublishSubject<()> { get }
+
+    // MARK: - Service
+
+    /// A service grant trigger was received
+    var receivedServiceGrantTriggerForStatus: PublishSubject<(status: ServiceGrantTriggerStatus?, error: String?)> { get }
+
+    // MARK: - Actions
 
     /**
      Connects to a SORC
 
      - parameter leaseToken: The lease token for the SORC
-     - parameter blob: The blob for the SORC
+     - parameter leaseTokenBlob: The blob for the SORC
      */
     func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob)
 
@@ -40,102 +76,9 @@ public protocol BLEManagerType: class {
     func disconnect()
 
     /**
-     Communicating connected SID with sending messages, that was builed from serviceGrant request with
-     id as messages payload
+     Send service grant for a feature to the current connected device
 
-     - parameter feature: defined features to identifier the target SidMessage id
+     - parameter feature: The feature to send the service grant for
      */
     func sendServiceGrantForFeature(_ feature: ServiceGrantFeature)
-
-    //// Observables
-
-    var connectedToSorc: PublishSubject<SID> { get }
-
-    var failedConnectingToSorc: PublishSubject<(sorc: SID, error: Error?)> { get }
-
-    var receivedServiceGrantTriggerForStatus: PublishSubject<(status: ServiceGrantTriggerStatus?, error: String?)> { get }
-
-    var sorcDiscovered: PublishSubject<SID> { get }
-
-    var sorcsLost: PublishSubject<[SID]> { get }
-
-    var blobOutdated: PublishSubject<()> { get }
-
-    var connected: BehaviorSubject<Bool> { get }
-
-    var updatedState: PublishSubject<()> { get }
-
-    var discoveredSorcs: BehaviorSubject<[SID]> { get }
 }
-
-public struct LeaseToken {
-
-    let id: String
-    let leaseId: String
-    let sorcId: String
-    let sorcAccessKey: String
-
-    public init(id: String, leaseId: String, sorcId: String, sorcAccessKey: String) {
-        self.id = id
-        self.leaseId = leaseId
-        self.sorcId = sorcId
-        self.sorcAccessKey = sorcAccessKey
-    }
-}
-
-public struct LeaseTokenBlob {
-
-    let messageCounter: Int
-    let data: String
-
-    public init(messageCounter: Int, data: String) {
-        self.messageCounter = messageCounter
-        self.data = data
-    }
-}
-
-// enum LinkType {
-//    case ble
-//    case bleTestSORC
-// }
-//
-// enum SORCErrorCode {
-//    case noError
-//    case linkLayerError
-//    case bluetoothInterfaceGone
-//    case securityError
-//    case remoteClose
-//    case remoteGone
-//    case autoReconnectFail
-//    case connectFinalFail
-// }
-//
-// enum InterfaceErrorCode {
-//    case noError
-//    case unavailable
-//    case permissionError
-//    case deviceDeactivated
-//    case performanceWarning
-//    case serviceGrantQueueLimitReached
-//    case deviceError
-// }
-//
-// enum SORCStatusCode {
-//    case unavailable
-//    case searching
-//    case searchingOverdue
-//    case available
-//    case connecting
-//    case CRAMStage
-//    case BLOBTransfer
-//    case connected
-//    case disconnecting
-//    case removed
-//    case error
-// }
-//
-// enum AutoConnectStatus {
-//    case disabled
-//    case enabled
-//    case paused
-// }
