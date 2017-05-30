@@ -24,12 +24,7 @@ class MockBLEManager: BLEManagerType {
 
     // MARK: - Interface
 
-    public var isPoweredOn: Bool {
-        return true
-    }
-
-    // Not mocked
-    public var updatedState = PublishSubject<()>()
+    public var isBluetoothEnabled = BehaviorSubject(value: true)
 
     // MARK: - Discovery
 

@@ -21,11 +21,8 @@ public protocol BLEManagerType: class {
 
     // MARK: - Interface
 
-    /// If bluetooth is enabled
-    var isPoweredOn: Bool { get }
-
-    /// The state of the manager has updated
-    var updatedState: PublishSubject<()> { get }
+    /// The bluetoothEnabled status
+    var isBluetoothEnabled: BehaviorSubject<Bool> { get }
 
     // MARK: - Discovery
 

@@ -131,7 +131,7 @@ public class BLEManager: NSObject, BLEManagerType {
 
     fileprivate var lastHeartbeatResponseDate = Date()
 
-    private let scanner = BLEScanner()
+    fileprivate let scanner = BLEScanner()
 
     /**
      A object that must confirm to the DataTransfer protocol
@@ -205,11 +205,7 @@ public class BLEManager: NSObject, BLEManagerType {
 
     // MARK: Interface
 
-    public var isPoweredOn: Bool {
-        return scanner.isPoweredOn()
-    }
-
-    public var updatedState = PublishSubject<()>()
+    public var isBluetoothEnabled = BehaviorSubject(value: false)
 
     // MARK: Discovery
 
@@ -462,7 +458,7 @@ public class BLEManager: NSObject, BLEManagerType {
 extension BLEManager: BLEScannerDelegate {
 
     public func didUpdateState() {
-        updatedState.onNext()
+        isBluetoothEnabled.onNext(scanner.isPoweredOn())
     }
 }
 
