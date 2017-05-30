@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CommonUtils
 
 /// Mocks the communication with a BLE device
 class MockBLEManager: BLEManagerType {

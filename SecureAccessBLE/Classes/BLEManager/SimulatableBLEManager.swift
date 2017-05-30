@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CommonUtils
 
 /// A BLEManager that can switch between simulated and real BLE communication
 public class SimulatableBLEManager: BLEManagerType {
@@ -37,7 +38,7 @@ public class SimulatableBLEManager: BLEManagerType {
     }
 
     // MARK: - Configuration
-    
+
     /// If BLE is simulated currently
     public var isSimulating: Bool = false {
         willSet {
@@ -68,37 +69,37 @@ public class SimulatableBLEManager: BLEManagerType {
             mockManager.heartbeatTimeout = newValue
         }
     }
-    
+
     // MARK: - Interface
-    
+
     public var isBluetoothEnabled = BehaviorSubject<Bool>(value: false)
 
     // MARK: - Discovery
-    
+
     public func hasSorcId(_ sordId: String) -> Bool {
         return currentManager.hasSorcId(sordId)
     }
-    
+
     public var sorcDiscovered = PublishSubject<SID>()
-    
+
     public var sorcsLost = PublishSubject<[SID]>()
-    
+
     // MARK: - Connection
-    
+
     public var connected = BehaviorSubject<Bool>(value: false)
-    
+
     public var connectedToSorc = PublishSubject<SID>()
 
     public var failedConnectingToSorc = PublishSubject<(sorc: SID, error: Error?)>()
-    
+
     public var blobOutdated = PublishSubject<()>()
-    
+
     // MARK: - Service
 
     public var receivedServiceGrantTriggerForStatus = PublishSubject<(status: ServiceGrantTriggerStatus?, error: String?)>()
 
     // MARK: - Actions
-    
+
     public func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob) {
         currentManager.connectToSorc(leaseToken: leaseToken, leaseTokenBlob: leaseTokenBlob)
     }

@@ -8,6 +8,7 @@
 
 import UIKit
 import CryptoSwift
+import CommonUtils
 
 /**
  Defines the ServiceGrantTriggersStatus anwered from SID, see also the definations for

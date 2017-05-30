@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import CommonUtils
 
 /// Declares the contract a BLEManagerType has to follow
 public protocol BLEManagerType: class {
