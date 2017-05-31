@@ -91,7 +91,7 @@ struct ServiceGrantTrigger: ServiceGrant {
     var result: ServiceGrantResult {
         if data.count > 3 {
             let messageData = data.subdata(in: 3 ..< data.count) // NSMakeRange(3, data.count-3))
-            guard let string = NSString(data: messageData, encoding: String.Encoding.ascii.rawValue) as? String else {
+            guard let string = String(data: messageData, encoding: .ascii) else {
                 return .Unknown
             }
             let cleanString = string.trimmingCharacters(in: CharacterSet.controlCharacters)
