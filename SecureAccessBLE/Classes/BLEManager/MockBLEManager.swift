@@ -69,7 +69,9 @@ class MockBLEManager: BLEManagerType {
     public func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob _: LeaseTokenBlob) {
         let connectWorkItem = DispatchWorkItem { [weak self] in
             guard let strongSelf = self else { return }
-            strongSelf.connected.onNext(true)
+            if !strongSelf.connected.value {
+                strongSelf.connected.onNext(true)
+            }
         }
         self.connectWorkItem = connectWorkItem
 
@@ -82,7 +84,9 @@ class MockBLEManager: BLEManagerType {
         connectWorkItem = nil
         serviceWorkItem?.cancel()
         serviceWorkItem = nil
-        connected.onNext(false)
+        if connected.value {
+            connected.onNext(false)
+        }
     }
 
     public func sendServiceGrantForFeature(_ feature: ServiceGrantFeature) {
