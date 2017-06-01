@@ -14,7 +14,7 @@ class MockBLEManager: BLEManagerType {
 
     // MARK: - Configuration
 
-    public let connectionTimeSeconds = 17
+    public let connectionTimeSeconds = 2
     public let serviceTimeSeconds = 2
 
     // Unused
@@ -29,9 +29,8 @@ class MockBLEManager: BLEManagerType {
 
     // MARK: - Discovery
 
-    // Not mocked
     public func hasSorcId(_: String) -> Bool {
-        return false
+        return true
     }
 
     // Not mocked
@@ -59,6 +58,7 @@ class MockBLEManager: BLEManagerType {
 
     // MARK: - Private properties
 
+    private var discoveryWorkItem: DispatchWorkItem?
     private var connectWorkItem: DispatchWorkItem?
     private var serviceWorkItem: DispatchWorkItem?
     private var carIsLocked = true
@@ -66,14 +66,15 @@ class MockBLEManager: BLEManagerType {
 
     // MARK: - Actions
 
-    public func connectToSorc(leaseToken _: LeaseToken, leaseTokenBlob _: LeaseTokenBlob) {
-        let deadline = DispatchTime.now() + DispatchTimeInterval.seconds(connectionTimeSeconds)
-        let workItem = DispatchWorkItem { [weak self] in
+    public func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob _: LeaseTokenBlob) {
+        let connectWorkItem = DispatchWorkItem { [weak self] in
             guard let strongSelf = self else { return }
             strongSelf.connected.onNext(true)
         }
-        DispatchQueue.main.asyncAfter(deadline: deadline, execute: workItem)
-        connectWorkItem = workItem
+        self.connectWorkItem = connectWorkItem
+
+        let connectDeadline = DispatchTime.now() + DispatchTimeInterval.seconds(connectionTimeSeconds)
+        DispatchQueue.main.asyncAfter(deadline: connectDeadline, execute: connectWorkItem)
     }
 
     public func disconnect() {

@@ -90,6 +90,8 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
     /// Current connected SID object
     var connectedSid: SID?
 
+    private var isConnected = false
+
     /**
      Init point
 
@@ -252,7 +254,10 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
      - parameter isConnected:        didConnected or not as Bool
      */
     func transferDidChangedConnectionState(_: DataTransfer, isConnected: Bool) {
-        delegate?.communicatorDidChangedConnectionState(isConnected)
+        if self.isConnected != isConnected {
+            self.isConnected = isConnected
+            delegate?.communicatorDidChangedConnectionState(isConnected)
+        }
     }
 
     /**

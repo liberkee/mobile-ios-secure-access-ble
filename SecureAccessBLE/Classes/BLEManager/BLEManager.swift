@@ -94,15 +94,27 @@ public class BLEManager: NSObject, BLEManagerType {
     /// The Default MTU Size
     static var mtuSize = 20
 
-    /// Connection state, default as .Notconnected
     fileprivate var currentConnectionState = ConnectionState.notConnected {
         didSet {
-            print("State changed now: \(currentConnectionState)")
+            if currentConnectionState == .notConnected {
+                reset()
+            }
+            updateConnected(
+                currentConnectionState: currentConnectionState,
+                currentEncryptionState: currentEncryptionState
+            )
         }
     }
 
-    /// Encryption state
-    fileprivate var currentEncryptionState: EncryptionState
+    fileprivate var currentEncryptionState: EncryptionState {
+        didSet {
+            updateConnected(
+                currentConnectionState: currentConnectionState,
+                currentEncryptionState: currentEncryptionState
+            )
+        }
+    }
+
     /// Chanllenger object
     fileprivate var challenger: BLEChallengeService?
     ///  The communicator objec
@@ -192,7 +204,6 @@ public class BLEManager: NSObject, BLEManagerType {
      Deinit point
      */
     deinit {
-        print("Will be both BLE and Comm. disconnected!")
         disconnect()
     }
 
@@ -245,17 +256,18 @@ public class BLEManager: NSObject, BLEManagerType {
     }
 
     public func disconnect() {
-        print("COM-Manager will be disconnected!")
-        communicator.resetCurrentPackage()
-        communicator.resetFoundSids()
-        currentEncryptionState = .shouldEncrypt
-        cryptoManager = ZeroSecurityManager()
-        sendHeartbeatsTimer?.invalidate()
-        checkHeartbeatsResponseTimer?.invalidate()
-
         if transporter.isConnected {
             transporter.disconnect()
         }
+    }
+
+    private func reset() {
+        communicator.resetCurrentPackage()
+        communicator.resetFoundSids()
+        cryptoManager = ZeroSecurityManager()
+        currentEncryptionState = .shouldEncrypt
+        sendHeartbeatsTimer?.invalidate()
+        checkHeartbeatsResponseTimer?.invalidate()
     }
 
     public func sendServiceGrantForFeature(_ feature: ServiceGrantFeature) {
@@ -282,14 +294,6 @@ public class BLEManager: NSObject, BLEManagerType {
     }
 
     // MARK: - Private methods
-
-    /// The connection state
-    fileprivate var isConnected: Bool {
-        let connectedState = currentConnectionState == .connected
-        let encryptionEstablished = currentEncryptionState == .encryptionEstablished
-        print("connected? \(self.currentConnectionState) EncryptionEstablished?: \(encryptionEstablished)")
-        return connectedState && encryptionEstablished
-    }
 
     /**
      Helper function repots if the transfer currently busy
@@ -335,7 +339,6 @@ public class BLEManager: NSObject, BLEManagerType {
         if (lastHeartbeatResponseDate.timeIntervalSinceNow + heartbeatTimeout / 1000) < 0 {
             currentConnectionState = .notConnected
         }
-        connected.onNext(isConnected)
     }
 
     /**
@@ -452,6 +455,15 @@ public class BLEManager: NSObject, BLEManagerType {
         }
         receivedServiceGrantTriggerForStatus.onNext((status: theStatus, error: error))
     }
+
+    private func updateConnected(currentConnectionState: ConnectionState, currentEncryptionState: EncryptionState) {
+        let connectedState = currentConnectionState == .connected
+        let encryptionEstablished = currentEncryptionState == .encryptionEstablished
+        let isConnectedSecurely = connectedState && encryptionEstablished
+        if connected.value != isConnectedSecurely {
+            connected.onNext(isConnectedSecurely)
+        }
+    }
 }
 
 // MARK: - BLEScannerDelegate
@@ -484,7 +496,6 @@ extension BLEManager: BLEChallengeServiceDelegate {
     func challengerFinishedWithSessionKey(_ sessionKey: [UInt8]) {
         cryptoManager = AesCbcCryptoManager(key: sessionKey)
         currentEncryptionState = .encryptionEstablished
-        connected.onNext(isConnected)
         bleSchouldSendHeartbeat()
     }
 
@@ -552,8 +563,6 @@ extension BLEManager: SIDCommunicatorDelegate {
             }
             if currentEncryptionState == .shouldEncrypt {
                 establishCrypto()
-            } else {
-                connected.onNext(isConnected)
             }
 
             // Challenger Message
@@ -595,7 +604,6 @@ extension BLEManager: SIDCommunicatorDelegate {
             currentConnectionState = .connected
             sendMtuRequest()
         } else {
-            print("Will be both BLE and Comm. disconnected!")
             currentConnectionState = .notConnected
         }
     }
