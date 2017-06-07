@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// Describes a change of connection state
 public struct ConnectionChange {
 
     // Possible state transitions (other transitions have no observable result, i.e. <no change>)
@@ -22,12 +23,14 @@ public struct ConnectionChange {
     // (connected)    -disconnect->            (disconnected)
     // (connected)    -connectionLost->        (disconnected)
 
+    /// The state the connection can be in
     public enum State {
         case disconnected
         case connecting(sorcId: String)
         case connected(sorcId: String)
     }
 
+    /// The action that led to the state
     public enum Action {
         // external
         case connect
@@ -39,7 +42,10 @@ public struct ConnectionChange {
         case connectionLost(error: ConnectionLostError)
     }
 
+    /// The state the connection can be in
     public let state: State
+
+    /// The action that led to the state
     public let action: Action
 
     public init(state: State, action: Action) {
@@ -48,11 +54,13 @@ public struct ConnectionChange {
     }
 }
 
+/// The errors that can occur if the connection attempt fails
 public enum ConnectingFailedError {
     case blobOutdated
     case unknown
 }
 
+/// The errors that can occur if the connection is lost
 public enum ConnectionLostError {
     case heartbeatTimedOut
     case unknown
