@@ -50,10 +50,7 @@ class BLEManagerTests: XCTestCase {
     }
 
     private func isBLEManagerConnected() -> Bool {
-        if case .connected = bleManager.connectionChange.value.state {
-            return true
-        }
-        return false
+        if case .connected = bleManager.connectionChange.value.state { return true } else { return false }
     }
 
     /**
