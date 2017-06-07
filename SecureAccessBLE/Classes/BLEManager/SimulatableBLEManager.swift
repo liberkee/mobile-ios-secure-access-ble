@@ -76,8 +76,8 @@ public class SimulatableBLEManager: BLEManagerType {
 
     // MARK: - Discovery
 
-    public func hasSorcId(_ sordId: String) -> Bool {
-        return currentManager.hasSorcId(sordId)
+    public func hasSorcId(_ sorcId: String) -> Bool {
+        return currentManager.hasSorcId(sorcId)
     }
 
     public var sorcDiscovered = PublishSubject<SID>()
