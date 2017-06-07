@@ -471,7 +471,7 @@ extension BLEManager: BLEChallengeServiceDelegate {
     func challengerFinishedWithSessionKey(_ sessionKey: [UInt8]) {
         cryptoManager = AesCbcCryptoManager(key: sessionKey)
         currentEncryptionState = .encryptionEstablished
-        // TODO: PLAM-749 set correct rssi
+        // TODO: PLAM-949 set correct rssi
         connectionChange.onNext(ConnectionChange(
             state: .connected(sorcId: sidId),
             action: .connectionEstablished(sorcId: sidId, rssi: 0))
@@ -486,7 +486,7 @@ extension BLEManager: BLEChallengeServiceDelegate {
     func challengerNeedsSendBlob(latestBlobCounter: Int?) {
 
         guard latestBlobCounter == nil || blobCounter >= latestBlobCounter! else {
-            // TODO: PLAM-749 set correct rssi
+            // TODO: PLAM-949 set correct rssi
             connectionChange.onNext(ConnectionChange(
                 state: .disconnected,
                 action: .connectingFailed(error: .blobOutdated, sorcId: sidId, rssi: 0))
@@ -569,7 +569,7 @@ extension BLEManager: SIDCommunicatorDelegate {
             sendMtuRequest()
         } else {
             currentConnectionState = .notConnected
-            // PLAM-749: Set proper action
+            // PLAM-951: Set proper action
             connectionChange.onNext(ConnectionChange(state: .disconnected, action: .disconnect))
         }
     }
