@@ -99,21 +99,10 @@ public class BLEManager: NSObject, BLEManagerType {
             if currentConnectionState == .notConnected {
                 reset()
             }
-            updateConnected(
-                currentConnectionState: currentConnectionState,
-                currentEncryptionState: currentEncryptionState
-            )
         }
     }
 
-    fileprivate var currentEncryptionState: EncryptionState {
-        didSet {
-            updateConnected(
-                currentConnectionState: currentConnectionState,
-                currentEncryptionState: currentEncryptionState
-            )
-        }
-    }
+    fileprivate var currentEncryptionState: EncryptionState
 
     /// Chanllenger object
     fileprivate var challenger: BLEChallengeService?
@@ -130,7 +119,7 @@ public class BLEManager: NSObject, BLEManagerType {
     private var sidAccessKey: String = ""
 
     /// SidId as String came from SecureAccess.leaseToken
-    private var sidId: String = ""
+    fileprivate var sidId: String = ""
 
     /// Blob as String came from SecureAccess.blob
     fileprivate var blobData: String? = ""
@@ -231,13 +220,7 @@ public class BLEManager: NSObject, BLEManagerType {
 
     // MARK: - Connection
 
-    public var connected = BehaviorSubject<Bool>(value: false)
-
-    public var connectedToSorc = PublishSubject<SID>()
-
-    public var failedConnectingToSorc = PublishSubject<(sorc: SID, error: Error?)>()
-
-    public var blobOutdated = PublishSubject<()>()
+    public var connectionChange = BehaviorSubject(value: ConnectionChange(state: .disconnected, action: .initial))
 
     // MARK: Service
 
@@ -247,6 +230,7 @@ public class BLEManager: NSObject, BLEManagerType {
 
     public func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob) {
         sidId = leaseToken.sorcId
+        connectionChange.onNext(ConnectionChange(state: .connecting(sorcId: sidId), action: .connect))
         leaseTokenId = leaseToken.id
         leaseId = leaseToken.leaseId
         sidAccessKey = leaseToken.sorcAccessKey
@@ -256,8 +240,15 @@ public class BLEManager: NSObject, BLEManagerType {
     }
 
     public func disconnect() {
+        if case .disconnected = connectionChange.value.state { return }
         if transporter.isConnected {
             transporter.disconnect()
+        } else {
+            currentConnectionState = .notConnected
+            connectionChange.onNext(ConnectionChange(
+                state: .disconnected,
+                action: .disconnect)
+            )
         }
     }
 
@@ -335,9 +326,12 @@ public class BLEManager: NSObject, BLEManagerType {
      check out connection state if timer for checkheartbeat response fired
      */
     func checkoutHeartbeatsResponse() {
-        print("check heartbeats Response!")
         if (lastHeartbeatResponseDate.timeIntervalSinceNow + heartbeatTimeout / 1000) < 0 {
             currentConnectionState = .notConnected
+            connectionChange.onNext(ConnectionChange(
+                state: .disconnected,
+                action: .connectionLost(error: .heartbeatTimedOut))
+            )
         }
     }
 
@@ -455,15 +449,6 @@ public class BLEManager: NSObject, BLEManagerType {
         }
         receivedServiceGrantTriggerForStatus.onNext((status: theStatus, error: error))
     }
-
-    private func updateConnected(currentConnectionState: ConnectionState, currentEncryptionState: EncryptionState) {
-        let connectedState = currentConnectionState == .connected
-        let encryptionEstablished = currentEncryptionState == .encryptionEstablished
-        let isConnectedSecurely = connectedState && encryptionEstablished
-        if connected.value != isConnectedSecurely {
-            connected.onNext(isConnectedSecurely)
-        }
-    }
 }
 
 // MARK: - BLEScannerDelegate
@@ -479,43 +464,33 @@ extension BLEManager: BLEScannerDelegate {
 
 extension BLEManager: BLEChallengeServiceDelegate {
 
-    /**
-     SID challenger reports to send SID a message
-
-     - parameter message: the message that will be sent to SID peripheral
-     */
     func challengerWantsSendMessage(_ message: SIDMessage) {
         _ = sendMessage(message)
     }
 
-    /**
-     SID challenger reports finished with extablishing SessionKey
-
-     - parameter sessionKey: Crypto key for initializing CryptoManager
-     */
     func challengerFinishedWithSessionKey(_ sessionKey: [UInt8]) {
         cryptoManager = AesCbcCryptoManager(key: sessionKey)
         currentEncryptionState = .encryptionEstablished
+        // TODO: PLAM-749 set correct rssi
+        connectionChange.onNext(ConnectionChange(
+            state: .connected(sorcId: sidId),
+            action: .connectionEstablished(sorcId: sidId, rssi: 0))
+        )
         bleSchouldSendHeartbeat()
     }
 
-    /**
-     SID challenger reports abort with challenge
-
-     - parameter error: error descriptiong for Cram Unit
-     */
     func challengerAbort(_: BLEChallengerError) {
         disconnect()
     }
 
-    /**
-     SID challenger reports to need send Blob to SID peripheral
-     */
     func challengerNeedsSendBlob(latestBlobCounter: Int?) {
 
         guard latestBlobCounter == nil || blobCounter >= latestBlobCounter! else {
-            print("Ask user to get latest blob")
-            blobOutdated.onNext()
+            // TODO: PLAM-749 set correct rssi
+            connectionChange.onNext(ConnectionChange(
+                state: .disconnected,
+                action: .connectingFailed(error: .blobOutdated, sorcId: sidId, rssi: 0))
+            )
             return
         }
         sendBlob()
@@ -526,12 +501,6 @@ extension BLEManager: BLEChallengeServiceDelegate {
 
 extension BLEManager: SIDCommunicatorDelegate {
 
-    /**
-     Communicator reports did received response data
-
-     - parameter messageData: received data
-     - parameter count:       received data length
-     */
     func communicatorDidRecivedData(_ messageData: Data, count: Int) {
 
         let noValidDataErrorMessage = "No valid data was received"
@@ -594,61 +563,26 @@ extension BLEManager: SIDCommunicatorDelegate {
         communicator.resetReceivedPackage()
     }
 
-    /**
-     Communicator reports if connection state did changed
-
-     - parameter connected: is connected or not
-     */
     func communicatorDidChangedConnectionState(_ connected: Bool) {
         if connected {
             currentConnectionState = .connected
             sendMtuRequest()
         } else {
             currentConnectionState = .notConnected
+            // PLAM-749: Set proper action
+            connectionChange.onNext(ConnectionChange(state: .disconnected, action: .disconnect))
         }
     }
 
-    /**
-
-     Communicator reports if new SID was discovered
-
-     - parameter newSid: the found SID object
-     */
     func comminicatorDidDiscoveredSidId(_ newSid: SID) {
         sorcDiscovered.onNext(newSid)
     }
 
-    /**
-     Communicator reports if there are SIDs longer as 5 seconds not reported
-
-     - parameter oldSid: did lost SIDs as Array
-     */
     func communicatorDidLostSidIds(_ oldSids: [SID]) {
         sorcsLost.onNext(oldSids)
     }
 
-    /**
-     Communicator reports if a connection attempt succeeded
+    func communicatorDidConnectSid(_: SIDCommunicator, sid _: SID) {}
 
-     - parameter communicator: The communicator object
-     - parameter sid: The SID the connection is made to
-     */
-    func communicatorDidConnectSid(_: SIDCommunicator, sid: SID) {
-        // TODO: this has to be advanced to cover further communication between device and sid
-        // it is only used for metrics at the moment
-        connectedToSorc.onNext(sid)
-    }
-
-    /**
-     Communicator reports if a connection attempt failed
-
-     - parameter communicator: The communicator object
-     - parameter sid: The SID the connection should have made to
-     - parameter error: Describes the error
-     */
-    func communicatorDidFailToConnectSid(_: SIDCommunicator, sid: SID, error: Error?) {
-        // TODO: this has to be advanced to cover further communication between device and sid
-        // it is only used for metrics at the moment
-        failedConnectingToSorc.onNext((sorc: sid, error: error))
-    }
+    func communicatorDidFailToConnectSid(_: SIDCommunicator, sid _: SID, error _: Error?) {}
 }

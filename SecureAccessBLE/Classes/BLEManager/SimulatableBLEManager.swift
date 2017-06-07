@@ -86,13 +86,7 @@ public class SimulatableBLEManager: BLEManagerType {
 
     // MARK: - Connection
 
-    public var connected = BehaviorSubject<Bool>(value: false)
-
-    public var connectedToSorc = PublishSubject<SID>()
-
-    public var failedConnectingToSorc = PublishSubject<(sorc: SID, error: Error?)>()
-
-    public var blobOutdated = PublishSubject<()>()
+    public var connectionChange = BehaviorSubject(value: ConnectionChange(state: .disconnected, action: .initial))
 
     // MARK: - Service
 
@@ -118,21 +112,9 @@ public class SimulatableBLEManager: BLEManagerType {
 
         let disposeBag = DisposeBag()
 
-        manager.connectedToSorc.subscribeNext { [weak self] sorc in
+        manager.isBluetoothEnabled.subscribeNext { [weak self] enabled in
             guard let strongSelf = self else { return }
-            strongSelf.connectedToSorc.onNext(sorc)
-        }
-        .disposed(by: disposeBag)
-
-        manager.failedConnectingToSorc.subscribeNext { [weak self] sorc in
-            guard let strongSelf = self else { return }
-            strongSelf.failedConnectingToSorc.onNext(sorc)
-        }
-        .disposed(by: disposeBag)
-
-        manager.receivedServiceGrantTriggerForStatus.subscribeNext { [weak self] result in
-            guard let strongSelf = self else { return }
-            strongSelf.receivedServiceGrantTriggerForStatus.onNext(result)
+            strongSelf.isBluetoothEnabled.onNext(enabled)
         }
         .disposed(by: disposeBag)
 
@@ -148,21 +130,15 @@ public class SimulatableBLEManager: BLEManagerType {
         }
         .disposed(by: disposeBag)
 
-        manager.blobOutdated.subscribeNext { [weak self] in
+        manager.connectionChange.subscribeNext { [weak self] change in
             guard let strongSelf = self else { return }
-            strongSelf.blobOutdated.onNext()
+            strongSelf.connectionChange.onNext(change)
         }
         .disposed(by: disposeBag)
 
-        manager.connected.subscribeNext { [weak self] connected in
+        manager.receivedServiceGrantTriggerForStatus.subscribeNext { [weak self] result in
             guard let strongSelf = self else { return }
-            strongSelf.connected.onNext(connected)
-        }
-        .disposed(by: disposeBag)
-
-        manager.isBluetoothEnabled.subscribeNext { [weak self] enabled in
-            guard let strongSelf = self else { return }
-            strongSelf.isBluetoothEnabled.onNext(enabled)
+            strongSelf.receivedServiceGrantTriggerForStatus.onNext(result)
         }
         .disposed(by: disposeBag)
 

@@ -38,17 +38,8 @@ public protocol BLEManagerType: class {
 
     // MARK: - Connection
 
-    /// The connection status
-    var connected: BehaviorSubject<Bool> { get }
-
-    /// A connection was established to a SORC
-    var connectedToSorc: PublishSubject<SID> { get }
-
-    /// A connection attempt to a SORC failed
-    var failedConnectingToSorc: PublishSubject<(sorc: SID, error: Error?)> { get }
-
-    /// A blob became outdated
-    var blobOutdated: PublishSubject<()> { get }
+    /// The state of the connection with the action that led to this state
+    var connectionChange: BehaviorSubject<ConnectionChange> { get }
 
     // MARK: - Service
 

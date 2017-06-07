@@ -41,16 +41,7 @@ class MockBLEManager: BLEManagerType {
 
     // MARK: - Connection
 
-    public var connected = BehaviorSubject<Bool>(value: false)
-
-    // Not mocked
-    public var connectedToSorc = PublishSubject<SID>()
-
-    // Not mocked
-    public var failedConnectingToSorc = PublishSubject<(sorc: SID, error: Error?)>()
-
-    // Not mocked
-    public var blobOutdated = PublishSubject<()>()
+    public var connectionChange = BehaviorSubject(value: ConnectionChange(state: .disconnected, action: .initial))
 
     // MARK: - Service
 
@@ -67,11 +58,14 @@ class MockBLEManager: BLEManagerType {
     // MARK: - Actions
 
     public func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob _: LeaseTokenBlob) {
+        let sorcId = leaseToken.sorcId
+        connectionChange.onNext(ConnectionChange(state: .connecting(sorcId: sorcId), action: .connect))
         let connectWorkItem = DispatchWorkItem { [weak self] in
             guard let strongSelf = self else { return }
-            if !strongSelf.connected.value {
-                strongSelf.connected.onNext(true)
-            }
+            strongSelf.connectionChange.onNext(ConnectionChange(
+                state: .connected(sorcId: sorcId),
+                action: .connectionEstablished(sorcId: sorcId, rssi: 0))
+            )
         }
         self.connectWorkItem = connectWorkItem
 
@@ -84,9 +78,7 @@ class MockBLEManager: BLEManagerType {
         connectWorkItem = nil
         serviceWorkItem?.cancel()
         serviceWorkItem = nil
-        if connected.value {
-            connected.onNext(false)
-        }
+        connectionChange.onNext(ConnectionChange(state: .disconnected, action: .disconnect))
     }
 
     public func sendServiceGrantForFeature(_ feature: ServiceGrantFeature) {
