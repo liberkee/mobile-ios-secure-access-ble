@@ -214,9 +214,9 @@ public class BLEManager: NSObject, BLEManagerType {
         return communicator.hasSidID(sorcId)
     }
 
-    public var sorcDiscovered = PublishSubject<SID>()
+    public var sorcDiscovered = PublishSubject<String>()
 
-    public var sorcsLost = PublishSubject<[SID]>()
+    public var sorcsLost = PublishSubject<[String]>()
 
     // MARK: - Connection
 
@@ -575,11 +575,12 @@ extension BLEManager: SIDCommunicatorDelegate {
     }
 
     func comminicatorDidDiscoveredSidId(_ newSid: SID) {
-        sorcDiscovered.onNext(newSid)
+        sorcDiscovered.onNext(newSid.sidID)
     }
 
     func communicatorDidLostSidIds(_ oldSids: [SID]) {
-        sorcsLost.onNext(oldSids)
+        let lostSorcIds = oldSids.map { $0.sidID }
+        sorcsLost.onNext(lostSorcIds)
     }
 
     func communicatorDidConnectSid(_: SIDCommunicator, sid _: SID) {}

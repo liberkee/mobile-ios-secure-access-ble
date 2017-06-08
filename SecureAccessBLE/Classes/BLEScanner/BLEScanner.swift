@@ -17,9 +17,9 @@ protocol BLEScannerDelegate: class {
 /**
  *  Definition for SID object
  */
-public struct SID: Hashable {
+struct SID: Hashable {
     /// SID id as String
-    public var sidID: String
+    var sidID: String
     /// Peripheral, that SID object inclusive
     var peripheral: CBPeripheral?
     /// Date that the sid was discovered
@@ -42,7 +42,7 @@ public struct SID: Hashable {
 
  - returns: both objects equal or not
  */
-public func == (lhs: SID, rhs: SID) -> Bool {
+func == (lhs: SID, rhs: SID) -> Bool {
     if (lhs.peripheral != rhs.peripheral) || (lhs.sidID != rhs.sidID) {
         return false
     }
@@ -286,7 +286,7 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
     open func centralManager(_: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         consoleLog("Central disconnected from peripheral: \(peripheral.identifier.uuidString)")
 
-        print("BLEScanner didDisconnectPeripheral \(error)")
+        print("BLEScanner didDisconnectPeripheral \(String(describing: error))")
 
         isConnected = false
         cleanUpSIDs()

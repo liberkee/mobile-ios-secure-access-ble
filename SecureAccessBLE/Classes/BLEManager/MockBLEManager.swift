@@ -34,10 +34,10 @@ class MockBLEManager: BLEManagerType {
     }
 
     // Not mocked
-    public var sorcDiscovered = PublishSubject<SID>()
+    public var sorcDiscovered = PublishSubject<String>()
 
     // Not mocked
-    public var sorcsLost = PublishSubject<[SID]>()
+    public var sorcsLost = PublishSubject<[String]>()
 
     // MARK: - Connection
 

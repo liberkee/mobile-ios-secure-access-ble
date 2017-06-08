@@ -30,11 +30,11 @@ public protocol BLEManagerType: class {
     /// If the SORC is discovered
     func hasSorcId(_ sorcId: String) -> Bool
 
-    /// A SORC was discovered
-    var sorcDiscovered: PublishSubject<SID> { get }
+    /// A SORC was discovered. Contains the SORC ID.
+    var sorcDiscovered: PublishSubject<String> { get }
 
-    /// SORCs were lost
-    var sorcsLost: PublishSubject<[SID]> { get }
+    /// SORCs were lost. Contains the SORC IDs.
+    var sorcsLost: PublishSubject<[String]> { get }
 
     // MARK: - Connection
 
