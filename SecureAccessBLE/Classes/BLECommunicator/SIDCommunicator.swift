@@ -65,7 +65,7 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
 
     /// The netto message size (MTU minus frame header information)
     var messageFrameSize: Int {
-        return BLEComManager.mtuSize - 4
+        return BLEManager.mtuSize - 4
     }
 
     /// The Communicator delegate object
@@ -89,6 +89,8 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
 
     /// Current connected SID object
     var connectedSid: SID?
+
+    private var isConnected = false
 
     /**
      Init point
@@ -252,7 +254,10 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
      - parameter isConnected:        didConnected or not as Bool
      */
     func transferDidChangedConnectionState(_: DataTransfer, isConnected: Bool) {
-        delegate?.communicatorDidChangedConnectionState(isConnected)
+        if self.isConnected != isConnected {
+            self.isConnected = isConnected
+            delegate?.communicatorDidChangedConnectionState(isConnected)
+        }
     }
 
     /**

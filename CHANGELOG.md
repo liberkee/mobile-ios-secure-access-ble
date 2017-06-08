@@ -4,7 +4,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+
+- 2017-06-07 : (PLAM-749)   : New `BLEManagerType` protocol, `SimulatableBLEManager` and `MockBLEManager`
+
 ### Changed
+
+- 2017-06-07 : (PLAM-749)   : Let `BLEManager` conform to `BLEManagerType`
+
 ### Fixed
 
 ## [1.0.8] - 2017-05-24

@@ -8,113 +8,7 @@
 
 import UIKit
 import CryptoSwift
-
-/// All delegate functions, BLE manager offers
-public protocol BLEManagerDelegate: class {
-    /**
-     BLE reports, received service grant trgger
-
-     - parameter status: service grant trigger status
-     - parameter error:  error description
-     */
-    func bleDidReceivedServiceTriggerForStatus(_ status: ServiceGrantTriggerStatus?, error: String?)
-
-    /**
-     BLE reports if a connection attempt succeeded
-
-     - parameter communicator: The communicator object
-     - parameter sid: The SID the connection is made to
-     */
-    func bleDidConnectSid(_ manager: BLEComManager, sid: SID)
-
-    /**
-     BLE reports if a connection attempt failed
-
-     - parameter manager: The manager object
-     - parameter sid: The SID the connection should have made to
-     - parameter error: Describes the error
-     */
-    func bleDidFailToConnectSid(_ manager: BLEComManager, sid: SID, error: Error?)
-
-    /**
-     BLE changed connection status
-
-     - parameter isConnected: currently connected or not
-     */
-    func bleDidChangedConnectionState(_ isConnected: Bool)
-
-    /**
-     BLE discovered new sid
-
-     - parameter newSid: new found SID object
-     */
-    func bleDidDiscoveredSidId(_ newSid: SID)
-
-    /**
-     BLE reports lost of old sids
-
-     - parameter oldSids: the lost old sids as array
-     */
-    func bleDidLostSidIds(_ oldSids: [SID])
-
-    /**
-     BLE reports blob needs to be updated, because the user is sending an out of date blob token
-     */
-    func blobIsOutdated()
-}
-
-public protocol BLEManagerStateDelegate: class {
-    func didUpdateState()
-}
-
-// MARK: - Extension point for BLEmanager delegate
-public extension BLEManagerDelegate {
-    /**
-     BLE reports, received service grant trgger
-
-     - parameter status: service grant trigger status
-     - parameter error:  error description
-     */
-    func bleDidReceivedServiceTriggerForStatus(_: ServiceGrantTriggerStatus?, error _: String?) {}
-
-    /**
-     BLE reports if a connection attempt succeeded
-
-     - parameter communicator: The communicator object
-     - parameter sid: The SID the connection is made to
-     */
-    func bleDidConnectSid(_: BLEComManager, sid _: SID) {}
-
-    /**
-     BLE reports if a connection attempt failed
-
-     - parameter manager: The manager object
-     - parameter sid: The SID the connection should have made to
-     - parameter error: Describes the error
-     */
-    func bleDidFailToConnectSid(_: BLEComManager, sid _: SID, error _: Error?) {}
-
-    /**
-     BLE changed connection status
-
-     - parameter isConnected: currently connected or not
-     */
-    func bleDidChangedConnectionState(_: Bool) {}
-
-    /**
-     BLE discovered new sid
-
-     - parameter newSid: new found SID object
-     */
-    func bleDidDiscoveredSidId(_: SID) {}
-
-    /**
-     BLE reports lost of old sids
-
-     - parameter oldSids: the lost old sids as array
-     */
-    func bleDidLostSidIds(_: [SID]) {}
-}
+import CommonUtils
 
 /**
  Defines the ServiceGrantTriggersStatus anwered from SID, see also the definations for
@@ -191,56 +85,47 @@ enum ConnectionState {
 }
 
 /**
- The BLEManager represents the TransportLayer
+ The BLEManager manages the communication with BLE peripherals
  */
-open class BLEComManager: NSObject {
+public class BLEManager: NSObject, BLEManagerType {
+
+    public static let shared = BLEManager()
 
     /// The Default MTU Size
     static var mtuSize = 20
 
-    /// The netto message size (MTU minus frame header information)
-    var messageFrameSize: Int {
-        return BLEComManager.mtuSize - 4
-    }
-
-    /// The connection state
-    open var isConnected: Bool {
-        let connectedState = currentConnectionState == .connected
-        let encryptionEstablished = currentEncryptionState == .encryptionEstablished
-        print("connected? \(self.currentConnectionState) EncryptionEstablished?: \(encryptionEstablished)")
-        return connectedState && encryptionEstablished
-    }
-
-    /// Connection state, default as .Notconnected
     fileprivate var currentConnectionState = ConnectionState.notConnected {
         didSet {
-            print("State changed now: \(currentConnectionState)")
+            if currentConnectionState == .notConnected {
+                reset()
+            }
         }
     }
 
-    /// Encryption state
     fileprivate var currentEncryptionState: EncryptionState
+
     /// Chanllenger object
     fileprivate var challenger: BLEChallengeService?
     ///  The communicator objec
     fileprivate let communicator: SIDCommunicator
+
     /// DeviceId as String came from Userspace.Booking
-    open var leaseId: String = ""
+    private var leaseId: String = ""
 
     /// LeaseToken Id as String came from SecureAccess.blob
-    open var leaseTokenId: String = ""
+    private var leaseTokenId: String = ""
+
     /// Sid AccessKey as String came from SecureAccess.blob
-    open var sidAccessKey: String = ""
+    private var sidAccessKey: String = ""
+
     /// SidId as String came from SecureAccess.leaseToken
-    open var sidId: String = ""
+    fileprivate var sidId: String = ""
+
     /// Blob as String came from SecureAccess.blob
     fileprivate var blobData: String? = ""
+
     /// Blob counter came from SecureAccess.blob
     fileprivate var blobCounter: Int = 0
-    /// time interval Ble should send heartbeat to SID
-    open var heartbeatInterval: Double = 2000.0
-    /// time out the ble should waite for heartbeat response
-    open var heartbeatTimeout: Double = 4000.0
 
     fileprivate var sendHeartbeatsTimer: Timer?
 
@@ -248,7 +133,7 @@ open class BLEComManager: NSObject {
 
     fileprivate var lastHeartbeatResponseDate = Date()
 
-    private let scanner = BLEScanner()
+    fileprivate let scanner = BLEScanner()
 
     /**
      A object that must confirm to the DataTransfer protocol
@@ -263,15 +148,6 @@ open class BLEComManager: NSObject {
      */
     fileprivate var cryptoManager: CryptoManager = ZeroSecurityManager()
 
-    /// The delegate must confirm to the BLEManagerDelegate Protocol
-    open weak var delegate: BLEManagerDelegate?
-
-    open weak var stateDelegate: BLEManagerStateDelegate?
-
-    open var isPoweredOn: Bool {
-        return scanner.isPoweredOn()
-    }
-
     // MARK: - Inits and deinit
 
     /**
@@ -282,14 +158,14 @@ open class BLEComManager: NSObject {
 
      - returns: ble-manager object
      */
-    public required init(crypto: Bool = false, sidID _: NSString = "") {
+    init(crypto: Bool = false, sidID _: NSString = "") {
         if crypto == true {
             currentEncryptionState = .noEncryption
         } else {
             currentEncryptionState = .shouldEncrypt
         }
         transporter = scanner
-        communicator = SIDCommunicator.init()
+        communicator = SIDCommunicator()
         communicator.transporter = transporter
         communicator.resetFoundSids()
         super.init()
@@ -306,73 +182,86 @@ open class BLEComManager: NSObject {
 
      - returns: BLE-Manager object
      */
-    convenience init(transporter: BLEScanner, delegate: BLEManagerDelegate, crypto: Bool = false, heartbeatInterval: Int, heartbeatTimeout: Int) {
+    convenience init(transporter: BLEScanner, crypto: Bool = false, heartbeatInterval: Int, heartbeatTimeout: Int) {
         self.init(crypto: crypto)
         self.transporter = transporter
         self.heartbeatInterval = Double(heartbeatInterval)
         self.heartbeatTimeout = Double(heartbeatTimeout)
-        self.delegate = delegate
     }
 
     /**
      Deinit point
      */
     deinit {
-        print("Will be both BLE and Comm. disconnected!")
         disconnect()
     }
 
-    // MARK: - Public methods
+    // MARK: - Public
 
-    /**
-     Connects to a spefific SID
+    // MARK: Configuration
 
-     - parameter sidId:       The Id of the SID, it should be connected to
-     - parameter blobData:    blobdata as String see also SecureAccess.Blob
-     - parameter blobCounter: blobs messageCounter see also SecureAccess.Blob
-     */
-    open func connectToSid(_ sidId: String, blobData: String?, blobCounter: Int) {
-        self.sidId = sidId
-        self.blobData = blobData
-        self.blobCounter = blobCounter
+    public var heartbeatInterval: Double = 2000.0
+
+    public var heartbeatTimeout: Double = 4000.0
+
+    // MARK: Interface
+
+    public var isBluetoothEnabled = BehaviorSubject(value: false)
+
+    // MARK: Discovery
+
+    public func hasSorcId(_ sorcId: String) -> Bool {
+        return communicator.hasSidID(sorcId)
+    }
+
+    public var sorcDiscovered = PublishSubject<SID>()
+
+    public var sorcsLost = PublishSubject<[SID]>()
+
+    // MARK: - Connection
+
+    public var connectionChange = BehaviorSubject(value: ConnectionChange(state: .disconnected, action: .initial))
+
+    // MARK: Service
+
+    public var receivedServiceGrantTriggerForStatus = PublishSubject<(status: ServiceGrantTriggerStatus?, error: String?)>()
+
+    // MARK: Actions
+
+    public func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob) {
+        sidId = leaseToken.sorcId
+        connectionChange.onNext(ConnectionChange(state: .connecting(sorcId: sidId), action: .connect))
+        leaseTokenId = leaseToken.id
+        leaseId = leaseToken.leaseId
+        sidAccessKey = leaseToken.sorcAccessKey
+        blobData = leaseTokenBlob.data
+        blobCounter = leaseTokenBlob.messageCounter
         communicator.connectToSid(sidId)
     }
 
-    /**
-     Disconnects from current sid
-     */
-    open func disconnect() {
-        print("COM-Manager will be disconnected!")
-        communicator.resetCurrentPackage()
-        communicator.resetFoundSids()
-        currentEncryptionState = .shouldEncrypt
-        cryptoManager = ZeroSecurityManager()
-        sendHeartbeatsTimer?.invalidate()
-        checkHeartbeatsResponseTimer?.invalidate()
-
+    public func disconnect() {
+        if case .disconnected = connectionChange.value.state { return }
         if transporter.isConnected {
             transporter.disconnect()
+        } else {
+            currentConnectionState = .notConnected
+            connectionChange.onNext(ConnectionChange(
+                state: .disconnected,
+                action: .disconnect)
+            )
         }
     }
 
-    /**
-     Checks if a SID ID is already discovered.
-
-     - parameter sidId: A SID ID string
-
-     - returns: When already in list it returns true, otherwise false.
-     */
-    open func hasSidID(_ sidId: String) -> Bool {
-        return communicator.hasSidID(sidId)
+    private func reset() {
+        communicator.resetCurrentPackage()
+        communicator.resetFoundSids()
+        cryptoManager = ZeroSecurityManager()
+        currentEncryptionState = .shouldEncrypt
+        sendHeartbeatsTimer?.invalidate()
+        checkHeartbeatsResponseTimer?.invalidate()
     }
 
-    /**
-     Communicating connected SID with sending messages, that was builed from serviceGrant request with
-     id as messages payload
-
-     - parameter feature: defined features to identifier the target SidMessage id
-     */
-    open func sendServiceGrantForFeature(_ feature: ServiceGrantFeature) {
+    public func sendServiceGrantForFeature(_ feature: ServiceGrantFeature) {
         if currentEncryptionState == .encryptionEstablished && transferIsBusy() == false {
             let payload: SIDMessagePayload
             switch feature {
@@ -412,8 +301,8 @@ open class BLEComManager: NSObject {
      start timers for sending heartbeat and checking heartbeat response
      */
     fileprivate func bleSchouldSendHeartbeat() {
-        sendHeartbeatsTimer = Timer.scheduledTimer(timeInterval: heartbeatInterval / 1000, target: self, selector: #selector(BLEComManager.startSendingHeartbeat), userInfo: nil, repeats: true)
-        checkHeartbeatsResponseTimer = Timer.scheduledTimer(timeInterval: heartbeatTimeout / 1000, target: self, selector: #selector(BLEComManager.checkoutHeartbeatsResponse), userInfo: nil, repeats: true)
+        sendHeartbeatsTimer = Timer.scheduledTimer(timeInterval: heartbeatInterval / 1000, target: self, selector: #selector(BLEManager.startSendingHeartbeat), userInfo: nil, repeats: true)
+        checkHeartbeatsResponseTimer = Timer.scheduledTimer(timeInterval: heartbeatTimeout / 1000, target: self, selector: #selector(BLEManager.checkoutHeartbeatsResponse), userInfo: nil, repeats: true)
     }
 
     /**
@@ -437,11 +326,13 @@ open class BLEComManager: NSObject {
      check out connection state if timer for checkheartbeat response fired
      */
     func checkoutHeartbeatsResponse() {
-        print("check heartbeats Response!")
         if (lastHeartbeatResponseDate.timeIntervalSinceNow + heartbeatTimeout / 1000) < 0 {
             currentConnectionState = .notConnected
+            connectionChange.onNext(ConnectionChange(
+                state: .disconnected,
+                action: .connectionLost(error: .heartbeatTimedOut))
+            )
         }
-        delegate?.bleDidChangedConnectionState(currentConnectionState == .connected)
     }
 
     /**
@@ -503,7 +394,7 @@ open class BLEComManager: NSObject {
     func sendMessage(_ message: SIDMessage) -> (success: Bool, error: String?) {
         if communicator.currentPackage != nil {
             print("Sending package not empty!! Message \(message.id) will not be sent!!")
-            print("Package: \(communicator.currentPackage?.message)")
+            print("Package: \(String(describing: communicator.currentPackage?.message))")
             return (false, "Sending in progress")
         } else {
             let data = cryptoManager.encryptMessage(message)
@@ -516,7 +407,6 @@ open class BLEComManager: NSObject {
              print("With key: \(key.toHexString())")
              */
         }
-        return (true, nil)
     }
 
     /**
@@ -529,7 +419,7 @@ open class BLEComManager: NSObject {
 
         var theStatus: ServiceGrantTriggerStatus = .triggerStatusUnkown
         guard let trigger = message.map({ ServiceGrantTrigger(rawData: $0.message) }) else {
-            delegate?.bleDidReceivedServiceTriggerForStatus(theStatus, error: error)
+            receivedServiceGrantTriggerForStatus.onNext((status: theStatus, error: error))
             return
         }
 
@@ -557,61 +447,50 @@ open class BLEComManager: NSObject {
         if theStatus == .triggerStatusUnkown {
             print("Trigger status unkown!!")
         }
-        delegate?.bleDidReceivedServiceTriggerForStatus(theStatus, error: error)
+        receivedServiceGrantTriggerForStatus.onNext((status: theStatus, error: error))
     }
 }
 
 // MARK: - BLEScannerDelegate
 
-extension BLEComManager: BLEScannerDelegate {
+extension BLEManager: BLEScannerDelegate {
 
     public func didUpdateState() {
-        stateDelegate?.didUpdateState()
+        isBluetoothEnabled.onNext(scanner.isPoweredOn())
     }
 }
 
 // MARK: - BLEChallengeServiceDelegate
 
-extension BLEComManager: BLEChallengeServiceDelegate {
+extension BLEManager: BLEChallengeServiceDelegate {
 
-    /**
-     SID challenger reports to send SID a message
-
-     - parameter message: the message that will be sent to SID peripheral
-     */
     func challengerWantsSendMessage(_ message: SIDMessage) {
         _ = sendMessage(message)
     }
 
-    /**
-     SID challenger reports finished with extablishing SessionKey
-
-     - parameter sessionKey: Crypto key for initializing CryptoManager
-     */
     func challengerFinishedWithSessionKey(_ sessionKey: [UInt8]) {
         cryptoManager = AesCbcCryptoManager(key: sessionKey)
         currentEncryptionState = .encryptionEstablished
-        delegate?.bleDidChangedConnectionState(true)
+        // TODO: PLAM-949 set correct rssi
+        connectionChange.onNext(ConnectionChange(
+            state: .connected(sorcId: sidId),
+            action: .connectionEstablished(sorcId: sidId, rssi: 0))
+        )
         bleSchouldSendHeartbeat()
     }
 
-    /**
-     SID challenger reports abort with challenge
-
-     - parameter error: error descriptiong for Cram Unit
-     */
     func challengerAbort(_: BLEChallengerError) {
         disconnect()
     }
 
-    /**
-     SID challenger reports to need send Blob to SID peripheral
-     */
     func challengerNeedsSendBlob(latestBlobCounter: Int?) {
 
         guard latestBlobCounter == nil || blobCounter >= latestBlobCounter! else {
-            print("Ask user to get latest blob")
-            delegate?.blobIsOutdated()
+            // TODO: PLAM-949 set correct rssi
+            connectionChange.onNext(ConnectionChange(
+                state: .disconnected,
+                action: .connectingFailed(error: .blobOutdated, sorcId: sidId, rssi: 0))
+            )
             return
         }
         sendBlob()
@@ -620,14 +499,8 @@ extension BLEComManager: BLEChallengeServiceDelegate {
 
 // MARK: - SIDCommunicatorDelegate
 
-extension BLEComManager: SIDCommunicatorDelegate {
+extension BLEManager: SIDCommunicatorDelegate {
 
-    /**
-     Communicator reports did received response data
-
-     - parameter messageData: received data
-     - parameter count:       received data length
-     */
     func communicatorDidRecivedData(_ messageData: Data, count: Int) {
 
         let noValidDataErrorMessage = "No valid data was received"
@@ -655,12 +528,10 @@ extension BLEComManager: SIDCommunicatorDelegate {
         case .mtuReceive:
             let payload = MTUSize(rawData: message.message)
             if let mtu = payload.mtuSize {
-                BLEComManager.mtuSize = mtu
+                BLEManager.mtuSize = mtu
             }
             if currentEncryptionState == .shouldEncrypt {
                 establishCrypto()
-            } else {
-                delegate?.bleDidChangedConnectionState(true)
             }
 
             // Challenger Message
@@ -692,62 +563,26 @@ extension BLEComManager: SIDCommunicatorDelegate {
         communicator.resetReceivedPackage()
     }
 
-    /**
-     Communicator reports if connection state did changed
-
-     - parameter connected: is connected or not
-     */
     func communicatorDidChangedConnectionState(_ connected: Bool) {
         if connected {
             currentConnectionState = .connected
             sendMtuRequest()
         } else {
-            print("Will be both BLE and Comm. disconnected!")
             currentConnectionState = .notConnected
+            // PLAM-951: Set proper action
+            connectionChange.onNext(ConnectionChange(state: .disconnected, action: .disconnect))
         }
     }
 
-    /**
-
-     Communicator reports if new SID was discovered
-
-     - parameter newSid: the found SID object
-     */
     func comminicatorDidDiscoveredSidId(_ newSid: SID) {
-        delegate?.bleDidDiscoveredSidId(newSid)
+        sorcDiscovered.onNext(newSid)
     }
 
-    /**
-     Communicator reports if there are SIDs longer as 5 seconds not reported
-
-     - parameter oldSid: did lost SIDs as Array
-     */
     func communicatorDidLostSidIds(_ oldSids: [SID]) {
-        delegate?.bleDidLostSidIds(oldSids)
+        sorcsLost.onNext(oldSids)
     }
 
-    /**
-     Communicator reports if a connection attempt succeeded
+    func communicatorDidConnectSid(_: SIDCommunicator, sid _: SID) {}
 
-     - parameter communicator: The communicator object
-     - parameter sid: The SID the connection is made to
-     */
-    func communicatorDidConnectSid(_: SIDCommunicator, sid: SID) {
-        // TODO: this has to be advanced to cover further communication between device and sid
-        // it is only used for metrics at the moment
-        delegate?.bleDidConnectSid(self, sid: sid)
-    }
-
-    /**
-     Communicator reports if a connection attempt failed
-
-     - parameter communicator: The communicator object
-     - parameter sid: The SID the connection should have made to
-     - parameter error: Describes the error
-     */
-    func communicatorDidFailToConnectSid(_: SIDCommunicator, sid: SID, error: Error?) {
-        // TODO: this has to be advanced to cover further communication between device and sid
-        // it is only used for metrics at the moment
-        delegate?.bleDidFailToConnectSid(self, sid: sid, error: error)
-    }
+    func communicatorDidFailToConnectSid(_: SIDCommunicator, sid _: SID, error _: Error?) {}
 }
