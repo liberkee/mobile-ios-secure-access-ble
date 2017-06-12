@@ -9,7 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-- 2017-06-08 : (PLAM-965)   : Don't expose `SID` type to the outside of the framework
+- 2017-06-12 : (PLAM-965)   : Don't expose `SID` type to the outside of the framework
 - 2017-06-07 : (PLAM-749)   : Let `BLEManager` conform to `BLEManagerType`
 
 ### Fixed

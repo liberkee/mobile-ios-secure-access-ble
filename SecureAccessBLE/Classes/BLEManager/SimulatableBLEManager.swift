@@ -76,13 +76,13 @@ public class SimulatableBLEManager: BLEManagerType {
 
     // MARK: - Discovery
 
-    public func hasSorcId(_ sorcId: String) -> Bool {
+    public func hasSorcId(_ sorcId: SorcID) -> Bool {
         return currentManager.hasSorcId(sorcId)
     }
 
-    public var sorcDiscovered = PublishSubject<String>()
+    public var sorcDiscovered = PublishSubject<SorcID>()
 
-    public var sorcsLost = PublishSubject<[String]>()
+    public var sorcsLost = PublishSubject<[SorcID]>()
 
     // MARK: - Connection
 
