@@ -1,0 +1,26 @@
+{
+  "name": "CommonUtils",
+  "version": "0.0.4",
+  "summary": "CommonUtils framework",
+  "description": "Shared methods for iOS Frameworks",
+  "homepage": "https://github.com/hufsm/mobile-ios-common-utils",
+  "authors": {
+    "Torsten Lehmann": "dev@tlehmann.com"
+  },
+  "source": {
+    "git": "https://github.com/hufsm/mobile-ios-common-utils.git",
+    "tag": "0.0.4"
+  },
+  "platforms": {
+    "ios": "9.0"
+  },
+  "source_files": "CommonUtils/Classes/**/*",
+  "dependencies": {
+    "ObjectMapper": [
+      "~> 2.2"
+    ],
+    "KeychainAccess": [
+
+    ]
+  }
+}

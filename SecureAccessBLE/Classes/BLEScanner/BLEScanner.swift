@@ -146,8 +146,8 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
 
      - returns: Central manager state is powered on or notas bool
      */
-    open func isPoweredOn() -> Bool {
-        print("central manager has \(self.centralManager!.state.rawValue)")
+    func isPoweredOn() -> Bool {
+        print("BLEScanner central manager has \(self.centralManager!.state.rawValue)")
         return centralManager!.state == .poweredOn
     }
 
@@ -158,7 +158,7 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
      */
     func connectToSidWithId(_ sidId: String) {
         if let sid = self.sids.filter({ $0.sidID.lowercased() == sidId.replacingOccurrences(of: "-", with: "").lowercased() }).first {
-            print("connecting to sid:\(sid.sidID)")
+            print("BLEScanner connecting to sid:\(sid.sidID)")
             connectingdSid = sid
             sidPeripheral = sid.peripheral!
             centralManager.connect(sid.peripheral!, options: nil)
@@ -170,7 +170,7 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
      */
     func disconnect() {
         if let peripheral = self.sidPeripheral {
-            print("BLE will be disconnected at: \(CACurrentMediaTime())")
+            print("BLEScanner will be disconnected at: \(CACurrentMediaTime())")
             centralManager.cancelPeripheralConnection(peripheral)
         }
         cleanUpSIDs()
@@ -190,7 +190,7 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
     /**
      Start BLE-Scanner to scan perihperals with allowing duplicatesKey options
      */
-    func begineToScan() {
+    private func startScan() {
         centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: 1])
     }
 
@@ -224,7 +224,7 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
      See CBCentralManager documentation from coreBluetooth
      */
     open func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        consoleLog("Central updated state: \(central.state)")
+        consoleLog("BLEScanner Central updated state: \(central.state)")
 
         bleScannerDelegate?.didUpdateState()
         centralManagerPoweredOn = central.state == .poweredOn
@@ -235,7 +235,7 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
             return
         }
         delegate?.transferDidChangedConnectionState(self, isConnected: isConnected)
-        begineToScan()
+        startScan()
     }
 
     /**
@@ -259,8 +259,11 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
 
         isConnected = true
         sidPeripheral = peripheral
-        print("Peripheral did Connected")
+        print("BLEScanner Peripheral did Connected")
         peripheral.delegate = self
+
+        print("ServiceId: \(self.serviceId)")
+
         peripheral.discoverServices([CBUUID(string: self.serviceId)])
     }
 
@@ -270,7 +273,7 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
     open func centralManager(_: CBCentralManager, didFailToConnect _: CBPeripheral, error: Error?) {
         consoleLog("Central failed connecting to peripheral: \(error?.localizedDescription ?? "Unkown error")")
 
-        print(error!.localizedDescription)
+        print("BLEScanner didFailToConnect: \(error!.localizedDescription)")
         let sid = connectingdSid!
         cleanUpSIDs()
         resetPeripheral()
@@ -280,13 +283,15 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
     /**
      See CBCentralManager documentation from coreBluetooth
      */
-    open func centralManager(_: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error _: Error?) {
+    open func centralManager(_: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
         consoleLog("Central disconnected from peripheral: \(peripheral.identifier.uuidString)")
+
+        print("BLEScanner didDisconnectPeripheral \(error)")
 
         isConnected = false
         cleanUpSIDs()
         resetPeripheral()
-        begineToScan()
+        startScan()
         delegate?.transferDidChangedConnectionState(self, isConnected: isConnected)
     }
 
