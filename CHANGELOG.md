@@ -4,27 +4,26 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
 ### Added
+### Changed
+### Fixed
 
+## [1.0.9] - 2017-06-13
+### Added
 - 2017-06-12 : (PLAM-999)   : Let BLEManager respond with errors if communication is blocked by a heartbeat
 - 2017-06-07 : (PLAM-749)   : New `BLEManagerType` protocol, `SimulatableBLEManager` and `MockBLEManager`
 
 ### Changed
-
 - 2017-06-07 : (PLAM-749)   : Let `BLEManager` conform to `BLEManagerType`
-
-### Fixed
 
 ## [1.0.8] - 2017-05-24
 ### Added
 ### Changed
 ### Fixed
-
 - 2017-05-24 : (PLAM-898)   : Fixed crash on decrypting messages with no MAC
 
 ## [1.0.7] - 2017-05-17
 
 ### Fixed
-
 - 2017-05-17 : (PLAM-820)   : MTU size was read out wrong in release versions
 
 
