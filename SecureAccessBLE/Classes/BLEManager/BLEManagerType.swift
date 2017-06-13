@@ -9,6 +9,8 @@
 import Foundation
 import CommonUtils
 
+public typealias SorcID = String
+
 /// Declares the contract a BLEManagerType has to follow
 public protocol BLEManagerType: class {
 
@@ -28,13 +30,13 @@ public protocol BLEManagerType: class {
     // MARK: - Discovery
 
     /// If the SORC is discovered
-    func hasSorcId(_ sorcId: String) -> Bool
+    func hasSorcId(_ sorcId: SorcID) -> Bool
 
-    /// A SORC was discovered
-    var sorcDiscovered: PublishSubject<SID> { get }
+    /// A SORC was discovered. Contains the SORC ID.
+    var sorcDiscovered: PublishSubject<SorcID> { get }
 
-    /// SORCs were lost
-    var sorcsLost: PublishSubject<[SID]> { get }
+    /// SORCs were lost. Contains the SORC IDs.
+    var sorcsLost: PublishSubject<[SorcID]> { get }
 
     // MARK: - Connection
 

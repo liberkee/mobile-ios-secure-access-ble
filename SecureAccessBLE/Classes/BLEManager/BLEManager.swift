@@ -210,13 +210,13 @@ public class BLEManager: NSObject, BLEManagerType {
 
     // MARK: Discovery
 
-    public func hasSorcId(_ sorcId: String) -> Bool {
+    public func hasSorcId(_ sorcId: SorcID) -> Bool {
         return communicator.hasSidID(sorcId)
     }
 
-    public var sorcDiscovered = PublishSubject<SID>()
+    public var sorcDiscovered = PublishSubject<SorcID>()
 
-    public var sorcsLost = PublishSubject<[SID]>()
+    public var sorcsLost = PublishSubject<[SorcID]>()
 
     // MARK: - Connection
 
@@ -453,7 +453,7 @@ public class BLEManager: NSObject, BLEManagerType {
         }
         receivedServiceGrantTriggerForStatus.onNext((status: theStatus, error: error))
     }
-    
+
     private func failedStatusMatchingFeature(_ feature: ServiceGrantFeature) -> ServiceGrantTriggerStatus {
         switch feature {
         case .open:
@@ -594,11 +594,12 @@ extension BLEManager: SIDCommunicatorDelegate {
     }
 
     func comminicatorDidDiscoveredSidId(_ newSid: SID) {
-        sorcDiscovered.onNext(newSid)
+        sorcDiscovered.onNext(newSid.sidID)
     }
 
     func communicatorDidLostSidIds(_ oldSids: [SID]) {
-        sorcsLost.onNext(oldSids)
+        let lostSorcIds = oldSids.map { $0.sidID }
+        sorcsLost.onNext(lostSorcIds)
     }
 
     func communicatorDidConnectSid(_: SIDCommunicator, sid _: SID) {}
