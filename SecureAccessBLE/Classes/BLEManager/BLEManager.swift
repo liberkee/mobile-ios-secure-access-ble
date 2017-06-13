@@ -453,7 +453,7 @@ public class BLEManager: NSObject, BLEManagerType {
         }
         receivedServiceGrantTriggerForStatus.onNext((status: theStatus, error: error))
     }
-    
+
     private func failedStatusMatchingFeature(_ feature: ServiceGrantFeature) -> ServiceGrantTriggerStatus {
         switch feature {
         case .open:
