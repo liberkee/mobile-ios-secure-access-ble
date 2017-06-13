@@ -262,26 +262,30 @@ public class BLEManager: NSObject, BLEManagerType {
     }
 
     public func sendServiceGrantForFeature(_ feature: ServiceGrantFeature) {
-        if currentEncryptionState == .encryptionEstablished && transferIsBusy() == false {
-            let payload: SIDMessagePayload
-            switch feature {
-            case .open:
-                payload = ServiceGrantRequest(grantID: ServiceGrantID.unlock)
-            case .close:
-                payload = ServiceGrantRequest(grantID: ServiceGrantID.lock)
-            case .ignitionStart:
-                payload = ServiceGrantRequest(grantID: ServiceGrantID.enableIgnition)
-            case .ignitionStop:
-                payload = ServiceGrantRequest(grantID: ServiceGrantID.disableIgnition)
-            case .lockStatus:
-                payload = ServiceGrantRequest(grantID: ServiceGrantID.lockStatus)
-            case .ignitionStatus:
-                payload = ServiceGrantRequest(grantID: ServiceGrantID.ignitionStatus)
-            }
-
-            let message = SIDMessage(id: SIDMessageID.serviceGrant, payload: payload)
-            _ = sendMessage(message)
+        guard currentEncryptionState == .encryptionEstablished && !transferIsBusy() else {
+            let status = failedStatusMatchingFeature(feature)
+            receivedServiceGrantTriggerForStatus.onNext((status: status, error: nil))
+            return
         }
+
+        let payload: SIDMessagePayload
+        switch feature {
+        case .open:
+            payload = ServiceGrantRequest(grantID: ServiceGrantID.unlock)
+        case .close:
+            payload = ServiceGrantRequest(grantID: ServiceGrantID.lock)
+        case .ignitionStart:
+            payload = ServiceGrantRequest(grantID: ServiceGrantID.enableIgnition)
+        case .ignitionStop:
+            payload = ServiceGrantRequest(grantID: ServiceGrantID.disableIgnition)
+        case .lockStatus:
+            payload = ServiceGrantRequest(grantID: ServiceGrantID.lockStatus)
+        case .ignitionStatus:
+            payload = ServiceGrantRequest(grantID: ServiceGrantID.ignitionStatus)
+        }
+
+        let message = SIDMessage(id: SIDMessageID.serviceGrant, payload: payload)
+        _ = sendMessage(message)
     }
 
     // MARK: - Private methods
@@ -448,6 +452,21 @@ public class BLEManager: NSObject, BLEManagerType {
             print("Trigger status unkown!!")
         }
         receivedServiceGrantTriggerForStatus.onNext((status: theStatus, error: error))
+    }
+    
+    private func failedStatusMatchingFeature(_ feature: ServiceGrantFeature) -> ServiceGrantTriggerStatus {
+        switch feature {
+        case .open:
+            return .unlockFailed
+        case .close:
+            return .lockFailed
+        case .ignitionStart:
+            return .enableIgnitionFailed
+        case .ignitionStop:
+            return .disableIgnitionFailed
+        default:
+            return .triggerStatusUnkown
+        }
     }
 }
 
