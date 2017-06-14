@@ -165,8 +165,7 @@ public class BLEManager: NSObject, BLEManagerType {
             currentEncryptionState = .shouldEncrypt
         }
         transporter = scanner
-        communicator = SIDCommunicator()
-        communicator.transporter = transporter
+        communicator = SIDCommunicator(transporter: transporter)
         communicator.resetFoundSids()
         super.init()
         scanner.bleScannerDelegate = self
@@ -236,7 +235,7 @@ public class BLEManager: NSObject, BLEManagerType {
         sidAccessKey = leaseToken.sorcAccessKey
         blobData = leaseTokenBlob.data
         blobCounter = leaseTokenBlob.messageCounter
-        communicator.connectToSid(sidId)
+        communicator.connectToSorc(sidId)
     }
 
     public func disconnect() {
@@ -254,7 +253,6 @@ public class BLEManager: NSObject, BLEManagerType {
 
     private func reset() {
         communicator.resetCurrentPackage()
-        communicator.resetFoundSids()
         cryptoManager = ZeroSecurityManager()
         currentEncryptionState = .shouldEncrypt
         sendHeartbeatsTimer?.invalidate()
@@ -296,9 +294,7 @@ public class BLEManager: NSObject, BLEManagerType {
      - returns: Transfer busy
      */
     private func transferIsBusy() -> Bool {
-        let transferIsBusy = communicator.currentPackage != nil
-        print("The transfer is busy: \(transferIsBusy)")
-        return transferIsBusy
+        return communicator.currentPackage != nil
     }
 
     /**
@@ -356,7 +352,7 @@ public class BLEManager: NSObject, BLEManagerType {
         do {
             try challenger?.beginChallenge()
         } catch {
-            print("Will be both BLE and Comm. disconnected!")
+            print("BLEManager Error: beginChallenge error: \(error)")
             disconnect()
         }
     }
@@ -398,7 +394,6 @@ public class BLEManager: NSObject, BLEManagerType {
     func sendMessage(_ message: SIDMessage) -> (success: Bool, error: String?) {
         if communicator.currentPackage != nil {
             print("Sending package not empty!! Message \(message.id) will not be sent!!")
-            print("Package: \(String(describing: communicator.currentPackage?.message))")
             return (false, "Sending in progress")
         } else {
             let data = cryptoManager.encryptMessage(message)
@@ -449,7 +444,7 @@ public class BLEManager: NSObject, BLEManagerType {
         }
         let error = error
         if theStatus == .triggerStatusUnkown {
-            print("Trigger status unkown!!")
+            print("BLEManager handleServiceGrantTrigger: Trigger status unknown.")
         }
         receivedServiceGrantTriggerForStatus.onNext((status: theStatus, error: error))
     }
@@ -475,6 +470,13 @@ public class BLEManager: NSObject, BLEManagerType {
 extension BLEManager: BLEScannerDelegate {
 
     public func didUpdateState() {
+        if !scanner.isPoweredOn() {
+            communicator.resetFoundSids()
+            connectionChange.onNext(ConnectionChange(
+                state: .disconnected,
+                action: .connectionLost(error: .bluetoothOff)
+            ))
+        }
         isBluetoothEnabled.onNext(scanner.isPoweredOn())
     }
 }
@@ -558,7 +560,7 @@ extension BLEManager: SIDCommunicatorDelegate {
             do {
                 try challenger?.handleReceivedChallengerMessage(message)
             } catch {
-                print("Will be both BLE and Comm. disconnected!")
+                print("BLEManager Error: handleReceivedChallengerMessage failed message: \(message)")
                 disconnect()
             }
 
@@ -587,9 +589,12 @@ extension BLEManager: SIDCommunicatorDelegate {
             currentConnectionState = .connected
             sendMtuRequest()
         } else {
-            currentConnectionState = .notConnected
-            // PLAM-951: Set proper action
-            connectionChange.onNext(ConnectionChange(state: .disconnected, action: .disconnect))
+            if isBluetoothEnabled.value {
+                currentConnectionState = .notConnected
+                // PLAM-951: Set proper action
+                connectionChange.onNext(ConnectionChange(state: .disconnected, action: .disconnect))
+            } else {
+            }
         }
     }
 

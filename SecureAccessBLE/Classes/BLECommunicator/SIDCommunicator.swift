@@ -85,10 +85,13 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
 
      Normally the transporter is a BLEScanner object
      */
-    var transporter: DataTransfer
+    private var transporter: DataTransfer
 
     /// Current connected SID object
-    var connectedSid: SID?
+    private var connectedSid: SID?
+
+    /// Timer to filter old SIDs
+    fileprivate var filterTimer: Timer?
 
     private var isConnected = false
 
@@ -97,24 +100,15 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
 
      - returns: self as communicator object
      */
-    required override init() {
-        transporter = BLEScanner()
-        super.init()
-        transporter.delegate = self
-    }
-
-    /**
-     Convenience init point with transporter
-
-     - parameter transporter: transporter object
-     - parameter delegate:    the communicator delegate object
-
-     - returns: self as communicator object
-     */
-    convenience init(transporter: BLEScanner, delegate: SIDCommunicatorDelegate) {
-        self.init()
+    init(transporter: DataTransfer) {
         self.transporter = transporter
-        self.delegate = delegate
+        super.init()
+        self.transporter.delegate = self
+        filterTimer = Timer.scheduledTimer(timeInterval: 1.31,
+                                           target: self,
+                                           selector: #selector(filterOldSidIds),
+                                           userInfo: nil,
+                                           repeats: true)
     }
 
     /**
@@ -151,9 +145,15 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
 
      - parameter sidId: sidId as String that transporter should connect to
      */
-    func connectToSid(_ sidId: String) {
-        transporter.delegate = self
-        transporter.connectToSidWithId(sidId)
+    func connectToSorc(_ sidId: String) {
+        let optSorc = currentFoundSidIds
+            .filter({ $0.sidID.lowercased() == sidId.replacingOccurrences(of: "-", with: "").lowercased() })
+            .first
+        if let sorc = optSorc {
+            transporter.connectToSorc(sorc)
+        } else {
+            print("SIDCommunicator can't connect to SORC that is not discovered.")
+        }
     }
 
     /**
@@ -258,6 +258,12 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
             self.isConnected = isConnected
             delegate?.communicatorDidChangedConnectionState(isConnected)
         }
+        if !isConnected {
+            if let sorcID = connectedSid?.sidID {
+                currentFoundSidIds = Set(currentFoundSidIds.filter { $0.sidID != sorcID })
+            }
+            connectedSid = nil
+        }
     }
 
     /**
@@ -267,9 +273,8 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
      - parameter newSid:             discovered new SID object
      */
     func transferDidDiscoveredSidId(_: DataTransfer, newSid: SID) {
-        let savedSameSids = currentFoundSidIds.filter { (commingSid) -> Bool in
-            let sidString = commingSid.sidID
-            return sidString == newSid.sidID
+        let savedSameSids = currentFoundSidIds.filter { commingSid in
+            return commingSid.sidID == newSid.sidID
         }
         let replaceOldSids = savedSameSids.count > 0
         if replaceOldSids {
@@ -287,15 +292,6 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
         if !replaceOldSids {
             delegate?.comminicatorDidDiscoveredSidId(newSid)
         }
-    }
-
-    /**
-     In transporter runs a timer, it reports wenn all saved SIDs must be filtered
-
-     - parameter dataTransferObject: Scanner instance
-     */
-    func transferShouldFilterOldIds(_: DataTransfer) {
-        filterOldSidIds()
     }
 
     /**
@@ -332,7 +328,6 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
      - parameter sid:                connected SID instance
      */
     func transferDidConnectSid(_: DataTransfer, sid: SID) {
-        print("sid: \(sid.sidID) did connected")
         connectedSid = sid
         delegate?.communicatorDidConnectSid(self, sid: sid)
     }

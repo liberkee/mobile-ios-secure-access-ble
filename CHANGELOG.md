@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 ### Changed
+- 2017-06-14 : (PLAM-1045)  : Don't remove discovered and unconnected SORCs on disconnect
 - 2017-06-13 : (PLAM-965)   : Don't expose `SID` type to the outside of the framework
 
 ### Fixed
