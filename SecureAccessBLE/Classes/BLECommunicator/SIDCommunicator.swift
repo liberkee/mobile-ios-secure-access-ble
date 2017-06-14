@@ -94,7 +94,13 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
     fileprivate var filterTimer: Timer?
 
     private var isConnected = false
+    
+    /// The interval a timer is triggered to remove outdated discovered SORCs
+    private let removeOutdatedSorcsTimerIntervalSeconds: Double = 2
 
+    /// The duration a SORC is considered outdated if last discovery date is greater than this duration
+    private let sorcOutdatedDurationSeconds: Double = 5
+    
     /**
      Init point
 
@@ -104,7 +110,7 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
         self.transporter = transporter
         super.init()
         self.transporter.delegate = self
-        filterTimer = Timer.scheduledTimer(timeInterval: 1.31,
+        filterTimer = Timer.scheduledTimer(timeInterval: removeOutdatedSorcsTimerIntervalSeconds,
                                            target: self,
                                            selector: #selector(filterOldSidIds),
                                            userInfo: nil,
@@ -301,8 +307,8 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
      */
     func filterOldSidIds() {
         let lostSids = currentFoundSidIds.filter { (sid) -> Bool in
-            let time = sid.discoveryDate.timeIntervalSinceNow
-            if time < -5.08 {
+            let outdated = sid.discoveryDate.timeIntervalSinceNow < -sorcOutdatedDurationSeconds
+            if outdated {
                 if sid.sidID == self.connectedSid?.sidID {
                     return false
                 } else {
