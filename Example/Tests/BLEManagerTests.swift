@@ -14,9 +14,14 @@ class BLEManagerTests: XCTestCase {
     /// blescanner instance
     let bleScanner = BLEScanner()
     /// ble communicator instance
-    let bleCommunicator = SIDCommunicator()
+    var bleCommunicator: SIDCommunicator!
     /// ble manager instance
     let bleManager = BLEManager(crypto: false)
+
+    override func setUp() {
+        super.setUp()
+        bleCommunicator = SIDCommunicator(transporter: bleScanner)
+    }
 
     /**
      To test changing connection state in scanner and communicator, and corresposing changed connetion states for BLE-manager

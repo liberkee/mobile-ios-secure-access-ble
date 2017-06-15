@@ -63,5 +63,6 @@ public enum ConnectingFailedError {
 /// The errors that can occur if the connection is lost
 public enum ConnectionLostError {
     case heartbeatTimedOut
+    case bluetoothOff
     case unknown
 }
