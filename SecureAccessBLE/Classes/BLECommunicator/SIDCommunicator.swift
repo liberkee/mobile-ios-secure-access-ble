@@ -94,13 +94,13 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
     fileprivate var filterTimer: Timer?
 
     private var isConnected = false
-    
+
     /// The interval a timer is triggered to remove outdated discovered SORCs
     private let removeOutdatedSorcsTimerIntervalSeconds: Double = 2
 
     /// The duration a SORC is considered outdated if last discovery date is greater than this duration
     private let sorcOutdatedDurationSeconds: Double = 5
-    
+
     /**
      Init point
 

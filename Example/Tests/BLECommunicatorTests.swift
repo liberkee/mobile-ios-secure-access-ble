@@ -42,7 +42,7 @@ class BLECommunicatorTests: XCTestCase {
     }
 
     /**
-     To test the sids older as 5.1 seconds will be filtered
+     To test the sids older as 5 seconds will be filtered
      */
     func testFilterOldSids() {
         /// reset all foundsids
@@ -54,14 +54,14 @@ class BLECommunicatorTests: XCTestCase {
         Delay(0.5) {
             /// The old sids will be removed in this case the "250bf2429d8c4f2896e2030dfe601bd8"
             self.communicator.filterOldSidIds()
-            /// Sid older als 5.1 seconds will be removed
+            /// Sid older als 5 seconds will be removed
             XCTAssert(self.communicator.hasSidID("250bf2429d8c4f2896e2030dfe601bd8") == false, "Old sid was not filtered from communicator")
         }
 
         Delay(2.5) {
             /// The old sids will be removed in this case the "250bf2429d8c4f2896e2030dfe601bd8"
             self.communicator.filterOldSidIds()
-            /// Sid older als 5.1 seconds will be removed
+            /// Sid older als 5 seconds will be removed
             XCTAssert(self.communicator.hasSidID("2c6088153bc7434f9c2b2e3272596adc") == false, "Old sid was not filtered from communicator")
         }
     }
