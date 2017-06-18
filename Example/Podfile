@@ -1,3 +1,6 @@
+source 'https://github.com/CocoaPods/Specs.git'
+source 'https://github.com/hufsm/mobile-ios-podspecs.git'
+
 platform :ios, '9.0'
 use_frameworks!
 
@@ -7,7 +10,7 @@ target 'SecureAccessBLE_Tests' do
 
   pod 'SecureAccessBLE', :path => '../'
 
-  pod 'CommonUtils', :git => 'https://github.com/hufsm/mobile-ios-common-utils.git', :branch => 'development'
+  #pod 'CommonUtils', :git => 'https://github.com/hufsm/mobile-ios-common-utils.git', :branch => 'development'
   #pod 'CommonUtils', :path => '../../mobile-ios-common-utils'
   
 end
