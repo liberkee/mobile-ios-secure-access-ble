@@ -76,13 +76,13 @@ public class SimulatableBLEManager: BLEManagerType {
 
     // MARK: - Discovery
 
-    public func hasSorcId(_ sorcId: String) -> Bool {
+    public func hasSorcId(_ sorcId: SorcID) -> Bool {
         return currentManager.hasSorcId(sorcId)
     }
 
-    public var sorcDiscovered = PublishSubject<SID>()
+    public var sorcDiscovered = PublishSubject<SorcID>()
 
-    public var sorcsLost = PublishSubject<[SID]>()
+    public var sorcsLost = PublishSubject<[SorcID]>()
 
     // MARK: - Connection
 
@@ -118,15 +118,15 @@ public class SimulatableBLEManager: BLEManagerType {
         }
         .disposed(by: disposeBag)
 
-        manager.sorcDiscovered.subscribeNext { [weak self] sorc in
+        manager.sorcDiscovered.subscribeNext { [weak self] sorcId in
             guard let strongSelf = self else { return }
-            strongSelf.sorcDiscovered.onNext(sorc)
+            strongSelf.sorcDiscovered.onNext(sorcId)
         }
         .disposed(by: disposeBag)
 
-        manager.sorcsLost.subscribeNext { [weak self] lostSorcs in
+        manager.sorcsLost.subscribeNext { [weak self] lostSorcIds in
             guard let strongSelf = self else { return }
-            strongSelf.sorcsLost.onNext(lostSorcs)
+            strongSelf.sorcsLost.onNext(lostSorcIds)
         }
         .disposed(by: disposeBag)
 

@@ -13,10 +13,10 @@ public struct LeaseToken {
 
     let id: String
     let leaseId: String
-    let sorcId: String
+    let sorcId: SorcID
     let sorcAccessKey: String
 
-    public init(id: String, leaseId: String, sorcId: String, sorcAccessKey: String) {
+    public init(id: String, leaseId: String, sorcId: SorcID, sorcAccessKey: String) {
         self.id = id
         self.leaseId = leaseId
         self.sorcId = sorcId

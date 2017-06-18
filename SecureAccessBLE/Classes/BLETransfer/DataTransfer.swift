@@ -46,21 +46,6 @@ protocol DataTransferDelegate: class {
     func transferDidDiscoveredSidId(_ dataTransferObject: DataTransfer, newSid: SID)
 
     /**
-     Tells the delegate that a SID was vanished.
-
-     - parameter dataTransferObject: The DataTransfer object.
-     - parameter sidId: The id of the discovered SID.
-     */
-    // func transferDidLostSidId(dataTransferObject: DataTransfer, oldSids: [SID])
-
-    /**
-     In transporter runs a timer, it reports wenn all saved SIDs must be filtered
-
-     - parameter dataTransferObject: Scanner instance
-     */
-    func transferShouldFilterOldIds(_ dataTransferObject: DataTransfer)
-
-    /**
      Transporter reports if that was successfully connected with a SID
 
      - parameter dataTransferObject: transporter instance
@@ -97,11 +82,11 @@ protocol DataTransfer {
     func sendData(_ data: Data)
 
     /**
-     A method to connecting to a specified sid.
+     A method to connecting to a specified SORC.
 
-     - parameter data: The sid id.
+     - parameter sorc: The SORC.
      */
-    func connectToSidWithId(_ sidId: String)
+    func connectToSorc(_ sorc: SID)
 
     /// Disconnect the current connected sid.
     func disconnect()

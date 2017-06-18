@@ -3,11 +3,20 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [Unreleased]
+
 ### Added
 ### Changed
 ### Fixed
+### Removed
+
+## [1.0.10] - 2017-06-18
+
+### Changed
+- 2017-06-14 : (PLAM-1045)  : Don't remove discovered and unconnected SORCs on disconnect
+- 2017-06-13 : (PLAM-965)   : Don't expose `SID` type to the outside of the framework
 
 ## [1.0.9] - 2017-06-13
+
 ### Added
 - 2017-06-12 : (PLAM-999)   : Let BLEManager respond with errors if communication is blocked by a heartbeat
 - 2017-06-07 : (PLAM-749)   : New `BLEManagerType` protocol, `SimulatableBLEManager` and `MockBLEManager`
@@ -16,19 +25,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - 2017-06-07 : (PLAM-749)   : Let `BLEManager` conform to `BLEManagerType`
 
 ## [1.0.8] - 2017-05-24
-### Added
-### Changed
 ### Fixed
 - 2017-05-24 : (PLAM-898)   : Fixed crash on decrypting messages with no MAC
 
 ## [1.0.7] - 2017-05-17
-
 ### Fixed
 - 2017-05-17 : (PLAM-820)   : MTU size was read out wrong in release versions
 
 
 ## [1.0.6] - 2017-05-04
-
 ### Changed
 - 2017-04-25 : (PLAM-749)   : Changed parts of the public API
 
@@ -56,8 +61,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - More tests for BleManager
 
 ## [1.0.1] - 2016-07-01
-### Changed
-- Reconstruction of Framework
 
 ### Added
 - BLEComManager
@@ -69,6 +72,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - CommunicationManager
 
 ### Changed
+- Reconstruction of Framework
 - Code documentation for BLE Framework
 
 ## [1.0.0] - 2016-06-08

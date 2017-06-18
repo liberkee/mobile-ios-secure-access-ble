@@ -11,7 +11,13 @@ import XCTest
 
 class BLECommunicatorTests: XCTestCase {
 
-    var communicator = SIDCommunicator.init()
+    let transporter = BLEScanner()
+    var communicator: SIDCommunicator!
+
+    override func setUp() {
+        super.setUp()
+        communicator = SIDCommunicator(transporter: transporter)
+    }
 
     /**
      To test if the from Scanner found new SIDs will be added to found list
@@ -36,7 +42,7 @@ class BLECommunicatorTests: XCTestCase {
     }
 
     /**
-     To test the sids older as 5.1 seconds will be filtered
+     To test the sids older as 5 seconds will be filtered
      */
     func testFilterOldSids() {
         /// reset all foundsids
@@ -47,15 +53,15 @@ class BLECommunicatorTests: XCTestCase {
 
         Delay(0.5) {
             /// The old sids will be removed in this case the "250bf2429d8c4f2896e2030dfe601bd8"
-            self.communicator.transferShouldFilterOldIds(self.communicator.transporter)
-            /// Sid older als 5.1 seconds will be removed
+            self.communicator.filterOldSidIds()
+            /// Sid older als 5 seconds will be removed
             XCTAssert(self.communicator.hasSidID("250bf2429d8c4f2896e2030dfe601bd8") == false, "Old sid was not filtered from communicator")
         }
 
         Delay(2.5) {
             /// The old sids will be removed in this case the "250bf2429d8c4f2896e2030dfe601bd8"
-            self.communicator.transferShouldFilterOldIds(self.communicator.transporter)
-            /// Sid older als 5.1 seconds will be removed
+            self.communicator.filterOldSidIds()
+            /// Sid older als 5 seconds will be removed
             XCTAssert(self.communicator.hasSidID("2c6088153bc7434f9c2b2e3272596adc") == false, "Old sid was not filtered from communicator")
         }
     }
@@ -85,7 +91,7 @@ class BLECommunicatorTests: XCTestCase {
         let mockPeripheral = BLEScanner().sidPeripheral
         for interval in intervals {
             let mockSid = SID(sidID: mockSidId, peripheral: mockPeripheral, discoveryDate: reference.addingTimeInterval(-interval) as Date, isConnected: false, rssi: 0)
-            communicator.transferDidDiscoveredSidId(communicator.transporter, newSid: mockSid)
+            communicator.transferDidDiscoveredSidId(transporter, newSid: mockSid)
         }
 
         let savedSameSids = communicator.currentFoundSidIds.filter { (commingSid) -> Bool in
@@ -114,10 +120,10 @@ class BLECommunicatorTests: XCTestCase {
      */
     func refillMockSids() {
         let mockPeripheral = BLEScanner().sidPeripheral
-        communicator.transferDidDiscoveredSidId(communicator.transporter, newSid: SID(sidID: "bb28d13fdcab416b85b7cec28c26add7", peripheral: mockPeripheral, discoveryDate: Date().addingTimeInterval(-0.8) as Date, isConnected: false, rssi: 0))
-        communicator.transferDidDiscoveredSidId(communicator.transporter, newSid: SID(sidID: "550e8400e29b11d4a716446655440003", peripheral: mockPeripheral, discoveryDate: Date().addingTimeInterval(-1.8) as Date, isConnected: false, rssi: 0))
-        communicator.transferDidDiscoveredSidId(communicator.transporter, newSid: SID(sidID: "1a1092e99f824187af92d92029b28cdc", peripheral: mockPeripheral, discoveryDate: Date().addingTimeInterval(-2.5) as Date, isConnected: false, rssi: 0))
-        communicator.transferDidDiscoveredSidId(communicator.transporter, newSid: SID(sidID: "2c6088153bc7434f9c2b2e3272596adc", peripheral: mockPeripheral, discoveryDate: Date().addingTimeInterval(-3.0) as Date, isConnected: false, rssi: 0))
-        communicator.transferDidDiscoveredSidId(communicator.transporter, newSid: SID(sidID: "250bf2429d8c4f2896e2030dfe601bd8", peripheral: mockPeripheral, discoveryDate: Date().addingTimeInterval(-4.8) as Date, isConnected: false, rssi: 0))
+        communicator.transferDidDiscoveredSidId(transporter, newSid: SID(sidID: "bb28d13fdcab416b85b7cec28c26add7", peripheral: mockPeripheral, discoveryDate: Date().addingTimeInterval(-0.8) as Date, isConnected: false, rssi: 0))
+        communicator.transferDidDiscoveredSidId(transporter, newSid: SID(sidID: "550e8400e29b11d4a716446655440003", peripheral: mockPeripheral, discoveryDate: Date().addingTimeInterval(-1.8) as Date, isConnected: false, rssi: 0))
+        communicator.transferDidDiscoveredSidId(transporter, newSid: SID(sidID: "1a1092e99f824187af92d92029b28cdc", peripheral: mockPeripheral, discoveryDate: Date().addingTimeInterval(-2.5) as Date, isConnected: false, rssi: 0))
+        communicator.transferDidDiscoveredSidId(transporter, newSid: SID(sidID: "2c6088153bc7434f9c2b2e3272596adc", peripheral: mockPeripheral, discoveryDate: Date().addingTimeInterval(-3.0) as Date, isConnected: false, rssi: 0))
+        communicator.transferDidDiscoveredSidId(transporter, newSid: SID(sidID: "250bf2429d8c4f2896e2030dfe601bd8", peripheral: mockPeripheral, discoveryDate: Date().addingTimeInterval(-4.8) as Date, isConnected: false, rssi: 0))
     }
 }

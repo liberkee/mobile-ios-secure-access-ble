@@ -26,8 +26,8 @@ public struct ConnectionChange {
     /// The state the connection can be in
     public enum State {
         case disconnected
-        case connecting(sorcId: String)
-        case connected(sorcId: String)
+        case connecting(sorcId: SorcID)
+        case connected(sorcId: SorcID)
     }
 
     /// The action that led to the state
@@ -37,8 +37,8 @@ public struct ConnectionChange {
         case disconnect
         // internal
         case initial
-        case connectionEstablished(sorcId: String, rssi: Int)
-        case connectingFailed(error: ConnectingFailedError, sorcId: String, rssi: Int)
+        case connectionEstablished(sorcId: SorcID, rssi: Int)
+        case connectingFailed(error: ConnectingFailedError, sorcId: SorcID, rssi: Int)
         case connectionLost(error: ConnectionLostError)
     }
 
@@ -63,5 +63,6 @@ public enum ConnectingFailedError {
 /// The errors that can occur if the connection is lost
 public enum ConnectionLostError {
     case heartbeatTimedOut
+    case bluetoothOff
     case unknown
 }

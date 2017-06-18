@@ -29,15 +29,15 @@ class MockBLEManager: BLEManagerType {
 
     // MARK: - Discovery
 
-    public func hasSorcId(_: String) -> Bool {
+    public func hasSorcId(_: SorcID) -> Bool {
         return true
     }
 
     // Not mocked
-    public var sorcDiscovered = PublishSubject<SID>()
+    public var sorcDiscovered = PublishSubject<SorcID>()
 
     // Not mocked
-    public var sorcsLost = PublishSubject<[SID]>()
+    public var sorcsLost = PublishSubject<[SorcID]>()
 
     // MARK: - Connection
 
