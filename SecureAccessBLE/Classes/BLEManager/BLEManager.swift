@@ -239,6 +239,10 @@ public class BLEManager: NSObject, BLEManagerType {
     }
 
     public func disconnect() {
+        disconnectInternal()
+    }
+
+    private func disconnectInternal(action: ConnectionChange.Action = .disconnect) {
         if case .disconnected = connectionChange.value.state { return }
         if transporter.isConnected {
             transporter.disconnect()
@@ -246,7 +250,7 @@ public class BLEManager: NSObject, BLEManagerType {
             currentConnectionState = .notConnected
             connectionChange.onNext(ConnectionChange(
                 state: .disconnected,
-                action: .disconnect)
+                action: action)
             )
         }
     }
@@ -255,8 +259,7 @@ public class BLEManager: NSObject, BLEManagerType {
         communicator.resetCurrentPackage()
         cryptoManager = ZeroSecurityManager()
         currentEncryptionState = .shouldEncrypt
-        sendHeartbeatsTimer?.invalidate()
-        checkHeartbeatsResponseTimer?.invalidate()
+        stopSendingHeartbeat()
     }
 
     public func sendServiceGrantForFeature(_ feature: ServiceGrantFeature) {
@@ -327,11 +330,7 @@ public class BLEManager: NSObject, BLEManagerType {
      */
     func checkoutHeartbeatsResponse() {
         if (lastHeartbeatResponseDate.timeIntervalSinceNow + heartbeatTimeout / 1000) < 0 {
-            currentConnectionState = .notConnected
-            connectionChange.onNext(ConnectionChange(
-                state: .disconnected,
-                action: .connectionLost(error: .heartbeatTimedOut))
-            )
+            disconnectInternal(action: .connectionLost(error: .heartbeatTimedOut))
         }
     }
 

@@ -7,6 +7,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 ### Changed
 ### Fixed
+- 2017-06-23 : (PLAM-1112)  : Disconnect transporter if heartbeat check failed
+
 ### Removed
 
 ## [1.0.10] - 2017-06-18
