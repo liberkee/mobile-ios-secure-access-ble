@@ -160,7 +160,7 @@ Git pre-commit hook
 3. Add the following line in the pre-commit file (unlike the Xcode build phase approach, this uses your locally installed version of SwiftFormat, not a separate copy in your project repository)
 
         #!/bin/bash
-        git status --porcelain | grep -e '^[AM]\(.*\).swift$' | cut -c 3- | while read line; do
+        git status --porcelain | grep -e '^ [AM] \(.*\).swift$' | cut -c 3- | while read line; do
           swiftformat ${line};
           git add $line;
         done
@@ -559,6 +559,14 @@ Here are all the rules that SwiftFormat currently applies, and the effect that t
 + func foo() {
 +   // returns nothing
 + }
+```
+
+***redundantInit*** - removes unnecessary `init` when instantiating Types:
+
+```diff
+- String.init("text")
+
++ String("text")
 ```
     
 ***semicolons*** - removes semicolons at the end of lines and optionally (depending on the `--semicolons` option) replaces inline semicolons with a linebreak:
