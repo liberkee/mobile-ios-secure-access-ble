@@ -8,6 +8,7 @@
 
 import XCTest
 import CryptoSwift
+import CoreBluetooth
 @testable import SecureAccessBLE
 
 class BLEManagerTests: XCTestCase {
@@ -32,7 +33,7 @@ class BLEManagerTests: XCTestCase {
         bleScanner.isConnected = false
 
         /// scanner update state and reports connection state
-        bleScanner.centralManagerDidUpdateState(bleScanner.centralManager)
+        bleScanner.centralManagerDidUpdateState(bleScanner.centralManager as! CBCentralManager)
 
         /// blemanager is not connected, because the scanner not connected
         XCTAssertFalse(isBLEManagerConnected(), "BLE manager has wrong connection state")

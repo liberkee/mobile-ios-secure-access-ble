@@ -13,6 +13,7 @@
 		46B760971DA26C8C003ADDB1 /* BLECryptorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760961DA26C8C003ADDB1 /* BLECryptorTests.swift */; };
 		8A124FF51D48BACC201824A8 /* Pods_SecureAccessBLE_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D955D40F7C47731B2AA178ED /* Pods_SecureAccessBLE_Tests.framework */; };
 		E573A7941EDC2BD50093ABA8 /* LeaseTokenBlob.swift in Sources */ = {isa = PBXBuildFile; fileRef = E573A7931EDC2BD50093ABA8 /* LeaseTokenBlob.swift */; };
+		E5FBD9B91F18DA4A0091F0B0 /* BLEScannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5FBD9B81F18DA4A0091F0B0 /* BLEScannerTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -60,6 +61,7 @@
 		E573A7921EDC2BAA0093ABA8 /* LeaseToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaseToken.swift; sourceTree = "<group>"; };
 		E573A7931EDC2BD50093ABA8 /* LeaseTokenBlob.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeaseTokenBlob.swift; sourceTree = "<group>"; };
 		E5AE2F4E1ED5CAD700580405 /* BLEManagerType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEManagerType.swift; sourceTree = "<group>"; };
+		E5FBD9B81F18DA4A0091F0B0 /* BLEScannerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEScannerTests.swift; sourceTree = "<group>"; };
 		EE99F13EBAEE0CDC40DBE8F5 /* Pods-SecureAccessBLE_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -258,6 +260,7 @@
 		607FACE81AFB9204008FA782 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				E5FBD9B81F18DA4A0091F0B0 /* BLEScannerTests.swift */,
 				46B760901DA26C40003ADDB1 /* BLEManagerTests.swift */,
 				46B760921DA26C61003ADDB1 /* BLEChallengerTests.swift */,
 				46B760941DA26C71003ADDB1 /* BLECommunicatorTests.swift */,
@@ -448,6 +451,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5FBD9B91F18DA4A0091F0B0 /* BLEScannerTests.swift in Sources */,
 				46B760951DA26C71003ADDB1 /* BLECommunicatorTests.swift in Sources */,
 				E573A7941EDC2BD50093ABA8 /* LeaseTokenBlob.swift in Sources */,
 				46B760971DA26C8C003ADDB1 /* BLECryptorTests.swift in Sources */,
@@ -498,7 +502,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -539,7 +543,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
