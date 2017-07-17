@@ -168,7 +168,7 @@ public final class Poly1305 {
         if context.leftover > 0 {
 
             var i = context.leftover
-            context.buffer[i++ ] = 1
+            context.buffer[i++] = 1
             for; i < blockSize; i++ {
                 context.buffer[i] = 0
             }
