@@ -327,29 +327,6 @@ extension FormatRules {
     @objc public class func spaceAroundOperators(_ formatter: Formatter) {
         formatter.forEachToken { i, token in
             switch token {
-            case .delimiter(":"):
-                // TODO: make this check more robust, and remove redundant space
-                if formatter.token(at: i + 1)?.isIdentifier == true &&
-                    formatter.token(at: i + 2) == .delimiter(":") {
-                    // It's a selector
-                    break
-                }
-                fallthrough
-            case .delimiter(","), .delimiter(";"):
-                if let nextToken = formatter.token(at: i + 1) {
-                    switch nextToken {
-                    case .space, .linebreak, .endOfScope:
-                        break
-                    default:
-                        // Ensure there is a space after the token
-                        formatter.insertToken(.space(" "), at: i + 1)
-                    }
-                }
-                if formatter.token(at: i - 1)?.isSpace == true &&
-                    formatter.token(at: i - 2)?.isLinebreak == false {
-                    // Remove space before the token
-                    formatter.removeToken(at: i - 1)
-                }
             case .operator("?", .postfix), .operator("!", .postfix):
                 if let prevToken = formatter.token(at: i - 1),
                     formatter.token(at: i + 1)?.isSpaceOrLinebreak == false,
@@ -388,9 +365,28 @@ extension FormatRules {
                 } else if formatter.token(at: i - 1)?.isSpaceOrLinebreak == false {
                     formatter.insertToken(.space(" "), at: i)
                 }
-            case .operator(_, .postfix):
-                if formatter.token(at: i + 1)?.isSpaceOrLinebreak == false {
-                    formatter.insertToken(.space(" "), at: i + 1)
+            case .delimiter(":"):
+                // TODO: make this check more robust, and remove redundant space
+                if formatter.token(at: i + 1)?.isIdentifier == true &&
+                    formatter.token(at: i + 2) == .delimiter(":") {
+                    // It's a selector
+                    break
+                }
+                fallthrough
+            case .operator(_, .postfix), .delimiter(","), .delimiter(";"):
+                if let nextToken = formatter.token(at: i + 1) {
+                    switch nextToken {
+                    case .space, .linebreak, .endOfScope:
+                        break
+                    default:
+                        // Ensure there is a space after the token
+                        formatter.insertToken(.space(" "), at: i + 1)
+                    }
+                }
+                if formatter.token(at: i - 1)?.isSpace == true &&
+                    formatter.token(at: i - 2)?.isLinebreak == false {
+                    // Remove space before the token
+                    formatter.removeToken(at: i - 1)
                 }
             default:
                 break
@@ -470,14 +466,14 @@ extension FormatRules {
                 if formatter.token(at: i - 1)?.isSpace == true {
                     formatter.removeToken(at: i - 1)
                 }
-            } else if let nextToken = formatter.next(.nonSpaceOrCommentOrLinebreak, after: i) {
-                if nextToken != .endOfScope(")") && nextToken != .delimiter(",") {
-                    if formatter.token(at: i + 1)?.isSpaceOrLinebreak == false {
-                        formatter.insertToken(.space(" "), at: i + 1)
-                    }
-                    if formatter.token(at: i - 1)?.isSpaceOrLinebreak == false {
-                        formatter.insertToken(.space(" "), at: i)
-                    }
+            } else if let nextToken = formatter.next(.nonSpaceOrCommentOrLinebreak, after: i),
+                let prevToken = formatter.last(.nonSpaceOrCommentOrLinebreak, before: i),
+                nextToken.isRvalue, prevToken.isLvalue {
+                if formatter.token(at: i + 1)?.isSpaceOrLinebreak == false {
+                    formatter.insertToken(.space(" "), at: i + 1)
+                }
+                if formatter.token(at: i - 1)?.isSpaceOrLinebreak == false {
+                    formatter.insertToken(.space(" "), at: i)
                 }
             }
         }
@@ -727,8 +723,14 @@ extension FormatRules {
             if let token = formatter.token(at: i) {
                 switch token {
                 case let .keyword(string) where [ // TODO: handle "in"
-                    "as", "is", "where", "dynamicType", "rethrows", "throws",
+                    "where", "dynamicType", "rethrows", "throws",
                 ].contains(string):
+                    return false
+                case .keyword("as"), .keyword("in"):
+                    if scopeStack.last?.string == "case" {
+                        // For case statements, we already indent
+                        return true
+                    }
                     return false
                 case .delimiter(","), .delimiter(":"):
                     if let scope = scopeStack.last?.string, ["<", "[", "(", "case"].contains(scope) {
@@ -2021,7 +2023,7 @@ extension FormatRules {
                     lastKeyword = ""
                 case let .keyword(name):
                     lastKeyword = name
-                case .startOfScope("("):
+                case .startOfScope("("), .startOfScope("\""):
                     scopeStack.append(token)
                 case .startOfScope("{") where lastKeyword == "catch":
                     lastKeyword = ""
@@ -2089,6 +2091,12 @@ extension FormatRules {
                             formatter.replaceToken(at: nextIndex, with: .identifier("`\(name)`"))
                         }
                         formatter.removeTokens(inRange: index ..< nextIndex)
+                    }
+                case .identifier("type"): // Special case for type(of:)
+                    guard let parenIndex = formatter.index(of: .nonSpaceOrCommentOrLinebreak, after: index, if: {
+                        $0 == .startOfScope("(")
+                    }), formatter.next(.nonSpaceOrCommentOrLinebreak, after: parenIndex) == .identifier("of") else {
+                        fallthrough
                     }
                 case .identifier where !formatter.options.removeSelf && !isTypeRoot:
                     let name = token.unescaped()
@@ -2797,7 +2805,10 @@ extension FormatRules {
         formatter.forEach(.identifier("init")) { i, _ in
             guard let dotIndex = formatter.index(of: .nonSpaceOrCommentOrLinebreak, before: i, if: {
                 $0 == .operator(".", .infix)
-            }), formatter.next(.nonSpaceOrCommentOrLinebreak, after: i) == .startOfScope("("),
+            }), let openParenIndex = formatter.index(of: .nonSpaceOrCommentOrLinebreak, after: i, if: {
+                $0 == .startOfScope("(")
+            }), let closeParenIndex = formatter.index(of: .endOfScope(")"), after: openParenIndex),
+                formatter.last(.nonSpaceOrCommentOrLinebreak, before: closeParenIndex) != .delimiter(":"),
                 let prevToken = formatter.last(.nonSpaceOrCommentOrLinebreak, before: dotIndex),
                 case let .identifier(name) = prevToken, let firstChar = name.characters.first,
                 firstChar != "$", String(firstChar).uppercased() == String(firstChar) else {
