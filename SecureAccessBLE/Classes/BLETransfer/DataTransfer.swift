@@ -8,6 +8,12 @@
 
 import Foundation
 
+enum TransferConnectionState {
+    case disconnected
+    case connecting(sorc: SID)
+    case connected(sorc: SID)
+}
+
 /**
  The Delegate for a DataTransfer object
  */
@@ -33,9 +39,9 @@ protocol DataTransferDelegate: class {
      Tells the delegate that a connection was established.
 
      - parameter dataTransferObject: The DataTransfer object.
-     - parameter data: The data which was received.
+     - parameter state: The state of the transfer connection.
      */
-    func transferDidChangedConnectionState(_ dataTransferObject: DataTransfer, isConnected: Bool)
+    func transferDidChangedConnectionState(_ dataTransferObject: DataTransfer, state: TransferConnectionState)
 
     /**
      Tells the delegate that a SID was discovered.
@@ -69,11 +75,12 @@ protocol DataTransferDelegate: class {
  */
 protocol DataTransfer {
 
-    /// A delegate confirming to DataTransferDelegate
+    /// A delegate conforming to DataTransferDelegate
     weak var delegate: DataTransferDelegate? { get set }
 
-    /// The connection state
-    var isConnected: Bool { get }
+    /// The connection state of the data transfer
+    var connectionState: TransferConnectionState { get }
+
     /**
      A method to send data.
 

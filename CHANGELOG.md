@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 ### Removed
 ### Fixed
+- 2017-07-17 : (PLAM-1230)  : "disconnect while connecting" leads to a "connected" state and not to "disconnected".
 
 ## [1.0.11] - 2017-06-26
 

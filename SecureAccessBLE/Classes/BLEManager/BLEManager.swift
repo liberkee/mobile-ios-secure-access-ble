@@ -244,15 +244,12 @@ public class BLEManager: NSObject, BLEManagerType {
 
     private func disconnectInternal(action: ConnectionChange.Action = .disconnect) {
         if case .disconnected = connectionChange.value.state { return }
-        if transporter.isConnected {
-            transporter.disconnect()
-        } else {
-            currentConnectionState = .notConnected
-            connectionChange.onNext(ConnectionChange(
-                state: .disconnected,
-                action: action)
-            )
-        }
+        currentConnectionState = .notConnected
+        connectionChange.onNext(ConnectionChange(
+            state: .disconnected,
+            action: action)
+        )
+        transporter.disconnect()
     }
 
     private func reset() {
@@ -521,7 +518,7 @@ extension BLEManager: BLEChallengeServiceDelegate {
 
 extension BLEManager: SIDCommunicatorDelegate {
 
-    func communicatorDidRecivedData(_ messageData: Data, count: Int) {
+    func communicatorDidReceivedData(_ messageData: Data, count: Int) {
 
         let noValidDataErrorMessage = "No valid data was received"
 
@@ -583,11 +580,14 @@ extension BLEManager: SIDCommunicatorDelegate {
         communicator.resetReceivedPackage()
     }
 
-    func communicatorDidChangedConnectionState(_ connected: Bool) {
-        if connected {
+    func communicatorDidChangedConnectionState(_: SIDCommunicator, state: TransferConnectionState) {
+        switch state {
+        case .connecting: break
+        case .connected:
             currentConnectionState = .connected
             sendMtuRequest()
-        } else {
+        case .disconnected:
+            if case .disconnected = connectionChange.value.state { return }
             if isBluetoothEnabled.value {
                 currentConnectionState = .notConnected
                 // PLAM-951: Set proper action
