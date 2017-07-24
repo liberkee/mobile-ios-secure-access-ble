@@ -17,14 +17,14 @@ public protocol LocalStorage {
 
      - returns: The saved object or `nil` if it doesn't exist
      */
-    func loadObject<T: Mappable>() -> T?
+    func loadObject<T: BaseMappable>() -> T?
 
     /**
      Loads the locally saved data as array
 
      - returns: The saved array or `nil` if it doesn't exist
      */
-    func loadArray<T: Mappable>() -> [T]?
+    func loadArray<T: BaseMappable>() -> [T]?
 
     /**
      Saves an object locally
@@ -32,7 +32,7 @@ public protocol LocalStorage {
      - parameter object: The object to be saved locally
      - returns: `true` if saving succeeds or `false` otherwise
      */
-    func save<T: Mappable>(_ object: T) -> Bool
+    func save<T: BaseMappable>(_ object: T) -> Bool
 
     /**
      Saves an array locally
@@ -40,7 +40,7 @@ public protocol LocalStorage {
      - parameter array: The array to be saved locally
      - returns: `true` if saving succeeds or `false` otherwise
      */
-    func save<T: Mappable>(_ array: [T]) -> Bool
+    func save<T: BaseMappable>(_ array: [T]) -> Bool
 
     /**
      Deletes the locally stored data
