@@ -38,7 +38,7 @@ public struct LocalJSONStorage: LocalStorage {
 
      - returns: The saved object or `nil` if it doesn't exist
      */
-    public func loadObject<T: Mappable>() -> T? {
+    public func loadObject<T: BaseMappable>() -> T? {
         if let json = stringStorage.load() {
             return Mapper<T>().map(JSONString: json)
         } else {
@@ -51,7 +51,7 @@ public struct LocalJSONStorage: LocalStorage {
 
      - returns: The saved array or `nil` if it doesn't exist
      */
-    public func loadArray<T: Mappable>() -> [T]? {
+    public func loadArray<T: BaseMappable>() -> [T]? {
         if let json = stringStorage.load() {
             return Mapper<T>().mapArray(JSONString: json)
         } else {
@@ -65,7 +65,7 @@ public struct LocalJSONStorage: LocalStorage {
      - parameter object: The object to be saved locally
      - returns: `true` if saving succeeds or `false` otherwise
      */
-    public func save<T: Mappable>(_ object: T) -> Bool {
+    public func save<T: BaseMappable>(_ object: T) -> Bool {
         if let json = Mapper().toJSONString(object, prettyPrint: true) {
             return saveJSON(json)
         } else {
@@ -80,7 +80,7 @@ public struct LocalJSONStorage: LocalStorage {
      - parameter array: The array to be saved locally
      - returns: `true` if saving succeeds or `false` otherwise
      */
-    public func save<T: Mappable>(_ array: [T]) -> Bool {
+    public func save<T: BaseMappable>(_ array: [T]) -> Bool {
         if let json = Mapper().toJSONString(array, prettyPrint: true) {
             return saveJSON(json)
         } else {

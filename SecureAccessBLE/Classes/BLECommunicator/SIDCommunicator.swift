@@ -19,7 +19,7 @@ protocol SIDCommunicatorDelegate {
      - parameter messageData: received data
      - parameter count:       received data length
      */
-    func communicatorDidRecivedData(_ messageData: Data, count: Int)
+    func communicatorDidReceivedData(_ messageData: Data, count: Int)
 
     /**
      Communicator reports if a connection attempt succeeded
@@ -41,9 +41,10 @@ protocol SIDCommunicatorDelegate {
     /**
      Communicator reports if connection state did changed
 
-     - parameter connected: is connected or not
+     - parameter communicator: The communicator object
+     - parameter state: The state of the transfer connection.
      */
-    func communicatorDidChangedConnectionState(_ connected: Bool)
+    func communicatorDidChangedConnectionState(_ communicator: SIDCommunicator, state: TransferConnectionState)
 
     /**
      Communicator reports if new SID was discovered
@@ -88,12 +89,15 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
     private var transporter: DataTransfer
 
     /// Current connected SID object
-    private var connectedSid: SID?
+    private var connectedSid: SID? {
+        if case let .connected(sorc) = transporter.connectionState {
+            return sorc
+        }
+        return nil
+    }
 
     /// Timer to filter old SIDs
     fileprivate var filterTimer: Timer?
-
-    private var isConnected = false
 
     /// The interval a timer is triggered to remove outdated discovered SORCs
     private let removeOutdatedSorcsTimerIntervalSeconds: Double = 2
@@ -246,30 +250,18 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
 
         if frame.type == .single || frame.type == .eop {
             if let messageData = self.currentReceivingPackage?.message {
-                delegate?.communicatorDidRecivedData(messageData as Data, count: data.count / 4)
+                delegate?.communicatorDidReceivedData(messageData as Data, count: data.count / 4)
             } else {
-                delegate?.communicatorDidRecivedData(Data(), count: 0)
+                delegate?.communicatorDidReceivedData(Data(), count: 0)
             }
         }
     }
 
-    /**
-     Datatransfer reports if connection status to SID did changed
-
-     - parameter dataTransferObject: BLEScanner object as dataTransfer
-     - parameter isConnected:        didConnected or not as Bool
-     */
-    func transferDidChangedConnectionState(_: DataTransfer, isConnected: Bool) {
-        if self.isConnected != isConnected {
-            self.isConnected = isConnected
-            delegate?.communicatorDidChangedConnectionState(isConnected)
+    func transferDidChangedConnectionState(_: DataTransfer, state: TransferConnectionState) {
+        if let sorcID = connectedSid?.sidID {
+            currentFoundSidIds = Set(currentFoundSidIds.filter { $0.sidID != sorcID })
         }
-        if !isConnected {
-            if let sorcID = connectedSid?.sidID {
-                currentFoundSidIds = Set(currentFoundSidIds.filter { $0.sidID != sorcID })
-            }
-            connectedSid = nil
-        }
+        delegate?.communicatorDidChangedConnectionState(self, state: state)
     }
 
     /**
@@ -334,7 +326,6 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
      - parameter sid:                connected SID instance
      */
     func transferDidConnectSid(_: DataTransfer, sid: SID) {
-        connectedSid = sid
         delegate?.communicatorDidConnectSid(self, sid: sid)
     }
 
