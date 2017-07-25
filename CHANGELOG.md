@@ -9,6 +9,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 ### Fixed
 
+## [1.0.13] - Unreleased
+
+### Changed
+- 2017-07-15 : (PLAM-1237)  : Allow `CommonUtils` `0.0.5` and above (`0.0.6` only before) 
+
 ## [1.0.12] - 2017-07-24
 
 ### Fixed
