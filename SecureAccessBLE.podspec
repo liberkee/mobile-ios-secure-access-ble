@@ -8,14 +8,14 @@
 
 Pod::Spec.new do |s|
   s.name             = 'SecureAccessBLE'
-  s.version          = '1.0.12'
+  s.version          = '1.0.13'
   s.summary          = 'SecureAccess BLE framework'
   s.description      = 'Framework for communicating with the SecureAccess BLE hardware.'
 
   s.homepage         = 'https://github.com/hufsm/mobile-ios-ble'
   #s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'Ke Song' => 'ke.song@excellence.ag', 'Lars Hosemann' => 'lars.hosemann@gmail.com' }
-  s.source           = { :git => 'https://github.com/hufsm/mobile-ios-ble.git', :tag => s.version.to_s }
+  s.source           = { :git => 'git@github.com:hufsm/mobile-ios-ble.git', :tag => s.version.to_s }
 
   s.ios.deployment_target = '9.0'
 
@@ -23,7 +23,7 @@ Pod::Spec.new do |s|
 
   s.vendored_frameworks = [ 'SecureAccessBLE/Frameworks/openssl.framework' ]
 
-  s.dependency 'CommonUtils', '0.0.6'
+  s.dependency 'CommonUtils', '~> 0.0.5'
 
   s.dependency 'CryptoSwift', '0.6.7'
   
