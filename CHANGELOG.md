@@ -9,7 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 ### Fixed
 
-## [1.0.13] - Unreleased
+## [1.0.13] - 2017-07-31
 
 ### Changed
 - 2017-07-31 : (PLAM-1309)  : Use git@ scheme to access the private pods repo
