@@ -13,6 +13,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - 2017-07-15 : (PLAM-1237)  : Allow `CommonUtils` `0.0.5` and above (`0.0.6` only before) 
+- 2017-07-31 : (PLAM-1169)  : Updated Cocoapods version to 1.2.1 in Gemfile
 
 ## [1.0.12] - 2017-07-24
 
