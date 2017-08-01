@@ -129,7 +129,7 @@ class BLEManagerTests: XCTestCase {
         XCTAssertEqual(serviceGrantTrigger.id, ServiceGrantID.lockStatus, "BLE manager received wrong service grant ID!")
 
         /// Testing if service grant trigger has result .Locked
-        XCTAssertEqual(serviceGrantTrigger.result, ServiceGrantTrigger.ServiceGrantResult.Locked, "BLE manager received wrong service grant result!")
+        XCTAssertEqual(serviceGrantTrigger.result, ServiceGrantTrigger.ServiceGrantResult.locked, "BLE manager received wrong service grant result!")
     }
 
     /**

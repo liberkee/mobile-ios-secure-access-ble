@@ -424,15 +424,15 @@ public class BLEManager: NSObject, BLEManagerType {
         case .enableIgnition: theStatus = (trigger.status == .success) ? .enableIgnitionSuccess : .enableIgnitionFailed
         case .disableIgnition: theStatus = (trigger.status == .success) ? .disableIgnitionSuccess : .disableIgnitionFailed
         case .lockStatus:
-            if trigger.result == ServiceGrantTrigger.ServiceGrantResult.Locked {
+            if trigger.result == ServiceGrantTrigger.ServiceGrantResult.locked {
                 theStatus = .lockStatusLocked
-            } else if trigger.result == ServiceGrantTrigger.ServiceGrantResult.Unlocked {
+            } else if trigger.result == ServiceGrantTrigger.ServiceGrantResult.unlocked {
                 theStatus = .lockStatusUnlocked
             }
         case .ignitionStatus:
-            if trigger.result == ServiceGrantTrigger.ServiceGrantResult.Enabled {
+            if trigger.result == ServiceGrantTrigger.ServiceGrantResult.enabled {
                 theStatus = .ignitionStatusEnabled
-            } else if trigger.result == ServiceGrantTrigger.ServiceGrantResult.Disabled {
+            } else if trigger.result == ServiceGrantTrigger.ServiceGrantResult.disabled {
                 theStatus = .ignitionStatusDisabled
             }
         default:
