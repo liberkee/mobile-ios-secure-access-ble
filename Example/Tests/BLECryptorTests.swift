@@ -78,7 +78,7 @@ class BLECryptorTests: XCTestCase {
         XCTAssertEqual(serviceGrantTrigger.id, ServiceGrantID.lockStatus, "Crypto manager returned wrong service grant ID!")
 
         /// Testing if service grant trigger has result .Locked
-        XCTAssertEqual(serviceGrantTrigger.result, ServiceGrantTrigger.ServiceGrantResult.Locked, "Crypto manager returned wrong service grant result!")
+        XCTAssertEqual(serviceGrantTrigger.result, ServiceGrantTrigger.ServiceGrantResult.locked, "Crypto manager returned wrong service grant result!")
     }
 
     func test_AesCbcCryptoManager_decryptData_ifMacIsInvalid_messageIdIsNotValid() {
