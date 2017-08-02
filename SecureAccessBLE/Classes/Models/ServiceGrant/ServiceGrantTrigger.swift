@@ -37,11 +37,11 @@ struct ServiceGrantTrigger: ServiceGrant {
      - Unknown:  Unknown result
      */
     enum ServiceGrantResult: String {
-        case Locked = "LOCKED"
-        case Unlocked = "UNLOCKED"
-        case Enabled = "ENABLED"
-        case Disabled = "DISABLED"
-        case Unknown = "UNKNOWN"
+        case locked = "LOCKED"
+        case unlocked = "UNLOCKED"
+        case enabled = "ENABLED"
+        case disabled = "DISABLED"
+        case unknown = "UNKNOWN"
     }
 
     /// start value as NSData
@@ -92,15 +92,15 @@ struct ServiceGrantTrigger: ServiceGrant {
         if data.count > 3 {
             let messageData = data.subdata(in: 3 ..< data.count) // NSMakeRange(3, data.count-3))
             guard let string = String(data: messageData, encoding: .ascii) else {
-                return .Unknown
+                return .unknown
             }
             let cleanString = string.trimmingCharacters(in: CharacterSet.controlCharacters)
             if let resultCode = ServiceGrantResult(rawValue: cleanString) {
                 return resultCode
             } else {
-                return .Unknown
+                return .unknown
             }
         }
-        return .Unknown
+        return .unknown
     }
 }
