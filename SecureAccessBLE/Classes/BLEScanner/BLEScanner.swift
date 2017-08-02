@@ -9,86 +9,6 @@
 import UIKit
 import CoreBluetooth
 
-protocol CBCentralManagerType: class {
-
-    weak var delegate: CBCentralManagerDelegate? { get set }
-
-    var state: CBManagerState { get }
-
-    func scanForPeripherals(withServices serviceUUIDs: [CBUUID]?, options: [String: Any]?)
-
-    func connect(_ peripheral: CBPeripheralType, options: [String: Any]?)
-
-    func cancelPeripheralConnection(_ peripheral: CBPeripheralType)
-}
-
-extension CBCentralManager: CBCentralManagerType {
-
-    func connect(_ peripheral: CBPeripheralType, options: [String: Any]?) {
-        connect(peripheral as! CBPeripheral, options: options)
-    }
-
-    func cancelPeripheralConnection(_ peripheral: CBPeripheralType) {
-        cancelPeripheralConnection(peripheral as! CBPeripheral)
-    }
-}
-
-protocol CBPeripheralType: class {
-
-    weak var delegate: CBPeripheralDelegate? { get set }
-
-    var services_: [CBServiceType]? { get }
-
-    var identifier: UUID { get }
-
-    func discoverServices(_ serviceUUIDs: [CBUUID]?)
-
-    func discoverCharacteristics(_ characteristicUUIDs: [CBUUID]?, for service: CBServiceType)
-
-    func writeValue(_ data: Data, for characteristic: CBCharacteristicType, type: CBCharacteristicWriteType)
-
-    func setNotifyValue(_ enabled: Bool, for characteristic: CBCharacteristicType)
-}
-
-extension CBPeripheral: CBPeripheralType {
-
-    var services_: [CBServiceType]? {
-        return services
-    }
-
-    func discoverCharacteristics(_ characteristicUUIDs: [CBUUID]?, for service: CBServiceType) {
-        discoverCharacteristics(characteristicUUIDs, for: service as! CBService)
-    }
-
-    func writeValue(_ data: Data, for characteristic: CBCharacteristicType, type: CBCharacteristicWriteType) {
-        writeValue(data, for: characteristic as! CBCharacteristic, type: type)
-    }
-
-    func setNotifyValue(_ enabled: Bool, for characteristic: CBCharacteristicType) {
-        setNotifyValue(enabled, for: characteristic as! CBCharacteristic)
-    }
-}
-
-protocol CBServiceType: class {
-
-    var characteristics_: [CBCharacteristicType]? { get }
-}
-
-extension CBService: CBServiceType {
-
-    var characteristics_: [CBCharacteristicType]? {
-        return characteristics
-    }
-}
-
-protocol CBCharacteristicType: class {
-
-    var uuid: CBUUID { get }
-    var value: Data? { get }
-}
-
-extension CBCharacteristic: CBCharacteristicType {}
-
 /// Delegatation of CBManager state changes.
 protocol BLEScannerDelegate: class {
     func didUpdateState()
@@ -147,7 +67,7 @@ extension CBCentralManagerState {
 
 /// BLEScanner implaments the secure BLE session between mobile devices and SID. The communication manager can only send / receive
 /// messages over a secure BLE connection, i.e. a valid session context must exist.
-class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPeripheralDelegate {
+class BLEScanner: NSObject, DataTransfer {
 
     /// delegate to handle CBManager state changes.
     weak var bleScannerDelegate: BLEScannerDelegate?
@@ -253,61 +173,21 @@ class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPeripheral
         peripheral.writeValue(data, for: characteristic, type: CBCharacteristicWriteType.withResponse)
     }
 
+    // MARK: - Private methods
+
     fileprivate func startScan() {
         centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: 1])
     }
-
-    // MARK: - Private methods
 
     fileprivate func updateConnectionState(_ state: TransferConnectionState) {
         connectionState = state
         delegate?.transferDidChangedConnectionState(self, state: connectionState)
     }
-
-    // MARK: - CBCentralManagerDelegate
-
-    func centralManagerDidUpdateState(_ central: CBCentralManager) {
-        centralManagerDidUpdateState_(central as CBCentralManagerType)
-    }
-
-    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
-        centralManager_(central as CBCentralManagerType, didDiscover: peripheral as CBPeripheralType, advertisementData: advertisementData, rssi: RSSI)
-    }
-
-    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
-        centralManager_(central as CBCentralManagerType, didConnect: peripheral as CBPeripheralType)
-    }
-
-    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
-        centralManager_(central as CBCentralManagerType, didFailToConnect: peripheral as CBPeripheralType, error: error)
-    }
-
-    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        centralManager_(central as CBCentralManagerType, didDisconnectPeripheral: peripheral as CBPeripheralType, error: error)
-    }
-
-    // MARK: - CBPeripheralDelegate
-
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
-        peripheral_(peripheral as CBPeripheralType, didDiscoverServices: error)
-    }
-
-    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        peripheral_(peripheral as CBPeripheralType, didDiscoverCharacteristicsFor: service as CBServiceType, error: error)
-    }
-
-    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
-        peripheral_(peripheral, didUpdateValueFor: characteristic as CBCharacteristicType, error: error)
-    }
-
-    func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
-        peripheral_(peripheral as CBPeripheralType, didWriteValueFor: characteristic, error: error)
-    }
 }
 
-extension BLEScanner {
+// MARK: - CBCentralManagerDelegate_
 
-    // MARK: - CBCentralManagerDelegate
+extension BLEScanner {
 
     func centralManagerDidUpdateState_(_ central: CBCentralManagerType) {
         consoleLog("BLEScanner Central updated state: \(central.state)")
@@ -347,8 +227,11 @@ extension BLEScanner {
         guard case let .connected(sorc) = connectionState, sorc.peripheral?.identifier == peripheral.identifier else { return }
         updateConnectionState(.disconnected)
     }
+}
 
-    // MARK: - CBPeripheralDelegate
+// MARK: - CBPeripheralDelegate_
+
+extension BLEScanner {
 
     func peripheral_(_ peripheral: CBPeripheralType, didDiscoverServices error: Error?) {
 
@@ -399,5 +282,51 @@ extension BLEScanner {
     func peripheral_(_: CBPeripheralType, didWriteValueFor _: CBCharacteristicType, error _: Error?) {
         // TODO: handle error
         delegate?.transferDidSendData(self, data: Data())
+    }
+}
+
+// MARK: - CBCentralManagerDelegate
+
+extension BLEScanner: CBCentralManagerDelegate {
+
+    func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        centralManagerDidUpdateState_(central as CBCentralManagerType)
+    }
+
+    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
+        centralManager_(central as CBCentralManagerType, didDiscover: peripheral as CBPeripheralType, advertisementData: advertisementData, rssi: RSSI)
+    }
+
+    func centralManager(_ central: CBCentralManager, didConnect peripheral: CBPeripheral) {
+        centralManager_(central as CBCentralManagerType, didConnect: peripheral as CBPeripheralType)
+    }
+
+    func centralManager(_ central: CBCentralManager, didFailToConnect peripheral: CBPeripheral, error: Error?) {
+        centralManager_(central as CBCentralManagerType, didFailToConnect: peripheral as CBPeripheralType, error: error)
+    }
+
+    func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
+        centralManager_(central as CBCentralManagerType, didDisconnectPeripheral: peripheral as CBPeripheralType, error: error)
+    }
+}
+
+// MARK: - CBPeripheralDelegate
+
+extension BLEScanner: CBPeripheralDelegate {
+
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
+        peripheral_(peripheral as CBPeripheralType, didDiscoverServices: error)
+    }
+
+    func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
+        peripheral_(peripheral as CBPeripheralType, didDiscoverCharacteristicsFor: service as CBServiceType, error: error)
+    }
+
+    func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
+        peripheral_(peripheral, didUpdateValueFor: characteristic as CBCharacteristicType, error: error)
+    }
+
+    func peripheral(_ peripheral: CBPeripheral, didWriteValueFor characteristic: CBCharacteristic, error: Error?) {
+        peripheral_(peripheral as CBPeripheralType, didWriteValueFor: characteristic, error: error)
     }
 }

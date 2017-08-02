@@ -62,7 +62,7 @@ protocol SIDCommunicatorDelegate {
 }
 
 /// Sid communicator
-class SIDCommunicator: NSObject, DataTransferDelegate {
+class SIDCommunicator: NSObject {
 
     /// The netto message size (MTU minus frame header information)
     var messageFrameSize: Int {
@@ -89,7 +89,7 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
     private var transporter: DataTransfer
 
     /// Current connected SID object
-    private var connectedSid: SID? {
+    fileprivate var connectedSid: SID? {
         if case let .connected(sorc) = transporter.connectionState {
             return sorc
         }
@@ -102,7 +102,7 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
     /// The interval a timer is triggered to remove outdated discovered SORCs
     private let removeOutdatedSorcsTimerIntervalSeconds: Double = 2
 
-    /// The duration a SORC is considered outdated if last discovery date is greater than this duration
+    /// The duration a SORC is considered outdated if last discovery date is longer ago than this duration
     private let sorcOutdatedDurationSeconds: Double = 5
 
     /**
@@ -119,6 +119,29 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
                                            selector: #selector(filterOldSidIds),
                                            userInfo: nil,
                                            repeats: true)
+    }
+
+    /**
+     Empty found sids list
+     */
+    func resetFoundSids() {
+        currentFoundSidIds = Set<SID>()
+    }
+
+    /**
+     Let transporter connect to SID-Peripheral with comming SID-ID
+
+     - parameter sidId: sidId as String that transporter should connect to
+     */
+    func connectToSorc(_ sidId: String) {
+        let optSorc = currentFoundSidIds
+            .filter({ $0.sidID.lowercased() == sidId.replacingOccurrences(of: "-", with: "").lowercased() })
+            .first
+        if let sorc = optSorc {
+            transporter.connectToSorc(sorc)
+        } else {
+            print("SIDCommunicator can't connect to SORC that is not discovered.")
+        }
     }
 
     /**
@@ -151,22 +174,6 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
     }
 
     /**
-     Let transporter connect to SID-Peripheral with comming SID-ID
-
-     - parameter sidId: sidId as String that transporter should connect to
-     */
-    func connectToSorc(_ sidId: String) {
-        let optSorc = currentFoundSidIds
-            .filter({ $0.sidID.lowercased() == sidId.replacingOccurrences(of: "-", with: "").lowercased() })
-            .first
-        if let sorc = optSorc {
-            transporter.connectToSorc(sorc)
-        } else {
-            print("SIDCommunicator can't connect to SORC that is not discovered.")
-        }
-    }
-
-    /**
      Reset sending package to nil
      */
     func resetCurrentPackage() {
@@ -178,13 +185,6 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
      */
     func resetReceivedPackage() {
         currentReceivingPackage = nil
-    }
-
-    /**
-     Empty found sids list
-     */
-    func resetFoundSids() {
-        currentFoundSidIds = Set<SID>()
     }
 
     /**
@@ -217,81 +217,6 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
         return didFoundSid
     }
 
-    // MARK: - DataTransferDelegate
-    /**
-     Datatransger reports when message to SID did send
-
-     - parameter dataTransferObject: the BLEScanner object as datatransfer
-     - parameter data:               the sent message as NSData
-     */
-    func transferDidSendData(_: DataTransfer, data _: Data) {
-        currentPackage?.currentIndex += 1
-        if let currentFrame = self.currentPackage?.currentFrame {
-            sendFrame(currentFrame)
-        } else {
-            if let _ = self.currentPackage?.message {
-                resetCurrentPackage()
-            }
-        }
-    }
-
-    /**
-     Datatransfer reports when new SID message was received
-
-     - parameter dataTransferObject: the BLEScanner object as datatransfer
-     - parameter data:               the received data as NSData
-     */
-    func transferDidReceivedData(_: DataTransfer, data: Data) {
-        if currentReceivingPackage == nil {
-            currentReceivingPackage = DataFramePackage()
-        }
-        let frame = DataFrame(rawData: data)
-        currentReceivingPackage?.frames.append(frame)
-
-        if frame.type == .single || frame.type == .eop {
-            if let messageData = self.currentReceivingPackage?.message {
-                delegate?.communicatorDidReceivedData(messageData as Data, count: data.count / 4)
-            } else {
-                delegate?.communicatorDidReceivedData(Data(), count: 0)
-            }
-        }
-    }
-
-    func transferDidChangedConnectionState(_: DataTransfer, state: TransferConnectionState) {
-        if let sorcID = connectedSid?.sidID {
-            currentFoundSidIds = Set(currentFoundSidIds.filter { $0.sidID != sorcID })
-        }
-        delegate?.communicatorDidChangedConnectionState(self, state: state)
-    }
-
-    /**
-     Datatransfer reports discovered SID object
-
-     - parameter dataTransferObject: current used data transfer
-     - parameter newSid:             discovered new SID object
-     */
-    func transferDidDiscoveredSidId(_: DataTransfer, newSid: SID) {
-        let savedSameSids = currentFoundSidIds.filter { commingSid in
-            return commingSid.sidID == newSid.sidID
-        }
-        let replaceOldSids = savedSameSids.count > 0
-        if replaceOldSids {
-            let oldSidArray = Array(savedSameSids)
-            for oldSid in oldSidArray {
-                currentFoundSidIds.remove(oldSid)
-            }
-        }
-        var newcommingSid = newSid
-        if newcommingSid.sidID == connectedSid?.sidID {
-            newcommingSid.isConnected = (connectedSid?.isConnected)!
-            newcommingSid.peripheral = (connectedSid?.peripheral)!
-        }
-        currentFoundSidIds.insert(newSid)
-        if !replaceOldSids {
-            delegate?.comminicatorDidDiscoveredSidId(newSid)
-        }
-    }
-
     /**
      Check all saved sids with discovery date (time), all older (discovered before 5 seconds)
      sids will be deleted from List. Scanner will be started after delete old sids and the deletion
@@ -318,26 +243,74 @@ class SIDCommunicator: NSObject, DataTransferDelegate {
             delegate?.communicatorDidLostSidIds(sidArray.map({ $0 }))
         }
     }
+}
 
-    /**
-     Transporter reports if that was successfully connected with a SID
+// MARK: - DataTransferDelegate
 
-     - parameter dataTransferObject: transporter instance
-     - parameter sid:                connected SID instance
-     */
+extension SIDCommunicator: DataTransferDelegate {
+
+    func transferDidDiscoveredSidId(_: DataTransfer, newSid: SID) {
+        let savedSameSids = currentFoundSidIds.filter { commingSid in
+            return commingSid.sidID == newSid.sidID
+        }
+        let replaceOldSids = savedSameSids.count > 0
+        if replaceOldSids {
+            let oldSidArray = Array(savedSameSids)
+            for oldSid in oldSidArray {
+                currentFoundSidIds.remove(oldSid)
+            }
+        }
+        var newcommingSid = newSid
+        if newcommingSid.sidID == connectedSid?.sidID {
+            newcommingSid.isConnected = (connectedSid?.isConnected)!
+            newcommingSid.peripheral = (connectedSid?.peripheral)!
+        }
+        currentFoundSidIds.insert(newSid)
+        if !replaceOldSids {
+            delegate?.comminicatorDidDiscoveredSidId(newSid)
+        }
+    }
+
+    func transferDidChangedConnectionState(_: DataTransfer, state: TransferConnectionState) {
+        if let sorcID = connectedSid?.sidID {
+            currentFoundSidIds = Set(currentFoundSidIds.filter { $0.sidID != sorcID })
+        }
+        delegate?.communicatorDidChangedConnectionState(self, state: state)
+    }
+
     func transferDidConnectSid(_: DataTransfer, sid: SID) {
         delegate?.communicatorDidConnectSid(self, sid: sid)
     }
 
-    /**
-     Tells the delegate if a connection attempt failed
-
-     - parameter dataTransferObject: Transporter instance
-     - parameter sid: The SID the connection should have made to
-     - parameter error: Describes the error
-     */
     func transferDidFailToConnectSid(_: DataTransfer, sid: SID, error: Error?) {
         // TODO: check if something has to be cleaned up in this instance
         delegate?.communicatorDidFailToConnectSid(self, sid: sid, error: error)
+    }
+
+    func transferDidSendData(_: DataTransfer, data _: Data) {
+        currentPackage?.currentIndex += 1
+        if let currentFrame = self.currentPackage?.currentFrame {
+            sendFrame(currentFrame)
+        } else {
+            if let _ = self.currentPackage?.message {
+                resetCurrentPackage()
+            }
+        }
+    }
+
+    func transferDidReceivedData(_: DataTransfer, data: Data) {
+        if currentReceivingPackage == nil {
+            currentReceivingPackage = DataFramePackage()
+        }
+        let frame = DataFrame(rawData: data)
+        currentReceivingPackage?.frames.append(frame)
+
+        if frame.type == .single || frame.type == .eop {
+            if let messageData = self.currentReceivingPackage?.message {
+                delegate?.communicatorDidReceivedData(messageData as Data, count: data.count / 4)
+            } else {
+                delegate?.communicatorDidReceivedData(Data(), count: 0)
+            }
+        }
     }
 }

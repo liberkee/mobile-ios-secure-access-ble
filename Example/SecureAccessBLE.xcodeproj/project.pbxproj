@@ -61,6 +61,7 @@
 		E573A7921EDC2BAA0093ABA8 /* LeaseToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaseToken.swift; sourceTree = "<group>"; };
 		E573A7931EDC2BD50093ABA8 /* LeaseTokenBlob.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeaseTokenBlob.swift; sourceTree = "<group>"; };
 		E5AE2F4E1ED5CAD700580405 /* BLEManagerType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEManagerType.swift; sourceTree = "<group>"; };
+		E5E308D21F324E6800C1537F /* CBWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBWrapper.swift; sourceTree = "<group>"; };
 		E5FBD9B81F18DA4A0091F0B0 /* BLEScannerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEScannerTests.swift; sourceTree = "<group>"; };
 		EE99F13EBAEE0CDC40DBE8F5 /* Pods-SecureAccessBLE_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -86,6 +87,7 @@
 				46B7606B1DA2637D003ADDB1 /* BLECryptor */,
 				46B760701DA2637D003ADDB1 /* BLEScanner */,
 				46B760721DA2637D003ADDB1 /* BLETransfer */,
+				E5E308D11F324E5900C1537F /* CBWrapper */,
 				46B7607A1DA2637D003ADDB1 /* Models */,
 				46B760741DA2637D003ADDB1 /* Extensions */,
 				46B760761DA2637D003ADDB1 /* Helper */,
@@ -312,6 +314,14 @@
 				E573A7931EDC2BD50093ABA8 /* LeaseTokenBlob.swift */,
 			);
 			path = Lease;
+			sourceTree = "<group>";
+		};
+		E5E308D11F324E5900C1537F /* CBWrapper */ = {
+			isa = PBXGroup;
+			children = (
+				E5E308D21F324E6800C1537F /* CBWrapper.swift */,
+			);
+			path = CBWrapper;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
