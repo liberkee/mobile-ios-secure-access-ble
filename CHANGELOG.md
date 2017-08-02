@@ -6,9 +6,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 ### Changed
-- 2017-08-01 : (PLAM-1219)  : Rewrite all enum values to lowerCase
 ### Removed
 ### Fixed
+
+## [1.0.14] - 2017-08-02
+
+### Changed
+- 2017-08-01 : (PLAM-1219)  : Rewrite all enum values to lowerCase
 
 ## [1.0.13] - 2017-07-31
 

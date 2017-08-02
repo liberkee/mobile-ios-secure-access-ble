@@ -32,11 +32,12 @@ public class SecureLocalStorage: LocalStorage {
     /**
      Loads the locally saved data as object
 
+     - parameter object: The object to be saved locally
      - returns: The saved object or `nil` if it doesn't exist
      */
-    public func loadObject<T: BaseMappable>() -> T? {
+    public func loadObject<T: BaseMappable>(context: MapContext? = nil) -> T? {
         if let json = securePreferences[keychainKey] {
-            return Mapper<T>().map(JSONString: json)
+            return Mapper<T>(context:context).map(JSONString: json)
         } else {
             return nil
         }
