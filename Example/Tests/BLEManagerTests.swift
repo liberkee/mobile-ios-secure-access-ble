@@ -29,8 +29,7 @@ class BLEManagerTests: XCTestCase {
      */
     func testChangingConnectionState() {
 
-        /// scanner will set to unconnected
-        bleScanner.isConnected = false
+        let sorc = SID(sidID: "", peripheral: nil, discoveryDate: Date(), isConnected: true, rssi: 0)
 
         /// scanner update state and reports connection state
         bleScanner.centralManagerDidUpdateState(bleScanner.centralManager as! CBCentralManager)
@@ -40,7 +39,7 @@ class BLEManagerTests: XCTestCase {
 
         bleCommunicator.delegate = bleManager
         /// change transfer connection status to connected
-        bleCommunicator.transferDidChangedConnectionState(bleScanner, isConnected: true)
+        bleCommunicator.transferDidChangedConnectionState(bleScanner, state: .connected(sorc: sorc))
 
         /// ble manager is not connected because crypto was Not established even with connected scanner
         XCTAssertFalse(isBLEManagerConnected(), "BLE manager has wrong connection state")
@@ -80,7 +79,7 @@ class BLEManagerTests: XCTestCase {
 
         /// MTU response data with size
         let bytes = [0x07, 0x9B, 0x00] as [UInt8]
-        bleCommunicator.delegate?.communicatorDidRecivedData(Data(bytes: bytes), count: 1)
+        bleCommunicator.delegate?.communicatorDidReceivedData(Data(bytes: bytes), count: 1)
 
         /// MTU size for ios device is default 155
         XCTAssertEqual(BLEManager.mtuSize, 155, "BLE manager has wrong MTU Size number!")
@@ -117,7 +116,7 @@ class BLEManagerTests: XCTestCase {
         let mockReceivedData = Data(bytes: UnsafePointer<UInt8>(mockBytes), count: mockBytes.count)
 
         /// ble manager will be reported for receiving data
-        bleCommunicator.delegate?.communicatorDidRecivedData(mockReceivedData as Data, count: mockReceivedData.count / 4)
+        bleCommunicator.delegate?.communicatorDidReceivedData(mockReceivedData as Data, count: mockReceivedData.count / 4)
 
         /// AES cryptor will initialized
         var cryptor = AesCbcCryptoManager(key: mockSessionKey)
@@ -131,7 +130,7 @@ class BLEManagerTests: XCTestCase {
         XCTAssertEqual(serviceGrantTrigger.id, ServiceGrantID.lockStatus, "BLE manager received wrong service grant ID!")
 
         /// Testing if service grant trigger has result .Locked
-        XCTAssertEqual(serviceGrantTrigger.result, ServiceGrantTrigger.ServiceGrantResult.Locked, "BLE manager received wrong service grant result!")
+        XCTAssertEqual(serviceGrantTrigger.result, ServiceGrantTrigger.ServiceGrantResult.locked, "BLE manager received wrong service grant result!")
     }
 
     /**

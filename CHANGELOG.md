@@ -6,8 +6,21 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 ### Changed
+- 2017-08-01 : (PLAM-1219)  : Rewrite all enum values to lowerCase
 ### Removed
 ### Fixed
+
+## [1.0.13] - 2017-07-31
+
+### Changed
+- 2017-07-31 : (PLAM-1309)  : Use git@ scheme to access the private pods repo
+- 2017-07-31 : (PLAM-1169)  : Updated Cocoapods version to 1.2.1 in Gemfile
+- 2017-07-15 : (PLAM-1237)  : Allow `CommonUtils` `0.0.5` and above (`0.0.6` only before) 
+
+## [1.0.12] - 2017-07-24
+
+### Fixed
+- 2017-07-17 : (PLAM-1230)  : "disconnect while connecting" leads to a "connected" state and not to "disconnected".
 
 ## [1.0.11] - 2017-06-26
 

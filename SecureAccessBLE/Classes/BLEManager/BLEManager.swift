@@ -244,15 +244,12 @@ public class BLEManager: NSObject, BLEManagerType {
 
     private func disconnectInternal(action: ConnectionChange.Action = .disconnect) {
         if case .disconnected = connectionChange.value.state { return }
-        if transporter.isConnected {
-            transporter.disconnect()
-        } else {
-            currentConnectionState = .notConnected
-            connectionChange.onNext(ConnectionChange(
-                state: .disconnected,
-                action: action)
-            )
-        }
+        currentConnectionState = .notConnected
+        connectionChange.onNext(ConnectionChange(
+            state: .disconnected,
+            action: action)
+        )
+        transporter.disconnect()
     }
 
     private func reset() {
@@ -427,15 +424,15 @@ public class BLEManager: NSObject, BLEManagerType {
         case .enableIgnition: theStatus = (trigger.status == .success) ? .enableIgnitionSuccess : .enableIgnitionFailed
         case .disableIgnition: theStatus = (trigger.status == .success) ? .disableIgnitionSuccess : .disableIgnitionFailed
         case .lockStatus:
-            if trigger.result == ServiceGrantTrigger.ServiceGrantResult.Locked {
+            if trigger.result == ServiceGrantTrigger.ServiceGrantResult.locked {
                 theStatus = .lockStatusLocked
-            } else if trigger.result == ServiceGrantTrigger.ServiceGrantResult.Unlocked {
+            } else if trigger.result == ServiceGrantTrigger.ServiceGrantResult.unlocked {
                 theStatus = .lockStatusUnlocked
             }
         case .ignitionStatus:
-            if trigger.result == ServiceGrantTrigger.ServiceGrantResult.Enabled {
+            if trigger.result == ServiceGrantTrigger.ServiceGrantResult.enabled {
                 theStatus = .ignitionStatusEnabled
-            } else if trigger.result == ServiceGrantTrigger.ServiceGrantResult.Disabled {
+            } else if trigger.result == ServiceGrantTrigger.ServiceGrantResult.disabled {
                 theStatus = .ignitionStatusDisabled
             }
         default:
@@ -521,7 +518,7 @@ extension BLEManager: BLEChallengeServiceDelegate {
 
 extension BLEManager: SIDCommunicatorDelegate {
 
-    func communicatorDidRecivedData(_ messageData: Data, count: Int) {
+    func communicatorDidReceivedData(_ messageData: Data, count: Int) {
 
         let noValidDataErrorMessage = "No valid data was received"
 
@@ -583,11 +580,14 @@ extension BLEManager: SIDCommunicatorDelegate {
         communicator.resetReceivedPackage()
     }
 
-    func communicatorDidChangedConnectionState(_ connected: Bool) {
-        if connected {
+    func communicatorDidChangedConnectionState(_: SIDCommunicator, state: TransferConnectionState) {
+        switch state {
+        case .connecting: break
+        case .connected:
             currentConnectionState = .connected
             sendMtuRequest()
-        } else {
+        case .disconnected:
+            if case .disconnected = connectionChange.value.state { return }
             if isBluetoothEnabled.value {
                 currentConnectionState = .notConnected
                 // PLAM-951: Set proper action

@@ -1,14 +1,14 @@
 PODS:
-  - CommonUtils (0.0.5):
+  - CommonUtils (0.0.6):
     - KeychainAccess
-    - ObjectMapper (~> 2.2)
+    - ObjectMapper (= 2.2.6)
   - CryptoSwift (0.6.7)
   - KeychainAccess (3.0.2)
-  - ObjectMapper (2.2.8)
-  - SecureAccessBLE (1.0.11):
-    - CommonUtils (= 0.0.5)
+  - ObjectMapper (2.2.6)
+  - SecureAccessBLE (1.0.13):
+    - CommonUtils (~> 0.0.5)
     - CryptoSwift (= 0.6.7)
-  - SwiftFormat/CLI (0.29.0)
+  - SwiftFormat/CLI (0.29.3)
 
 DEPENDENCIES:
   - SecureAccessBLE (from `../`)
@@ -19,13 +19,13 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  CommonUtils: fca914e10552382dfdad8c3d2574fedc4e01d2cf
+  CommonUtils: 516558cb9d768dc84e14f8b3650d67540475c5bd
   CryptoSwift: 685ae257941e5447474348a2b545583e1a16b573
   KeychainAccess: a986406022dfc7c634c691ad3bec670cc6a32002
-  ObjectMapper: 3d571bb5af471c779e1160828cd9ad5c4ef90958
-  SecureAccessBLE: a1737ce3e58a529e11b9f50d4d1fa39d47f411eb
-  SwiftFormat: 4da264e5f997a9add8ca7bbb447ef8a8aebc395f
+  ObjectMapper: 042708195cc46c20871cbcbec0453826398273fd
+  SecureAccessBLE: bbe80c5eb5280cec1fc2214ea8dc28b290f3564f
+  SwiftFormat: 7455708e7d4b7e822803c5237500cd03b756bc4a
 
-PODFILE CHECKSUM: 21f8c3991a7a857b400ce03b06a7d8915695d452
+PODFILE CHECKSUM: 7be123ce9cc2e465703a922688433bb722e120d0
 
 COCOAPODS: 1.2.1
