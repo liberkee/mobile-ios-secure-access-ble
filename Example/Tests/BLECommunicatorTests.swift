@@ -22,97 +22,97 @@ class BLECommunicatorTests: XCTestCase {
     /**
      To test if the from Scanner found new SIDs will be added to found list
      */
-    func testFindNewSidID() {
-        /// reset all foundsids
-        communicator.resetFoundSids()
+    /*
+     func testFindNewSidID() {
 
-        /// refill all Mock Sids
-        refillMockSids()
+     /// refill all Mock Sids
+     refillMockSids()
 
-        /// the following sids should be found
-        XCTAssert(communicator.hasSidID("250bf2429d8c4f2896e2030dfe601bd8"), "Communicator has not found NEW Sid")
+     /// the following sids should be found
+     XCTAssert(communicator.hasSidID("250bf2429d8c4f2896e2030dfe601bd8"), "Communicator has not found NEW Sid")
 
-        XCTAssert(communicator.hasSidID("550e8400e29b11d4a716446655440003"), "Communicator has not found NEW Sid")
+     XCTAssert(communicator.hasSidID("550e8400e29b11d4a716446655440003"), "Communicator has not found NEW Sid")
 
-        XCTAssert(communicator.hasSidID("bb28d13fdcab416b85b7cec28c26add7"), "Communicator has not found NEW Sid")
+     XCTAssert(communicator.hasSidID("bb28d13fdcab416b85b7cec28c26add7"), "Communicator has not found NEW Sid")
 
-        XCTAssert(communicator.hasSidID("1a1092e99f824187af92d92029b28cdc"), "Communicator has not found NEW Sid")
+     XCTAssert(communicator.hasSidID("1a1092e99f824187af92d92029b28cdc"), "Communicator has not found NEW Sid")
 
-        XCTAssert(communicator.hasSidID("2c6088153bc7434f9c2b2e3272596adc"), "Communicator has not found NEW Sid")
-    }
+     XCTAssert(communicator.hasSidID("2c6088153bc7434f9c2b2e3272596adc"), "Communicator has not found NEW Sid")
+     }
+     */
 
     /**
      To test the sids older as 5 seconds will be filtered
      */
-    func testFilterOldSids() {
-        /// reset all foundsids
-        communicator.resetFoundSids()
+    /*
+     func testFilterOldSids() {
 
-        /// refill all Mock Sids
-        refillMockSids()
+     /// refill all Mock Sids
+     refillMockSids()
 
-        Delay(0.5) {
-            /// The old sids will be removed in this case the "250bf2429d8c4f2896e2030dfe601bd8"
-            self.communicator.filterOldSidIds()
-            /// Sid older als 5 seconds will be removed
-            XCTAssert(self.communicator.hasSidID("250bf2429d8c4f2896e2030dfe601bd8") == false, "Old sid was not filtered from communicator")
-        }
+     Delay(0.5) {
+     /// The old sids will be removed in this case the "250bf2429d8c4f2896e2030dfe601bd8"
+     self.communicator.filterOldSidIds()
+     /// Sid older als 5 seconds will be removed
+     XCTAssert(self.communicator.hasSidID("250bf2429d8c4f2896e2030dfe601bd8") == false, "Old sid was not filtered from communicator")
+     }
 
-        Delay(2.5) {
-            /// The old sids will be removed in this case the "250bf2429d8c4f2896e2030dfe601bd8"
-            self.communicator.filterOldSidIds()
-            /// Sid older als 5 seconds will be removed
-            XCTAssert(self.communicator.hasSidID("2c6088153bc7434f9c2b2e3272596adc") == false, "Old sid was not filtered from communicator")
-        }
-    }
+     Delay(2.5) {
+     /// The old sids will be removed in this case the "250bf2429d8c4f2896e2030dfe601bd8"
+     self.communicator.filterOldSidIds()
+     /// Sid older als 5 seconds will be removed
+     XCTAssert(self.communicator.hasSidID("2c6088153bc7434f9c2b2e3272596adc") == false, "Old sid was not filtered from communicator")
+     }
+     }
+     */
 
     /**
      To test old sid will be replaced with new incomming sid
      */
-    func testReplaceSameNewSid() {
-        /// reset all foundsids
-        communicator.resetFoundSids()
+    /*
+     func testReplaceSameNewSid() {
 
-        /// refill all Mock Sids
-        self.refillMockSids()
+     /// refill all Mock Sids
+     self.refillMockSids()
 
-        /// Mock sid id
-        let mockSidId = "250bf2429d8c4f2896e2030dfe601bd8"
+     /// Mock sid id
+     let mockSidId = "250bf2429d8c4f2896e2030dfe601bd8"
 
-        let reference = Date()
-        debugPrint("reference time: \(reference)")
+     let reference = Date()
+     debugPrint("reference time: \(reference)")
 
-        var intervals: [Double] = [] // = Array(count: 10, repeatedValue: Double(arc4random_uniform(UInt32(1000))))
-        for _ in 0 ..< 100 {
-            intervals.append(Double(arc4random_uniform(UInt32(1000))))
-        }
-        intervals.sort(by: { $0 > $1 })
+     var intervals: [Double] = [] // = Array(count: 10, repeatedValue: Double(arc4random_uniform(UInt32(1000))))
+     for _ in 0 ..< 100 {
+     intervals.append(Double(arc4random_uniform(UInt32(1000))))
+     }
+     intervals.sort(by: { $0 > $1 })
 
-        for interval in intervals {
-            let mockSid = SID(sidID: mockSidId, peripheral: nil, discoveryDate: reference.addingTimeInterval(-interval) as Date, isConnected: false, rssi: 0)
-            communicator.transferDidDiscoveredSidId(transporter, newSid: mockSid)
-        }
+     for interval in intervals {
+     let mockSid = SID(sidID: mockSidId, peripheral: nil, discoveryDate: reference.addingTimeInterval(-interval) as Date, isConnected: false, rssi: 0)
+     communicator.transferDidDiscoveredSidId(transporter, newSid: mockSid)
+     }
 
-        let savedSameSids = communicator.currentFoundSidIds.filter { (commingSid) -> Bool in
-            let sidString = commingSid.sidID
-            if sidString.lowercased() == mockSidId.lowercased() {
-                return true
-            } else {
-                return false
-            }
-        }
+     let savedSameSids = communicator.currentFoundSidIds.filter { (commingSid) -> Bool in
+     let sidString = commingSid.sidID
+     if sidString.lowercased() == mockSidId.lowercased() {
+     return true
+     } else {
+     return false
+     }
+     }
 
-        /// There is only one newest SID saved in Foundlist
-        XCTAssert(savedSameSids.count == 1, "The old Sid will be not replaced with new one!")
+     /// There is only one newest SID saved in Foundlist
+     XCTAssert(savedSameSids.count == 1, "The old Sid will be not replaced with new one!")
 
-        let justOneSid = savedSameSids[0] as SID
-        let smallestTimeInterval = intervals.min()
-        let sidTime = justOneSid.discoveryDate
-        let mustTime = reference.addingTimeInterval(-smallestTimeInterval!)
+     let justOneSid = savedSameSids[0] as SID
+     let smallestTimeInterval = intervals.min()
+     let sidTime = justOneSid.discoveryDate
+     let mustTime = reference.addingTimeInterval(-smallestTimeInterval!)
 
-        /// To test if the one saved SID has newest found time
-        XCTAssertEqual(sidTime, mustTime as Date, "The old Sid will be not replaced with new one!")
-    }
+     /// To test if the one saved SID has newest found time
+     XCTAssertEqual(sidTime, mustTime as Date, "The old Sid will be not replaced with new one!")
+     }
+     */
 
     /**
      Mocked data used for testing purpose

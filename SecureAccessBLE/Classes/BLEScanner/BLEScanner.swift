@@ -93,6 +93,30 @@ class BLEScanner: NSObject, DataTransfer {
     /// Notify characteristic object defined in Core Bluetooth
     fileprivate var notifyCharacteristic: CBCharacteristicType?
 
+    ////////
+
+    /// Current connected SID object
+    fileprivate var connectedSid: SID? {
+        if case let .connected(sorc) = connectionState {
+            return sorc
+        }
+        return nil
+    }
+
+    /// A set of discovered Sid IDs
+    var currentFoundSidIds = Set<SID>()
+
+    /// Timer to filter old SIDs
+    fileprivate var filterTimer: Timer?
+
+    /// The interval a timer is triggered to remove outdated discovered SORCs
+    private let removeOutdatedSorcsTimerIntervalSeconds: Double = 2
+
+    /// The duration a SORC is considered outdated if last discovery date is longer ago than this duration
+    private let sorcOutdatedDurationSeconds: Double = 5
+
+    ////////
+
     /**
      Initialization end point for SID Scanner
 
@@ -104,6 +128,12 @@ class BLEScanner: NSObject, DataTransfer {
         super.init()
         self.centralManager = centralManager
         centralManager.delegate = self
+
+        filterTimer = Timer.scheduledTimer(timeInterval: removeOutdatedSorcsTimerIntervalSeconds,
+                                           target: self,
+                                           selector: #selector(filterOldSidIds),
+                                           userInfo: nil,
+                                           repeats: true)
     }
 
     convenience override init() {
@@ -112,6 +142,7 @@ class BLEScanner: NSObject, DataTransfer {
 
     deinit {
         disconnect()
+        filterTimer?.invalidate()
     }
 
     /**
@@ -123,7 +154,14 @@ class BLEScanner: NSObject, DataTransfer {
         return centralManager.state == .poweredOn
     }
 
-    func connectToSorc(_ sorc: SID) {
+    func connectToSorc(_ sorcID: SorcID) {
+        let optSorc = currentFoundSidIds
+            .filter { $0.sidID.lowercased() == sorcID.replacingOccurrences(of: "-", with: "").lowercased() }
+            .first
+        guard let sorc = optSorc else {
+            print("BLEScanner: Try to connect to SORC that is not discovered.")
+            return
+        }
         guard let peripheral = sorc.peripheral else {
             print("BLEScanner: Try to connect to nil peripheral which is not possible.")
             return
@@ -183,6 +221,76 @@ class BLEScanner: NSObject, DataTransfer {
         connectionState = state
         delegate?.transferDidChangedConnectionState(self, state: connectionState)
     }
+
+    /////////// TODO: PLAM-963
+
+    // TODO: PLAM-963 use BehaviourSubject for currentFoundSids with added/removed actions
+
+    /**
+     Checks if a SID ID is already discovered.
+
+     - parameter sidId: A SID ID string
+
+     - returns: When already in list it returns true, otherwise false.
+     */
+    func hasSidID(_ sidId: String) -> Bool {
+        let savedSameSids = currentFoundSidIds.filter { (commingSid) -> Bool in
+            let sidString = commingSid.sidID
+            if sidString.lowercased() == sidId.lowercased() {
+                return true
+            } else {
+                return false
+            }
+        }
+        let didFoundSid = savedSameSids.count > 0
+        // print ("did found connecting sidid: \(didFoundSid)")
+        return didFoundSid
+    }
+
+    /**
+     Check all saved sids with discovery date (time), all older (discovered before 5 seconds)
+     sids will be deleted from List. Scanner will be started after delete old sids and the deletion
+     will be informed
+     */
+    func filterOldSidIds() {
+        let lostSids = currentFoundSidIds.filter { (sid) -> Bool in
+            let outdated = sid.discoveryDate.timeIntervalSinceNow < -sorcOutdatedDurationSeconds
+            if outdated {
+                if sid.sidID == self.connectedSid?.sidID {
+                    return false
+                } else {
+                    return true
+                }
+            } else {
+                return false
+            }
+        }
+        if lostSids.count > 0 {
+            let sidArray = Array(lostSids)
+            for sid in lostSids {
+                currentFoundSidIds.remove(sid)
+            }
+            delegate?.transferDidLostSidIds(self, oldSids: sidArray.map({ $0 }))
+        }
+    }
+
+    fileprivate func updateFoundSorcsWithDiscoveredSorc(_ sorc: SID) {
+        var sorcCopy = sorc
+        if let connectedSid = connectedSid, sorcCopy.sidID == connectedSid.sidID {
+            sorcCopy.isConnected = connectedSid.isConnected
+            sorcCopy.peripheral = connectedSid.peripheral
+        }
+        let replacedSidID = currentFoundSidIds.update(with: sorcCopy)
+        if replacedSidID == nil {
+            delegate?.transferDidDiscoveredSidId(self, newSid: sorc)
+        }
+    }
+
+    fileprivate func resetFoundSids() {
+        currentFoundSidIds = Set<SID>()
+    }
+
+    /////////// TODO: PLAM-963
 }
 
 // MARK: - CBCentralManagerDelegate_
@@ -195,6 +303,8 @@ extension BLEScanner {
         bleScannerDelegate?.didUpdateState()
         if central.state == .poweredOn {
             startScan()
+        } else {
+            resetFoundSids()
         }
     }
 
@@ -204,7 +314,7 @@ extension BLEScanner {
         }
         let sidID = manufacturerData.toHexString()
         let foundSid = SID(sidID: sidID, peripheral: peripheral, discoveryDate: Date(), isConnected: false, rssi: RSSI.intValue)
-        delegate?.transferDidDiscoveredSidId(self, newSid: foundSid)
+        updateFoundSorcsWithDiscoveredSorc(foundSid)
     }
 
     func centralManager_(_: CBCentralManagerType, didConnect peripheral: CBPeripheralType) {
@@ -225,6 +335,7 @@ extension BLEScanner {
 
     func centralManager_(_: CBCentralManagerType, didDisconnectPeripheral peripheral: CBPeripheralType, error _: Error?) {
         guard case let .connected(sorc) = connectionState, sorc.peripheral?.identifier == peripheral.identifier else { return }
+        currentFoundSidIds.remove(sorc)
         updateConnectionState(.disconnected)
     }
 }

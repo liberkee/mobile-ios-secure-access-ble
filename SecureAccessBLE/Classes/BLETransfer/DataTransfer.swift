@@ -52,6 +52,13 @@ protocol DataTransferDelegate: class {
     func transferDidDiscoveredSidId(_ dataTransferObject: DataTransfer, newSid: SID)
 
     /**
+     Tells the delegate that SIDs were lost.
+
+     - parameter oldSid: did lost SIDs as Array
+     */
+    func transferDidLostSidIds(_ dataTransferObject: DataTransfer, oldSids: [SID])
+
+    /**
      Transporter reports if that was successfully connected with a SID
 
      - parameter dataTransferObject: transporter instance
@@ -93,7 +100,7 @@ protocol DataTransfer {
 
      - parameter sorc: The SORC.
      */
-    func connectToSorc(_ sorc: SID)
+    func connectToSorc(_ sorcId: SorcID)
 
     /// Disconnect the current connected sid.
     func disconnect()

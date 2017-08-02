@@ -166,7 +166,6 @@ public class BLEManager: NSObject, BLEManagerType {
         }
         transporter = scanner
         communicator = SIDCommunicator(transporter: transporter)
-        communicator.resetFoundSids()
         super.init()
         scanner.bleScannerDelegate = self
         communicator.delegate = self
@@ -210,7 +209,7 @@ public class BLEManager: NSObject, BLEManagerType {
     // MARK: Discovery
 
     public func hasSorcId(_ sorcId: SorcID) -> Bool {
-        return communicator.hasSidID(sorcId)
+        return scanner.hasSidID(sorcId)
     }
 
     public var sorcDiscovered = PublishSubject<SorcID>()
@@ -235,7 +234,7 @@ public class BLEManager: NSObject, BLEManagerType {
         sidAccessKey = leaseToken.sorcAccessKey
         blobData = leaseTokenBlob.data
         blobCounter = leaseTokenBlob.messageCounter
-        communicator.connectToSorc(sidId)
+        scanner.connectToSorc(sidId)
     }
 
     public func disconnect() {
@@ -467,7 +466,6 @@ extension BLEManager: BLEScannerDelegate {
 
     public func didUpdateState() {
         if !scanner.isPoweredOn() {
-            communicator.resetFoundSids()
             connectionChange.onNext(ConnectionChange(
                 state: .disconnected,
                 action: .connectionLost(error: .bluetoothOff)
