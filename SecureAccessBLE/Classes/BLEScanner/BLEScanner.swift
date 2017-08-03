@@ -76,6 +76,8 @@ class BLEScanner: NSObject, DataTransfer {
     /// central mananger object defined in Core Bluetooth
     var centralManager: CBCentralManagerType!
 
+    let systemClock: SystemClockType
+
     let isPoweredOn: BehaviorSubject<Bool>
     let discoveryChange = BehaviorSubject(value: DiscoveryChange(state: Set<SorcID>(), action: .initial))
     let connectionState = BehaviorSubject(value: TransferConnectionState.disconnected)
@@ -107,7 +109,8 @@ class BLEScanner: NSObject, DataTransfer {
         return nil
     }
 
-    required init(centralManager: CBCentralManagerType) {
+    required init(centralManager: CBCentralManagerType, systemClock: SystemClockType) {
+        self.systemClock = systemClock
         isPoweredOn = BehaviorSubject(value: centralManager.state == .poweredOn)
         super.init()
         self.centralManager = centralManager
@@ -121,7 +124,13 @@ class BLEScanner: NSObject, DataTransfer {
     }
 
     convenience override init() {
-        self.init(centralManager: CBCentralManager(delegate: nil, queue: nil, options: [CBPeripheralManagerOptionShowPowerAlertKey: 0]))
+        let centralManager = CBCentralManager(delegate: nil, queue: nil,
+                                              options: [CBPeripheralManagerOptionShowPowerAlertKey: 0])
+        let systemClock = SystemClock()
+        self.init(
+            centralManager: centralManager,
+            systemClock: systemClock
+        )
     }
 
     deinit {
@@ -253,7 +262,7 @@ extension BLEScanner {
             return
         }
         let sidID = manufacturerData.toHexString()
-        let sorc = SID(sidID: sidID, peripheral: peripheral, discoveryDate: Date(), rssi: RSSI.intValue)
+        let sorc = SID(sidID: sidID, peripheral: peripheral, discoveryDate: systemClock.now(), rssi: RSSI.intValue)
         updateDiscoveredSorcsWithNewSorc(sorc)
     }
 
@@ -264,7 +273,7 @@ extension BLEScanner {
             peripheralMatchingSorcID(sorcID)?.identifier == peripheral.identifier else { return }
 
         peripheral.delegate = self
-        peripheral.discoverServices([CBUUID(string: self.serviceId)])
+        peripheral.discoverServices([CBUUID(string: serviceId)])
     }
 
     func centralManager_(_: CBCentralManagerType, didFailToConnect peripheral: CBPeripheralType, error: Error?) {
@@ -275,7 +284,7 @@ extension BLEScanner {
 
         connectionState.onNext(.disconnected)
 
-        // TODO: PLAM-963 Send error event?
+        // TODO: PLAM-963 Send action?
     }
 
     func centralManager_(_: CBCentralManagerType, didDisconnectPeripheral peripheral: CBPeripheralType, error _: Error?) {
@@ -286,6 +295,8 @@ extension BLEScanner {
         discoveredSorcs.remove(sorc)
         updateDiscoveryChange(action: .sorcDisconnected(sorcID))
         connectionState.onNext(.disconnected)
+
+        // TODO: PLAM-963 Send action?
     }
 }
 
