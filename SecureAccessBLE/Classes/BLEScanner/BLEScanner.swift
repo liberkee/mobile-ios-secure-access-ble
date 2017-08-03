@@ -95,9 +95,7 @@ class BLEScanner: NSObject, DataTransfer {
     /// Notify characteristic object defined in Core Bluetooth
     fileprivate var notifyCharacteristic: CBCharacteristicType?
 
-    ////////
-
-    /// Timer to filter old SIDs
+    /// Timer to remove outdated discovered SORCs
     fileprivate var filterTimer: Timer?
 
     /// The interval a timer is triggered to remove outdated discovered SORCs
@@ -115,8 +113,6 @@ class BLEScanner: NSObject, DataTransfer {
         return nil
     }
 
-    ////////
-
     /**
      Initialization end point for SID Scanner
 
@@ -132,7 +128,7 @@ class BLEScanner: NSObject, DataTransfer {
 
         filterTimer = Timer.scheduledTimer(timeInterval: removeOutdatedSorcsTimerIntervalSeconds,
                                            target: self,
-                                           selector: #selector(filterOldSidIds),
+                                           selector: #selector(removeOutdatedSorcs),
                                            userInfo: nil,
                                            repeats: true)
     }
@@ -203,32 +199,17 @@ class BLEScanner: NSObject, DataTransfer {
         centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: 1])
     }
 
-    /////////// TODO: PLAM-963
-
-    /**
-     Check all saved sids with discovery date (time), all older (discovered before 5 seconds)
-     sids will be deleted from List. Scanner will be started after delete old sids and the deletion
-     will be informed
-     */
-    func filterOldSidIds() {
-        let lostSorcs = discoveredSorcs.filter { (sid) -> Bool in
-            let outdated = sid.discoveryDate.timeIntervalSinceNow < -sorcOutdatedDurationSeconds
-            if outdated {
-                if sid.sidID == self.connectedSid?.sidID {
-                    return false
-                } else {
-                    return true
-                }
-            } else {
-                return false
-            }
+    @objc private func removeOutdatedSorcs() {
+        let outdatedSorcs = discoveredSorcs.filter { (sorc) -> Bool in
+            let outdated = sorc.discoveryDate.timeIntervalSinceNow < -sorcOutdatedDurationSeconds
+            return outdated && sorc.sidID != self.connectedSid?.sidID
         }
-        if lostSorcs.count > 0 {
-            for sid in lostSorcs {
-                discoveredSorcs.remove(sid)
+        if outdatedSorcs.count > 0 {
+            for sorc in outdatedSorcs {
+                discoveredSorcs.remove(sorc)
             }
-            let lostSorcIDs = lostSorcs.map { $0.sidID }
-            updateDiscoveryChange(action: .sorcsLost(Set(lostSorcIDs)))
+            let outdatedSorcIDs = outdatedSorcs.map { $0.sidID }
+            updateDiscoveryChange(action: .sorcsLost(Set(outdatedSorcIDs)))
         }
     }
 
@@ -263,8 +244,6 @@ class BLEScanner: NSObject, DataTransfer {
     fileprivate func peripheralMatchingSorcID(_ sorcID: SorcID) -> CBPeripheralType? {
         return sorcMatchingSorcID(sorcID)?.peripheral
     }
-
-    /////////// TODO: PLAM-963
 }
 
 // MARK: - CBCentralManagerDelegate_
