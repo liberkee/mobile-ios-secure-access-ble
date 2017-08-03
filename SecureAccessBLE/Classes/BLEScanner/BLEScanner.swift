@@ -6,8 +6,8 @@
 //  Copyright © 2016 Huf Secure Mobile. All rights reserved.
 //
 
-import UIKit
 import CoreBluetooth
+import CommonUtils
 
 /// Delegatation of CBManager state changes.
 protocol BLEScannerDelegate: class {
@@ -78,6 +78,8 @@ class BLEScanner: NSObject, DataTransfer {
     /// central mananger object defined in Core Bluetooth
     var centralManager: CBCentralManagerType!
 
+    let discoveryChange = BehaviorSubject(value: DiscoveryChange(state: Set<SorcID>(), action: .initial))
+
     private(set) var connectionState = TransferConnectionState.disconnected
 
     /// Device id as String
@@ -103,8 +105,7 @@ class BLEScanner: NSObject, DataTransfer {
         return nil
     }
 
-    /// A set of discovered Sid IDs
-    var currentFoundSidIds = Set<SID>()
+    fileprivate var discoveredSorcs = Set<SID>()
 
     /// Timer to filter old SIDs
     fileprivate var filterTimer: Timer?
@@ -155,14 +156,16 @@ class BLEScanner: NSObject, DataTransfer {
     }
 
     func connectToSorc(_ sorcID: SorcID) {
-        let optSorc = currentFoundSidIds
+        let optSorc = discoveredSorcs
             .filter { $0.sidID.lowercased() == sorcID.replacingOccurrences(of: "-", with: "").lowercased() }
             .first
         guard let sorc = optSorc else {
+            // TODO: PLAM-963 didFailToConnect?
             print("BLEScanner: Try to connect to SORC that is not discovered.")
             return
         }
         guard let peripheral = sorc.peripheral else {
+            // TODO: PLAM-963 didFailToConnect?
             print("BLEScanner: Try to connect to nil peripheral which is not possible.")
             return
         }
@@ -224,8 +227,6 @@ class BLEScanner: NSObject, DataTransfer {
 
     /////////// TODO: PLAM-963
 
-    // TODO: PLAM-963 use BehaviourSubject for currentFoundSids with added/removed actions
-
     /**
      Checks if a SID ID is already discovered.
 
@@ -234,17 +235,7 @@ class BLEScanner: NSObject, DataTransfer {
      - returns: When already in list it returns true, otherwise false.
      */
     func hasSidID(_ sidId: String) -> Bool {
-        let savedSameSids = currentFoundSidIds.filter { (commingSid) -> Bool in
-            let sidString = commingSid.sidID
-            if sidString.lowercased() == sidId.lowercased() {
-                return true
-            } else {
-                return false
-            }
-        }
-        let didFoundSid = savedSameSids.count > 0
-        // print ("did found connecting sidid: \(didFoundSid)")
-        return didFoundSid
+        return discoveredSorcs.first { $0.sidID.lowercased() == sidId.lowercased() } != nil
     }
 
     /**
@@ -253,7 +244,7 @@ class BLEScanner: NSObject, DataTransfer {
      will be informed
      */
     func filterOldSidIds() {
-        let lostSids = currentFoundSidIds.filter { (sid) -> Bool in
+        let lostSorcs = discoveredSorcs.filter { (sid) -> Bool in
             let outdated = sid.discoveryDate.timeIntervalSinceNow < -sorcOutdatedDurationSeconds
             if outdated {
                 if sid.sidID == self.connectedSid?.sidID {
@@ -265,12 +256,12 @@ class BLEScanner: NSObject, DataTransfer {
                 return false
             }
         }
-        if lostSids.count > 0 {
-            let sidArray = Array(lostSids)
-            for sid in lostSids {
-                currentFoundSidIds.remove(sid)
+        if lostSorcs.count > 0 {
+            for sid in lostSorcs {
+                discoveredSorcs.remove(sid)
             }
-            delegate?.transferDidLostSidIds(self, oldSids: sidArray.map({ $0 }))
+            let lostSorcIDs = lostSorcs.map { $0.sidID }
+            updateDiscoveryChange(action: .sorcsLost(Set(lostSorcIDs)))
         }
     }
 
@@ -280,14 +271,21 @@ class BLEScanner: NSObject, DataTransfer {
             sorcCopy.isConnected = connectedSid.isConnected
             sorcCopy.peripheral = connectedSid.peripheral
         }
-        let replacedSidID = currentFoundSidIds.update(with: sorcCopy)
+        let replacedSidID = discoveredSorcs.update(with: sorcCopy)
         if replacedSidID == nil {
-            delegate?.transferDidDiscoveredSidId(self, newSid: sorc)
+            updateDiscoveryChange(action: .sorcDiscovered(sorc.sidID))
         }
     }
 
-    fileprivate func resetFoundSids() {
-        currentFoundSidIds = Set<SID>()
+    fileprivate func resetDiscoveredSorcs() {
+        discoveredSorcs = Set<SID>()
+        updateDiscoveryChange(action: .sorcsReset)
+    }
+
+    fileprivate func updateDiscoveryChange(action: DiscoveryChange.Action) {
+        let discoveredSorcIds = discoveredSorcs.map { $0.sidID }
+        let change = DiscoveryChange(state: Set(discoveredSorcIds), action: action)
+        discoveryChange.onNext(change)
     }
 
     /////////// TODO: PLAM-963
@@ -304,7 +302,7 @@ extension BLEScanner {
         if central.state == .poweredOn {
             startScan()
         } else {
-            resetFoundSids()
+            resetDiscoveredSorcs()
         }
     }
 
@@ -335,7 +333,9 @@ extension BLEScanner {
 
     func centralManager_(_: CBCentralManagerType, didDisconnectPeripheral peripheral: CBPeripheralType, error _: Error?) {
         guard case let .connected(sorc) = connectionState, sorc.peripheral?.identifier == peripheral.identifier else { return }
-        currentFoundSidIds.remove(sorc)
+
+        discoveredSorcs.remove(sorc)
+        updateDiscoveryChange(action: .sorcDisconnected(sorc.sidID))
         updateConnectionState(.disconnected)
     }
 }

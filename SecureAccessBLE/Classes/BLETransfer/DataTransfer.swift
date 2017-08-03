@@ -8,6 +8,20 @@
 
 import Foundation
 
+struct DiscoveryChange {
+
+    let state: Set<SorcID>
+    let action: Action
+
+    enum Action {
+        case initial
+        case sorcDiscovered(SorcID)
+        case sorcsLost(Set<SorcID>)
+        case sorcDisconnected(SorcID)
+        case sorcsReset
+    }
+}
+
 enum TransferConnectionState {
     case disconnected
     case connecting(sorc: SID)
@@ -42,21 +56,6 @@ protocol DataTransferDelegate: class {
      - parameter state: The state of the transfer connection.
      */
     func transferDidChangedConnectionState(_ dataTransferObject: DataTransfer, state: TransferConnectionState)
-
-    /**
-     Tells the delegate that a SID was discovered.
-
-     - parameter dataTransferObject: The DataTransfer object.
-     - parameter sidId: The id of the discovered SID.
-     */
-    func transferDidDiscoveredSidId(_ dataTransferObject: DataTransfer, newSid: SID)
-
-    /**
-     Tells the delegate that SIDs were lost.
-
-     - parameter oldSid: did lost SIDs as Array
-     */
-    func transferDidLostSidIds(_ dataTransferObject: DataTransfer, oldSids: [SID])
 
     /**
      Transporter reports if that was successfully connected with a SID

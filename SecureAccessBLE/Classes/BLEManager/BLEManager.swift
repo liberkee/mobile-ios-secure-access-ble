@@ -135,6 +135,8 @@ public class BLEManager: NSObject, BLEManagerType {
 
     fileprivate let scanner = BLEScanner()
 
+    private let disposeBag = DisposeBag()
+
     /**
      A object that must confirm to the DataTransfer protocol
 
@@ -169,6 +171,21 @@ public class BLEManager: NSObject, BLEManagerType {
         super.init()
         scanner.bleScannerDelegate = self
         communicator.delegate = self
+
+        scanner.discoveryChange.subscribeNext { [weak self] change in
+            guard let strongSelf = self else { return }
+            switch change.action {
+            case .initial: break
+            case let .sorcDiscovered(sorcID):
+                strongSelf.sorcDiscovered.onNext(sorcID)
+            case let .sorcsLost(lostSorcIds):
+                strongSelf.sorcsLost.onNext(Array(lostSorcIds))
+            default:
+                // TODO: PLAM 963 handle further cases
+                break
+            }
+        }
+        .disposed(by: disposeBag)
     }
 
     /**
@@ -593,15 +610,6 @@ extension BLEManager: SIDCommunicatorDelegate {
             } else {
             }
         }
-    }
-
-    func comminicatorDidDiscoveredSidId(_ newSid: SID) {
-        sorcDiscovered.onNext(newSid.sidID)
-    }
-
-    func communicatorDidLostSidIds(_ oldSids: [SID]) {
-        let lostSorcIds = oldSids.map { $0.sidID }
-        sorcsLost.onNext(lostSorcIds)
     }
 
     func communicatorDidConnectSid(_: SIDCommunicator, sid _: SID) {}

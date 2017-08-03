@@ -45,20 +45,6 @@ protocol SIDCommunicatorDelegate {
      - parameter state: The state of the transfer connection.
      */
     func communicatorDidChangedConnectionState(_ communicator: SIDCommunicator, state: TransferConnectionState)
-
-    /**
-     Communicator reports if new SID was discovered
-
-     - parameter newSid: the found SID object
-     */
-    func comminicatorDidDiscoveredSidId(_ newSid: SID)
-
-    /**
-     Communicator reports if there are SIDs longer as 5 seconds not reported
-
-     - parameter oldSid: did lost SIDs as Array
-     */
-    func communicatorDidLostSidIds(_ oldSid: [SID])
 }
 
 /// Sid communicator
@@ -154,14 +140,6 @@ class SIDCommunicator: NSObject {
 // MARK: - DataTransferDelegate
 
 extension SIDCommunicator: DataTransferDelegate {
-
-    func transferDidDiscoveredSidId(_: DataTransfer, newSid: SID) {
-        delegate?.comminicatorDidDiscoveredSidId(newSid)
-    }
-
-    func transferDidLostSidIds(_: DataTransfer, oldSids: [SID]) {
-        delegate?.communicatorDidLostSidIds(oldSids)
-    }
 
     func transferDidChangedConnectionState(_: DataTransfer, state: TransferConnectionState) {
         delegate?.communicatorDidChangedConnectionState(self, state: state)
