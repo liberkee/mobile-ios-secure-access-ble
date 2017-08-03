@@ -103,24 +103,22 @@ class BLEScannerTests: XCTestCase {
 
         // Given
         let centralManager = CBCentralManagerMock()
+        centralManager.state = .poweredOn
         let scanner = BLEScanner(centralManager: centralManager)
 
-        centralManager.state = .poweredOn
-
         // Then
-        XCTAssertTrue(scanner.isPoweredOn())
+        XCTAssertTrue(scanner.isPoweredOn.value)
     }
 
     func test_isPoweredOn_ifCentralManagerIsNotPoweredOn_returnsFalse() {
 
         // Given
         let centralManager = CBCentralManagerMock()
+        centralManager.state = .poweredOff
         let scanner = BLEScanner(centralManager: centralManager)
 
-        centralManager.state = .poweredOff
-
         // Then
-        XCTAssertFalse(scanner.isPoweredOn())
+        XCTAssertFalse(scanner.isPoweredOn.value)
     }
 
     func test_connectToSorc_ifSorcIsNotDiscovered_itDoesNotMoveToConnectingStateAndItDoesNotTryToConnectToAPeripheral() {
@@ -325,26 +323,22 @@ class BLEScannerTests: XCTestCase {
         XCTAssertNil(peripheral.writeValueCalledWithArguments)
     }
 
-    func test_centralManagerDidUpdateState_callsBLEScannerDelegateDidUpdateState() {
+    func test_centralManagerDidUpdateState_sendsIsPoweredOnUpdate() {
 
         // Given
-        class BLEScannerDelegateMock: BLEScannerDelegate {
-            var didUpdateStateCalled = false
-            func didUpdateState() {
-                didUpdateStateCalled = true
-            }
-        }
-
         let centralManager = CBCentralManagerMock()
         let scanner = BLEScanner(centralManager: centralManager)
-        let delegate = BLEScannerDelegateMock()
-        scanner.bleScannerDelegate = delegate
+
+        var isPoweredOnUpdate: Bool?
+        _ = scanner.isPoweredOn.subscribeNext { isPoweredOn in
+            isPoweredOnUpdate = isPoweredOn
+        }
 
         // When
         scanner.centralManagerDidUpdateState_(centralManager)
 
         // Then
-        XCTAssertTrue(delegate.didUpdateStateCalled)
+        XCTAssertFalse(isPoweredOnUpdate!)
     }
 
     func test_centralManagerDidUpdateState_ifCentralManagerIsPoweredOn_itScansForPeripheralsAllowingDuplicates() {

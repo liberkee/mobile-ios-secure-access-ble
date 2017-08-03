@@ -29,11 +29,6 @@ enum TransferConnectionState {
     case connected(sorc: SID)
 }
 
-/// Delegatation of CBManager state changes.
-protocol BLEScannerDelegate: class {
-    func didUpdateState()
-}
-
 /**
  *  Definition for SID object
  */
@@ -89,14 +84,13 @@ extension CBCentralManagerState {
 /// messages over a secure BLE connection, i.e. a valid session context must exist.
 class BLEScanner: NSObject, DataTransfer {
 
-    /// delegate to handle CBManager state changes.
-    weak var bleScannerDelegate: BLEScannerDelegate?
-
     /// delegate for message tranfer
     weak var delegate: DataTransferDelegate?
 
     /// central mananger object defined in Core Bluetooth
     var centralManager: CBCentralManagerType!
+
+    let isPoweredOn: BehaviorSubject<Bool>
 
     let discoveryChange = BehaviorSubject(value: DiscoveryChange(state: Set<SorcID>(), action: .initial))
 
@@ -146,6 +140,7 @@ class BLEScanner: NSObject, DataTransfer {
      - returns: Scanner object
      */
     required init(centralManager: CBCentralManagerType) {
+        isPoweredOn = BehaviorSubject(value: centralManager.state == .poweredOn)
         super.init()
         self.centralManager = centralManager
         centralManager.delegate = self
@@ -164,15 +159,6 @@ class BLEScanner: NSObject, DataTransfer {
     deinit {
         disconnect()
         filterTimer?.invalidate()
-    }
-
-    /**
-     To check if the current bluetooth central manager has powered On
-
-     - returns: Central manager state is powered on or notas bool
-     */
-    func isPoweredOn() -> Bool {
-        return centralManager.state == .poweredOn
     }
 
     func connectToSorc(_ sorcID: SorcID) {
@@ -313,7 +299,7 @@ extension BLEScanner {
     func centralManagerDidUpdateState_(_ central: CBCentralManagerType) {
         consoleLog("BLEScanner Central updated state: \(central.state)")
 
-        bleScannerDelegate?.didUpdateState()
+        isPoweredOn.onNext(central.state == .poweredOn)
         if central.state == .poweredOn {
             startScan()
         } else {

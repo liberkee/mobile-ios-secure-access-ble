@@ -169,8 +169,20 @@ public class BLEManager: NSObject, BLEManagerType {
         transporter = scanner
         communicator = SIDCommunicator(transporter: transporter)
         super.init()
-        scanner.bleScannerDelegate = self
         communicator.delegate = self
+
+        scanner.isPoweredOn.subscribeNext { [weak self] isPoweredOn in
+            // TODO: PLAM-963 is it correct to always send it even if not connected?
+            //            if !poweredOn.value {
+            //                connectionChange.onNext(ConnectionChange(
+            //                    state: .disconnected,
+            //                    action: .connectionLost(error: .bluetoothOff)
+            //                ))
+            //            }
+
+            self?.isBluetoothEnabled.onNext(isPoweredOn)
+        }
+        .disposed(by: disposeBag)
 
         scanner.discoveryChange.subscribeNext { [weak self] change in
             guard let strongSelf = self else { return }
@@ -496,21 +508,6 @@ public class BLEManager: NSObject, BLEManagerType {
         default:
             return .triggerStatusUnkown
         }
-    }
-}
-
-// MARK: - BLEScannerDelegate
-
-extension BLEManager: BLEScannerDelegate {
-
-    public func didUpdateState() {
-        if !scanner.isPoweredOn() {
-            connectionChange.onNext(ConnectionChange(
-                state: .disconnected,
-                action: .connectionLost(error: .bluetoothOff)
-            ))
-        }
-        isBluetoothEnabled.onNext(scanner.isPoweredOn())
     }
 }
 
