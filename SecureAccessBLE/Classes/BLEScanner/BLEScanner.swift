@@ -97,13 +97,13 @@ class BLEScanner: NSObject, DataTransfer {
     let connectionState = BehaviorSubject(value: TransferConnectionState.disconnected)
 
     /// Device id as String
-    fileprivate var deviceId = "EF82084D-BFAD-4ABE-90EE-2552C20C5765"
+    fileprivate let deviceId = "EF82084D-BFAD-4ABE-90EE-2552C20C5765"
     /// Device id as String
-    fileprivate var serviceId = "d1cf0603-b501-4569-a4b9-e47ad3f628a5"
+    fileprivate let serviceId = "d1cf0603-b501-4569-a4b9-e47ad3f628a5"
     /// notify characteristic id as String
-    fileprivate var notifyCharacteristicId = "d1d7a6b6-457e-458a-b237-a9df99b3d98b"
+    fileprivate let notifyCharacteristicId = "d1d7a6b6-457e-458a-b237-a9df99b3d98b"
     /// write characteristic id as String
-    fileprivate var writeCharacteristicId = "c8e58f23-9417-41c6-97a8-70f6b2c8cab9"
+    fileprivate let writeCharacteristicId = "c8e58f23-9417-41c6-97a8-70f6b2c8cab9"
     /// write characteristice object defined in Core Bluetooth
     fileprivate var writeCharacteristic: CBCharacteristicType?
     /// Notify characteristic object defined in Core Bluetooth
@@ -227,17 +227,6 @@ class BLEScanner: NSObject, DataTransfer {
     }
 
     /////////// TODO: PLAM-963
-
-    /**
-     Checks if a SID ID is already discovered.
-
-     - parameter sidId: A SID ID string
-
-     - returns: When already in list it returns true, otherwise false.
-     */
-    func hasSidID(_ sidId: String) -> Bool {
-        return discoveredSorcs.first { $0.sidID.lowercased() == sidId.lowercased() } != nil
-    }
 
     /**
      Check all saved sids with discovery date (time), all older (discovered before 5 seconds)

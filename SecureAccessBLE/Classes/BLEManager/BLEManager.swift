@@ -243,7 +243,7 @@ public class BLEManager: NSObject, BLEManagerType {
     // MARK: Discovery
 
     public func hasSorcId(_ sorcId: SorcID) -> Bool {
-        return scanner.hasSidID(sorcId)
+        return scanner.discoveryChange.value.state.first { $0.lowercased() == sorcId.lowercased() } != nil
     }
 
     public var sorcDiscovered = PublishSubject<SorcID>()
