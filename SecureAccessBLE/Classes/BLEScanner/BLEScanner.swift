@@ -315,7 +315,8 @@ extension BLEScanner {
             // TODO: PLAM-963 Send error event?
         } else {
             for service in peripheral.services_! {
-                peripheral.discoverCharacteristics([CBUUID(string: self.writeCharacteristicId), CBUUID(string: self.notifyCharacteristicId)], for: service)
+                let characteristics = [CBUUID(string: writeCharacteristicId), CBUUID(string: notifyCharacteristicId)]
+                peripheral.discoverCharacteristics(characteristics, for: service)
             }
         }
     }
@@ -347,14 +348,14 @@ extension BLEScanner {
 
     func peripheral_(_: CBPeripheralType, didUpdateValueFor characteristic: CBCharacteristicType, error _: Error?) {
         // TODO: handle error
-        if characteristic.uuid == CBUUID(string: notifyCharacteristicId) {
-            delegate?.transferDidReceivedData(self, data: characteristic.value!)
+        if characteristic.uuid == CBUUID(string: notifyCharacteristicId), let data = characteristic.value {
+            delegate?.transferDidReceivedData(self, data: data)
         }
     }
 
     func peripheral_(_: CBPeripheralType, didWriteValueFor _: CBCharacteristicType, error _: Error?) {
         // TODO: handle error
-        delegate?.transferDidSendData(self, data: Data())
+        delegate?.transferDidSendData(self)
     }
 }
 

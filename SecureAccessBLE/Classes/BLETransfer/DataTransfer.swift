@@ -17,9 +17,8 @@ protocol DataTransferDelegate: class {
      Tells the delegate that data was send.
 
      - parameter dataTransferObject: The DataTransfer object.
-     - parameter data: The data which was send.
      */
-    func transferDidSendData(_ dataTransferObject: DataTransfer, data: Data)
+    func transferDidSendData(_ dataTransferObject: DataTransfer)
 
     /**
      Tells the delegate that data was received.

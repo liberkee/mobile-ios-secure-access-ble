@@ -58,7 +58,9 @@ class CBPeripheralMock: CBPeripheralType {
         discoverServicesCalledWithUUIDs = serviceUUIDs
     }
 
-    func discoverCharacteristics(_: [CBUUID]?, for _: CBServiceType) {
+    var discoverCharacteristicsCalledWithArguments: (characteristicUUIDs: [CBUUID]?, service: CBServiceType)?
+    func discoverCharacteristics(_ characteristicUUIDs: [CBUUID]?, for service: CBServiceType) {
+        discoverCharacteristicsCalledWithArguments = (characteristicUUIDs, service)
     }
 
     var writeValueCalledWithArguments: (data: Data, characteristic: CBCharacteristicType, type: CBCharacteristicWriteType)?
@@ -66,7 +68,10 @@ class CBPeripheralMock: CBPeripheralType {
         writeValueCalledWithArguments = (data: data, characteristic: characteristic, type: type)
     }
 
-    func setNotifyValue(_: Bool, for _: CBCharacteristicType) {}
+    var setNotifyValueCalledWithArguments: (enabled: Bool, characteristic: CBCharacteristicType)?
+    func setNotifyValue(_ enabled: Bool, for characteristic: CBCharacteristicType) {
+        setNotifyValueCalledWithArguments = (enabled, characteristic)
+    }
 }
 
 class CBServiceMock: CBServiceType {
@@ -81,9 +86,23 @@ class CBCharacteristicMock: CBCharacteristicType {
 }
 
 class DataTransferDelegateMock: DataTransferDelegate {
-    func transferDidSendData(_: DataTransfer, data _: Data) {}
 
-    func transferDidReceivedData(_: DataTransfer, data _: Data) {}
+    var transferDidSendDataCalled = false
+    func transferDidSendData(_: DataTransfer) {
+        transferDidSendDataCalled = true
+    }
+
+    var transferDidReceivedDataCalledWithData: Data?
+    func transferDidReceivedData(_: DataTransfer, data: Data) {
+        transferDidReceivedDataCalledWithData = data
+    }
+}
+
+extension BLEScanner {
+
+    convenience init(centralManager: CBCentralManagerType) {
+        self.init(centralManager: centralManager, systemClock: SystemClock())
+    }
 }
 
 class BLEScannerTests: XCTestCase {
@@ -91,16 +110,6 @@ class BLEScannerTests: XCTestCase {
     let notifyCharacteristicId = "d1d7a6b6-457e-458a-b237-a9df99b3d98b"
     let writeCharacteristicId = "c8e58f23-9417-41c6-97a8-70f6b2c8cab9"
     let serviceId = "d1cf0603-b501-4569-a4b9-e47ad3f628a5"
-
-    //    override func setUp() {
-    //        super.setUp()
-    //        // Put setup code here. This method is called before the invocation of each test method in the class.
-    //    }
-    //
-    //    override func tearDown() {
-    //        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    //        super.tearDown()
-    //    }
 
     func test_isPoweredOn_ifCentralManagerIsPoweredOn_returnsTrue() {
 
@@ -557,6 +566,136 @@ class BLEScannerTests: XCTestCase {
         }
     }
 
+    func test_peripheralDidDiscoverServices_ifItsConnectingAndPeripheralIsDiscoveredAndErrorIsNil_triesToDiscoverCharacteristicsForService() {
+
+        // Given
+        let centralManager = CBCentralManagerMock()
+        let scanner = BLEScanner(centralManager: centralManager)
+        let peripheral = CBPeripheralMock()
+        let service = CBServiceMock()
+        peripheral.services_ = [service]
+
+        prepareConnectingSorc("1a", peripheral: peripheral, scanner: scanner, centralManager: centralManager)
+
+        // When
+        scanner.peripheral_(peripheral, didDiscoverServices: nil)
+
+        // Then
+        if let arguments = peripheral.discoverCharacteristicsCalledWithArguments {
+            XCTAssert(arguments.characteristicUUIDs!.contains(CBUUID(string: writeCharacteristicId)))
+            XCTAssert(arguments.characteristicUUIDs!.contains(CBUUID(string: notifyCharacteristicId)))
+        } else {
+            XCTFail()
+        }
+    }
+
+    func test_peripheralDidDiscoverServices_ifItsConnectingAndPeripheralIsDiscoveredAndErrorExists_disconnects() {
+
+        // Given
+        let centralManager = CBCentralManagerMock()
+        let scanner = BLEScanner(centralManager: centralManager)
+        let peripheral = CBPeripheralMock()
+        let service = CBServiceMock()
+        peripheral.services_ = [service]
+
+        prepareConnectingSorc("1a", peripheral: peripheral, scanner: scanner, centralManager: centralManager)
+
+        // When
+        scanner.peripheral_(peripheral, didDiscoverServices: NSError(domain: "", code: 0, userInfo: nil))
+
+        // Then
+        if case .disconnected = scanner.connectionState.value {} else {
+            XCTFail()
+        }
+    }
+
+    func test_peripheralDidDiscoverCharacteristics_ifItsConnectingAndPeripheralIsDiscoveredAndErrorIsNil_connectedAndSetNotifyValue() {
+
+        // Given
+        let centralManager = CBCentralManagerMock()
+        let scanner = BLEScanner(centralManager: centralManager)
+        let peripheral = CBPeripheralMock()
+        let service = CBServiceMock()
+        peripheral.services_ = [service]
+
+        let writeCharacteristic = CBCharacteristicMock()
+        writeCharacteristic.uuid = CBUUID(string: writeCharacteristicId)
+        let notifyCharacteristic = CBCharacteristicMock()
+        notifyCharacteristic.uuid = CBUUID(string: notifyCharacteristicId)
+        service.characteristics_ = [writeCharacteristic, notifyCharacteristic]
+
+        prepareConnectingSorc("1a", peripheral: peripheral, scanner: scanner, centralManager: centralManager)
+
+        // When
+        scanner.peripheral_(peripheral, didDiscoverCharacteristicsFor: service, error: nil)
+
+        // Then
+        if case let .connected(sorcID) = scanner.connectionState.value {
+            XCTAssertEqual(sorcID, "1a")
+        } else {
+            XCTFail()
+        }
+        if let arguments = peripheral.setNotifyValueCalledWithArguments {
+            XCTAssert(arguments.enabled)
+            XCTAssertEqual(arguments.characteristic.uuid, notifyCharacteristic.uuid)
+        } else {
+            XCTFail()
+        }
+    }
+
+    func test_peripheralDidDiscoverCharacteristics_ifItsConnectingAndPeripheralIsDiscoveredAndErrorExists_disconnects() {
+
+        // Given
+        let centralManager = CBCentralManagerMock()
+        let scanner = BLEScanner(centralManager: centralManager)
+        let peripheral = CBPeripheralMock()
+        let service = CBServiceMock()
+        peripheral.services_ = [service]
+
+        prepareConnectingSorc("1a", peripheral: peripheral, scanner: scanner, centralManager: centralManager)
+
+        // When
+        scanner.peripheral_(peripheral, didDiscoverCharacteristicsFor: service, error: NSError(domain: "", code: 0, userInfo: nil))
+
+        // Then
+        if case .disconnected = scanner.connectionState.value {} else {
+            XCTFail()
+        }
+    }
+
+    func test_peripheralDidUpdateValue_ifNotifyCharacteristic_callsTransferDidReceivedData() {
+
+        // Given
+        let centralManager = CBCentralManagerMock()
+        let transferDelegate = DataTransferDelegateMock()
+        let scanner = BLEScanner(centralManager: centralManager)
+        scanner.delegate = transferDelegate
+        let notifyCharacteristic = CBCharacteristicMock()
+        notifyCharacteristic.value = Data(base64Encoded: "data")
+        notifyCharacteristic.uuid = CBUUID(string: notifyCharacteristicId)
+
+        // When
+        scanner.peripheral_(CBPeripheralMock(), didUpdateValueFor: notifyCharacteristic, error: nil)
+
+        // Then
+        XCTAssertEqual(transferDelegate.transferDidReceivedDataCalledWithData, Data(base64Encoded: "data"))
+    }
+
+    func test_peripheralDidWriteValue_callsTransferDidSendData() {
+
+        // Given
+        let centralManager = CBCentralManagerMock()
+        let transferDelegate = DataTransferDelegateMock()
+        let scanner = BLEScanner(centralManager: centralManager)
+        scanner.delegate = transferDelegate
+
+        // When
+        scanner.peripheral_(CBPeripheralMock(), didWriteValueFor: CBCharacteristicMock(), error: nil)
+
+        // Then
+        XCTAssert(transferDelegate.transferDidSendDataCalled)
+    }
+
     private func prepareDiscoveredSorc(_ sorcID: SorcID, peripheral: CBPeripheralType, scanner: BLEScanner, centralManager: CBCentralManagerMock) {
         let advertisementData: [String: Any] = [
             CBAdvertisementDataManufacturerDataKey: sorcID.dataFromHexadecimalString()!,
@@ -589,12 +728,5 @@ class BLEScannerTests: XCTestCase {
         scanner.peripheral_(peripheral, didDiscoverCharacteristicsFor: service, error: nil)
 
         centralManager.connectCalledWithPeripheral = nil
-    }
-}
-
-extension BLEScanner {
-
-    convenience init(centralManager: CBCentralManagerType) {
-        self.init(centralManager: centralManager, systemClock: SystemClock())
     }
 }

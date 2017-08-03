@@ -116,7 +116,7 @@ class SIDCommunicator: NSObject {
 
 extension SIDCommunicator: DataTransferDelegate {
 
-    func transferDidSendData(_: DataTransfer, data _: Data) {
+    func transferDidSendData(_: DataTransfer) {
         currentPackage?.currentIndex += 1
         if let currentFrame = self.currentPackage?.currentFrame {
             sendFrame(currentFrame)
