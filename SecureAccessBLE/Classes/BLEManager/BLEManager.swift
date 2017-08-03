@@ -181,9 +181,14 @@ public class BLEManager: NSObject, BLEManagerType {
             case let .sorcsLost(lostSorcIds):
                 strongSelf.sorcsLost.onNext(Array(lostSorcIds))
             default:
-                // TODO: PLAM 963 handle further cases
+                // TODO: PLAM 963 handle further cases or replace both subjects with discoveryChange
                 break
             }
+        }
+        .disposed(by: disposeBag)
+
+        scanner.connectionState.subscribeNext { [weak self] state in
+            self?.handleTransferConnectionStateChange(state: state)
         }
         .disposed(by: disposeBag)
     }
@@ -265,7 +270,7 @@ public class BLEManager: NSObject, BLEManagerType {
             state: .disconnected,
             action: action)
         )
-        transporter.disconnect()
+        scanner.disconnect()
     }
 
     private func reset() {
@@ -303,6 +308,23 @@ public class BLEManager: NSObject, BLEManagerType {
     }
 
     // MARK: - Private methods
+
+    private func handleTransferConnectionStateChange(state: TransferConnectionState) {
+        switch state {
+        case .connecting: break
+        case .connected:
+            currentConnectionState = .connected
+            sendMtuRequest()
+        case .disconnected:
+            if case .disconnected = connectionChange.value.state { return }
+            if isBluetoothEnabled.value {
+                currentConnectionState = .notConnected
+                // PLAM-951: Set proper action
+                connectionChange.onNext(ConnectionChange(state: .disconnected, action: .disconnect))
+            } else {
+            }
+        }
+    }
 
     /**
      Helper function repots if the transfer currently busy
@@ -594,25 +616,4 @@ extension BLEManager: SIDCommunicatorDelegate {
         }
         communicator.resetReceivedPackage()
     }
-
-    func communicatorDidChangedConnectionState(_: SIDCommunicator, state: TransferConnectionState) {
-        switch state {
-        case .connecting: break
-        case .connected:
-            currentConnectionState = .connected
-            sendMtuRequest()
-        case .disconnected:
-            if case .disconnected = connectionChange.value.state { return }
-            if isBluetoothEnabled.value {
-                currentConnectionState = .notConnected
-                // PLAM-951: Set proper action
-                connectionChange.onNext(ConnectionChange(state: .disconnected, action: .disconnect))
-            } else {
-            }
-        }
-    }
-
-    func communicatorDidConnectSid(_: SIDCommunicator, sid _: SID) {}
-
-    func communicatorDidFailToConnectSid(_: SIDCommunicator, sid _: SID, error _: Error?) {}
 }

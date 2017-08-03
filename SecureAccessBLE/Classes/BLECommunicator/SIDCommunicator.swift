@@ -20,31 +20,6 @@ protocol SIDCommunicatorDelegate {
      - parameter count:       received data length
      */
     func communicatorDidReceivedData(_ messageData: Data, count: Int)
-
-    /**
-     Communicator reports if a connection attempt succeeded
-
-     - parameter communicator: The communicator object
-     - parameter sid: The SID the connection is made to
-     */
-    func communicatorDidConnectSid(_ communicator: SIDCommunicator, sid: SID)
-
-    /**
-     Communicator reports if a connection attempt failed
-
-     - parameter communicator: The communicator object
-     - parameter sid: The SID the connection should have made to
-     - parameter error: Describes the error
-     */
-    func communicatorDidFailToConnectSid(_ communicator: SIDCommunicator, sid: SID, error: Error?)
-
-    /**
-     Communicator reports if connection state did changed
-
-     - parameter communicator: The communicator object
-     - parameter state: The state of the transfer connection.
-     */
-    func communicatorDidChangedConnectionState(_ communicator: SIDCommunicator, state: TransferConnectionState)
 }
 
 /// Sid communicator
@@ -140,18 +115,6 @@ class SIDCommunicator: NSObject {
 // MARK: - DataTransferDelegate
 
 extension SIDCommunicator: DataTransferDelegate {
-
-    func transferDidChangedConnectionState(_: DataTransfer, state: TransferConnectionState) {
-        delegate?.communicatorDidChangedConnectionState(self, state: state)
-    }
-
-    func transferDidConnectSid(_: DataTransfer, sid: SID) {
-        delegate?.communicatorDidConnectSid(self, sid: sid)
-    }
-
-    func transferDidFailToConnectSid(_: DataTransfer, sid: SID, error: Error?) {
-        delegate?.communicatorDidFailToConnectSid(self, sid: sid, error: error)
-    }
 
     func transferDidSendData(_: DataTransfer, data _: Data) {
         currentPackage?.currentIndex += 1

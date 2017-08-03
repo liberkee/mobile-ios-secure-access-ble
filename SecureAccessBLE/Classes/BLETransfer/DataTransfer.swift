@@ -8,26 +8,6 @@
 
 import Foundation
 
-struct DiscoveryChange {
-
-    let state: Set<SorcID>
-    let action: Action
-
-    enum Action {
-        case initial
-        case sorcDiscovered(SorcID)
-        case sorcsLost(Set<SorcID>)
-        case sorcDisconnected(SorcID)
-        case sorcsReset
-    }
-}
-
-enum TransferConnectionState {
-    case disconnected
-    case connecting(sorc: SID)
-    case connected(sorc: SID)
-}
-
 /**
  The Delegate for a DataTransfer object
  */
@@ -48,31 +28,6 @@ protocol DataTransferDelegate: class {
      - parameter data: The data which was received.
      */
     func transferDidReceivedData(_ dataTransferObject: DataTransfer, data: Data)
-
-    /**
-     Tells the delegate that a connection was established.
-
-     - parameter dataTransferObject: The DataTransfer object.
-     - parameter state: The state of the transfer connection.
-     */
-    func transferDidChangedConnectionState(_ dataTransferObject: DataTransfer, state: TransferConnectionState)
-
-    /**
-     Transporter reports if that was successfully connected with a SID
-
-     - parameter dataTransferObject: transporter instance
-     - parameter sid:                connected SID instance
-     */
-    func transferDidConnectSid(_ dataTransferObject: DataTransfer, sid: SID)
-
-    /**
-     Tells the delegate if a connection attempt failed
-
-     - parameter dataTransferObject: Transporter instance
-     - parameter sid: The SID the connection should have made to
-     - parameter error: Describes the error
-     */
-    func transferDidFailToConnectSid(_ dataTransferObject: DataTransfer, sid: SID, error: Error?)
 }
 
 /**
@@ -84,23 +39,10 @@ protocol DataTransfer {
     /// A delegate conforming to DataTransferDelegate
     weak var delegate: DataTransferDelegate? { get set }
 
-    /// The connection state of the data transfer
-    var connectionState: TransferConnectionState { get }
-
     /**
      A method to send data.
 
      - parameter data: The data package which should be send.
      */
     func sendData(_ data: Data)
-
-    /**
-     A method to connecting to a specified SORC.
-
-     - parameter sorc: The SORC.
-     */
-    func connectToSorc(_ sorcId: SorcID)
-
-    /// Disconnect the current connected sid.
-    func disconnect()
 }

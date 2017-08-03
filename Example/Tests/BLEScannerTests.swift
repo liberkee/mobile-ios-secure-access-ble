@@ -133,7 +133,7 @@ class BLEScannerTests: XCTestCase {
         scanner.connectToSorc("1a")
 
         // Then
-        if case .connecting = scanner.connectionState {
+        if case .connecting = scanner.connectionState.value {
             XCTFail()
         }
         XCTAssertNil(centralManager.connectCalledWithPeripheral)
@@ -152,7 +152,7 @@ class BLEScannerTests: XCTestCase {
         scanner.connectToSorc("1a")
 
         // Then
-        if case let .connecting(connectingSorc) = scanner.connectionState {
+        if case let .connecting(connectingSorc) = scanner.connectionState.value {
             XCTAssertEqual(connectingSorc, sorc)
         } else {
             XCTFail()
@@ -173,7 +173,7 @@ class BLEScannerTests: XCTestCase {
         scanner.connectToSorc("1a")
 
         // Then
-        if case let .connecting(connectingSorc) = scanner.connectionState {
+        if case let .connecting(connectingSorc) = scanner.connectionState.value {
             XCTAssertEqual(connectingSorc, sorc)
         } else {
             XCTFail()
@@ -198,7 +198,7 @@ class BLEScannerTests: XCTestCase {
         scanner.connectToSorc("1b")
 
         // Then
-        if case let .connecting(connectingSorc) = scanner.connectionState {
+        if case let .connecting(connectingSorc) = scanner.connectionState.value {
             XCTAssertEqual(connectingSorc, sorc2)
         } else {
             XCTFail()
@@ -219,7 +219,7 @@ class BLEScannerTests: XCTestCase {
         scanner.connectToSorc("1a")
 
         // Then
-        if case let .connected(connectedSorc) = scanner.connectionState {
+        if case let .connected(connectedSorc) = scanner.connectionState.value {
             XCTAssertEqual(connectedSorc, sorc)
         } else {
             XCTFail()
@@ -245,7 +245,7 @@ class BLEScannerTests: XCTestCase {
 
         // Then
         XCTAssertEqual(centralManager.cancelConnectionCalledWithPeripheral?.identifier, peripheral1.identifier)
-        if case let .connecting(connectingSorc) = scanner.connectionState {
+        if case let .connecting(connectingSorc) = scanner.connectionState.value {
             XCTAssertEqual(connectingSorc, sorc2)
         } else {
             XCTFail()
@@ -267,7 +267,7 @@ class BLEScannerTests: XCTestCase {
 
         // Then
         XCTAssertEqual(centralManager.cancelConnectionCalledWithPeripheral?.identifier, peripheral.identifier)
-        if case .disconnected = scanner.connectionState {} else {
+        if case .disconnected = scanner.connectionState.value {} else {
             XCTFail()
         }
     }
@@ -286,7 +286,7 @@ class BLEScannerTests: XCTestCase {
 
         // Then
         XCTAssertEqual(centralManager.cancelConnectionCalledWithPeripheral?.identifier, peripheral.identifier)
-        if case .disconnected = scanner.connectionState {} else {
+        if case .disconnected = scanner.connectionState.value {} else {
             XCTFail()
         }
     }
