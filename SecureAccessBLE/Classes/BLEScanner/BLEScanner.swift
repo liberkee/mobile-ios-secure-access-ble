@@ -25,14 +25,14 @@ struct DiscoveryChange {
 
 enum TransferConnectionState {
     case disconnected
-    case connecting(sorc: SID)
-    case connected(sorc: SID)
+    case connecting(sorcID: SorcID)
+    case connected(sorcID: SorcID)
 }
 
 /**
  *  Definition for SID object
  */
-struct SID: Hashable {
+private struct SID: Hashable {
     /// SID id as String
     var sidID: String
     /// Peripheral, that SID object inclusive
@@ -57,7 +57,7 @@ struct SID: Hashable {
 
  - returns: both objects equal or not
  */
-func == (lhs: SID, rhs: SID) -> Bool {
+fileprivate func == (lhs: SID, rhs: SID) -> Bool {
     if (lhs.peripheral?.identifier != rhs.peripheral?.identifier) || (lhs.sidID != rhs.sidID) {
         return false
     }
@@ -111,16 +111,6 @@ class BLEScanner: NSObject, DataTransfer {
 
     ////////
 
-    /// Current connected SID object
-    fileprivate var connectedSid: SID? {
-        if case let .connected(sorc) = connectionState.value {
-            return sorc
-        }
-        return nil
-    }
-
-    fileprivate var discoveredSorcs = Set<SID>()
-
     /// Timer to filter old SIDs
     fileprivate var filterTimer: Timer?
 
@@ -129,6 +119,15 @@ class BLEScanner: NSObject, DataTransfer {
 
     /// The duration a SORC is considered outdated if last discovery date is longer ago than this duration
     private let sorcOutdatedDurationSeconds: Double = 5
+
+    fileprivate var discoveredSorcs = Set<SID>()
+
+    fileprivate var connectedSid: SID? {
+        if case let .connected(sorcId) = connectionState.value {
+            return discoveredSorcs.first { $0.sidID == sorcId }
+        }
+        return nil
+    }
 
     ////////
 
@@ -162,42 +161,34 @@ class BLEScanner: NSObject, DataTransfer {
     }
 
     func connectToSorc(_ sorcID: SorcID) {
-        let optSorc = discoveredSorcs
-            .filter { $0.sidID.lowercased() == sorcID.replacingOccurrences(of: "-", with: "").lowercased() }
-            .first
-        guard let sorc = optSorc else {
+        guard let peripheral = peripheralMatchingSorcID(sorcID) else {
             // TODO: PLAM-963 didFailToConnect?
             print("BLEScanner: Try to connect to SORC that is not discovered.")
             return
         }
-        guard let peripheral = sorc.peripheral else {
-            // TODO: PLAM-963 didFailToConnect?
-            print("BLEScanner: Try to connect to nil peripheral which is not possible.")
-            return
-        }
         switch connectionState.value {
-        case let .connecting(currentSorc):
-            if currentSorc != sorc {
+        case let .connecting(currentSorcID):
+            if currentSorcID != sorcID {
                 disconnect()
-                connectionState.onNext(.connecting(sorc: sorc))
+                connectionState.onNext(.connecting(sorcID: sorcID))
             }
             centralManager.connect(peripheral, options: nil)
-        case let .connected(currentSorc):
-            if currentSorc != sorc {
+        case let .connected(currentSorcID):
+            if currentSorcID != sorcID {
                 disconnect()
-                connectionState.onNext(.connecting(sorc: sorc))
+                connectionState.onNext(.connecting(sorcID: sorcID))
                 centralManager.connect(peripheral, options: nil)
             }
         case .disconnected:
-            connectionState.onNext(.connecting(sorc: sorc))
+            connectionState.onNext(.connecting(sorcID: sorcID))
             centralManager.connect(peripheral, options: nil)
         }
     }
 
     func disconnect() {
         switch connectionState.value {
-        case let .connecting(sorc), let .connected(sorc):
-            if let peripheral = sorc.peripheral {
+        case let .connecting(sorcID), let .connected(sorcID):
+            if let peripheral = peripheralMatchingSorcID(sorcID) {
                 centralManager.cancelPeripheralConnection(peripheral)
             }
             writeCharacteristic = nil
@@ -213,9 +204,9 @@ class BLEScanner: NSObject, DataTransfer {
      - parameter data: NSData that will be sended to SID
      */
     func sendData(_ data: Data) {
-        guard case let .connected(sorc) = connectionState.value,
+        guard case let .connected(sorcID) = connectionState.value,
             let characteristic = writeCharacteristic,
-            let peripheral = sorc.peripheral else { return }
+            let peripheral = peripheralMatchingSorcID(sorcID) else { return }
 
         peripheral.writeValue(data, for: characteristic, type: CBCharacteristicWriteType.withResponse)
     }
@@ -278,6 +269,16 @@ class BLEScanner: NSObject, DataTransfer {
         discoveryChange.onNext(change)
     }
 
+    fileprivate func sorcMatchingSorcID(_ sorcID: SorcID) -> SID? {
+        return discoveredSorcs
+            .filter { $0.sidID.lowercased() == sorcID.replacingOccurrences(of: "-", with: "").lowercased() }
+            .first
+    }
+
+    fileprivate func peripheralMatchingSorcID(_ sorcID: SorcID) -> CBPeripheralType? {
+        return sorcMatchingSorcID(sorcID)?.peripheral
+    }
+
     /////////// TODO: PLAM-963
 }
 
@@ -308,8 +309,8 @@ extension BLEScanner {
     func centralManager_(_: CBCentralManagerType, didConnect peripheral: CBPeripheralType) {
         consoleLog("Central connected to peripheral: \(peripheral.identifier.uuidString)")
 
-        guard case let .connecting(sorc) = connectionState.value,
-            sorc.peripheral?.identifier == peripheral.identifier else { return }
+        guard case let .connecting(sorcID) = connectionState.value,
+            peripheralMatchingSorcID(sorcID)?.identifier == peripheral.identifier else { return }
 
         peripheral.delegate = self
         peripheral.discoverServices([CBUUID(string: self.serviceId)])
@@ -318,8 +319,8 @@ extension BLEScanner {
     func centralManager_(_: CBCentralManagerType, didFailToConnect peripheral: CBPeripheralType, error: Error?) {
         consoleLog("Central failed connecting to peripheral: \(error?.localizedDescription ?? "Unknown error")")
 
-        guard case let .connecting(sorc) = connectionState.value,
-            sorc.peripheral?.identifier == peripheral.identifier else { return }
+        guard case let .connecting(sorcID) = connectionState.value,
+            peripheralMatchingSorcID(sorcID)?.identifier == peripheral.identifier else { return }
 
         connectionState.onNext(.disconnected)
 
@@ -327,11 +328,12 @@ extension BLEScanner {
     }
 
     func centralManager_(_: CBCentralManagerType, didDisconnectPeripheral peripheral: CBPeripheralType, error _: Error?) {
-        guard case let .connected(sorc) = connectionState.value,
+        guard case let .connected(sorcID) = connectionState.value,
+            let sorc = sorcMatchingSorcID(sorcID),
             sorc.peripheral?.identifier == peripheral.identifier else { return }
 
         discoveredSorcs.remove(sorc)
-        updateDiscoveryChange(action: .sorcDisconnected(sorc.sidID))
+        updateDiscoveryChange(action: .sorcDisconnected(sorcID))
         connectionState.onNext(.disconnected)
     }
 }
@@ -342,8 +344,8 @@ extension BLEScanner {
 
     func peripheral_(_ peripheral: CBPeripheralType, didDiscoverServices error: Error?) {
 
-        guard case let .connecting(sorc) = connectionState.value,
-            sorc.peripheral?.identifier == peripheral.identifier else { return }
+        guard case let .connecting(sorcID) = connectionState.value,
+            peripheralMatchingSorcID(sorcID)?.identifier == peripheral.identifier else { return }
 
         if error != nil {
             disconnect()
@@ -358,8 +360,8 @@ extension BLEScanner {
 
     func peripheral_(_ peripheral: CBPeripheralType, didDiscoverCharacteristicsFor service: CBServiceType, error: Error?) {
 
-        guard case var .connecting(sorc) = connectionState.value,
-            sorc.peripheral?.identifier == peripheral.identifier else { return }
+        guard case let .connecting(sorcID) = connectionState.value,
+            peripheralMatchingSorcID(sorcID)?.identifier == peripheral.identifier else { return }
 
         if error != nil {
             disconnect()
@@ -377,8 +379,9 @@ extension BLEScanner {
         }
 
         if writeCharacteristic != nil && notifyCharacteristic != nil {
-            sorc.isConnected = true
-            connectionState.onNext(.connected(sorc: sorc))
+            // TODO: PLAM-963 do we need is connected?
+            // sorcMatchingSorcID(sorcID)?.isConnected = true
+            connectionState.onNext(.connected(sorcID: sorcID))
         }
     }
 
