@@ -146,9 +146,9 @@ class BLEScanner: NSObject, DataTransfer {
         filterTimer?.invalidate()
     }
 
+    /// If a connection to an undiscovered SORC is tried it fails silently.
     func connectToSorc(_ sorcID: SorcID) {
         guard let peripheral = peripheralMatchingSorcID(sorcID) else {
-            // TODO: PLAM-963 didFailToConnect?
             print("BLEScanner: Try to connect to SORC that is not discovered.")
             return
         }
