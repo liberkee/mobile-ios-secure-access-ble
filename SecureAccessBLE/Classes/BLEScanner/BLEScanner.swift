@@ -32,7 +32,7 @@ enum TransferConnectionState {
 /**
  *  Definition for SID object
  */
-private struct SID: Hashable {
+private struct SID: Hashable, Equatable {
 
     let sidID: String
     var peripheral: CBPeripheralType?
@@ -42,27 +42,18 @@ private struct SID: Hashable {
     var hashValue: Int {
         return sidID.hashValue
     }
-}
 
-/**
- To compare if both objects equal
+    static func == (lhs: SID, rhs: SID) -> Bool {
+        if (lhs.peripheral?.identifier != rhs.peripheral?.identifier) || (lhs.sidID != rhs.sidID) {
+            return false
+        }
 
- - parameter lhs: first object to compare
- - parameter rhs: second object to compare
-
- - returns: both objects equal or not
- */
-fileprivate func == (lhs: SID, rhs: SID) -> Bool {
-    if (lhs.peripheral?.identifier != rhs.peripheral?.identifier) || (lhs.sidID != rhs.sidID) {
-        return false
+        return true
     }
-
-    return true
 }
 
-//  extension the Central manager state to allow showing status as String
-extension CBCentralManagerState {
-    /// Externsion point for Central manager connection state
+extension CBManagerState {
+
     var description: String {
         switch self {
         case .unknown: return "Unknown"
