@@ -77,22 +77,15 @@ class BLEScanner: NSObject, DataTransfer {
     var centralManager: CBCentralManagerType!
 
     let isPoweredOn: BehaviorSubject<Bool>
-
     let discoveryChange = BehaviorSubject(value: DiscoveryChange(state: Set<SorcID>(), action: .initial))
-
     let connectionState = BehaviorSubject(value: TransferConnectionState.disconnected)
 
-    /// Device id as String
     fileprivate let deviceId = "EF82084D-BFAD-4ABE-90EE-2552C20C5765"
-    /// Device id as String
     fileprivate let serviceId = "d1cf0603-b501-4569-a4b9-e47ad3f628a5"
-    /// notify characteristic id as String
     fileprivate let notifyCharacteristicId = "d1d7a6b6-457e-458a-b237-a9df99b3d98b"
-    /// write characteristic id as String
     fileprivate let writeCharacteristicId = "c8e58f23-9417-41c6-97a8-70f6b2c8cab9"
-    /// write characteristice object defined in Core Bluetooth
+
     fileprivate var writeCharacteristic: CBCharacteristicType?
-    /// Notify characteristic object defined in Core Bluetooth
     fileprivate var notifyCharacteristic: CBCharacteristicType?
 
     /// Timer to remove outdated discovered SORCs
@@ -104,6 +97,7 @@ class BLEScanner: NSObject, DataTransfer {
     /// The duration a SORC is considered outdated if last discovery date is longer ago than this duration
     private let sorcOutdatedDurationSeconds: Double = 5
 
+    /// The SORCs that were discovered and were not removed by the filterTimer
     fileprivate var discoveredSorcs = Set<SID>()
 
     fileprivate var connectedSid: SID? {
@@ -113,13 +107,6 @@ class BLEScanner: NSObject, DataTransfer {
         return nil
     }
 
-    /**
-     Initialization end point for SID Scanner
-
-     - parameter sidID: The sid id as String
-
-     - returns: Scanner object
-     */
     required init(centralManager: CBCentralManagerType) {
         isPoweredOn = BehaviorSubject(value: centralManager.state == .poweredOn)
         super.init()
@@ -213,7 +200,7 @@ class BLEScanner: NSObject, DataTransfer {
         }
     }
 
-    fileprivate func updateFoundSorcsWithDiscoveredSorc(_ sorc: SID) {
+    fileprivate func updateDiscoveredSorcsWithNewSorc(_ sorc: SID) {
         var sorcCopy = sorc
         if let connectedSid = connectedSid, sorcCopy.sidID == connectedSid.sidID {
             sorcCopy.peripheral = connectedSid.peripheral
@@ -266,8 +253,8 @@ extension BLEScanner {
             return
         }
         let sidID = manufacturerData.toHexString()
-        let foundSid = SID(sidID: sidID, peripheral: peripheral, discoveryDate: Date(), rssi: RSSI.intValue)
-        updateFoundSorcsWithDiscoveredSorc(foundSid)
+        let sorc = SID(sidID: sidID, peripheral: peripheral, discoveryDate: Date(), rssi: RSSI.intValue)
+        updateDiscoveredSorcsWithNewSorc(sorc)
     }
 
     func centralManager_(_: CBCentralManagerType, didConnect peripheral: CBPeripheralType) {
@@ -343,8 +330,6 @@ extension BLEScanner {
         }
 
         if writeCharacteristic != nil && notifyCharacteristic != nil {
-            // TODO: PLAM-963 do we need is connected?
-            // sorcMatchingSorcID(sorcID)?.isConnected = true
             connectionState.onNext(.connected(sorcID: sorcID))
         }
     }
