@@ -33,18 +33,13 @@ enum TransferConnectionState {
  *  Definition for SID object
  */
 private struct SID: Hashable {
-    /// SID id as String
-    var sidID: String
-    /// Peripheral, that SID object inclusive
+
+    let sidID: String
     var peripheral: CBPeripheralType?
-    /// Date that the sid was discovered
-    var discoveryDate: Date
-    /// If currently connected
-    var isConnected: Bool
-    /// The rssi on discovery in dbm
-    public var rssi: Int
-    /// has value as Int fo SID id
-    public var hashValue: Int {
+    let discoveryDate: Date
+    let rssi: Int
+
+    var hashValue: Int {
         return sidID.hashValue
     }
 }
@@ -249,7 +244,6 @@ class BLEScanner: NSObject, DataTransfer {
     fileprivate func updateFoundSorcsWithDiscoveredSorc(_ sorc: SID) {
         var sorcCopy = sorc
         if let connectedSid = connectedSid, sorcCopy.sidID == connectedSid.sidID {
-            sorcCopy.isConnected = connectedSid.isConnected
             sorcCopy.peripheral = connectedSid.peripheral
         }
         let replacedSidID = discoveredSorcs.update(with: sorcCopy)
@@ -302,7 +296,7 @@ extension BLEScanner {
             return
         }
         let sidID = manufacturerData.toHexString()
-        let foundSid = SID(sidID: sidID, peripheral: peripheral, discoveryDate: Date(), isConnected: false, rssi: RSSI.intValue)
+        let foundSid = SID(sidID: sidID, peripheral: peripheral, discoveryDate: Date(), rssi: RSSI.intValue)
         updateFoundSorcsWithDiscoveredSorc(foundSid)
     }
 
