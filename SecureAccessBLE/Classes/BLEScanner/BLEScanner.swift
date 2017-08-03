@@ -70,6 +70,8 @@ extension CBManagerState {
 /// messages over a secure BLE connection, i.e. a valid session context must exist.
 class BLEScanner: NSObject, DataTransfer {
 
+    typealias CreateTimer = (@escaping () -> Void) -> Timer
+
     /// delegate for message tranfer
     weak var delegate: DataTransferDelegate?
 
@@ -93,9 +95,6 @@ class BLEScanner: NSObject, DataTransfer {
     /// Timer to remove outdated discovered SORCs
     fileprivate var filterTimer: Timer?
 
-    /// The interval a timer is triggered to remove outdated discovered SORCs
-    private let removeOutdatedSorcsTimerIntervalSeconds: Double = 2
-
     /// The duration a SORC is considered outdated if last discovery date is longer ago than this duration
     private let sorcOutdatedDurationSeconds: Double = 5
 
@@ -109,27 +108,34 @@ class BLEScanner: NSObject, DataTransfer {
         return nil
     }
 
-    required init(centralManager: CBCentralManagerType, systemClock: SystemClockType) {
+    required init(centralManager: CBCentralManagerType, systemClock: SystemClockType,
+                  createTimer: CreateTimer) {
+
         self.systemClock = systemClock
         isPoweredOn = BehaviorSubject(value: centralManager.state == .poweredOn)
         super.init()
+
         self.centralManager = centralManager
         centralManager.delegate = self
 
-        filterTimer = Timer.scheduledTimer(timeInterval: removeOutdatedSorcsTimerIntervalSeconds,
-                                           target: self,
-                                           selector: #selector(removeOutdatedSorcs),
-                                           userInfo: nil,
-                                           repeats: true)
+        filterTimer = createTimer(removeOutdatedSorcs)
     }
 
     convenience override init() {
         let centralManager = CBCentralManager(delegate: nil, queue: nil,
                                               options: [CBPeripheralManagerOptionShowPowerAlertKey: 0])
         let systemClock = SystemClock()
+
+        let createTimer: CreateTimer = { block in
+            /// The interval a timer is triggered to remove outdated discovered SORCs
+            let removeOutdatedSorcsTimerIntervalSeconds: Double = 2
+            return Timer(timeInterval: removeOutdatedSorcsTimerIntervalSeconds, repeats: true, block: { _ in block() })
+        }
+
         self.init(
             centralManager: centralManager,
-            systemClock: systemClock
+            systemClock: systemClock,
+            createTimer: createTimer
         )
     }
 
@@ -195,9 +201,9 @@ class BLEScanner: NSObject, DataTransfer {
         centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: 1])
     }
 
-    @objc private func removeOutdatedSorcs() {
+    private func removeOutdatedSorcs() {
         let outdatedSorcs = discoveredSorcs.filter { (sorc) -> Bool in
-            let outdated = sorc.discoveryDate.timeIntervalSinceNow < -sorcOutdatedDurationSeconds
+            let outdated = systemClock.timeIntervalSinceNow(for: sorc.discoveryDate) < -sorcOutdatedDurationSeconds
             return outdated && sorc.sidID != self.connectedSid?.sidID
         }
         if outdatedSorcs.count > 0 {

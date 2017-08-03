@@ -21,6 +21,10 @@ class SystemClockMock: SystemClockType {
     func now() -> Date {
         return currentNow
     }
+
+    func timeIntervalSinceNow(for date: Date) -> TimeInterval {
+        return date.timeIntervalSince(currentNow)
+    }
 }
 
 class CBCentralManagerMock: CBCentralManagerType {
@@ -100,8 +104,11 @@ class DataTransferDelegateMock: DataTransferDelegate {
 
 extension BLEScanner {
 
-    convenience init(centralManager: CBCentralManagerType) {
-        self.init(centralManager: centralManager, systemClock: SystemClock())
+    convenience init(centralManager: CBCentralManagerType, createTimer: CreateTimer? = nil) {
+        let createTimer: CreateTimer = createTimer ?? { block in
+            Timer(timeInterval: 1000, repeats: false, block: { _ in block() })
+        }
+        self.init(centralManager: centralManager, systemClock: SystemClock(), createTimer: createTimer)
     }
 }
 
@@ -694,6 +701,58 @@ class BLEScannerTests: XCTestCase {
 
         // Then
         XCTAssert(transferDelegate.transferDidSendDataCalled)
+    }
+
+    func test_filterTimerFired_ifDiscoveredSorcIsOutdatedAndNotConnected_removesIt() {
+
+        // Given
+        let centralManager = CBCentralManagerMock()
+        let systemClock = SystemClockMock(currentNow: Date(timeIntervalSince1970: 0))
+
+        var fireTimer: (() -> Void)!
+        let createTimer: BLEScanner.CreateTimer = { block in
+            fireTimer = block
+            return Timer()
+        }
+
+        let scanner = BLEScanner(centralManager: centralManager, systemClock: systemClock, createTimer: createTimer)
+
+        prepareDiscoveredSorc("1a", peripheral: CBPeripheralMock(), scanner: scanner, centralManager: centralManager)
+
+        // Moving system time forward 6 seconds, sorcOutdatedDurationSeconds == 5
+        systemClock.currentNow = Date(timeIntervalSince1970: 6)
+
+        // When
+        fireTimer()
+
+        // Then
+        XCTAssert(!scanner.discoveryChange.value.state.contains("1a"))
+    }
+
+    func test_filterTimerFired_ifDiscoveredSorcIsOutdatedAndConnected_keepsIt() {
+
+        // Given
+        let centralManager = CBCentralManagerMock()
+        let systemClock = SystemClockMock(currentNow: Date(timeIntervalSince1970: 0))
+
+        var fireTimer: (() -> Void)!
+        let createTimer: BLEScanner.CreateTimer = { block in
+            fireTimer = block
+            return Timer()
+        }
+
+        let scanner = BLEScanner(centralManager: centralManager, systemClock: systemClock, createTimer: createTimer)
+
+        prepareConnectedSorc("1a", peripheral: CBPeripheralMock(), scanner: scanner, centralManager: centralManager)
+
+        // Moving system time forward 6 seconds, sorcOutdatedDurationSeconds == 5
+        systemClock.currentNow = Date(timeIntervalSince1970: 6)
+
+        // When
+        fireTimer()
+
+        // Then
+        XCTAssert(scanner.discoveryChange.value.state.contains("1a"))
     }
 
     private func prepareDiscoveredSorc(_ sorcID: SorcID, peripheral: CBPeripheralType, scanner: BLEScanner, centralManager: CBCentralManagerMock) {
