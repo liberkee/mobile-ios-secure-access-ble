@@ -7,10 +7,11 @@
 //
 
 import Foundation
+import CommonUtils
 
 /**
  *  SIDCommnicator takes a communication to SID and handles the response from SID.
- *  Sending and receiving message through data transfer (Scanner)
+ *  Sending and receiving message through data transfer
  */
 protocol SIDCommunicatorDelegate {
     /**
@@ -44,7 +45,9 @@ class SIDCommunicator: NSObject {
 
      Normally the transporter is a SorcConnectionManager object
      */
-    private var transporter: DataTransfer
+    private let transporter: DataTransfer
+
+    private let disposeBag = DisposeBag()
 
     /**
      Init point
@@ -54,7 +57,16 @@ class SIDCommunicator: NSObject {
     init(transporter: DataTransfer) {
         self.transporter = transporter
         super.init()
-        self.transporter.delegate = self
+
+        transporter.sentData.subscribeNext { [weak self] in
+            self?.handleSentData()
+        }
+        .disposed(by: disposeBag)
+
+        transporter.receivedData.subscribeNext { [weak self] data in
+            self?.handleReceivedData(data)
+        }
+        .disposed(by: disposeBag)
     }
 
     /**
@@ -110,13 +122,8 @@ class SIDCommunicator: NSObject {
     fileprivate func sendFrame(_ frame: DataFrame) {
         transporter.sendData(frame.data)
     }
-}
 
-// MARK: - DataTransferDelegate
-
-extension SIDCommunicator: DataTransferDelegate {
-
-    func transferDidSendData(_: DataTransfer) {
+    private func handleSentData() {
         currentPackage?.currentIndex += 1
         if let currentFrame = self.currentPackage?.currentFrame {
             sendFrame(currentFrame)
@@ -127,7 +134,7 @@ extension SIDCommunicator: DataTransferDelegate {
         }
     }
 
-    func transferDidReceivedData(_: DataTransfer, data: Data) {
+    private func handleReceivedData(_ data: Data) {
         if currentReceivingPackage == nil {
             currentReceivingPackage = DataFramePackage()
         }

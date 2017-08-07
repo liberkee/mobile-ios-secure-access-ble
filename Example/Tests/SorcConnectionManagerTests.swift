@@ -89,19 +89,6 @@ class CBCharacteristicMock: CBCharacteristicType {
     var value: Data?
 }
 
-class DataTransferDelegateMock: DataTransferDelegate {
-
-    var transferDidSendDataCalled = false
-    func transferDidSendData(_: DataTransfer) {
-        transferDidSendDataCalled = true
-    }
-
-    var transferDidReceivedDataCalledWithData: Data?
-    func transferDidReceivedData(_: DataTransfer, data: Data) {
-        transferDidReceivedDataCalledWithData = data
-    }
-}
-
 extension SorcConnectionManager {
 
     convenience init(centralManager: CBCentralManagerType, createTimer: CreateTimer? = nil) {
@@ -705,33 +692,39 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Given
         let centralManager = CBCentralManagerMock()
-        let transferDelegate = DataTransferDelegateMock()
         let connectionManager = SorcConnectionManager(centralManager: centralManager)
-        connectionManager.delegate = transferDelegate
         let notifyCharacteristic = CBCharacteristicMock()
         notifyCharacteristic.value = Data(base64Encoded: "data")
         notifyCharacteristic.uuid = CBUUID(string: notifyCharacteristicId)
+
+        var receivedData: Data?
+        _ = connectionManager.receivedData.subscribeNext { data in
+            receivedData = data
+        }
 
         // When
         connectionManager.peripheral_(CBPeripheralMock(), didUpdateValueFor: notifyCharacteristic, error: nil)
 
         // Then
-        XCTAssertEqual(transferDelegate.transferDidReceivedDataCalledWithData, Data(base64Encoded: "data"))
+        XCTAssertEqual(receivedData, Data(base64Encoded: "data"))
     }
 
     func test_peripheralDidWriteValue_callsTransferDidSendData() {
 
         // Given
         let centralManager = CBCentralManagerMock()
-        let transferDelegate = DataTransferDelegateMock()
         let connectionManager = SorcConnectionManager(centralManager: centralManager)
-        connectionManager.delegate = transferDelegate
+
+        var sentDataCalled = false
+        _ = connectionManager.sentData.subscribeNext {
+            sentDataCalled = true
+        }
 
         // When
         connectionManager.peripheral_(CBPeripheralMock(), didWriteValueFor: CBCharacteristicMock(), error: nil)
 
         // Then
-        XCTAssert(transferDelegate.transferDidSendDataCalled)
+        XCTAssert(sentDataCalled)
     }
 
     func test_filterTimerFired_ifDiscoveredSorcIsOutdatedAndNotConnected_removesIt() {

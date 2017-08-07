@@ -10,6 +10,8 @@ import CommonUtils
 
 extension SorcConnectionManager {
 
+    typealias CreateTimer = (@escaping () -> Void) -> Timer
+
     struct DiscoveryChange {
 
         let state: Set<SorcID>
@@ -86,20 +88,12 @@ extension CBManagerState {
 /// Manages the discovery and connection of SORCs
 class SorcConnectionManager: NSObject, DataTransfer {
 
-    typealias CreateTimer = (@escaping () -> Void) -> Timer
-
-    /// delegate for message tranfer
-    weak var delegate: DataTransferDelegate?
-
-    /// central mananger object defined in Core Bluetooth
-    var centralManager: CBCentralManagerType!
-
-    let systemClock: SystemClockType
-
     let isPoweredOn: BehaviorSubject<Bool>
     let discoveryChange = BehaviorSubject(value: DiscoveryChange(state: Set<SorcID>(), action: .initial))
-
     let connectionChange = BehaviorSubject(value: ConnectionChange(state: .disconnected, action: .initial))
+
+    let sentData = PublishSubject<()>()
+    let receivedData = PublishSubject<Data>()
 
     fileprivate let deviceId = "EF82084D-BFAD-4ABE-90EE-2552C20C5765"
     fileprivate let serviceId = "d1cf0603-b501-4569-a4b9-e47ad3f628a5"
@@ -108,6 +102,9 @@ class SorcConnectionManager: NSObject, DataTransfer {
 
     fileprivate var writeCharacteristic: CBCharacteristicType?
     fileprivate var notifyCharacteristic: CBCharacteristicType?
+
+    private var centralManager: CBCentralManagerType!
+    fileprivate let systemClock: SystemClockType
 
     /// Timer to remove outdated discovered SORCs
     fileprivate var filterTimer: Timer?
@@ -373,13 +370,13 @@ extension SorcConnectionManager {
     func peripheral_(_: CBPeripheralType, didUpdateValueFor characteristic: CBCharacteristicType, error _: Error?) {
         // TODO: handle error
         if characteristic.uuid == CBUUID(string: notifyCharacteristicId), let data = characteristic.value {
-            delegate?.transferDidReceivedData(self, data: data)
+            receivedData.onNext(data)
         }
     }
 
     func peripheral_(_: CBPeripheralType, didWriteValueFor _: CBCharacteristicType, error _: Error?) {
         // TODO: handle error
-        delegate?.transferDidSendData(self)
+        sentData.onNext()
     }
 }
 
