@@ -296,6 +296,13 @@ class SorcConnectionManagerTests: XCTestCase {
         if case .disconnect = connectionManager.connectionChange.value.action {} else {
             XCTFail()
         }
+
+        XCTAssert(!connectionManager.discoveryChange.value.state.contains("1a"))
+        if case let .disconnectSorc(sorcID) = connectionManager.discoveryChange.value.action {
+            XCTAssertEqual(sorcID, "1a")
+        } else {
+            XCTFail()
+        }
     }
 
     func test_disconnect_ifItsConnected_itCancelsTheConnectionAndMovesToDisconnectedState() {
@@ -315,6 +322,13 @@ class SorcConnectionManagerTests: XCTestCase {
             XCTFail()
         }
         if case .disconnect = connectionManager.connectionChange.value.action {} else {
+            XCTFail()
+        }
+
+        XCTAssert(!connectionManager.discoveryChange.value.state.contains("1a"))
+        if case let .disconnectSorc(sorcID) = connectionManager.discoveryChange.value.action {
+            XCTAssertEqual(sorcID, "1a")
+        } else {
             XCTFail()
         }
     }
@@ -539,16 +553,18 @@ class SorcConnectionManagerTests: XCTestCase {
         connectionManager.centralManager_(centralManager, didDisconnectPeripheral: peripheral, error: nil)
 
         // Then
-        if case let .sorcDisconnected(disconnectedSorcID) = connectionManager.discoveryChange.value.action {
-            XCTAssertEqual(disconnectedSorcID, "1a")
+        XCTAssert(!connectionManager.discoveryChange.value.state.contains("1a"))
+        if case let .sorcDisconnected(sorcID) = connectionManager.discoveryChange.value.action {
+            XCTAssertEqual(sorcID, "1a")
         } else {
             XCTFail()
         }
+
         if case .disconnected = connectionManager.connectionChange.value.state {} else {
             XCTFail()
         }
-        if case let .disconnected(disconnectedSorcID) = connectionManager.connectionChange.value.action {
-            XCTAssertEqual(disconnectedSorcID, "1a")
+        if case let .disconnected(sorcID) = connectionManager.connectionChange.value.action {
+            XCTAssertEqual(sorcID, "1a")
         } else {
             XCTFail()
         }
@@ -568,6 +584,7 @@ class SorcConnectionManagerTests: XCTestCase {
         connectionManager.centralManager_(centralManager, didDisconnectPeripheral: peripheral, error: nil)
 
         // Then
+        XCTAssert(connectionManager.discoveryChange.value.state.contains("1a"))
         if case .sorcDisconnected = connectionManager.discoveryChange.value.action {
             XCTFail()
         }

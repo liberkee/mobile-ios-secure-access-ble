@@ -331,7 +331,7 @@ public class BLEManager: NSObject, BLEManagerType {
             if case .disconnected = connectionChange.value.state { return }
             if isBluetoothEnabled.value {
                 currentConnectionState = .notConnected
-                // TODO PLAM-951: Set proper action
+                // TODO: PLAM-951: Set proper action
                 connectionChange.onNext(ConnectionChange(state: .disconnected, action: .disconnect))
             } else {
             }

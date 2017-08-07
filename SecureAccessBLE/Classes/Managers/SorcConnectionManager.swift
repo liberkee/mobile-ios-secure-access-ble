@@ -21,6 +21,7 @@ extension SorcConnectionManager {
             case initial
             case sorcDiscovered(SorcID)
             case sorcsLost(Set<SorcID>)
+            case disconnectSorc(SorcID)
             case sorcDisconnected(SorcID)
             case sorcsReset
         }
@@ -211,6 +212,10 @@ class SorcConnectionManager: NSObject, DataTransfer {
         case let .connecting(sorcID), let .connected(sorcID):
             if let peripheral = peripheralMatchingSorcID(sorcID) {
                 centralManager.cancelPeripheralConnection(peripheral)
+            }
+            if let sorc = sorcMatchingSorcID(sorcID) {
+                discoveredSorcs.remove(sorc)
+                updateDiscoveryChange(action: .disconnectSorc(sorcID))
             }
             writeCharacteristic = nil
             notifyCharacteristic = nil
