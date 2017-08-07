@@ -12,37 +12,35 @@ import CoreBluetooth
 @testable import SecureAccessBLE
 
 class BLEManagerTests: XCTestCase {
-    /// blescanner instance
-    let bleScanner = BLEScanner()
-    /// ble communicator instance
+
+    let connectionManager = SorcConnectionManager()
     var bleCommunicator: SIDCommunicator!
-    /// ble manager instance
     let bleManager = BLEManager(crypto: false)
 
     override func setUp() {
         super.setUp()
-        bleCommunicator = SIDCommunicator(transporter: bleScanner)
+        bleCommunicator = SIDCommunicator(transporter: connectionManager)
     }
 
     /**
-     To test changing connection state in scanner and communicator, and corresposing changed connetion states for BLE-manager
+     To test changing connection state in connectionManager and communicator, and corresposing changed connetion states for BLE-manager
      */
     /*
      func testChangingConnectionState() {
 
      let sorc = SID(sidID: "", peripheral: nil, discoveryDate: Date(), isConnected: true, rssi: 0)
 
-     /// scanner update state and reports connection state
-     bleScanner.centralManagerDidUpdateState(bleScanner.centralManager as! CBCentralManager)
+     /// connectionManager update state and reports connection state
+     connectionManager.centralManagerDidUpdateState(connectionManager.centralManager as! CBCentralManager)
 
-     /// blemanager is not connected, because the scanner not connected
+     /// blemanager is not connected, because the connectionManager not connected
      XCTAssertFalse(isBLEManagerConnected(), "BLE manager has wrong connection state")
 
      bleCommunicator.delegate = bleManager
      /// change transfer connection status to connected
-     bleCommunicator.transferDidChangedConnectionState(bleScanner, state: .connected(sorc: sorc))
+     bleCommunicator.transferDidChangedConnectionState(connectionManager, state: .connected(sorc: sorc))
 
-     /// ble manager is not connected because crypto was Not established even with connected scanner
+     /// ble manager is not connected because crypto was Not established even with connected connectionManager
      XCTAssertFalse(isBLEManagerConnected(), "BLE manager has wrong connection state")
 
      /// Mock session key for crypto
@@ -51,7 +49,7 @@ class BLEManagerTests: XCTestCase {
      /// To change crypto status in blemanager
      bleManager.challengerFinishedWithSessionKey(mockSessionKey)
 
-     /// The blemanager must be now connected because scanner connected and crypto established
+     /// The blemanager must be now connected because connectionManager connected and crypto established
      XCTAssertTrue(isBLEManagerConnected(), "BLE manager has wrong connection state")
      }
      */

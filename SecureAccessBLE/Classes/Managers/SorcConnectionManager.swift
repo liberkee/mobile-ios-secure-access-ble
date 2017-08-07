@@ -1,15 +1,14 @@
 //
-//  BLEScanner.swift
-//  BLE
+//  SorcConnectionManager.swift
+//  SecureAccessBLE
 //
-//  Created by Ke Song on 21.06.16.
 //  Copyright © 2016 Huf Secure Mobile. All rights reserved.
 //
 
 import CoreBluetooth
 import CommonUtils
 
-extension BLEScanner {
+extension SorcConnectionManager {
 
     struct DiscoveryChange {
 
@@ -84,9 +83,8 @@ extension CBManagerState {
     }
 }
 
-/// BLEScanner implaments the secure BLE session between mobile devices and SID. The communication manager can only send / receive
-/// messages over a secure BLE connection, i.e. a valid session context must exist.
-class BLEScanner: NSObject, DataTransfer {
+/// Manages the discovery and connection of SORCs
+class SorcConnectionManager: NSObject, DataTransfer {
 
     typealias CreateTimer = (@escaping () -> Void) -> Timer
 
@@ -170,7 +168,7 @@ class BLEScanner: NSObject, DataTransfer {
     /// If a connection to an undiscovered SORC is tried it fails silently.
     func connectToSorc(_ sorcID: SorcID) {
         guard let peripheral = peripheralMatchingSorcID(sorcID) else {
-            print("BLEScanner: Try to connect to SORC that is not discovered.")
+            print("SorcConnectionManager: Try to connect to SORC that is not discovered.")
             return
         }
         switch connectionState {
@@ -277,10 +275,10 @@ class BLEScanner: NSObject, DataTransfer {
 
 // MARK: - CBCentralManagerDelegate_
 
-extension BLEScanner {
+extension SorcConnectionManager {
 
     func centralManagerDidUpdateState_(_ central: CBCentralManagerType) {
-        consoleLog("BLEScanner Central updated state: \(central.state)")
+        consoleLog("SorcConnectionManager Central updated state: \(central.state)")
 
         isPoweredOn.onNext(central.state == .poweredOn)
         if central.state == .poweredOn {
@@ -331,7 +329,7 @@ extension BLEScanner {
 
 // MARK: - CBPeripheralDelegate_
 
-extension BLEScanner {
+extension SorcConnectionManager {
 
     func peripheral_(_ peripheral: CBPeripheralType, didDiscoverServices error: Error?) {
 
@@ -387,7 +385,7 @@ extension BLEScanner {
 
 // MARK: - CBCentralManagerDelegate
 
-extension BLEScanner: CBCentralManagerDelegate {
+extension SorcConnectionManager: CBCentralManagerDelegate {
 
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         centralManagerDidUpdateState_(central as CBCentralManagerType)
@@ -412,7 +410,7 @@ extension BLEScanner: CBCentralManagerDelegate {
 
 // MARK: - CBPeripheralDelegate
 
-extension BLEScanner: CBPeripheralDelegate {
+extension SorcConnectionManager: CBPeripheralDelegate {
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         peripheral_(peripheral as CBPeripheralType, didDiscoverServices: error)

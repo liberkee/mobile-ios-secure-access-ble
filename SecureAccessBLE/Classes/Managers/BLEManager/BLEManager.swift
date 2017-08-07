@@ -133,14 +133,14 @@ public class BLEManager: NSObject, BLEManagerType {
 
     fileprivate var lastHeartbeatResponseDate = Date()
 
-    fileprivate let scanner = BLEScanner()
+    fileprivate let connectionManager = SorcConnectionManager()
 
     private let disposeBag = DisposeBag()
 
     /**
      A object that must confirm to the DataTransfer protocol
 
-     Normally the transporter is a BLEScanner object
+     Normally the transporter is a SorcConnectionManager object
      */
     private var transporter: DataTransfer
 
@@ -166,12 +166,12 @@ public class BLEManager: NSObject, BLEManagerType {
         } else {
             currentEncryptionState = .shouldEncrypt
         }
-        transporter = scanner
+        transporter = connectionManager
         communicator = SIDCommunicator(transporter: transporter)
         super.init()
         communicator.delegate = self
 
-        scanner.isPoweredOn.subscribeNext { [weak self] isPoweredOn in
+        connectionManager.isPoweredOn.subscribeNext { [weak self] isPoweredOn in
             // TODO: PLAM-963 is it correct to always send it even if not connected?
             //            if !poweredOn.value {
             //                connectionChange.onNext(ConnectionChange(
@@ -184,7 +184,7 @@ public class BLEManager: NSObject, BLEManagerType {
         }
         .disposed(by: disposeBag)
 
-        scanner.discoveryChange.subscribeNext { [weak self] change in
+        connectionManager.discoveryChange.subscribeNext { [weak self] change in
             guard let strongSelf = self else { return }
             switch change.action {
             case .initial: break
@@ -199,7 +199,7 @@ public class BLEManager: NSObject, BLEManagerType {
         }
         .disposed(by: disposeBag)
 
-        scanner.connectionChange.subscribeNext { [weak self] change in
+        connectionManager.connectionChange.subscribeNext { [weak self] change in
             self?.handleTransferConnectionStateChange(state: change.state)
         }
         .disposed(by: disposeBag)
@@ -214,7 +214,7 @@ public class BLEManager: NSObject, BLEManagerType {
 
      - returns: BLE-Manager object
      */
-    convenience init(transporter: BLEScanner, crypto: Bool = false, heartbeatInterval: Int, heartbeatTimeout: Int) {
+    convenience init(transporter: SorcConnectionManager, crypto: Bool = false, heartbeatInterval: Int, heartbeatTimeout: Int) {
         self.init(crypto: crypto)
         self.transporter = transporter
         self.heartbeatInterval = Double(heartbeatInterval)
@@ -243,7 +243,7 @@ public class BLEManager: NSObject, BLEManagerType {
     // MARK: Discovery
 
     public func hasSorcId(_ sorcId: SorcID) -> Bool {
-        return scanner.discoveryChange.value.state.first { $0.lowercased() == sorcId.lowercased() } != nil
+        return connectionManager.discoveryChange.value.state.first { $0.lowercased() == sorcId.lowercased() } != nil
     }
 
     public var sorcDiscovered = PublishSubject<SorcID>()
@@ -268,7 +268,7 @@ public class BLEManager: NSObject, BLEManagerType {
         sidAccessKey = leaseToken.sorcAccessKey
         blobData = leaseTokenBlob.data
         blobCounter = leaseTokenBlob.messageCounter
-        scanner.connectToSorc(sidId)
+        connectionManager.connectToSorc(sidId)
     }
 
     public func disconnect() {
@@ -282,7 +282,7 @@ public class BLEManager: NSObject, BLEManagerType {
             state: .disconnected,
             action: action)
         )
-        scanner.disconnect()
+        connectionManager.disconnect()
     }
 
     private func reset() {
@@ -321,7 +321,7 @@ public class BLEManager: NSObject, BLEManagerType {
 
     // MARK: - Private methods
 
-    private func handleTransferConnectionStateChange(state: BLEScanner.ConnectionChange.State) {
+    private func handleTransferConnectionStateChange(state: SorcConnectionManager.ConnectionChange.State) {
         switch state {
         case .connecting: break
         case .connected:

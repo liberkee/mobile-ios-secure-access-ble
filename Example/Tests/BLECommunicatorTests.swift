@@ -11,7 +11,7 @@ import XCTest
 
 class BLECommunicatorTests: XCTestCase {
 
-    let transporter = BLEScanner()
+    let transporter = SorcConnectionManager()
     var communicator: SIDCommunicator!
 
     override func setUp() {

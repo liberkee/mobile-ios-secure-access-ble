@@ -42,7 +42,7 @@ class SIDCommunicator: NSObject {
     /**
      A object that must confirm to the DataTransfer protocol
 
-     Normally the transporter is a BLEScanner object
+     Normally the transporter is a SorcConnectionManager object
      */
     private var transporter: DataTransfer
 
