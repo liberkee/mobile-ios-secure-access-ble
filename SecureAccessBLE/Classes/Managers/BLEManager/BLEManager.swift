@@ -193,7 +193,7 @@ public class BLEManager: NSObject, BLEManagerType {
             case let .sorcsLost(lostSorcIds):
                 strongSelf.sorcsLost.onNext(Array(lostSorcIds))
             default:
-                // TODO: PLAM 963 handle further cases or replace both subjects with discoveryChange
+                // TODO: PLAM 960 handle further cases or replace both subjects with discoveryChange
                 break
             }
         }
@@ -331,7 +331,7 @@ public class BLEManager: NSObject, BLEManagerType {
             if case .disconnected = connectionChange.value.state { return }
             if isBluetoothEnabled.value {
                 currentConnectionState = .notConnected
-                // PLAM-951: Set proper action
+                // TODO PLAM-951: Set proper action
                 connectionChange.onNext(ConnectionChange(state: .disconnected, action: .disconnect))
             } else {
             }
@@ -368,7 +368,7 @@ public class BLEManager: NSObject, BLEManagerType {
      */
     func startSendingHeartbeat() {
         let message = SIDMessage(id: SIDMessageID.heartBeatRequest, payload: MTUSize())
-        // TODO: handle error
+        // TODO: PLAM-1375 handle error
         _ = self.sendMessage(message)
     }
 

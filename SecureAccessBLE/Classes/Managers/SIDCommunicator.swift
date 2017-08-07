@@ -60,7 +60,7 @@ class SIDCommunicator: NSObject {
 
         transporter.sentData.subscribeNext { [weak self] error in
             if let error = error {
-                // TODO: handle error
+                // TODO: PLAM-1374 handle error
             } else {
                 self?.handleSentData()
             }
@@ -72,7 +72,7 @@ class SIDCommunicator: NSObject {
             case let .success(data):
                 self?.handleReceivedData(data)
             case let .error(error):
-                // TODO: handle error
+                // TODO: PLAM-1374 handle error
                 break
             }
         }
