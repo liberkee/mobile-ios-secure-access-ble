@@ -172,14 +172,6 @@ public class BLEManager: NSObject, BLEManagerType {
         communicator.delegate = self
 
         connectionManager.isPoweredOn.subscribeNext { [weak self] isPoweredOn in
-            // TODO: PLAM-963 is it correct to always send it even if not connected?
-            //            if !poweredOn.value {
-            //                connectionChange.onNext(ConnectionChange(
-            //                    state: .disconnected,
-            //                    action: .connectionLost(error: .bluetoothOff)
-            //                ))
-            //            }
-
             self?.isBluetoothEnabled.onNext(isPoweredOn)
         }
         .disposed(by: disposeBag)
