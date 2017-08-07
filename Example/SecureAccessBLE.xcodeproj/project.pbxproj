@@ -62,6 +62,7 @@
 		E59E016A1F387BE5006F114D /* DataTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTransfer.swift; sourceTree = "<group>"; };
 		E59E016B1F387BE5006F114D /* SIDCommunicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SIDCommunicator.swift; sourceTree = "<group>"; };
 		E59E016C1F387BE5006F114D /* SorcConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SorcConnectionManager.swift; sourceTree = "<group>"; };
+		E59E016D1F38B295006F114D /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		E5E308D21F324E6800C1537F /* CBWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBWrapper.swift; sourceTree = "<group>"; };
 		E5FBD9B81F18DA4A0091F0B0 /* SorcConnectionManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SorcConnectionManagerTests.swift; sourceTree = "<group>"; };
 		EE99F13EBAEE0CDC40DBE8F5 /* Pods-SecureAccessBLE_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -127,6 +128,7 @@
 			children = (
 				46B760771DA2637D003ADDB1 /* BLEHelper.swift */,
 				E565092C1F3333C1002771F8 /* SystemClock.swift */,
+				E59E016D1F38B295006F114D /* Result.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";

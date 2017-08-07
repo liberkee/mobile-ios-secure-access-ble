@@ -688,7 +688,7 @@ class SorcConnectionManagerTests: XCTestCase {
         }
     }
 
-    func test_peripheralDidUpdateValue_ifNotifyCharacteristic_callsTransferDidReceivedData() {
+    func test_peripheralDidUpdateValue_ifNotifyCharacteristicAndErrorIsNil_receivedDataSuccess() {
 
         // Given
         let centralManager = CBCentralManagerMock()
@@ -698,8 +698,10 @@ class SorcConnectionManagerTests: XCTestCase {
         notifyCharacteristic.uuid = CBUUID(string: notifyCharacteristicId)
 
         var receivedData: Data?
-        _ = connectionManager.receivedData.subscribeNext { data in
-            receivedData = data
+        _ = connectionManager.receivedData.subscribeNext { result in
+            if case let .success(data) = result {
+                receivedData = data
+            }
         }
 
         // When
@@ -709,22 +711,71 @@ class SorcConnectionManagerTests: XCTestCase {
         XCTAssertEqual(receivedData, Data(base64Encoded: "data"))
     }
 
-    func test_peripheralDidWriteValue_callsTransferDidSendData() {
+    func test_peripheralDidUpdateValue_ifNotifyCharacteristicAndErrorExists_receivedDataError() {
 
         // Given
         let centralManager = CBCentralManagerMock()
         let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let notifyCharacteristic = CBCharacteristicMock()
+        notifyCharacteristic.value = Data(base64Encoded: "data")
+        notifyCharacteristic.uuid = CBUUID(string: notifyCharacteristicId)
 
-        var sentDataCalled = false
-        _ = connectionManager.sentData.subscribeNext {
-            sentDataCalled = true
+        var receivedDataError: Error?
+        _ = connectionManager.receivedData.subscribeNext { result in
+            if case let .error(error) = result {
+                receivedDataError = error
+            }
+        }
+
+        let error = NSError(domain: "", code: 0, userInfo: nil)
+
+        // When
+        connectionManager.peripheral_(CBPeripheralMock(), didUpdateValueFor: notifyCharacteristic, error: error)
+
+        // Then
+        XCTAssertEqual(receivedDataError! as NSError, error)
+    }
+
+    func test_peripheralDidWriteValue_ifWriteCharacteristicAndErrorIsNil_sentDataErrorIsNil() {
+
+        // Given
+        let centralManager = CBCentralManagerMock()
+        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let writeCharacteristic = CBCharacteristicMock()
+        writeCharacteristic.uuid = CBUUID(string: writeCharacteristicId)
+
+        var sentDataError: Error?
+        _ = connectionManager.sentData.subscribeNext { error in
+            sentDataError = error
         }
 
         // When
-        connectionManager.peripheral_(CBPeripheralMock(), didWriteValueFor: CBCharacteristicMock(), error: nil)
+        connectionManager.peripheral_(CBPeripheralMock(), didWriteValueFor: writeCharacteristic, error: nil)
 
         // Then
-        XCTAssert(sentDataCalled)
+        XCTAssertNil(sentDataError)
+    }
+
+    func test_peripheralDidWriteValue_ifWriteCharacteristicAndErrorExists_sentDataErrorExists() {
+
+        // Given
+        let centralManager = CBCentralManagerMock()
+        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let writeCharacteristic = CBCharacteristicMock()
+        writeCharacteristic.uuid = CBUUID(string: writeCharacteristicId)
+
+        var sentDataError: Error?
+        _ = connectionManager.sentData.subscribeNext { error in
+            sentDataError = error
+        }
+
+        let error = NSError(domain: "", code: 0, userInfo: nil)
+
+        // When
+        connectionManager.peripheral_(CBPeripheralMock(), didWriteValueFor: writeCharacteristic, error: error)
+
+        // Then
+        XCTAssertEqual(sentDataError! as NSError, error)
     }
 
     func test_filterTimerFired_ifDiscoveredSorcIsOutdatedAndNotConnected_removesIt() {

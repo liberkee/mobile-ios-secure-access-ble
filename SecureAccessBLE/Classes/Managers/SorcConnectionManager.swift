@@ -92,8 +92,8 @@ class SorcConnectionManager: NSObject, DataTransfer {
     let discoveryChange = BehaviorSubject(value: DiscoveryChange(state: Set<SorcID>(), action: .initial))
     let connectionChange = BehaviorSubject(value: ConnectionChange(state: .disconnected, action: .initial))
 
-    let sentData = PublishSubject<()>()
-    let receivedData = PublishSubject<Data>()
+    let sentData = PublishSubject<Error?>()
+    let receivedData = PublishSubject<Result<Data>>()
 
     fileprivate let deviceId = "EF82084D-BFAD-4ABE-90EE-2552C20C5765"
     fileprivate let serviceId = "d1cf0603-b501-4569-a4b9-e47ad3f628a5"
@@ -367,16 +367,20 @@ extension SorcConnectionManager {
         }
     }
 
-    func peripheral_(_: CBPeripheralType, didUpdateValueFor characteristic: CBCharacteristicType, error _: Error?) {
-        // TODO: handle error
-        if characteristic.uuid == CBUUID(string: notifyCharacteristicId), let data = characteristic.value {
-            receivedData.onNext(data)
+    func peripheral_(_: CBPeripheralType, didUpdateValueFor characteristic: CBCharacteristicType, error: Error?) {
+        guard characteristic.uuid == CBUUID(string: notifyCharacteristicId) else { return }
+        if let error = error {
+            receivedData.onNext(.error(error))
+        } else if let data = characteristic.value {
+            receivedData.onNext(.success(data))
+        } else {
+            print("SorcConnectionManager: No error but characteristic value was nil which is unexpected.")
         }
     }
 
-    func peripheral_(_: CBPeripheralType, didWriteValueFor _: CBCharacteristicType, error _: Error?) {
-        // TODO: handle error
-        sentData.onNext()
+    func peripheral_(_: CBPeripheralType, didWriteValueFor characteristic: CBCharacteristicType, error: Error?) {
+        guard characteristic.uuid == CBUUID(string: writeCharacteristicId) else { return }
+        sentData.onNext(error)
     }
 }
 

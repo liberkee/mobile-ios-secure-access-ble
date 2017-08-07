@@ -11,8 +11,8 @@ import CommonUtils
 /// A protocol for sending and receiving data
 protocol DataTransfer {
 
-    var sentData: PublishSubject<()> { get }
-    var receivedData: PublishSubject<Data> { get }
+    var sentData: PublishSubject<Error?> { get }
+    var receivedData: PublishSubject<Result<Data>> { get }
 
     func sendData(_ data: Data)
 }

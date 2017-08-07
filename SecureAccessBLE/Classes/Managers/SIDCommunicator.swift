@@ -58,13 +58,23 @@ class SIDCommunicator: NSObject {
         self.transporter = transporter
         super.init()
 
-        transporter.sentData.subscribeNext { [weak self] in
-            self?.handleSentData()
+        transporter.sentData.subscribeNext { [weak self] error in
+            if let error = error {
+                // TODO: handle error
+            } else {
+                self?.handleSentData()
+            }
         }
         .disposed(by: disposeBag)
 
-        transporter.receivedData.subscribeNext { [weak self] data in
-            self?.handleReceivedData(data)
+        transporter.receivedData.subscribeNext { [weak self] result in
+            switch result {
+            case let .success(data):
+                self?.handleReceivedData(data)
+            case let .error(error):
+                // TODO: handle error
+                break
+            }
         }
         .disposed(by: disposeBag)
     }
