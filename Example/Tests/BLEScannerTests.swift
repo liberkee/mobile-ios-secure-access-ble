@@ -150,7 +150,7 @@ class BLEScannerTests: XCTestCase {
         scanner.connectToSorc("1a")
 
         // Then
-        if case .connecting = scanner.connectionState.value {
+        if case .connecting = scanner.connectionChange.value.state {
             XCTFail()
         }
         XCTAssertNil(centralManager.connectCalledWithPeripheral)
@@ -168,7 +168,12 @@ class BLEScannerTests: XCTestCase {
         scanner.connectToSorc("1a")
 
         // Then
-        if case let .connecting(connectingSorcID) = scanner.connectionState.value {
+        if case let .connecting(connectingSorcID) = scanner.connectionChange.value.state {
+            XCTAssertEqual(connectingSorcID, "1a")
+        } else {
+            XCTFail()
+        }
+        if case let .connect(connectingSorcID) = scanner.connectionChange.value.action {
             XCTAssertEqual(connectingSorcID, "1a")
         } else {
             XCTFail()
@@ -188,7 +193,12 @@ class BLEScannerTests: XCTestCase {
         scanner.connectToSorc("1a")
 
         // Then
-        if case let .connecting(connectingSorcID) = scanner.connectionState.value {
+        if case let .connecting(connectingSorcID) = scanner.connectionChange.value.state {
+            XCTAssertEqual(connectingSorcID, "1a")
+        } else {
+            XCTFail()
+        }
+        if case let .connect(connectingSorcID) = scanner.connectionChange.value.action {
             XCTAssertEqual(connectingSorcID, "1a")
         } else {
             XCTFail()
@@ -213,7 +223,12 @@ class BLEScannerTests: XCTestCase {
         scanner.connectToSorc(sorcID2)
 
         // Then
-        if case let .connecting(connectingSorcID) = scanner.connectionState.value {
+        if case let .connecting(connectingSorcID) = scanner.connectionChange.value.state {
+            XCTAssertEqual(connectingSorcID, sorcID2)
+        } else {
+            XCTFail()
+        }
+        if case let .connect(connectingSorcID) = scanner.connectionChange.value.action {
             XCTAssertEqual(connectingSorcID, sorcID2)
         } else {
             XCTFail()
@@ -233,7 +248,12 @@ class BLEScannerTests: XCTestCase {
         scanner.connectToSorc("1a")
 
         // Then
-        if case let .connected(connectedSorcID) = scanner.connectionState.value {
+        if case let .connected(connectedSorcID) = scanner.connectionChange.value.state {
+            XCTAssertEqual(connectedSorcID, "1a")
+        } else {
+            XCTFail()
+        }
+        if case let .connectionEstablished(connectedSorcID) = scanner.connectionChange.value.action {
             XCTAssertEqual(connectedSorcID, "1a")
         } else {
             XCTFail()
@@ -257,7 +277,12 @@ class BLEScannerTests: XCTestCase {
 
         // Then
         XCTAssertEqual(centralManager.cancelConnectionCalledWithPeripheral?.identifier, peripheral1.identifier)
-        if case let .connecting(connectingSorcID) = scanner.connectionState.value {
+        if case let .connecting(connectingSorcID) = scanner.connectionChange.value.state {
+            XCTAssertEqual(connectingSorcID, "1b")
+        } else {
+            XCTFail()
+        }
+        if case let .connect(connectingSorcID) = scanner.connectionChange.value.action {
             XCTAssertEqual(connectingSorcID, "1b")
         } else {
             XCTFail()
@@ -278,7 +303,10 @@ class BLEScannerTests: XCTestCase {
 
         // Then
         XCTAssertEqual(centralManager.cancelConnectionCalledWithPeripheral?.identifier, peripheral.identifier)
-        if case .disconnected = scanner.connectionState.value {} else {
+        if case .disconnected = scanner.connectionChange.value.state {} else {
+            XCTFail()
+        }
+        if case .disconnect = scanner.connectionChange.value.action {} else {
             XCTFail()
         }
     }
@@ -296,7 +324,10 @@ class BLEScannerTests: XCTestCase {
 
         // Then
         XCTAssertEqual(centralManager.cancelConnectionCalledWithPeripheral?.identifier, peripheral.identifier)
-        if case .disconnected = scanner.connectionState.value {} else {
+        if case .disconnected = scanner.connectionChange.value.state {} else {
+            XCTFail()
+        }
+        if case .disconnect = scanner.connectionChange.value.action {} else {
             XCTFail()
         }
     }
@@ -378,18 +409,13 @@ class BLEScannerTests: XCTestCase {
         let peripheral = CBPeripheralMock()
         prepareDiscoveredSorc("1a", peripheral: peripheral, scanner: scanner, centralManager: centralManager)
 
-        var discoveryChange: DiscoveryChange?
-        _ = scanner.discoveryChange.subscribeNext { change in
-            discoveryChange = change
-        }
-
         // When
         centralManager.state = .poweredOff
         scanner.centralManagerDidUpdateState_(centralManager)
 
         // Then
-        XCTAssert(discoveryChange!.state.isEmpty)
-        if case .sorcsReset = discoveryChange!.action {} else {
+        XCTAssert(scanner.discoveryChange.value.state.isEmpty)
+        if case .sorcsReset = scanner.discoveryChange.value.action {} else {
             XCTFail()
         }
     }
@@ -407,17 +433,12 @@ class BLEScannerTests: XCTestCase {
             CBAdvertisementDataManufacturerDataKey: sorcID.dataFromHexadecimalString()!,
         ]
 
-        var discoveryChange: DiscoveryChange?
-        _ = scanner.discoveryChange.subscribeNext { change in
-            discoveryChange = change
-        }
-
         // When
         scanner.centralManager_(centralManager, didDiscover: peripheral, advertisementData: advertisementData, rssi: 0)
 
         // Then
-        XCTAssert(discoveryChange!.state.contains("1a"))
-        if case let .sorcDiscovered(discoveredSorcID) = discoveryChange!.action {
+        XCTAssert(scanner.discoveryChange.value.state.contains("1a"))
+        if case let .sorcDiscovered(discoveredSorcID) = scanner.discoveryChange.value.action {
             XCTAssertEqual(discoveredSorcID, "1a")
         } else {
             XCTFail()
@@ -433,16 +454,11 @@ class BLEScannerTests: XCTestCase {
         let peripheral = CBPeripheralMock()
         let advertisementData = [String: Any]()
 
-        var discoveryChange: DiscoveryChange?
-        _ = scanner.discoveryChange.subscribeNext { change in
-            discoveryChange = change
-        }
-
         // When
         scanner.centralManager_(centralManager, didDiscover: peripheral, advertisementData: advertisementData, rssi: 0)
 
         // Then
-        if case .initial = discoveryChange!.action {} else {
+        if case .initial = scanner.discoveryChange.value.action {} else {
             XCTFail()
         }
     }
@@ -493,7 +509,12 @@ class BLEScannerTests: XCTestCase {
         scanner.centralManager_(centralManager, didFailToConnect: peripheral, error: nil)
 
         // Then
-        if case .disconnected = scanner.connectionState.value {} else {
+        if case .disconnected = scanner.connectionChange.value.state {} else {
+            XCTFail()
+        }
+        if case let .connectingFailed(sorcID) = scanner.connectionChange.value.action {
+            XCTAssertEqual("1a", sorcID)
+        } else {
             XCTFail()
         }
     }
@@ -512,7 +533,7 @@ class BLEScannerTests: XCTestCase {
         scanner.centralManager_(centralManager, didFailToConnect: peripheral, error: nil)
 
         // Then
-        if case .connected = scanner.connectionState.value {} else {
+        if case .connected = scanner.connectionChange.value.state {} else {
             XCTFail()
         }
     }
@@ -527,21 +548,21 @@ class BLEScannerTests: XCTestCase {
 
         prepareConnectedSorc("1a", peripheral: peripheral, scanner: scanner, centralManager: centralManager)
 
-        var discoveryChange: DiscoveryChange?
-        _ = scanner.discoveryChange.subscribeNext { change in
-            discoveryChange = change
-        }
-
         // When
         scanner.centralManager_(centralManager, didDisconnectPeripheral: peripheral, error: nil)
 
         // Then
-        if case let .sorcDisconnected(disconnectedSorcID) = discoveryChange!.action {
+        if case let .sorcDisconnected(disconnectedSorcID) = scanner.discoveryChange.value.action {
             XCTAssertEqual(disconnectedSorcID, "1a")
         } else {
             XCTFail()
         }
-        if case .disconnected = scanner.connectionState.value {} else {
+        if case .disconnected = scanner.connectionChange.value.state {} else {
+            XCTFail()
+        }
+        if case let .disconnected(disconnectedSorcID) = scanner.connectionChange.value.action {
+            XCTAssertEqual(disconnectedSorcID, "1a")
+        } else {
             XCTFail()
         }
     }
@@ -556,19 +577,14 @@ class BLEScannerTests: XCTestCase {
 
         prepareConnectingSorc("1a", peripheral: peripheral, scanner: scanner, centralManager: centralManager)
 
-        var discoveryChange: DiscoveryChange?
-        _ = scanner.discoveryChange.subscribeNext { change in
-            discoveryChange = change
-        }
-
         // When
         scanner.centralManager_(centralManager, didDisconnectPeripheral: peripheral, error: nil)
 
         // Then
-        if case .sorcDisconnected = discoveryChange!.action {
+        if case .sorcDisconnected = scanner.discoveryChange.value.action {
             XCTFail()
         }
-        if case .connecting = scanner.connectionState.value {} else {
+        if case .connecting = scanner.connectionChange.value.state {} else {
             XCTFail()
         }
     }
@@ -596,7 +612,7 @@ class BLEScannerTests: XCTestCase {
         }
     }
 
-    func test_peripheralDidDiscoverServices_ifItsConnectingAndPeripheralIsDiscoveredAndErrorExists_disconnects() {
+    func test_peripheralDidDiscoverServices_ifItsConnectingAndPeripheralIsDiscoveredAndErrorExists_connectingFailed() {
 
         // Given
         let centralManager = CBCentralManagerMock()
@@ -611,7 +627,12 @@ class BLEScannerTests: XCTestCase {
         scanner.peripheral_(peripheral, didDiscoverServices: NSError(domain: "", code: 0, userInfo: nil))
 
         // Then
-        if case .disconnected = scanner.connectionState.value {} else {
+        if case .disconnected = scanner.connectionChange.value.state {} else {
+            XCTFail()
+        }
+        if case let .connectingFailed(disconnectedSorcID) = scanner.connectionChange.value.action {
+            XCTAssertEqual(disconnectedSorcID, "1a")
+        } else {
             XCTFail()
         }
     }
@@ -637,7 +658,12 @@ class BLEScannerTests: XCTestCase {
         scanner.peripheral_(peripheral, didDiscoverCharacteristicsFor: service, error: nil)
 
         // Then
-        if case let .connected(sorcID) = scanner.connectionState.value {
+        if case let .connected(sorcID) = scanner.connectionChange.value.state {
+            XCTAssertEqual(sorcID, "1a")
+        } else {
+            XCTFail()
+        }
+        if case let .connectionEstablished(sorcID) = scanner.connectionChange.value.action {
             XCTAssertEqual(sorcID, "1a")
         } else {
             XCTFail()
@@ -650,7 +676,7 @@ class BLEScannerTests: XCTestCase {
         }
     }
 
-    func test_peripheralDidDiscoverCharacteristics_ifItsConnectingAndPeripheralIsDiscoveredAndErrorExists_disconnects() {
+    func test_peripheralDidDiscoverCharacteristics_ifItsConnectingAndPeripheralIsDiscoveredAndErrorExists_connectingFailed() {
 
         // Given
         let centralManager = CBCentralManagerMock()
@@ -665,7 +691,12 @@ class BLEScannerTests: XCTestCase {
         scanner.peripheral_(peripheral, didDiscoverCharacteristicsFor: service, error: NSError(domain: "", code: 0, userInfo: nil))
 
         // Then
-        if case .disconnected = scanner.connectionState.value {} else {
+        if case .disconnected = scanner.connectionChange.value.state {} else {
+            XCTFail()
+        }
+        if case let .connectingFailed(sorcID) = scanner.connectionChange.value.action {
+            XCTAssertEqual(sorcID, "1a")
+        } else {
             XCTFail()
         }
     }

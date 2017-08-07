@@ -199,8 +199,8 @@ public class BLEManager: NSObject, BLEManagerType {
         }
         .disposed(by: disposeBag)
 
-        scanner.connectionState.subscribeNext { [weak self] state in
-            self?.handleTransferConnectionStateChange(state: state)
+        scanner.connectionChange.subscribeNext { [weak self] change in
+            self?.handleTransferConnectionStateChange(state: change.state)
         }
         .disposed(by: disposeBag)
     }
@@ -321,7 +321,7 @@ public class BLEManager: NSObject, BLEManagerType {
 
     // MARK: - Private methods
 
-    private func handleTransferConnectionStateChange(state: TransferConnectionState) {
+    private func handleTransferConnectionStateChange(state: BLEScanner.ConnectionChange.State) {
         switch state {
         case .connecting: break
         case .connected:
