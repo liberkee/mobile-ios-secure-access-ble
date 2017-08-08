@@ -12,10 +12,14 @@ extension SorcConnectionManager {
 
     typealias CreateTimer = (@escaping () -> Void) -> Timer
 
-    struct DiscoveryChange {
+    struct DiscoveryChange: ChangeType {
 
         let state: Set<SorcID>
         let action: Action
+
+        static func initialWithState(_ state: Set<SorcID>) -> DiscoveryChange {
+            return DiscoveryChange(state: state, action: .initial)
+        }
 
         enum Action {
             case initial
@@ -27,10 +31,14 @@ extension SorcConnectionManager {
         }
     }
 
-    struct ConnectionChange {
+    struct ConnectionChange: ChangeType {
 
         let state: State
         let action: Action
+
+        static func initialWithState(_ state: State) -> ConnectionChange {
+            return ConnectionChange(state: state, action: .initial)
+        }
 
         enum State {
             case disconnected
@@ -45,6 +53,43 @@ extension SorcConnectionManager {
             case connectingFailed(sorcID: SorcID)
             case disconnect
             case disconnected(sorcID: SorcID)
+        }
+    }
+}
+
+extension SorcConnectionManager.ConnectionChange: Equatable {
+
+    static func ==(lhs: SorcConnectionManager.ConnectionChange, rhs: SorcConnectionManager.ConnectionChange) -> Bool {
+        return lhs.state == rhs.state
+            && lhs.action == rhs.action
+    }
+}
+
+extension SorcConnectionManager.ConnectionChange.State: Equatable {
+
+    static func ==(lhs: SorcConnectionManager.ConnectionChange.State,
+                   rhs: SorcConnectionManager.ConnectionChange.State) -> Bool {
+        switch (lhs, rhs) {
+        case (.disconnected, .disconnected): return true
+        case let (.connecting(lSorcID), .connecting(rSorcID)) where lSorcID == rSorcID: return true
+        case let (.connected(lSorcID), .connected(rSorcID)) where lSorcID == rSorcID: return true
+        default: return false
+        }
+    }
+}
+
+extension SorcConnectionManager.ConnectionChange.Action: Equatable {
+
+    static func ==(lhs: SorcConnectionManager.ConnectionChange.Action,
+                   rhs: SorcConnectionManager.ConnectionChange.Action) -> Bool {
+        switch (lhs, rhs) {
+        case (.initial, .initial): return true
+        case let (.connect(lSorcID), .connect(rSorcID)) where lSorcID == rSorcID: return true
+        case let (.connectionEstablished(lSorcID), .connectionEstablished(rSorcID)) where lSorcID == rSorcID: return true
+        case let (.connectingFailed(lSorcID), .connectingFailed(rSorcID)) where lSorcID == rSorcID: return true
+        case (.disconnect, .disconnect): return true
+        case let (.disconnected(lSorcID), .disconnected(rSorcID)) where lSorcID == rSorcID: return true
+        default: return false
         }
     }
 }
@@ -91,7 +136,7 @@ class SorcConnectionManager: NSObject, DataTransfer {
 
     let isPoweredOn: BehaviorSubject<Bool>
     let discoveryChange = BehaviorSubject(value: DiscoveryChange(state: Set<SorcID>(), action: .initial))
-    let connectionChange = BehaviorSubject(value: ConnectionChange(state: .disconnected, action: .initial))
+    let connectionChange = ChangeSubject<ConnectionChange>(state: .disconnected)
 
     let sentData = PublishSubject<Error?>()
     let receivedData = PublishSubject<Result<Data>>()
@@ -124,7 +169,7 @@ class SorcConnectionManager: NSObject, DataTransfer {
     }
 
     fileprivate var connectionState: ConnectionChange.State {
-        return connectionChange.value.state
+        return connectionChange.state
     }
 
     required init(centralManager: CBCentralManagerType, systemClock: SystemClockType,

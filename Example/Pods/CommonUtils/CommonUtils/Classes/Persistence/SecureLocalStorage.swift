@@ -37,7 +37,7 @@ public class SecureLocalStorage: LocalStorage {
      */
     public func loadObject<T: BaseMappable>(context: MapContext? = nil) -> T? {
         if let json = securePreferences[keychainKey] {
-            return Mapper<T>(context:context).map(JSONString: json)
+            return Mapper<T>(context: context).map(JSONString: json)
         } else {
             return nil
         }
