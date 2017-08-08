@@ -249,7 +249,8 @@ extension SorcConnectionManager {
         }
     }
 
-    func centralManager_(_: CBCentralManagerType, didDiscover peripheral: CBPeripheralType, advertisementData: [String: Any], rssi RSSI: NSNumber) {
+    func centralManager_(_: CBCentralManagerType, didDiscover peripheral: CBPeripheralType,
+                         advertisementData: [String: Any], rssi RSSI: NSNumber) {
         guard let manufacturerData = advertisementData[CBAdvertisementDataManufacturerDataKey] as? Data else {
             return
         }
@@ -277,7 +278,9 @@ extension SorcConnectionManager {
         connectionChange.onNext(.init(state: .disconnected, action: .connectingFailed(sorcID: sorcID)))
     }
 
-    func centralManager_(_: CBCentralManagerType, didDisconnectPeripheral peripheral: CBPeripheralType, error _: Error?) {
+    func centralManager_(_: CBCentralManagerType, didDisconnectPeripheral peripheral: CBPeripheralType,
+                         error _: Error?) {
+
         guard case let .connected(sorcID) = connectionState,
             let sorc = sorcMatchingSorcID(sorcID),
             sorc.peripheral?.identifier == peripheral.identifier else { return }
@@ -307,7 +310,8 @@ extension SorcConnectionManager {
         }
     }
 
-    func peripheral_(_ peripheral: CBPeripheralType, didDiscoverCharacteristicsFor service: CBServiceType, error: Error?) {
+    func peripheral_(_ peripheral: CBPeripheralType, didDiscoverCharacteristicsFor service: CBServiceType,
+                     error: Error?) {
 
         guard case let .connecting(sorcID) = connectionState,
             peripheralMatchingSorcID(sorcID)?.identifier == peripheral.identifier else { return }

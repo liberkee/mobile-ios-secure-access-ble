@@ -109,7 +109,8 @@ extension SorcConnectionManager.ConnectionChange.Action: Equatable {
         switch (lhs, rhs) {
         case (.initial, .initial): return true
         case let (.connect(lSorcID), .connect(rSorcID)) where lSorcID == rSorcID: return true
-        case let (.connectionEstablished(lSorcID), .connectionEstablished(rSorcID)) where lSorcID == rSorcID: return true
+        case let (.connectionEstablished(lSorcID), .connectionEstablished(rSorcID)) where lSorcID == rSorcID:
+            return true
         case let (.connectingFailed(lSorcID), .connectingFailed(rSorcID)) where lSorcID == rSorcID: return true
         case (.disconnect, .disconnect): return true
         case let (.disconnected(lSorcID), .disconnected(rSorcID)) where lSorcID == rSorcID: return true
@@ -126,7 +127,9 @@ extension SorcConnectionManager: CBCentralManagerDelegate {
         centralManagerDidUpdateState_(central as CBCentralManagerType)
     }
 
-    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral, advertisementData: [String: Any], rssi RSSI: NSNumber) {
+    func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
+                        advertisementData: [String: Any], rssi RSSI: NSNumber) {
+
         centralManager_(central as CBCentralManagerType, didDiscover: peripheral as CBPeripheralType, advertisementData: advertisementData, rssi: RSSI)
     }
 
@@ -139,7 +142,8 @@ extension SorcConnectionManager: CBCentralManagerDelegate {
     }
 
     func centralManager(_ central: CBCentralManager, didDisconnectPeripheral peripheral: CBPeripheral, error: Error?) {
-        centralManager_(central as CBCentralManagerType, didDisconnectPeripheral: peripheral as CBPeripheralType, error: error)
+        centralManager_(central as CBCentralManagerType, didDisconnectPeripheral: peripheral as CBPeripheralType,
+                        error: error)
     }
 }
 
@@ -152,7 +156,8 @@ extension SorcConnectionManager: CBPeripheralDelegate {
     }
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverCharacteristicsFor service: CBService, error: Error?) {
-        peripheral_(peripheral as CBPeripheralType, didDiscoverCharacteristicsFor: service as CBServiceType, error: error)
+        peripheral_(peripheral as CBPeripheralType, didDiscoverCharacteristicsFor: service as CBServiceType,
+                    error: error)
     }
 
     func peripheral(_ peripheral: CBPeripheral, didUpdateValueFor characteristic: CBCharacteristic, error: Error?) {
