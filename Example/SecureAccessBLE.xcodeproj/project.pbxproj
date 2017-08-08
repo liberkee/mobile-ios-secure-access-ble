@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		46B760911DA26C40003ADDB1 /* BLEManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760901DA26C40003ADDB1 /* BLEManagerTests.swift */; };
 		46B760931DA26C61003ADDB1 /* BLEChallengerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760921DA26C61003ADDB1 /* BLEChallengerTests.swift */; };
-		46B760951DA26C71003ADDB1 /* BLECommunicatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760941DA26C71003ADDB1 /* BLECommunicatorTests.swift */; };
 		46B760971DA26C8C003ADDB1 /* BLECryptorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760961DA26C8C003ADDB1 /* BLECryptorTests.swift */; };
 		8A124FF51D48BACC201824A8 /* Pods_SecureAccessBLE_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D955D40F7C47731B2AA178ED /* Pods_SecureAccessBLE_Tests.framework */; };
 		E573A7941EDC2BD50093ABA8 /* LeaseTokenBlob.swift in Sources */ = {isa = PBXBuildFile; fileRef = E573A7931EDC2BD50093ABA8 /* LeaseTokenBlob.swift */; };
@@ -41,7 +40,6 @@
 		46B7608F1DA2637D003ADDB1 /* TestMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestMessage.swift; sourceTree = "<group>"; };
 		46B760901DA26C40003ADDB1 /* BLEManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BLEManagerTests.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		46B760921DA26C61003ADDB1 /* BLEChallengerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLEChallengerTests.swift; sourceTree = "<group>"; };
-		46B760941DA26C71003ADDB1 /* BLECommunicatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLECommunicatorTests.swift; sourceTree = "<group>"; };
 		46B760961DA26C8C003ADDB1 /* BLECryptorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BLECryptorTests.swift; sourceTree = "<group>"; };
 		46B760981DA271FC003ADDB1 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = CHANGELOG.md; path = ../CHANGELOG.md; sourceTree = "<group>"; };
 		46B760991DA27634003ADDB1 /* ChallengerPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = ChallengerPlayground.playground; path = ../../Playgrounds/ChallengerPlayground.playground; sourceTree = "<group>"; };
@@ -231,7 +229,6 @@
 				E5FBD9B81F18DA4A0091F0B0 /* SorcConnectionManagerTests.swift */,
 				46B760901DA26C40003ADDB1 /* BLEManagerTests.swift */,
 				46B760921DA26C61003ADDB1 /* BLEChallengerTests.swift */,
-				46B760941DA26C71003ADDB1 /* BLECommunicatorTests.swift */,
 				46B760961DA26C8C003ADDB1 /* BLECryptorTests.swift */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
 			);
@@ -452,7 +449,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E5FBD9B91F18DA4A0091F0B0 /* SorcConnectionManagerTests.swift in Sources */,
-				46B760951DA26C71003ADDB1 /* BLECommunicatorTests.swift in Sources */,
 				E573A7941EDC2BD50093ABA8 /* LeaseTokenBlob.swift in Sources */,
 				46B760971DA26C8C003ADDB1 /* BLECryptorTests.swift in Sources */,
 				46B760931DA26C61003ADDB1 /* BLEChallengerTests.swift in Sources */,

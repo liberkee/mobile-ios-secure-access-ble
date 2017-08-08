@@ -10,49 +10,60 @@ import XCTest
 import CryptoSwift
 import CoreBluetooth
 @testable import SecureAccessBLE
+import CommonUtils
+
+// class DataTransferMock: DataTransfer {
+//
+//    var sentData = PublishSubject<Error?>()
+//    var receivedData = PublishSubject<Result<Data>>()
+//
+//    func sendData(_: Data) {
+//    }
+// }
 
 class BLEManagerTests: XCTestCase {
 
-    let connectionManager = SorcConnectionManager()
+    var bleManager: BLEManager!
     var bleCommunicator: SIDCommunicator!
-    let bleManager = BLEManager(crypto: false)
+    let centralManagerMock = CBCentralManagerMock()
+    var connectionManager: SorcConnectionManager!
 
     override func setUp() {
         super.setUp()
+        connectionManager = SorcConnectionManager(centralManager: centralManagerMock)
         bleCommunicator = SIDCommunicator(transporter: connectionManager)
+        bleManager = BLEManager(sorcConnectionManager: connectionManager, communicator: bleCommunicator)
+        bleCommunicator.delegate = bleManager
     }
 
     /**
      To test changing connection state in connectionManager and communicator, and corresposing changed connetion states for BLE-manager
      */
-    /*
-     func testChangingConnectionState() {
+    func testChangingConnectionState() {
 
-     let sorc = SID(sidID: "", peripheral: nil, discoveryDate: Date(), isConnected: true, rssi: 0)
+        // power on
+        centralManagerMock.state = .poweredOn
+        connectionManager.centralManagerDidUpdateState_(centralManagerMock)
 
-     /// connectionManager update state and reports connection state
-     connectionManager.centralManagerDidUpdateState(connectionManager.centralManager as! CBCentralManager)
+        // assert not connected
+        XCTAssertFalse(isBLEManagerConnected(), "BLE manager has wrong connection state")
 
-     /// blemanager is not connected, because the connectionManager not connected
-     XCTAssertFalse(isBLEManagerConnected(), "BLE manager has wrong connection state")
+        // simulate SORC connection
+        connectionManager.connectionChange.onNext(.init(state: .connected(sorcID: "1a"),
+                                                        action: .connectionEstablished(sorcID: "1a")))
 
-     bleCommunicator.delegate = bleManager
-     /// change transfer connection status to connected
-     bleCommunicator.transferDidChangedConnectionState(connectionManager, state: .connected(sorc: sorc))
+        /// ble manager is not connected because crypto was Not established even with connected connectionManager
+        XCTAssertFalse(isBLEManagerConnected(), "BLE manager has wrong connection state")
 
-     /// ble manager is not connected because crypto was Not established even with connected connectionManager
-     XCTAssertFalse(isBLEManagerConnected(), "BLE manager has wrong connection state")
+        /// Mock session key for crypto
+        let mockSessionKey = [0xA9, 0xBA, 0x14, 0xA1, 0x50, 0x20, 0x9F, 0xE2, 0x30, 0xE7, 0x1A, 0x2B, 0x78, 0x0F, 0x06, 0x45] as [UInt8]
 
-     /// Mock session key for crypto
-     let mockSessionKey = [0xA9, 0xBA, 0x14, 0xA1, 0x50, 0x20, 0x9F, 0xE2, 0x30, 0xE7, 0x1A, 0x2B, 0x78, 0x0F, 0x06, 0x45] as [UInt8]
+        /// To change crypto status in blemanager
+        bleManager.challengerFinishedWithSessionKey(mockSessionKey)
 
-     /// To change crypto status in blemanager
-     bleManager.challengerFinishedWithSessionKey(mockSessionKey)
-
-     /// The blemanager must be now connected because connectionManager connected and crypto established
-     XCTAssertTrue(isBLEManagerConnected(), "BLE manager has wrong connection state")
-     }
-     */
+        /// The blemanager must be now connected because connectionManager connected and crypto established
+        XCTAssertTrue(isBLEManagerConnected(), "BLE manager has wrong connection state")
+    }
 
     private func isBLEManagerConnected() -> Bool {
         if case .connected = bleManager.connectionChange.value.state { return true } else { return false }

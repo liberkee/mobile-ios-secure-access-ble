@@ -66,8 +66,6 @@ public enum ServiceGrantFeature {
  Define encryption state as enum
  */
 enum EncryptionState {
-    /// No encryption required
-    case noEncryption
     /// Encryption is required, but not established
     case shouldEncrypt
     /// Encryption is required and established
@@ -133,16 +131,9 @@ public class BLEManager: NSObject, BLEManagerType {
 
     fileprivate var lastHeartbeatResponseDate = Date()
 
-    fileprivate let connectionManager = SorcConnectionManager()
+    fileprivate let connectionManager: SorcConnectionManager
 
     private let disposeBag = DisposeBag()
-
-    /**
-     A object that must confirm to the DataTransfer protocol
-
-     Normally the transporter is a SorcConnectionManager object
-     */
-    private var transporter: DataTransfer
 
     /**
      A object that must confirm to the CryptoManager protocol
@@ -152,22 +143,10 @@ public class BLEManager: NSObject, BLEManagerType {
 
     // MARK: - Inits and deinit
 
-    /**
-     Initial point for BLE-Manager
-
-     - parameter crypto: if should be nedded cryption service
-     - parameter sidID:  sid id, that BLE connecting to
-
-     - returns: ble-manager object
-     */
-    init(crypto: Bool = false, sidID _: NSString = "") {
-        if crypto == true {
-            currentEncryptionState = .noEncryption
-        } else {
-            currentEncryptionState = .shouldEncrypt
-        }
-        transporter = connectionManager
-        communicator = SIDCommunicator(transporter: transporter)
+    init(sorcConnectionManager: SorcConnectionManager, communicator: SIDCommunicator) {
+        currentEncryptionState = .shouldEncrypt
+        connectionManager = sorcConnectionManager
+        self.communicator = communicator
         super.init()
         communicator.delegate = self
 
@@ -197,20 +176,10 @@ public class BLEManager: NSObject, BLEManagerType {
         .disposed(by: disposeBag)
     }
 
-    /**
-     Convenience Init with more parameters
-
-     - parameter transporter: transfer object
-     - parameter delegate:    delegate object
-     - parameter crypto:      if cryption service needed
-
-     - returns: BLE-Manager object
-     */
-    convenience init(transporter: SorcConnectionManager, crypto: Bool = false, heartbeatInterval: Int, heartbeatTimeout: Int) {
-        self.init(crypto: crypto)
-        self.transporter = transporter
-        self.heartbeatInterval = Double(heartbeatInterval)
-        self.heartbeatTimeout = Double(heartbeatTimeout)
+    convenience override init() {
+        let sorcConnectionManager = SorcConnectionManager()
+        let communicator = SIDCommunicator(transporter: sorcConnectionManager)
+        self.init(sorcConnectionManager: sorcConnectionManager, communicator: communicator)
     }
 
     /**
@@ -512,6 +481,7 @@ extension BLEManager: BLEChallengeServiceDelegate {
     }
 
     func challengerFinishedWithSessionKey(_ sessionKey: [UInt8]) {
+        guard currentConnectionState == .connected else { return }
         cryptoManager = AesCbcCryptoManager(key: sessionKey)
         currentEncryptionState = .encryptionEstablished
         // TODO: PLAM-949 set correct rssi
