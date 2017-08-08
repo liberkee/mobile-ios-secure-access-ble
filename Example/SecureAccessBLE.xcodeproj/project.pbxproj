@@ -51,6 +51,7 @@
 		BDD2935451DD295A50BFBCF1 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		C28A7D5203261E30CA436EC3 /* SecureAccessBLE.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = SecureAccessBLE.podspec; path = ../SecureAccessBLE.podspec; sourceTree = "<group>"; };
 		D955D40F7C47731B2AA178ED /* Pods_SecureAccessBLE_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SecureAccessBLE_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E55B78AD1F39C55B0090D376 /* SorcConnectionManagerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SorcConnectionManagerExtensions.swift; sourceTree = "<group>"; };
 		E565092C1F3333C1002771F8 /* SystemClock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemClock.swift; sourceTree = "<group>"; };
 		E573A7921EDC2BAA0093ABA8 /* LeaseToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaseToken.swift; sourceTree = "<group>"; };
 		E573A7931EDC2BD50093ABA8 /* LeaseTokenBlob.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeaseTokenBlob.swift; sourceTree = "<group>"; };
@@ -288,6 +289,7 @@
 				E59E016B1F387BE5006F114D /* SIDCommunicator.swift */,
 				E59E016A1F387BE5006F114D /* DataTransfer.swift */,
 				E59E016C1F387BE5006F114D /* SorcConnectionManager.swift */,
+				E55B78AD1F39C55B0090D376 /* SorcConnectionManagerExtensions.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
