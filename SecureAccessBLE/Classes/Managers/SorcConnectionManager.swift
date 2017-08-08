@@ -212,14 +212,10 @@ class SorcConnectionManager: NSObject, DataTransfer {
         discoveryChange.onNext(change)
     }
 
-    fileprivate func sorcMatchingSorcID(_ sorcID: SorcID) -> DiscoveredSorc? {
+    fileprivate func peripheralMatchingSorcID(_ sorcID: SorcID) -> CBPeripheralType? {
         return discoveredSorcs.values
             .filter { $0.sorcID == sorcID }
-            .first
-    }
-
-    fileprivate func peripheralMatchingSorcID(_ sorcID: SorcID) -> CBPeripheralType? {
-        return sorcMatchingSorcID(sorcID)?.peripheral
+            .first?.peripheral
     }
 }
 
@@ -270,8 +266,7 @@ extension SorcConnectionManager {
                          error _: Error?) {
 
         guard case let .connected(sorcID) = connectionState,
-            let sorc = sorcMatchingSorcID(sorcID),
-            sorc.peripheral.identifier == peripheral.identifier else { return }
+            peripheralMatchingSorcID(sorcID)?.identifier == peripheral.identifier else { return }
 
         discoveredSorcs[sorcID] = nil
         updateDiscoveryChange(action: .sorcDisconnected(sorcID))
