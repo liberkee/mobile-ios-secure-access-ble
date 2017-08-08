@@ -8,26 +8,18 @@
 import CoreBluetooth
 import CommonUtils
 
-/**
- *  Definition for SID object
- */
-private struct SID: Hashable, Equatable {
+private class DiscoveredSorc {
 
-    let sidID: String
-    var peripheral: CBPeripheralType?
+    let sorcID: String
+    var peripheral: CBPeripheralType
     let discoveryDate: Date
     let rssi: Int
 
-    var hashValue: Int {
-        return sidID.hashValue
-    }
-
-    static func == (lhs: SID, rhs: SID) -> Bool {
-        if (lhs.peripheral?.identifier != rhs.peripheral?.identifier) || (lhs.sidID != rhs.sidID) {
-            return false
-        }
-
-        return true
+    init(sorcID: String, peripheral: CBPeripheralType, discoveryDate: Date, rssi: Int) {
+        self.sorcID = sorcID
+        self.peripheral = peripheral
+        self.discoveryDate = discoveryDate
+        self.rssi = rssi
     }
 }
 
@@ -73,11 +65,11 @@ class SorcConnectionManager: NSObject, DataTransfer {
     private let sorcOutdatedDurationSeconds: Double = 5
 
     /// The SORCs that were discovered and were not removed by the filterTimer
-    fileprivate var discoveredSorcs = Set<SID>()
+    fileprivate var discoveredSorcs = [SorcID: DiscoveredSorc]()
 
-    fileprivate var connectedSid: SID? {
-        if case let .connected(sorcId) = connectionState {
-            return discoveredSorcs.first { $0.sidID == sorcId }
+    fileprivate var connectedSid: DiscoveredSorc? {
+        if case let .connected(sorcID) = connectionState {
+            return discoveredSorcs[sorcID]
         }
         return nil
     }
@@ -172,10 +164,8 @@ class SorcConnectionManager: NSObject, DataTransfer {
             if let peripheral = peripheralMatchingSorcID(sorcID) {
                 centralManager.cancelPeripheralConnection(peripheral)
             }
-            if let sorc = sorcMatchingSorcID(sorcID) {
-                discoveredSorcs.remove(sorc)
-                updateDiscoveryChange(action: .disconnectSorc(sorcID))
-            }
+            discoveredSorcs[sorcID] = nil
+            updateDiscoveryChange(action: .disconnectSorc(sorcID))
             writeCharacteristic = nil
             notifyCharacteristic = nil
             connectionChange.onNext(.init(state: .disconnected, action: action))
@@ -188,44 +178,43 @@ class SorcConnectionManager: NSObject, DataTransfer {
     }
 
     private func removeOutdatedSorcs() {
-        let outdatedSorcs = discoveredSorcs.filter { (sorc) -> Bool in
+        let outdatedSorcs = Array(discoveredSorcs.values).filter { (sorc) -> Bool in
             let outdated = systemClock.timeIntervalSinceNow(for: sorc.discoveryDate) < -sorcOutdatedDurationSeconds
-            return outdated && sorc.sidID != self.connectedSid?.sidID
+            return outdated && sorc.sorcID != self.connectedSid?.sorcID
         }
-        if outdatedSorcs.count > 0 {
-            for sorc in outdatedSorcs {
-                discoveredSorcs.remove(sorc)
+        let outdatedSorcIDs = outdatedSorcs.map { $0.sorcID }
+        if outdatedSorcIDs.count > 0 {
+            for sorcID in outdatedSorcIDs {
+                discoveredSorcs[sorcID] = nil
             }
-            let outdatedSorcIDs = outdatedSorcs.map { $0.sidID }
             updateDiscoveryChange(action: .sorcsLost(Set(outdatedSorcIDs)))
         }
     }
 
-    fileprivate func updateDiscoveredSorcsWithNewSorc(_ sorc: SID) {
-        var sorcCopy = sorc
-        if let connectedSid = connectedSid, sorcCopy.sidID == connectedSid.sidID {
+    fileprivate func updateDiscoveredSorcsWithNewSorc(_ sorc: DiscoveredSorc) {
+        let sorcCopy = sorc
+        if let connectedSid = connectedSid, sorcCopy.sorcID == connectedSid.sorcID {
             sorcCopy.peripheral = connectedSid.peripheral
         }
-        let replacedSidID = discoveredSorcs.update(with: sorcCopy)
+        let replacedSidID = discoveredSorcs.updateValue(sorcCopy, forKey: sorcCopy.sorcID)
         if replacedSidID == nil {
-            updateDiscoveryChange(action: .sorcDiscovered(sorc.sidID))
+            updateDiscoveryChange(action: .sorcDiscovered(sorc.sorcID))
         }
     }
 
     fileprivate func resetDiscoveredSorcs() {
-        discoveredSorcs = Set<SID>()
+        discoveredSorcs = [:]
         updateDiscoveryChange(action: .sorcsReset)
     }
 
     fileprivate func updateDiscoveryChange(action: DiscoveryChange.Action) {
-        let discoveredSorcIds = discoveredSorcs.map { $0.sidID }
-        let change = DiscoveryChange(state: Set(discoveredSorcIds), action: action)
+        let change = DiscoveryChange(state: Set(discoveredSorcs.keys), action: action)
         discoveryChange.onNext(change)
     }
 
-    fileprivate func sorcMatchingSorcID(_ sorcID: SorcID) -> SID? {
-        return discoveredSorcs
-            .filter { $0.sidID.lowercased() == sorcID.replacingOccurrences(of: "-", with: "").lowercased() }
+    fileprivate func sorcMatchingSorcID(_ sorcID: SorcID) -> DiscoveredSorc? {
+        return discoveredSorcs.values
+            .filter { $0.sorcID.lowercased() == sorcID.replacingOccurrences(of: "-", with: "").lowercased() }
             .first
     }
 
@@ -254,8 +243,8 @@ extension SorcConnectionManager {
         guard let manufacturerData = advertisementData[CBAdvertisementDataManufacturerDataKey] as? Data else {
             return
         }
-        let sidID = manufacturerData.toHexString()
-        let sorc = SID(sidID: sidID, peripheral: peripheral, discoveryDate: systemClock.now(), rssi: RSSI.intValue)
+        let sorcID = manufacturerData.toHexString()
+        let sorc = DiscoveredSorc(sorcID: sorcID, peripheral: peripheral, discoveryDate: systemClock.now(), rssi: RSSI.intValue)
         updateDiscoveredSorcsWithNewSorc(sorc)
     }
 
@@ -283,9 +272,9 @@ extension SorcConnectionManager {
 
         guard case let .connected(sorcID) = connectionState,
             let sorc = sorcMatchingSorcID(sorcID),
-            sorc.peripheral?.identifier == peripheral.identifier else { return }
+            sorc.peripheral.identifier == peripheral.identifier else { return }
 
-        discoveredSorcs.remove(sorc)
+        discoveredSorcs[sorcID] = nil
         updateDiscoveryChange(action: .sorcDisconnected(sorcID))
         connectionChange.onNext(.init(state: .disconnected, action: .disconnected(sorcID: sorcID)))
     }
