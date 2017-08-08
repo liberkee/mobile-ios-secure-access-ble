@@ -9,6 +9,7 @@
 import Foundation
 import CommonUtils
 
+/// Only lowercased IDs with hyphens are supported
 public typealias SorcID = String
 
 /// Declares the contract a BLEManagerType has to follow

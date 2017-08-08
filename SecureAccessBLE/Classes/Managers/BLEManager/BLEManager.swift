@@ -204,7 +204,7 @@ public class BLEManager: NSObject, BLEManagerType {
     // MARK: Discovery
 
     public func hasSorcId(_ sorcId: SorcID) -> Bool {
-        return connectionManager.discoveryChange.state.first { $0.lowercased() == sorcId.lowercased() } != nil
+        return connectionManager.discoveryChange.state.first { $0 == sorcId } != nil
     }
 
     public var sorcDiscovered = PublishSubject<SorcID>()

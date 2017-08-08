@@ -214,7 +214,7 @@ class SorcConnectionManager: NSObject, DataTransfer {
 
     fileprivate func sorcMatchingSorcID(_ sorcID: SorcID) -> DiscoveredSorc? {
         return discoveredSorcs.values
-            .filter { $0.sorcID.lowercased() == sorcID.replacingOccurrences(of: "-", with: "").lowercased() }
+            .filter { $0.sorcID == sorcID }
             .first
     }
 
@@ -240,10 +240,9 @@ extension SorcConnectionManager {
 
     func centralManager_(_: CBCentralManagerType, didDiscover peripheral: CBPeripheralType,
                          advertisementData: [String: Any], rssi RSSI: NSNumber) {
-        guard let manufacturerData = advertisementData[CBAdvertisementDataManufacturerDataKey] as? Data else {
-            return
-        }
-        let sorcID = manufacturerData.toHexString()
+        guard let manufacturerData = advertisementData[CBAdvertisementDataManufacturerDataKey] as? Data,
+            let sorcID = manufacturerData.uuidString else { return }
+
         let sorc = DiscoveredSorc(sorcID: sorcID, peripheral: peripheral, discoveryDate: systemClock.now(), rssi: RSSI.intValue)
         updateDiscoveredSorcsWithNewSorc(sorc)
     }
