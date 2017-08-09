@@ -65,13 +65,13 @@ class MockBLEManager: BLEManagerType {
     // MARK: - Actions
 
     public func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob _: LeaseTokenBlob) {
-        let sorcId = leaseToken.sorcId
-        connectionChange.onNext(ConnectionChange(state: .connecting(sorcId: sorcId), action: .connect))
+        let sorcID = leaseToken.sorcID
+        connectionChange.onNext(ConnectionChange(state: .connecting(sorcID: sorcID), action: .connect))
         let connectWorkItem = DispatchWorkItem { [weak self] in
             guard let strongSelf = self else { return }
             strongSelf.connectionChange.onNext(ConnectionChange(
-                state: .connected(sorcId: sorcId),
-                action: .connectionEstablished(sorcId: sorcId, rssi: 0))
+                state: .connected(sorcID: sorcID),
+                action: .connectionEstablished(sorcID: sorcID, rssi: 0))
             )
         }
         self.connectWorkItem = connectWorkItem

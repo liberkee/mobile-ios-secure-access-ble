@@ -11,8 +11,8 @@ import Foundation
 /// A lease token blob used in establishing a connection to a SORC
 public struct LeaseTokenBlob {
 
-    let messageCounter: Int
-    let data: String
+    public let messageCounter: Int
+    public let data: String
 
     public init(messageCounter: Int, data: String) {
         self.messageCounter = messageCounter

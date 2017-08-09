@@ -107,17 +107,10 @@ public class BLEManager: NSObject, BLEManagerType {
     ///  The communicator objec
     fileprivate let communicator: SIDCommunicator
 
-    /// DeviceId as String came from Userspace.Booking
-    private var leaseId: String = ""
-
-    /// LeaseToken Id as String came from SecureAccess.blob
-    private var leaseTokenId: String = ""
-
-    /// Sid AccessKey as String came from SecureAccess.blob
+    private var leaseID: String = ""
+    private var leaseTokenID: String = ""
     private var sidAccessKey: String = ""
-
-    /// SidId as String came from SecureAccess.leaseToken
-    fileprivate var sidId: String = ""
+    fileprivate var sorcID: String = ""
 
     /// Blob as String came from SecureAccess.blob
     fileprivate var blobData: String? = ""
@@ -203,14 +196,14 @@ public class BLEManager: NSObject, BLEManagerType {
     // MARK: Actions
 
     public func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob) {
-        sidId = leaseToken.sorcId
-        connectionChange.onNext(ConnectionChange(state: .connecting(sorcId: sidId), action: .connect))
-        leaseTokenId = leaseToken.id
-        leaseId = leaseToken.leaseId
+        sorcID = leaseToken.sorcID
+        connectionChange.onNext(ConnectionChange(state: .connecting(sorcID: sorcID), action: .connect))
+        leaseTokenID = leaseToken.id
+        leaseID = leaseToken.leaseID
         sidAccessKey = leaseToken.sorcAccessKey
         blobData = leaseTokenBlob.data
         blobCounter = leaseTokenBlob.messageCounter
-        connectionManager.connectToSorc(sidId)
+        connectionManager.connectToSorc(sorcID)
     }
 
     public func disconnect() {
@@ -327,11 +320,11 @@ public class BLEManager: NSObject, BLEManagerType {
      Initialize SID challenger to establish Crypto
      */
     fileprivate func establishCrypto() {
-        if sidId.isEmpty || sidAccessKey.isEmpty {
-            print("Not found sidId or access key for cram")
+        if sorcID.isEmpty || sidAccessKey.isEmpty {
+            print("Not found sorcID or access key for cram")
             return
         }
-        challenger = BLEChallengeService(leaseId: leaseId, sidId: sidId, leaseTokenId: leaseTokenId, sidAccessKey: sidAccessKey)
+        challenger = BLEChallengeService(leaseId: leaseID, sidId: sorcID, leaseTokenId: leaseTokenID, sidAccessKey: sidAccessKey)
         challenger?.delegate = self
         if challenger == nil {
             print("Cram could not be initialized")
@@ -467,8 +460,8 @@ extension BLEManager: BLEChallengeServiceDelegate {
         currentEncryptionState = .encryptionEstablished
         // TODO: PLAM-949 set correct rssi
         connectionChange.onNext(ConnectionChange(
-            state: .connected(sorcId: sidId),
-            action: .connectionEstablished(sorcId: sidId, rssi: 0))
+            state: .connected(sorcID: sorcID),
+            action: .connectionEstablished(sorcID: sorcID, rssi: 0))
         )
         bleSchouldSendHeartbeat()
     }
@@ -483,7 +476,7 @@ extension BLEManager: BLEChallengeServiceDelegate {
             // TODO: PLAM-949 set correct rssi
             connectionChange.onNext(ConnectionChange(
                 state: .disconnected,
-                action: .connectingFailed(error: .blobOutdated, sorcId: sidId, rssi: 0))
+                action: .connectingFailed(error: .blobOutdated, sorcID: sorcID, rssi: 0))
             )
             return
         }

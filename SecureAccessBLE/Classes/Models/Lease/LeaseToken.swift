@@ -11,15 +11,15 @@ import Foundation
 /// A lease token used in establishing a connection to a SORC
 public struct LeaseToken {
 
-    let id: String
-    let leaseId: String
-    let sorcId: SorcID
-    let sorcAccessKey: String
+    public let id: String
+    public let leaseID: String
+    public let sorcID: SorcID
+    public let sorcAccessKey: String
 
-    public init(id: String, leaseId: String, sorcId: SorcID, sorcAccessKey: String) {
+    public init(id: String, leaseID: String, sorcID: SorcID, sorcAccessKey: String) {
         self.id = id
-        self.leaseId = leaseId
-        self.sorcId = sorcId
+        self.leaseID = leaseID
+        self.sorcID = sorcID
         self.sorcAccessKey = sorcAccessKey
     }
 }
