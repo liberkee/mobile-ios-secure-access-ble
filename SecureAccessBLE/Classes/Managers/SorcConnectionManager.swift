@@ -140,7 +140,7 @@ class SorcConnectionManager: NSObject, DataTransfer {
     }
 
     func disconnect() {
-        disconnect(withAction: .disconnect)
+        disconnect(withAction: nil)
     }
 
     /**
@@ -158,17 +158,17 @@ class SorcConnectionManager: NSObject, DataTransfer {
 
     // MARK: - Private methods
 
-    fileprivate func disconnect(withAction action: ConnectionChange.Action) {
+    fileprivate func disconnect(withAction action: ConnectionChange.Action?) {
         switch connectionState {
         case let .connecting(sorcID), let .connected(sorcID):
             if let peripheral = peripheralMatchingSorcID(sorcID) {
                 centralManager.cancelPeripheralConnection(peripheral)
             }
             discoveredSorcs[sorcID] = nil
-            updateDiscoveryChange(action: .disconnectSorc(sorcID))
+            updateDiscoveryChange(action: .disconnect(sorcID: sorcID))
             writeCharacteristic = nil
             notifyCharacteristic = nil
-            connectionChange.onNext(.init(state: .disconnected, action: action))
+            connectionChange.onNext(.init(state: .disconnected, action: action ?? .disconnect(sorcID: sorcID)))
         case .disconnected: break
         }
     }
@@ -187,7 +187,7 @@ class SorcConnectionManager: NSObject, DataTransfer {
             for sorcID in outdatedSorcIDs {
                 discoveredSorcs[sorcID] = nil
             }
-            updateDiscoveryChange(action: .sorcsLost(Set(outdatedSorcIDs)))
+            updateDiscoveryChange(action: .lost(sorcIDs: Set(outdatedSorcIDs)))
         }
     }
 
@@ -198,13 +198,13 @@ class SorcConnectionManager: NSObject, DataTransfer {
         }
         let replacedSidID = discoveredSorcs.updateValue(sorcCopy, forKey: sorcCopy.sorcID)
         if replacedSidID == nil {
-            updateDiscoveryChange(action: .sorcDiscovered(sorc.sorcID))
+            updateDiscoveryChange(action: .discovered(sorcID: sorc.sorcID))
         }
     }
 
     fileprivate func resetDiscoveredSorcs() {
         discoveredSorcs = [:]
-        updateDiscoveryChange(action: .sorcsReset)
+        updateDiscoveryChange(action: .reset)
     }
 
     fileprivate func updateDiscoveryChange(action: DiscoveryChange.Action) {
@@ -269,7 +269,7 @@ extension SorcConnectionManager {
             peripheralMatchingSorcID(sorcID)?.identifier == peripheral.identifier else { return }
 
         discoveredSorcs[sorcID] = nil
-        updateDiscoveryChange(action: .sorcDisconnected(sorcID))
+        updateDiscoveryChange(action: .disconnected(sorcID: sorcID))
         connectionChange.onNext(.init(state: .disconnected, action: .disconnected(sorcID: sorcID)))
     }
 }

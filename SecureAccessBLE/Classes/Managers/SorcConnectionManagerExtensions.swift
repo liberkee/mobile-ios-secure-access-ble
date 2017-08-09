@@ -32,7 +32,7 @@ extension SorcConnectionManager {
             case connect(sorcID: SorcID)
             case connectionEstablished(sorcID: SorcID)
             case connectingFailed(sorcID: SorcID)
-            case disconnect
+            case disconnect(sorcID: SorcID)
             case disconnected(sorcID: SorcID)
         }
     }

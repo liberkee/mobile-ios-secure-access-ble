@@ -33,16 +33,15 @@ class MockBLEManager: BLEManagerType {
 
     // MARK: - Discovery
 
-    // TODO: PLAM-960 How to mock that?
     public let discoveryChange = ChangeSubject<DiscoveryChange>(state: Set<SorcID>())
 
     // MARK: - Connection
 
-    public var connectionChange = BehaviorSubject(value: ConnectionChange(state: .disconnected, action: .initial))
+    public let connectionChange = BehaviorSubject(value: ConnectionChange(state: .disconnected, action: .initial))
 
     // MARK: - Service
 
-    public var receivedServiceGrantTriggerForStatus = PublishSubject<(status: ServiceGrantTriggerStatus?, error: String?)>()
+    public let receivedServiceGrantTriggerForStatus = PublishSubject<(status: ServiceGrantTriggerStatus?, error: String?)>()
 
     // MARK: - Private properties
 

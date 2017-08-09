@@ -302,9 +302,10 @@ class SorcConnectionManagerTests: XCTestCase {
         XCTAssertEqual(centralManager.cancelConnectionCalledWithPeripheral?.identifier, peripheral.identifier)
 
         XCTAssert(!receivedDiscoveryChange.state.contains(sorcID1))
-        XCTAssertEqual(receivedDiscoveryChange.action, .disconnectSorc(sorcID1))
+        XCTAssertEqual(receivedDiscoveryChange.action, .disconnect(sorcID: sorcID1))
 
-        let expected = SorcConnectionManager.ConnectionChange(state: .disconnected, action: .disconnect)
+        let expected = SorcConnectionManager.ConnectionChange(state: .disconnected,
+                                                              action: .disconnect(sorcID: sorcID1))
         XCTAssertEqual(receivedConnectionChange, expected)
     }
 
@@ -334,9 +335,10 @@ class SorcConnectionManagerTests: XCTestCase {
         XCTAssertEqual(centralManager.cancelConnectionCalledWithPeripheral?.identifier, peripheral.identifier)
 
         XCTAssert(!receivedDiscoveryChange.state.contains(sorcID1))
-        XCTAssertEqual(receivedDiscoveryChange.action, .disconnectSorc(sorcID1))
+        XCTAssertEqual(receivedDiscoveryChange.action, .disconnect(sorcID: sorcID1))
 
-        let expected = SorcConnectionManager.ConnectionChange(state: .disconnected, action: .disconnect)
+        let expected = SorcConnectionManager.ConnectionChange(state: .disconnected,
+                                                              action: .disconnect(sorcID: sorcID1))
         XCTAssertEqual(receivedConnectionChange, expected)
     }
 
@@ -430,7 +432,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Then
         XCTAssert(receivedDiscoveryChange.state.isEmpty)
-        XCTAssertEqual(receivedDiscoveryChange.action, .sorcsReset)
+        XCTAssertEqual(receivedDiscoveryChange.action, .reset)
     }
 
     func test_centralManagerDidDiscoverPeripheral_ifManufacturerDataKeyIsSet_addsSorcToDiscoveredSorcs() {
@@ -457,7 +459,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Then
         XCTAssert(receivedDiscoveryChange.state.contains(sorcID1))
-        XCTAssertEqual(receivedDiscoveryChange.action, .sorcDiscovered(sorcID1))
+        XCTAssertEqual(receivedDiscoveryChange.action, .discovered(sorcID: sorcID1))
     }
 
     func test_centralManagerDidDiscoverPeripheral_ifManufacturerDataKeyIsNotSet_doesNotUpdateDiscoveredSorcs() {
@@ -585,7 +587,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Then
         XCTAssert(!receivedDiscoveryChange.state.contains(sorcID1))
-        XCTAssertEqual(receivedDiscoveryChange.action, .sorcDisconnected(sorcID1))
+        XCTAssertEqual(receivedDiscoveryChange.action, .disconnected(sorcID: sorcID1))
 
         let expected = SorcConnectionManager.ConnectionChange(state: .disconnected, action: .disconnected(sorcID: sorcID1))
         XCTAssertEqual(receivedConnectionChange, expected)

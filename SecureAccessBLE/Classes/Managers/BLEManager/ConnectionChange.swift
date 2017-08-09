@@ -9,48 +9,6 @@
 import Foundation
 import CommonUtils
 
-public struct DiscoveryChange: ChangeType {
-
-    public let state: Set<SorcID>
-    public let action: Action
-
-    public static func initialWithState(_ state: Set<SorcID>) -> DiscoveryChange {
-        return DiscoveryChange(state: state, action: .initial)
-    }
-
-    public enum Action {
-        case initial
-        case sorcDiscovered(SorcID)
-        case sorcsLost(Set<SorcID>)
-        case disconnectSorc(SorcID)
-        case sorcDisconnected(SorcID)
-        case sorcsReset
-    }
-}
-
-extension DiscoveryChange: Equatable {
-
-    public static func ==(lhs: DiscoveryChange, rhs: DiscoveryChange) -> Bool {
-        return lhs.state == rhs.state
-            && lhs.action == rhs.action
-    }
-}
-
-extension DiscoveryChange.Action: Equatable {
-
-    public static func ==(lhs: DiscoveryChange.Action, rhs: DiscoveryChange.Action) -> Bool {
-        switch (lhs, rhs) {
-        case (.initial, .initial): return true
-        case let (.sorcDiscovered(lSorcID), .sorcDiscovered(rSorcID)) where lSorcID == rSorcID: return true
-        case let (.sorcsLost(lSorcIDs), .sorcsLost(rSorcIDs)) where lSorcIDs == rSorcIDs: return true
-        case let (.disconnectSorc(lSorcID), .disconnectSorc(rSorcID)) where lSorcID == rSorcID: return true
-        case let (.sorcDisconnected(lSorcID), .sorcDisconnected(rSorcID)) where lSorcID == rSorcID: return true
-        case (.sorcsReset, .sorcsReset): return true
-        default: return false
-        }
-    }
-}
-
 /// Describes a change of connection state
 public struct ConnectionChange {
 
