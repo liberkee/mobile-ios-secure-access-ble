@@ -36,7 +36,7 @@ public protocol BLEManagerType: class {
     // MARK: - Connection
 
     /// The state of the connection with the action that led to this state
-    var connectionChange: BehaviorSubject<ConnectionChange> { get }
+    var connectionChange: ChangeSubject<ConnectionChange> { get }
 
     // MARK: - Service
 

@@ -194,7 +194,7 @@ public class BLEManager: NSObject, BLEManagerType {
 
     // MARK: - Connection
 
-    public let connectionChange = BehaviorSubject(value: ConnectionChange(state: .disconnected, action: .initial))
+    public let connectionChange = ChangeSubject<ConnectionChange>(state: .disconnected)
 
     // MARK: Service
 
@@ -218,7 +218,7 @@ public class BLEManager: NSObject, BLEManagerType {
     }
 
     private func disconnectInternal(action: ConnectionChange.Action = .disconnect) {
-        if case .disconnected = connectionChange.value.state { return }
+        if case .disconnected = connectionChange.state { return }
         currentConnectionState = .notConnected
         connectionChange.onNext(ConnectionChange(
             state: .disconnected,
@@ -270,7 +270,7 @@ public class BLEManager: NSObject, BLEManagerType {
             currentConnectionState = .connected
             sendMtuRequest()
         case .disconnected:
-            if case .disconnected = connectionChange.value.state { return }
+            if case .disconnected = connectionChange.state { return }
             if isBluetoothEnabled.value {
                 currentConnectionState = .notConnected
                 // TODO: PLAM-951: Set proper action

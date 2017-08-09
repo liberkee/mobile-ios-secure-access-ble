@@ -10,7 +10,7 @@ import Foundation
 import CommonUtils
 
 /// Describes a change of connection state
-public struct ConnectionChange {
+public struct ConnectionChange: ChangeType {
 
     // Possible state transitions (other transitions have no observable result, i.e. <no change>)
     //                -initial->               (disconnected)
@@ -41,6 +41,10 @@ public struct ConnectionChange {
         case connectionEstablished(sorcId: SorcID, rssi: Int)
         case connectingFailed(error: ConnectingFailedError, sorcId: SorcID, rssi: Int)
         case connectionLost(error: ConnectionLostError)
+    }
+
+    public static func initialWithState(_ state: ConnectionChange.State) -> ConnectionChange {
+        return ConnectionChange(state: state, action: .initial)
     }
 
     /// The state the connection can be in

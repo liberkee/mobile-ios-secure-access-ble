@@ -86,7 +86,7 @@ public class SimulatableBLEManager: BLEManagerType {
 
     // MARK: - Connection
 
-    public let connectionChange = BehaviorSubject(value: ConnectionChange(state: .disconnected, action: .initial))
+    public let connectionChange = ChangeSubject<ConnectionChange>(state: .disconnected)
 
     // MARK: - Service
 
