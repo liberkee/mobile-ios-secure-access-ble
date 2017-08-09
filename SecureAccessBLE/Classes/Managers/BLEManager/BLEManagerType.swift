@@ -30,14 +30,8 @@ public protocol BLEManagerType: class {
 
     // MARK: - Discovery
 
-    /// If the SORC is discovered
-    func hasSorcId(_ sorcId: SorcID) -> Bool
-
-    /// A SORC was discovered. Contains the SORC ID.
-    var sorcDiscovered: PublishSubject<SorcID> { get }
-
-    /// SORCs were lost. Contains the SORC IDs.
-    var sorcsLost: PublishSubject<[SorcID]> { get }
+    /// The state of SORC discovery with the action that led to this state
+    var discoveryChange: ChangeSubject<DiscoveryChange> { get }
 
     // MARK: - Connection
 

@@ -12,25 +12,6 @@ extension SorcConnectionManager {
 
     typealias CreateTimer = (@escaping () -> Void) -> Timer
 
-    struct DiscoveryChange: ChangeType {
-
-        let state: Set<SorcID>
-        let action: Action
-
-        static func initialWithState(_ state: Set<SorcID>) -> DiscoveryChange {
-            return DiscoveryChange(state: state, action: .initial)
-        }
-
-        enum Action {
-            case initial
-            case sorcDiscovered(SorcID)
-            case sorcsLost(Set<SorcID>)
-            case disconnectSorc(SorcID)
-            case sorcDisconnected(SorcID)
-            case sorcsReset
-        }
-    }
-
     struct ConnectionChange: ChangeType {
 
         let state: State
@@ -53,30 +34,6 @@ extension SorcConnectionManager {
             case connectingFailed(sorcID: SorcID)
             case disconnect
             case disconnected(sorcID: SorcID)
-        }
-    }
-}
-
-extension SorcConnectionManager.DiscoveryChange: Equatable {
-
-    static func ==(lhs: SorcConnectionManager.DiscoveryChange, rhs: SorcConnectionManager.DiscoveryChange) -> Bool {
-        return lhs.state == rhs.state
-            && lhs.action == rhs.action
-    }
-}
-
-extension SorcConnectionManager.DiscoveryChange.Action: Equatable {
-
-    static func ==(lhs: SorcConnectionManager.DiscoveryChange.Action,
-                   rhs: SorcConnectionManager.DiscoveryChange.Action) -> Bool {
-        switch (lhs, rhs) {
-        case (.initial, .initial): return true
-        case let (.sorcDiscovered(lSorcID), .sorcDiscovered(rSorcID)) where lSorcID == rSorcID: return true
-        case let (.sorcsLost(lSorcIDs), .sorcsLost(rSorcIDs)) where lSorcIDs == rSorcIDs: return true
-        case let (.disconnectSorc(lSorcID), .disconnectSorc(rSorcID)) where lSorcID == rSorcID: return true
-        case let (.sorcDisconnected(lSorcID), .sorcDisconnected(rSorcID)) where lSorcID == rSorcID: return true
-        case (.sorcsReset, .sorcsReset): return true
-        default: return false
         }
     }
 }

@@ -9,6 +9,10 @@
 import Foundation
 import CommonUtils
 
+public protocol DiscoveredSorcsProviderType {
+    var discoveredSorcIDs: BehaviorSubject<Set<SorcID>> { get }
+}
+
 /// Mocks the communication with a BLE device
 class MockBLEManager: BLEManagerType {
 
@@ -25,19 +29,12 @@ class MockBLEManager: BLEManagerType {
 
     // MARK: - Interface
 
-    public var isBluetoothEnabled = BehaviorSubject(value: true)
+    public let isBluetoothEnabled = BehaviorSubject(value: true)
 
     // MARK: - Discovery
 
-    public func hasSorcId(_: SorcID) -> Bool {
-        return true
-    }
-
-    // Not mocked
-    public var sorcDiscovered = PublishSubject<SorcID>()
-
-    // Not mocked
-    public var sorcsLost = PublishSubject<[SorcID]>()
+    // TODO: PLAM-960 How to mock that?
+    public let discoveryChange = ChangeSubject<DiscoveryChange>(state: Set<SorcID>())
 
     // MARK: - Connection
 
@@ -49,11 +46,22 @@ class MockBLEManager: BLEManagerType {
 
     // MARK: - Private properties
 
+    private let discoveredSorcsProvider: DiscoveredSorcsProviderType
+    private let disposeBag = DisposeBag()
+
     private var discoveryWorkItem: DispatchWorkItem?
     private var connectWorkItem: DispatchWorkItem?
     private var serviceWorkItem: DispatchWorkItem?
     private var carIsLocked = true
     private var ignitionDisabled = true
+
+    init(discoveredSorcsProvider: DiscoveredSorcsProviderType) {
+        self.discoveredSorcsProvider = discoveredSorcsProvider
+        discoveredSorcsProvider.discoveredSorcIDs.subscribeNext { [weak self] sorcIDs in
+            self?.discoveryChange.onNext(.init(state: sorcIDs, action: .initial))
+        }
+        .disposed(by: disposeBag)
+    }
 
     // MARK: - Actions
 

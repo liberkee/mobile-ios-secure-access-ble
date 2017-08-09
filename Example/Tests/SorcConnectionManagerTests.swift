@@ -285,7 +285,7 @@ class SorcConnectionManagerTests: XCTestCase {
         prepareConnectingSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
                               centralManager: centralManager)
 
-        var receivedDiscoveryChange: SorcConnectionManager.DiscoveryChange!
+        var receivedDiscoveryChange: DiscoveryChange!
         _ = connectionManager.discoveryChange.subscribeNext { change in
             receivedDiscoveryChange = change
         }
@@ -317,7 +317,7 @@ class SorcConnectionManagerTests: XCTestCase {
         prepareConnectedSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
                              centralManager: centralManager)
 
-        var receivedDiscoveryChange: SorcConnectionManager.DiscoveryChange!
+        var receivedDiscoveryChange: DiscoveryChange!
         _ = connectionManager.discoveryChange.subscribeNext { change in
             receivedDiscoveryChange = change
         }
@@ -419,7 +419,7 @@ class SorcConnectionManagerTests: XCTestCase {
         prepareDiscoveredSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
                               centralManager: centralManager)
 
-        var receivedDiscoveryChange: SorcConnectionManager.DiscoveryChange!
+        var receivedDiscoveryChange: DiscoveryChange!
         _ = connectionManager.discoveryChange.subscribeNext { change in
             receivedDiscoveryChange = change
         }
@@ -446,7 +446,7 @@ class SorcConnectionManagerTests: XCTestCase {
             CBAdvertisementDataManufacturerDataKey: strippedSorcID,
         ]
 
-        var receivedDiscoveryChange: SorcConnectionManager.DiscoveryChange!
+        var receivedDiscoveryChange: DiscoveryChange!
         _ = connectionManager.discoveryChange.subscribeNext { change in
             receivedDiscoveryChange = change
         }
@@ -469,7 +469,7 @@ class SorcConnectionManagerTests: XCTestCase {
         let peripheral = CBPeripheralMock()
         let advertisementData = [String: Any]()
 
-        var receivedDiscoveryChange: SorcConnectionManager.DiscoveryChange!
+        var receivedDiscoveryChange: DiscoveryChange!
         _ = connectionManager.discoveryChange.subscribeNext { change in
             receivedDiscoveryChange = change
         }
@@ -570,7 +570,7 @@ class SorcConnectionManagerTests: XCTestCase {
         prepareConnectedSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
                              centralManager: centralManager)
 
-        var receivedDiscoveryChange: SorcConnectionManager.DiscoveryChange!
+        var receivedDiscoveryChange: DiscoveryChange!
         _ = connectionManager.discoveryChange.subscribeNext { change in
             receivedDiscoveryChange = change
         }
@@ -602,7 +602,7 @@ class SorcConnectionManagerTests: XCTestCase {
         prepareConnectingSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
                               centralManager: centralManager)
 
-        var receivedDiscoveryChange: SorcConnectionManager.DiscoveryChange!
+        var receivedDiscoveryChange: DiscoveryChange!
         _ = connectionManager.discoveryChange.subscribeNext { change in
             receivedDiscoveryChange = change
         }

@@ -155,21 +155,6 @@ public class BLEManager: NSObject, BLEManagerType {
         }
         .disposed(by: disposeBag)
 
-        connectionManager.discoveryChange.subscribeNext { [weak self] change in
-            guard let strongSelf = self else { return }
-            switch change.action {
-            case .initial: break
-            case let .sorcDiscovered(sorcID):
-                strongSelf.sorcDiscovered.onNext(sorcID)
-            case let .sorcsLost(lostSorcIds):
-                strongSelf.sorcsLost.onNext(Array(lostSorcIds))
-            default:
-                // TODO: PLAM 960 handle further cases or replace both subjects with discoveryChange
-                break
-            }
-        }
-        .disposed(by: disposeBag)
-
         connectionManager.connectionChange.subscribeNext { [weak self] change in
             self?.handleTransferConnectionStateChange(state: change.state)
         }
@@ -199,25 +184,21 @@ public class BLEManager: NSObject, BLEManagerType {
 
     // MARK: Interface
 
-    public var isBluetoothEnabled = BehaviorSubject(value: false)
+    public let isBluetoothEnabled = BehaviorSubject(value: false)
 
     // MARK: Discovery
 
-    public func hasSorcId(_ sorcId: SorcID) -> Bool {
-        return connectionManager.discoveryChange.state.first { $0 == sorcId } != nil
+    public var discoveryChange: ChangeSubject<DiscoveryChange> {
+        return connectionManager.discoveryChange
     }
-
-    public var sorcDiscovered = PublishSubject<SorcID>()
-
-    public var sorcsLost = PublishSubject<[SorcID]>()
 
     // MARK: - Connection
 
-    public var connectionChange = BehaviorSubject(value: ConnectionChange(state: .disconnected, action: .initial))
+    public let connectionChange = BehaviorSubject(value: ConnectionChange(state: .disconnected, action: .initial))
 
     // MARK: Service
 
-    public var receivedServiceGrantTriggerForStatus = PublishSubject<(status: ServiceGrantTriggerStatus?, error: String?)>()
+    public let receivedServiceGrantTriggerForStatus = PublishSubject<(status: ServiceGrantTriggerStatus?, error: String?)>()
 
     // MARK: Actions
 

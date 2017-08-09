@@ -13,10 +13,16 @@ import CommonUtils
 public class SimulatableBLEManager: BLEManagerType {
 
     /// The single shared instance
-    public static let shared = SimulatableBLEManager(
-        realManager: BLEManager.shared,
-        mockManager: MockBLEManager()
-    )
+    private static var shared: SimulatableBLEManager!
+    public static func shared(discoveredSorcsProvider: DiscoveredSorcsProviderType) -> SimulatableBLEManager {
+        if shared == nil {
+            shared = SimulatableBLEManager(
+                realManager: BLEManager.shared,
+                mockManager: MockBLEManager(discoveredSorcsProvider: discoveredSorcsProvider)
+            )
+        }
+        return shared
+    }
 
     private let realManager: BLEManagerType
     private let mockManager: BLEManagerType
@@ -72,25 +78,19 @@ public class SimulatableBLEManager: BLEManagerType {
 
     // MARK: - Interface
 
-    public var isBluetoothEnabled = BehaviorSubject<Bool>(value: false)
+    public let isBluetoothEnabled = BehaviorSubject<Bool>(value: false)
 
     // MARK: - Discovery
 
-    public func hasSorcId(_ sorcId: SorcID) -> Bool {
-        return currentManager.hasSorcId(sorcId)
-    }
-
-    public var sorcDiscovered = PublishSubject<SorcID>()
-
-    public var sorcsLost = PublishSubject<[SorcID]>()
+    public let discoveryChange = ChangeSubject<DiscoveryChange>(state: Set<SorcID>())
 
     // MARK: - Connection
 
-    public var connectionChange = BehaviorSubject(value: ConnectionChange(state: .disconnected, action: .initial))
+    public let connectionChange = BehaviorSubject(value: ConnectionChange(state: .disconnected, action: .initial))
 
     // MARK: - Service
 
-    public var receivedServiceGrantTriggerForStatus = PublishSubject<(status: ServiceGrantTriggerStatus?, error: String?)>()
+    public let receivedServiceGrantTriggerForStatus = PublishSubject<(status: ServiceGrantTriggerStatus?, error: String?)>()
 
     // MARK: - Actions
 
@@ -113,32 +113,22 @@ public class SimulatableBLEManager: BLEManagerType {
         let disposeBag = DisposeBag()
 
         manager.isBluetoothEnabled.subscribeNext { [weak self] enabled in
-            guard let strongSelf = self else { return }
-            strongSelf.isBluetoothEnabled.onNext(enabled)
+            self?.isBluetoothEnabled.onNext(enabled)
         }
         .disposed(by: disposeBag)
 
-        manager.sorcDiscovered.subscribeNext { [weak self] sorcId in
-            guard let strongSelf = self else { return }
-            strongSelf.sorcDiscovered.onNext(sorcId)
-        }
-        .disposed(by: disposeBag)
-
-        manager.sorcsLost.subscribeNext { [weak self] lostSorcIds in
-            guard let strongSelf = self else { return }
-            strongSelf.sorcsLost.onNext(lostSorcIds)
+        manager.discoveryChange.subscribeNext { [weak self] change in
+            self?.discoveryChange.onNext(change)
         }
         .disposed(by: disposeBag)
 
         manager.connectionChange.subscribeNext { [weak self] change in
-            guard let strongSelf = self else { return }
-            strongSelf.connectionChange.onNext(change)
+            self?.connectionChange.onNext(change)
         }
         .disposed(by: disposeBag)
 
         manager.receivedServiceGrantTriggerForStatus.subscribeNext { [weak self] result in
-            guard let strongSelf = self else { return }
-            strongSelf.receivedServiceGrantTriggerForStatus.onNext(result)
+            self?.receivedServiceGrantTriggerForStatus.onNext(result)
         }
         .disposed(by: disposeBag)
 
