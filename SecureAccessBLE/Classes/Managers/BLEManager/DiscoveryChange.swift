@@ -9,6 +9,7 @@
 import Foundation
 import CommonUtils
 
+/// A change (state and last action) that describes the discovery transitions
 public struct DiscoveryChange: ChangeType {
 
     public let state: Set<SorcID>
@@ -20,10 +21,20 @@ public struct DiscoveryChange: ChangeType {
 
     public enum Action {
         case initial
+        
+        /// The SORC was discovered
         case discovered(sorcID: SorcID)
+        
+        /// Discovered SORCs were not discovered recently and hence considered lost
         case lost(sorcIDs: Set<SorcID>)
+        
+        /// The disconnect was triggered manually
         case disconnect(sorcID: SorcID)
+        
+        /// The SORC was disconnected or disconnected on its own
         case disconnected(sorcID: SorcID)
+        
+        /// Discovered SORCs were cleared
         case reset
     }
 }
