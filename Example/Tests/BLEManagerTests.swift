@@ -12,15 +12,6 @@ import CoreBluetooth
 @testable import SecureAccessBLE
 import CommonUtils
 
-// class DataTransferMock: DataTransfer {
-//
-//    var sentData = PublishSubject<Error?>()
-//    var receivedData = PublishSubject<Result<Data>>()
-//
-//    func sendData(_: Data) {
-//    }
-// }
-
 class BLEManagerTests: XCTestCase {
 
     var bleManager: BLEManager!
