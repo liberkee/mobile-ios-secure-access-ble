@@ -80,7 +80,7 @@ class SIDCommunicator: NSObject {
     }
 
     /**
-     Sendign data to connected SID
+     Sending data to connected SID
 
      - parameter sendData: the message data, that will be sent to SID
 
