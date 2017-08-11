@@ -152,11 +152,6 @@ class SorcConnectionManager: NSObject, DataTransfer {
         disconnect(withAction: nil)
     }
 
-    /**
-     Sending data to current connected peripheral
-
-     - parameter data: NSData that will be sended to SID
-     */
     func sendData(_ data: Data) {
         guard case let .connected(sorcID) = connectionState,
             let characteristic = writeCharacteristic,
