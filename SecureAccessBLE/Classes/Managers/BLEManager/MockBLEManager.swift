@@ -10,7 +10,7 @@ import Foundation
 import CommonUtils
 
 public protocol DiscoveredSorcsProviderType {
-    var discoveredSorcIDs: BehaviorSubject<[SorcID: SorcInfo]> { get }
+    var discoveredSorcInfos: BehaviorSubject<[SorcID: SorcInfo]> { get }
 }
 
 /// Mocks the communication with a BLE device
@@ -56,8 +56,8 @@ class MockBLEManager: BLEManagerType {
 
     init(discoveredSorcsProvider: DiscoveredSorcsProviderType) {
         self.discoveredSorcsProvider = discoveredSorcsProvider
-        discoveredSorcsProvider.discoveredSorcIDs.subscribeNext { [weak self] sorcIDs in
-            self?.discoveryChange.onNext(.init(state: sorcIDs, action: .initial))
+        discoveredSorcsProvider.discoveredSorcInfos.subscribeNext { [weak self] sorcInfos in
+            self?.discoveryChange.onNext(.init(state: sorcInfos, action: .initial))
         }
         .disposed(by: disposeBag)
     }
