@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 ### Changed
+- 2017-08-11 : (PLAM-961)   : Provide correct rssi through DiscoveryChange
 - 2017-08-11 : (PLAM-960)   : Merged sorcDiscovered, sorcsLost and hasSorcId into one subject
 - 2017-08-08 : (PLAM-963)   : Improve `BLEScanner` (`SorcConnectionManager`)
 
