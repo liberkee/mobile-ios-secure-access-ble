@@ -71,7 +71,7 @@ class MockBLEManager: BLEManagerType {
             guard let strongSelf = self else { return }
             strongSelf.connectionChange.onNext(ConnectionChange(
                 state: .connected(sorcID: sorcID),
-                action: .connectionEstablished(sorcID: sorcID, rssi: 0))
+                action: .connectionEstablished(sorcID: sorcID))
             )
         }
         self.connectWorkItem = connectWorkItem

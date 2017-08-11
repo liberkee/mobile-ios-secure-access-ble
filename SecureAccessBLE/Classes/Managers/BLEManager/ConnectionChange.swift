@@ -26,8 +26,8 @@ public struct ConnectionChange: ChangeType {
         case disconnect
         // internal
         case initial
-        case connectionEstablished(sorcID: SorcID, rssi: Int)
-        case connectingFailed(error: ConnectingFailedError, sorcID: SorcID, rssi: Int)
+        case connectionEstablished(sorcID: SorcID)
+        case connectingFailed(error: ConnectingFailedError, sorcID: SorcID)
         case connectionLost(error: ConnectionLostError)
     }
 

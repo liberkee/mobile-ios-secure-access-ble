@@ -458,10 +458,9 @@ extension BLEManager: BLEChallengeServiceDelegate {
         guard currentConnectionState == .connected else { return }
         cryptoManager = AesCbcCryptoManager(key: sessionKey)
         currentEncryptionState = .encryptionEstablished
-        // TODO: PLAM-949 set correct rssi
         connectionChange.onNext(ConnectionChange(
             state: .connected(sorcID: sorcID),
-            action: .connectionEstablished(sorcID: sorcID, rssi: 0))
+            action: .connectionEstablished(sorcID: sorcID))
         )
         bleSchouldSendHeartbeat()
     }
@@ -473,10 +472,9 @@ extension BLEManager: BLEChallengeServiceDelegate {
     func challengerNeedsSendBlob(latestBlobCounter: Int?) {
 
         guard latestBlobCounter == nil || blobCounter >= latestBlobCounter! else {
-            // TODO: PLAM-949 set correct rssi
             connectionChange.onNext(ConnectionChange(
                 state: .disconnected,
-                action: .connectingFailed(error: .blobOutdated, sorcID: sorcID, rssi: 0))
+                action: .connectingFailed(error: .blobOutdated, sorcID: sorcID))
             )
             return
         }
