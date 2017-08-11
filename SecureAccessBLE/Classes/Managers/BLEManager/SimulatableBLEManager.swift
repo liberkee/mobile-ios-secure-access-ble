@@ -82,7 +82,7 @@ public class SimulatableBLEManager: BLEManagerType {
 
     // MARK: - Discovery
 
-    public let discoveryChange = ChangeSubject<DiscoveryChange>(state: Set<SorcID>())
+    public let discoveryChange = ChangeSubject<DiscoveryChange>(state: [:])
 
     // MARK: - Connection
 

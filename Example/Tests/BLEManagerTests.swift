@@ -28,7 +28,7 @@ class BLEManagerTests: XCTestCase {
     }
 
     /**
-     To test changing connection state in connectionManager and communicator, and corresposing changed connection 
+     To test changing connection state in connectionManager and communicator, and corresposing changed connection
      states for BLE-manager
      */
     func testChangingConnectionState() {

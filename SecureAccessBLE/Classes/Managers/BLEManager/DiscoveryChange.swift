@@ -12,10 +12,10 @@ import CommonUtils
 /// A change (state and last action) that describes the discovery transitions
 public struct DiscoveryChange: ChangeType {
 
-    public let state: Set<SorcID>
+    public let state: [SorcID: SorcInfo]
     public let action: Action
 
-    public static func initialWithState(_ state: Set<SorcID>) -> DiscoveryChange {
+    public static func initialWithState(_ state: [SorcID: SorcInfo]) -> DiscoveryChange {
         return DiscoveryChange(state: state, action: .initial)
     }
 
@@ -24,6 +24,9 @@ public struct DiscoveryChange: ChangeType {
 
         /// The SORC was discovered
         case discovered(sorcID: SorcID)
+
+        /// The SORC was discovered again
+        case rediscovered(sorcID: SorcID)
 
         /// Discovered SORCs were not discovered recently and hence considered lost
         case lost(sorcIDs: Set<SorcID>)
@@ -53,6 +56,7 @@ extension DiscoveryChange.Action: Equatable {
         switch (lhs, rhs) {
         case (.initial, .initial): return true
         case let (.discovered(lSorcID), .discovered(rSorcID)) where lSorcID == rSorcID: return true
+        case let (.rediscovered(lSorcID), .rediscovered(rSorcID)) where lSorcID == rSorcID: return true
         case let (.lost(lSorcIDs), .lost(rSorcIDs)) where lSorcIDs == rSorcIDs: return true
         case let (.disconnect(lSorcID), .disconnect(rSorcID)) where lSorcID == rSorcID: return true
         case let (.disconnected(lSorcID), .disconnected(rSorcID)) where lSorcID == rSorcID: return true

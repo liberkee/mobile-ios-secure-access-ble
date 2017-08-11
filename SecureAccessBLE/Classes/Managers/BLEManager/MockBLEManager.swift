@@ -10,7 +10,7 @@ import Foundation
 import CommonUtils
 
 public protocol DiscoveredSorcsProviderType {
-    var discoveredSorcIDs: BehaviorSubject<Set<SorcID>> { get }
+    var discoveredSorcIDs: BehaviorSubject<[SorcID: SorcInfo]> { get }
 }
 
 /// Mocks the communication with a BLE device
@@ -33,7 +33,7 @@ class MockBLEManager: BLEManagerType {
 
     // MARK: - Discovery
 
-    public let discoveryChange = ChangeSubject<DiscoveryChange>(state: Set<SorcID>())
+    public let discoveryChange = ChangeSubject<DiscoveryChange>(state: [:])
 
     // MARK: - Connection
 
