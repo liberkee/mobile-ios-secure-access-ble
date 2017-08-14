@@ -1,5 +1,5 @@
 //
-//  PhoneToSidChallenge.swift
+//  PhoneToSorcChallenge.swift
 //  BLE
 //
 //  Created by Ke Song on 20.06.16.
@@ -9,11 +9,11 @@
 import UIKit
 
 /**
- A SidMessaage Payload for a BLE challenger
+ A SorcMessage Payload for a BLE challenger
 
  A convience initializer accepts a LeaseToken and a challenge.
  */
-struct PhoneToSidChallenge: SIDMessagePayload {
+struct PhoneToSorcChallenge: SorcMessagePayload {
     /// The initialized data object
     var data: Data = Data()
 
@@ -21,23 +21,23 @@ struct PhoneToSidChallenge: SIDMessagePayload {
      The Device ID as a string.
      Read-only, can be only set through a initializer.
      */
-    var leaseId: String {
+    var leaseID: String {
         let part = data.subdata(in: 0 ..< 36) // 36 chars
-        if let deviceId = NSString(data: part, encoding: String.Encoding.utf8.rawValue) {
-            return deviceId as String
+        if let deviceID = NSString(data: part, encoding: String.Encoding.utf8.rawValue) {
+            return deviceID as String
         } else {
             return ""
         }
     }
 
     /**
-     The SID ID as a string.
+     The SORC id as a string.
      Read-only, can be only set through a initializer.
      */
-    var sidID: String {
+    var sorcID: String {
         let part = data.subdata(in: 36 ..< 72) // 36 chars
-        if let sidId = NSString(data: part, encoding: String.Encoding.utf8.rawValue) {
-            return sidId as String
+        if let sorcID = NSString(data: part, encoding: String.Encoding.utf8.rawValue) {
+            return sorcID as String
         } else {
             return ""
         }
@@ -49,8 +49,8 @@ struct PhoneToSidChallenge: SIDMessagePayload {
      */
     var leaseTokenID: String {
         let part = data.subdata(in: 72 ..< 108) // 36 chars
-        if let sidId = NSString(data: part, encoding: String.Encoding.utf8.rawValue) {
-            return sidId as String
+        if let sorcID = NSString(data: part, encoding: String.Encoding.utf8.rawValue) {
+            return sorcID as String
         } else {
             return ""
         }
@@ -68,18 +68,18 @@ struct PhoneToSidChallenge: SIDMessagePayload {
     /**
      Inits the Payload. Takes IDs and challenge directly.
      - parameter deviceID: The Device ID as String
-     - parameter sidID: The SID ID as String
+     - parameter sorcID: The SORC ID as String
      - parameter leaseTokenID: The LeaseToken ID as String
      - parameter challenge: The challenge as a UInt8 array
 
      */
-    init(leaseId: String, sidID: String, leaseTokenID: String, challenge: [UInt8]) {
+    init(leaseID: String, sorcID: String, leaseTokenID: String, challenge: [UInt8]) {
         let data = NSMutableData()
 
-        if let stringData = leaseId.data(using: String.Encoding.utf8) {
+        if let stringData = leaseID.data(using: String.Encoding.utf8) {
             data.append(stringData)
         }
-        if let stringData = sidID.data(using: String.Encoding.utf8) {
+        if let stringData = sorcID.data(using: String.Encoding.utf8) {
             data.append(stringData)
         }
 

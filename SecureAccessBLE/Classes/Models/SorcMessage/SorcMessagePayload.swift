@@ -1,5 +1,5 @@
 //
-//  SIDMessagePayload.swift
+//  SorcMessagePayload.swift
 //  HSM
 //
 //  Created by Sebastian Stüssel on 20.09.15.
@@ -9,22 +9,22 @@
 import Foundation
 
 /**
- *  General defined SID message payload, with NSData object type
+ *  General defined SORC message payload, with NSData object type
  */
-protocol SIDMessagePayload {
+protocol SorcMessagePayload {
 
     /// message payload defined as NSData
     var data: Data { set get }
 }
 
 // MARK: - Extension end point
-extension SIDMessagePayload {
+extension SorcMessagePayload {
 }
 
 /**
  *  Message payload with empty bytes
  */
-struct EmptyPayload: SIDMessagePayload {
+struct EmptyPayload: SorcMessagePayload {
     /// start value as NSData
     var data: Data
     /**

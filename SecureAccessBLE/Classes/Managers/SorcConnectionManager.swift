@@ -56,10 +56,10 @@ class SorcConnectionManager: NSObject, DataTransfer {
     let sentData = PublishSubject<Error?>()
     let receivedData = PublishSubject<Result<Data>>()
 
-    fileprivate let deviceId = "EF82084D-BFAD-4ABE-90EE-2552C20C5765"
-    fileprivate let serviceId = "d1cf0603-b501-4569-a4b9-e47ad3f628a5"
-    fileprivate let notifyCharacteristicId = "d1d7a6b6-457e-458a-b237-a9df99b3d98b"
-    fileprivate let writeCharacteristicId = "c8e58f23-9417-41c6-97a8-70f6b2c8cab9"
+    fileprivate let deviceID = "EF82084D-BFAD-4ABE-90EE-2552C20C5765"
+    fileprivate let serviceID = "d1cf0603-b501-4569-a4b9-e47ad3f628a5"
+    fileprivate let notifyCharacteristicID = "d1d7a6b6-457e-458a-b237-a9df99b3d98b"
+    fileprivate let writeCharacteristicID = "c8e58f23-9417-41c6-97a8-70f6b2c8cab9"
 
     fileprivate var writeCharacteristic: CBCharacteristicType?
     fileprivate var notifyCharacteristic: CBCharacteristicType?
@@ -256,7 +256,7 @@ extension SorcConnectionManager {
             peripheralMatchingSorcID(sorcID)?.identifier == peripheral.identifier else { return }
 
         peripheral.delegate = self
-        peripheral.discoverServices([CBUUID(string: serviceId)])
+        peripheral.discoverServices([CBUUID(string: serviceID)])
     }
 
     func centralManager_(_: CBCentralManagerType, didFailToConnect peripheral: CBPeripheralType, error: Error?) {
@@ -293,7 +293,7 @@ extension SorcConnectionManager {
             disconnect(withAction: .connectingFailed(sorcID: sorcID))
         } else {
             for service in peripheral.services_! {
-                let characteristics = [CBUUID(string: writeCharacteristicId), CBUUID(string: notifyCharacteristicId)]
+                let characteristics = [CBUUID(string: writeCharacteristicID), CBUUID(string: notifyCharacteristicID)]
                 peripheral.discoverCharacteristics(characteristics, for: service)
             }
         }
@@ -309,10 +309,10 @@ extension SorcConnectionManager {
             disconnect(withAction: .connectingFailed(sorcID: sorcID))
         } else {
             for characteristic in service.characteristics_! {
-                if characteristic.uuid == CBUUID(string: notifyCharacteristicId) {
+                if characteristic.uuid == CBUUID(string: notifyCharacteristicID) {
                     notifyCharacteristic = characteristic
                     peripheral.setNotifyValue(true, for: characteristic)
-                } else if characteristic.uuid == CBUUID(string: writeCharacteristicId) {
+                } else if characteristic.uuid == CBUUID(string: writeCharacteristicID) {
                     writeCharacteristic = characteristic
                 }
             }
@@ -325,7 +325,7 @@ extension SorcConnectionManager {
     }
 
     func peripheral_(_: CBPeripheralType, didUpdateValueFor characteristic: CBCharacteristicType, error: Error?) {
-        guard characteristic.uuid == CBUUID(string: notifyCharacteristicId) else { return }
+        guard characteristic.uuid == CBUUID(string: notifyCharacteristicID) else { return }
         if let error = error {
             receivedData.onNext(.error(error))
         } else if let data = characteristic.value {
@@ -336,7 +336,7 @@ extension SorcConnectionManager {
     }
 
     func peripheral_(_: CBPeripheralType, didWriteValueFor characteristic: CBCharacteristicType, error: Error?) {
-        guard characteristic.uuid == CBUUID(string: writeCharacteristicId) else { return }
+        guard characteristic.uuid == CBUUID(string: writeCharacteristicID) else { return }
         sentData.onNext(error)
     }
 }

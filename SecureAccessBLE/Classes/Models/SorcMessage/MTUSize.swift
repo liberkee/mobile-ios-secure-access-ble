@@ -9,9 +9,9 @@
 import Foundation
 
 /**
- *  Init Sid message payload with data and size for MTUSize (request) instance
+ *  Init SORC message payload with data and size for MTUSize (request) instance
  */
-struct MTUSize: SIDMessagePayload {
+struct MTUSize: SorcMessagePayload {
     /// start value as NSData
     var data = Data()
     /// size as Int
@@ -27,7 +27,7 @@ struct MTUSize: SIDMessagePayload {
     /**
      Initialization point
 
-     - returns: MTUSize instance as Sid messag payload
+     - returns: MTUSize instance as SORC messag payload
      */
     init() {
     }
@@ -37,7 +37,7 @@ struct MTUSize: SIDMessagePayload {
 
      - parameter rawData: raw data the message payload contains
 
-     - returns: MTUSize(request message to SID) instance as sid message payload
+     - returns: MTUSize(request message to SORC) instance as SORC message payload
      */
     init(rawData: Data) {
         self.init()

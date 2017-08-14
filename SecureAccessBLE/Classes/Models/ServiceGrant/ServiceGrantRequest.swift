@@ -29,9 +29,9 @@ enum ServiceGrantID: UInt16 {
 }
 
 /**
- *  SID messagepayload with service grant id
+ *  SORC messagepayload with service grant id
  */
-protocol ServiceGrant: SIDMessagePayload {
+protocol ServiceGrant: SorcMessagePayload {
     /**
      Initilization point
 
@@ -101,7 +101,7 @@ extension ServiceGrant {
     }
 }
 
-/// The service grant request is forwarded by SID to the secured object endpoint where the
+/// The service grant request is forwarded by SORC to the secured object endpoint where the
 /// corresponding action is executed
 struct ServiceGrantRequest: ServiceGrant {
     /// start value as NSData

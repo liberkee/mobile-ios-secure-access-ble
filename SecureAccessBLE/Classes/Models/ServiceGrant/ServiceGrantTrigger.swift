@@ -9,11 +9,11 @@
 import Foundation
 
 /**
- *  Service grant trigger comes from SID peripheral
+ *  Service grant trigger comes from SORC peripheral
  */
 struct ServiceGrantTrigger: ServiceGrant {
     /**
-     Defines the Service Grant Status as enumerating, answered from SID peripheral
+     Defines the Service Grant Status as enumerating, answered from SORC peripheral
 
      - Success:    Success status
      - Pending:    Pending status

@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 ### Changed
+- 2017-08-14 : (PLAM-964)   : Rename `SID` to `SORC`
 - 2017-08-14 : (PLAM-962)   : Provide proper actions for disconnected state in `BLEManager`
 - 2017-08-11 : (PLAM-961)   : Provide correct rssi through DiscoveryChange
 - 2017-08-11 : (PLAM-960)   : Merged sorcDiscovered, sorcsLost and hasSorcId into one subject

@@ -9,13 +9,13 @@
 import Foundation
 
 /**
- *  To build MessagePayload as Blob request sending to SID
+ *  To build MessagePayload as Blob request sending to SORC
  */
-struct BlobRequest: SIDMessagePayload {
+struct BlobRequest: SorcMessagePayload {
     /// Start message payload as NSData for blob request
     var data: Data
     /// The message id as Int
-    var blobMessageId: Int {
+    var blobMessageID: Int {
         let type: UInt32 = 0
         var receiveData = UInt8(type)
         (data as Data).copyBytes(to: &receiveData, count: MemoryLayout<UInt32>.size)

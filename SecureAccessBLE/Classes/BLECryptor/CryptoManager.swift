@@ -10,7 +10,7 @@ import Foundation
 
 /**
  *  All Transport layer messages shall be encrypted. Crypto manager will be used for endryting and decrypting
- *  the SID messages
+ *  the SORC messages
  */
 protocol CryptoManager {
     /// cryption key
@@ -18,27 +18,27 @@ protocol CryptoManager {
     /**
      Encryption message to message Data
 
-     - parameter message: incomming SIDMessage
+     - parameter message: incomming SorcMessage
 
      - returns: encrypted message data
      */
-    mutating func encryptMessage(_ message: SIDMessage) -> Data
+    mutating func encryptMessage(_ message: SorcMessage) -> Data
 
     /**
-     To decrypte incomming data to SID Message
+     To decrypte incomming data to SORC Message
 
      - parameter data: incomming Data, that will be decryted
 
-     - returns: SID message object decryted from incomming data
+     - returns: SORC message object decryted from incomming data
      */
-    mutating func decryptData(_ data: Data) -> SIDMessage
+    mutating func decryptData(_ data: Data) -> SorcMessage
 
     /**
-     To decrypte incomming data to SID data
+     To decrypte incomming data to SORC data
 
      - parameter data: incomming Data, that will be decryted
 
-     - returns: SID Data object decryted from incomming data
+     - returns: SORC Data object decryted from incomming data
      */
     func decryptRawData(_ data: Data) -> Data
 }
@@ -46,11 +46,11 @@ protocol CryptoManager {
 /// Extension endpoint
 extension CryptoManager {
     /**
-     To decrypte incomming data to SID data
+     To decrypte incomming data to SORC data
 
      - parameter data: incomming Data, that will be decryted
 
-     - returns: SID Data object decryted from incomming data
+     - returns: SORC Data object decryted from incomming data
      */
     func decryptRawData(_ data: Data) -> Data {
         return data

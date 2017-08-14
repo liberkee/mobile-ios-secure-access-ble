@@ -11,7 +11,7 @@ import UIKit
 /**
  *  Message payload with blob data
  */
-struct LTBlobPayload: SIDMessagePayload {
+struct LTBlobPayload: SorcMessagePayload {
     /// start Payload as NSData
     var data: Data
     /**

@@ -8,7 +8,7 @@
 
 import UIKit
 
-/// Creates and holds data Frames for a SIDMessage
+/// Creates and holds data Frames for a SorcMessage
 class DataFramePackage: NSObject {
     /// Date frame list
     var frames = [DataFrame]()
@@ -24,7 +24,7 @@ class DataFramePackage: NSObject {
         }
     }
 
-    /// The message data the SIDMessage contains
+    /// The message data the SorcMessage contains
     var message: Data {
         let data = NSMutableData()
 
@@ -37,7 +37,7 @@ class DataFramePackage: NSObject {
     /**
      convenience initialization point
 
-     - parameter messageData: the message data SIDMessage contains
+     - parameter messageData: the message data SorcMessage contains
      - parameter frameSize:   the data frame size
 
      - returns: Data frame package objec

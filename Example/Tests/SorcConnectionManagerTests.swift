@@ -111,9 +111,9 @@ extension SorcConnectionManager {
 
 class SorcConnectionManagerTests: XCTestCase {
 
-    let notifyCharacteristicId = "d1d7a6b6-457e-458a-b237-a9df99b3d98b"
-    let writeCharacteristicId = "c8e58f23-9417-41c6-97a8-70f6b2c8cab9"
-    let serviceId = "d1cf0603-b501-4569-a4b9-e47ad3f628a5"
+    let notifyCharacteristicID = "d1d7a6b6-457e-458a-b237-a9df99b3d98b"
+    let writeCharacteristicID = "c8e58f23-9417-41c6-97a8-70f6b2c8cab9"
+    let serviceID = "d1cf0603-b501-4569-a4b9-e47ad3f628a5"
 
     let sorcID1 = "82f6ed49-b70d-4c9e-afa1-4b0377d0de5f"
     let sorcID2 = "a8c5e6b9-9df1-4194-a214-88636a048fcb"
@@ -548,7 +548,7 @@ class SorcConnectionManagerTests: XCTestCase {
         connectionManager.centralManager_(centralManager, didConnect: peripheral)
 
         // Then
-        XCTAssertEqual(peripheral.discoverServicesCalledWithUUIDs!, [CBUUID(string: serviceId)])
+        XCTAssertEqual(peripheral.discoverServicesCalledWithUUIDs!, [CBUUID(string: serviceID)])
     }
 
     func test_centralManagerDidConnectPeripheral_ifItsNotConnecting_doesNotTryToDiscoverServices() {
@@ -687,8 +687,8 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Then
         if let arguments = peripheral.discoverCharacteristicsCalledWithArguments {
-            XCTAssert(arguments.characteristicUUIDs!.contains(CBUUID(string: writeCharacteristicId)))
-            XCTAssert(arguments.characteristicUUIDs!.contains(CBUUID(string: notifyCharacteristicId)))
+            XCTAssert(arguments.characteristicUUIDs!.contains(CBUUID(string: writeCharacteristicID)))
+            XCTAssert(arguments.characteristicUUIDs!.contains(CBUUID(string: notifyCharacteristicID)))
         } else {
             XCTFail()
         }
@@ -730,9 +730,9 @@ class SorcConnectionManagerTests: XCTestCase {
         peripheral.services_ = [service]
 
         let writeCharacteristic = CBCharacteristicMock()
-        writeCharacteristic.uuid = CBUUID(string: writeCharacteristicId)
+        writeCharacteristic.uuid = CBUUID(string: writeCharacteristicID)
         let notifyCharacteristic = CBCharacteristicMock()
-        notifyCharacteristic.uuid = CBUUID(string: notifyCharacteristicId)
+        notifyCharacteristic.uuid = CBUUID(string: notifyCharacteristicID)
         service.characteristics_ = [writeCharacteristic, notifyCharacteristic]
 
         prepareConnectingSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
@@ -793,7 +793,7 @@ class SorcConnectionManagerTests: XCTestCase {
         let connectionManager = SorcConnectionManager(centralManager: centralManager)
         let notifyCharacteristic = CBCharacteristicMock()
         notifyCharacteristic.value = Data(base64Encoded: "data")
-        notifyCharacteristic.uuid = CBUUID(string: notifyCharacteristicId)
+        notifyCharacteristic.uuid = CBUUID(string: notifyCharacteristicID)
 
         var receivedData: Data?
         _ = connectionManager.receivedData.subscribeNext { result in
@@ -816,7 +816,7 @@ class SorcConnectionManagerTests: XCTestCase {
         let connectionManager = SorcConnectionManager(centralManager: centralManager)
         let notifyCharacteristic = CBCharacteristicMock()
         notifyCharacteristic.value = Data(base64Encoded: "data")
-        notifyCharacteristic.uuid = CBUUID(string: notifyCharacteristicId)
+        notifyCharacteristic.uuid = CBUUID(string: notifyCharacteristicID)
 
         var receivedDataError: Error?
         _ = connectionManager.receivedData.subscribeNext { result in
@@ -840,7 +840,7 @@ class SorcConnectionManagerTests: XCTestCase {
         let centralManager = CBCentralManagerMock()
         let connectionManager = SorcConnectionManager(centralManager: centralManager)
         let writeCharacteristic = CBCharacteristicMock()
-        writeCharacteristic.uuid = CBUUID(string: writeCharacteristicId)
+        writeCharacteristic.uuid = CBUUID(string: writeCharacteristicID)
 
         var sentDataError: Error?
         _ = connectionManager.sentData.subscribeNext { error in
@@ -860,7 +860,7 @@ class SorcConnectionManagerTests: XCTestCase {
         let centralManager = CBCentralManagerMock()
         let connectionManager = SorcConnectionManager(centralManager: centralManager)
         let writeCharacteristic = CBCharacteristicMock()
-        writeCharacteristic.uuid = CBUUID(string: writeCharacteristicId)
+        writeCharacteristic.uuid = CBUUID(string: writeCharacteristicID)
 
         var sentDataError: Error?
         _ = connectionManager.sentData.subscribeNext { error in
@@ -965,9 +965,9 @@ class SorcConnectionManagerTests: XCTestCase {
         connectionManager.peripheral_(peripheral, didDiscoverServices: nil)
 
         let notifyCharacteristic = CBCharacteristicMock()
-        notifyCharacteristic.uuid = CBUUID(string: notifyCharacteristicId)
+        notifyCharacteristic.uuid = CBUUID(string: notifyCharacteristicID)
         let writeCharacteristic = CBCharacteristicMock()
-        writeCharacteristic.uuid = CBUUID(string: writeCharacteristicId)
+        writeCharacteristic.uuid = CBUUID(string: writeCharacteristicID)
         service.characteristics_ = [notifyCharacteristic, writeCharacteristic]
 
         connectionManager.peripheral_(peripheral, didDiscoverCharacteristicsFor: service, error: nil)

@@ -1,5 +1,5 @@
 //
-//  PhoneToSidResponse.swift
+//  PhoneToSorcResponse.swift
 //  BLE
 //
 //  Created by Ke Song on 20.06.16.
@@ -9,9 +9,9 @@
 import UIKit
 
 /**
- *  SID message payload for second step Challenge responses to SID
+ *  SORC message payload for second step Challenge responses to SORC
  */
-struct PhoneToSidResponse: SIDMessagePayload {
+struct PhoneToSorcResponse: SorcMessagePayload {
     /// Initialized Payload as NSData
     var data: Data
     /// challenge bytes
@@ -25,7 +25,7 @@ struct PhoneToSidResponse: SIDMessagePayload {
 
      - parameter response: response bytes
 
-     - returns: payload object to SID as NSData
+     - returns: payload object to SORC as NSData
      */
     init(response: [UInt8]) {
         data = Data(bytes: response) // Data.withBytes(response)

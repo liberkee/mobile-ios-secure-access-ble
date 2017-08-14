@@ -11,7 +11,7 @@ import CryptoSwift
 import CommonUtils
 
 /**
- Defines the ServiceGrantTriggersStatus anwered from SID, see also the definations for
+ Defines the ServiceGrantTriggersStatus anwered from SORC, see also the definations for
  ServiceGrantID, ServiceGrantStatus and ServiceGrantResult defined in 'ServiceGrantTrigger.swift'
  */
 public enum ServiceGrantTriggerStatus: Int {
@@ -97,11 +97,11 @@ public class BLEManager: NSObject, BLEManagerType {
     /// Chanllenger object
     fileprivate var challenger: BLEChallengeService?
     ///  The communicator objec
-    fileprivate let communicator: SIDCommunicator
+    fileprivate let communicator: SorcCommunicator
 
     private var leaseID: String = ""
     private var leaseTokenID: String = ""
-    private var sidAccessKey: String = ""
+    private var sorcAccessKey: String = ""
     fileprivate var sorcID: String = ""
 
     /// Blob as String came from SecureAccess.blob
@@ -128,7 +128,7 @@ public class BLEManager: NSObject, BLEManagerType {
 
     // MARK: - Inits and deinit
 
-    init(sorcConnectionManager: SorcConnectionManager, communicator: SIDCommunicator) {
+    init(sorcConnectionManager: SorcConnectionManager, communicator: SorcCommunicator) {
         currentEncryptionState = .shouldEncrypt
         connectionManager = sorcConnectionManager
         self.communicator = communicator
@@ -148,7 +148,7 @@ public class BLEManager: NSObject, BLEManagerType {
 
     convenience override init() {
         let sorcConnectionManager = SorcConnectionManager()
-        let communicator = SIDCommunicator(transporter: sorcConnectionManager)
+        let communicator = SorcCommunicator(transporter: sorcConnectionManager)
         self.init(sorcConnectionManager: sorcConnectionManager, communicator: communicator)
     }
 
@@ -191,7 +191,7 @@ public class BLEManager: NSObject, BLEManagerType {
         sorcID = leaseToken.sorcID
         leaseTokenID = leaseToken.id
         leaseID = leaseToken.leaseID
-        sidAccessKey = leaseToken.sorcAccessKey
+        sorcAccessKey = leaseToken.sorcAccessKey
         blobData = leaseTokenBlob.data
         blobCounter = leaseTokenBlob.messageCounter
         connectionManager.connectToSorc(sorcID)
@@ -215,7 +215,7 @@ public class BLEManager: NSObject, BLEManagerType {
             return
         }
 
-        let payload: SIDMessagePayload
+        let payload: SorcMessagePayload
         switch feature {
         case .open:
             payload = ServiceGrantRequest(grantID: ServiceGrantID.unlock)
@@ -231,7 +231,7 @@ public class BLEManager: NSObject, BLEManagerType {
             payload = ServiceGrantRequest(grantID: ServiceGrantID.ignitionStatus)
         }
 
-        let message = SIDMessage(id: SIDMessageID.serviceGrant, payload: payload)
+        let message = SorcMessage(id: SorcMessageID.serviceGrant, payload: payload)
         _ = sendMessage(message)
     }
 
@@ -280,10 +280,10 @@ public class BLEManager: NSObject, BLEManagerType {
     }
 
     /**
-     Sending heartbeats message to SID
+     Sending heartbeats message to SORC
      */
     func startSendingHeartbeat() {
-        let message = SIDMessage(id: SIDMessageID.heartBeatRequest, payload: MTUSize())
+        let message = SorcMessage(id: SorcMessageID.heartBeatRequest, payload: MTUSize())
         // TODO: PLAM-1375 handle error
         _ = self.sendMessage(message)
     }
@@ -308,20 +308,20 @@ public class BLEManager: NSObject, BLEManagerType {
     fileprivate func sendMTURequest() {
         connectionChange.onNext(.init(state: .connecting(sorcID: sorcID, state: .requestingMTU),
                                       action: .physicalConnectionEstablished(sorcID: sorcID)))
-        let message = SIDMessage(id: SIDMessageID.mtuRequest, payload: MTUSize())
+        let message = SorcMessage(id: SorcMessageID.mtuRequest, payload: MTUSize())
         _ = self.sendMessage(message)
     }
 
     /**
-     Initialize SID challenger to establish Crypto
+     Initialize BLEChallengeService to establish Crypto
      */
     fileprivate func establishCrypto() {
-        if sorcID.isEmpty || sidAccessKey.isEmpty {
+        if sorcID.isEmpty || sorcAccessKey.isEmpty {
             print("Not found sorcID or access key for cram")
             disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
             return
         }
-        challenger = BLEChallengeService(leaseId: leaseID, sidId: sorcID, leaseTokenId: leaseTokenID, sidAccessKey: sidAccessKey)
+        challenger = BLEChallengeService(leaseID: leaseID, sorcID: sorcID, leaseTokenID: leaseTokenID, sorcAccessKey: sorcAccessKey)
         challenger?.delegate = self
         if challenger == nil {
             print("Cram could not be initialized")
@@ -339,12 +339,12 @@ public class BLEManager: NSObject, BLEManagerType {
     }
 
     /**
-     Sending Blob to SID peripheral
+     Sending Blob to SORC peripheral
      */
     fileprivate func sendBlob() {
         if blobData?.isEmpty == false {
             if let payload = LTBlobPayload(blobData: blobData!) {
-                let message = SIDMessage(id: .ltBlob, payload: payload)
+                let message = SorcMessage(id: .ltBlob, payload: payload)
                 _ = sendMessage(message)
             } else {
                 print("Blob data error")
@@ -362,11 +362,11 @@ public class BLEManager: NSObject, BLEManagerType {
      When previous data is still in a sending state, the method will return **false** and an error message.
      Otherwise it will return **true** and a no error string (nil)
 
-     - parameter message: The SIDMessage which should be send
+     - parameter message: The SorcMessage which should be send
 
      - returns:  (success: Bool, error: String?) A Tuple containing a success boolean and a error string or nil
      */
-    func sendMessage(_ message: SIDMessage) -> (success: Bool, error: String?) {
+    func sendMessage(_ message: SorcMessage) -> (success: Bool, error: String?) {
         if communicator.currentPackage != nil {
             print("Sending package not empty!! Message \(message.id) will not be sent!!")
             return (false, "Sending in progress")
@@ -384,12 +384,12 @@ public class BLEManager: NSObject, BLEManagerType {
     }
 
     /**
-     Response message from SID will be handled with reporting ServiceGrantTriggerStatus
+     Response message from SORC will be handled with reporting ServiceGrantTriggerStatus
 
-     - parameter message: the Response message came from SID
+     - parameter message: the Response message came from SORC
      - parameter error:   error description if that not nil
      */
-    fileprivate func handleServiceGrantTrigger(_ message: SIDMessage?, error: String?) {
+    fileprivate func handleServiceGrantTrigger(_ message: SorcMessage?, error: String?) {
 
         var theStatus: ServiceGrantTriggerStatus = .triggerStatusUnkown
         guard let trigger = message.map({ ServiceGrantTrigger(rawData: $0.message) }) else {
@@ -449,7 +449,7 @@ public class BLEManager: NSObject, BLEManagerType {
 
 extension BLEManager: BLEChallengeServiceDelegate {
 
-    func challengerWantsSendMessage(_ message: SIDMessage) {
+    func challengerWantsSendMessage(_ message: SorcMessage) {
         _ = sendMessage(message)
     }
 
@@ -477,9 +477,9 @@ extension BLEManager: BLEChallengeServiceDelegate {
     }
 }
 
-// MARK: - SIDCommunicatorDelegate
+// MARK: - SorcCommunicatorDelegate
 
-extension BLEManager: SIDCommunicatorDelegate {
+extension BLEManager: SorcCommunicatorDelegate {
 
     func communicatorDidReceivedData(_ messageData: Data, count: Int) {
 
@@ -516,7 +516,7 @@ extension BLEManager: SIDCommunicatorDelegate {
                 establishCrypto()
             }
             // Challenger Message
-        case .challengeSidResponse, .badChallengeSidResponse, .ltAck:
+        case .challengeSorcResponse, .badChallengeSorcResponse, .ltAck:
             do {
                 try challenger?.handleReceivedChallengerMessage(message)
             } catch {
@@ -526,7 +526,7 @@ extension BLEManager: SIDCommunicatorDelegate {
 
         case .ltBlobRequest:
             let payload = BlobRequest(rawData: message.message)
-            if blobCounter > payload.blobMessageId {
+            if blobCounter > payload.blobMessageID {
                 sendBlob()
             }
 
@@ -537,7 +537,7 @@ extension BLEManager: SIDCommunicatorDelegate {
         default:
             // Normal Message. E.g. ServiceGrant
             let messageID = message.id
-            if messageID == SIDMessageID.serviceGrantTrigger {
+            if messageID == SorcMessageID.serviceGrantTrigger {
                 handleServiceGrantTrigger(message, error: nil)
             }
         }

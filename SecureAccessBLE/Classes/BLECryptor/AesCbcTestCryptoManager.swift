@@ -40,25 +40,25 @@ struct AesCbcTestCryptoManager: CryptoManager {
     /**
      To encrypt incomming message
 
-     - parameter message: incomming SID Message object that will be encrypted
+     - parameter message: incomming SORC Message object that will be encrypted
 
-     - returns: sending data encrypted from SID Message
+     - returns: sending data encrypted from SORC Message
      */
-    func encryptMessage(_ message: SIDMessage) -> Data {
+    func encryptMessage(_ message: SorcMessage) -> Data {
         do {
             let bytes: [UInt8] = try AES(key: key, iv: iv, blockMode: .CBC, padding: ZeroByte()).encrypt((message.data as Data).bytes)
 
             let data = Data(bytes: bytes)
             return data
         } catch {
-            fatalError("Can not encrypt SIDMessage")
+            fatalError("Can not encrypt SorcMessage")
         }
     }
 
     /**
      All sending message will be encrypted to NSData object for Data transfer
 
-     - parameter message: comming SID message object to encrypt
+     - parameter message: comming SORC message object to encrypt
 
      - returns: encrypted out put NSData object
      */
@@ -68,25 +68,25 @@ struct AesCbcTestCryptoManager: CryptoManager {
             let data = Data(bytes: bytes)
             return data
         } catch {
-            fatalError("Can not encrypt SIDMessage")
+            fatalError("Can not encrypt SorcMessage")
         }
     }
 
     /**
-     To decrypte incomming data to SID Message
+     To decrypte incomming data to SORC Message
 
      - parameter data: incomming Data, that will be decryted
 
-     - returns: SID message object decryted from incomming data
+     - returns: SORC message object decryted from incomming data
      */
-    func decryptData(_ data: Data) -> SIDMessage {
+    func decryptData(_ data: Data) -> SorcMessage {
         do {
             let bytes: [UInt8] = try AES(key: key, iv: iv, blockMode: .CBC, padding: ZeroByte()).decrypt((data as Data).bytes)
             let data = Data(bytes: bytes)
-            let message = SIDMessage(rawData: data)
+            let message = SorcMessage(rawData: data)
             return message
         } catch {
-            fatalError("Can not decrypt SIDMessage")
+            fatalError("Can not decrypt SorcMessage")
         }
     }
 
@@ -103,7 +103,7 @@ struct AesCbcTestCryptoManager: CryptoManager {
             let data = Data(bytes: bytes)
             return data
         } catch {
-            fatalError("Can not decrypt SIDMessage")
+            fatalError("Can not decrypt SorcMessage")
         }
     }
 }

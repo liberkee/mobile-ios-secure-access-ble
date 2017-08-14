@@ -1,5 +1,5 @@
 //
-//  SIDMessage.swift
+//  SorcMessage.swift
 //  TransportTest
 //
 //  Created by Sebastian Stüssel on 21.08.15.
@@ -11,16 +11,16 @@ import UIKit
 /**
  Defines the message type as enumerating, for application layer, session layer and also for testing
  */
-enum SIDMessageID: UInt8 {
-    /// Challenge message from mobile to SID
+enum SorcMessageID: UInt8 {
+    /// Challenge message from mobile to SORC
     case challengePhone = 0x01
-    /// Response challenge message from SID to mobile
-    case challengeSidResponse = 0x02
-    /// Response message for bad response from SID to mobile
-    case badChallengeSidResponse = 0x03
-    /// Response message from mobile to SID
+    /// Response challenge message from SORC to mobile
+    case challengeSorcResponse = 0x02
+    /// Response message for bad response from SORC to mobile
+    case badChallengeSorcResponse = 0x03
+    /// Response message from mobile to SORC
     case challengePhoneResonse = 0x04
-    /// Response message for bad response from mobile to SID
+    /// Response message for bad response from mobile to SORC
     case badChallengePhoneResponse = 0x05
     /// Request to get negotiated MTU Size
     case mtuRequest = 0x06
@@ -28,10 +28,10 @@ enum SIDMessageID: UInt8 {
     case mtuReceive = 0x07
     /// To transfer blob or lease token
     case ltAck = 0x09
-    /// Test message from mobile to SID
+    /// Test message from mobile to SORC
     case phoneTest = 0x10
-    /// Response message from SID for testing message
-    case sidTest = 0x13
+    /// Response message from SORC for testing message
+    case sorcTest = 0x13
     /// Deprecated only for testing
     case ltBlobRequest = 0x0A
     /// Deprecated ??
@@ -49,47 +49,47 @@ enum SIDMessageID: UInt8 {
 }
 
 /**
- *  All message come from SID or send to SID have same Message formate
+ *  All message come from SORC or send to SORC have same Message formate
  */
-struct SIDMessage {
-    var id: SIDMessageID {
+struct SorcMessage {
+    var id: SorcMessageID {
         var byteArray = [UInt8](repeating: 0x0, count: 1)
         (data as Data).copyBytes(to: &byteArray, count: 1)
-        if let validValue = SIDMessageID(rawValue: byteArray[0]) {
+        if let validValue = SorcMessageID(rawValue: byteArray[0]) {
             return validValue
         } else {
             return .notValid
         }
     }
 
-    /// The real data that a SID Message carried over
+    /// The real data that a SORC Message carried over
     var message: Data {
         return data.subdata(in: 1 ..< data.count) // NSMakeRange(1, data.count-1))
     }
 
-    /// Start value of Sid message as NSData
+    /// Start value of SORC message as NSData
     var data: Data = Data(bytes: UnsafePointer<UInt8>(([0x00] as [UInt8])), count: 1)
 
     /**
-     Initializatio point of SID message instance
+     Initializatio point of SORC message instance
 
-     - parameter rawData: raw data, SID message should contain
+     - parameter rawData: raw data, SORC message should contain
 
-     - returns: new SID message instance
+     - returns: new SORC message instance
      */
     init(rawData: Data) {
         data = rawData
     }
 
     /**
-     Optional initializatio point for SID message
+     Optional initializatio point for SORC message
 
-     - parameter id:      message id defined as SIDMessageID, see description above
-     - parameter payload: payload that SID message should contain
+     - parameter id:      message id defined as SorcMessageID, see description above
+     - parameter payload: payload that SORC message should contain
 
-     - returns: new SID message instance
+     - returns: new SORC message instance
      */
-    init(id: SIDMessageID, payload: SIDMessagePayload) {
+    init(id: SorcMessageID, payload: SorcMessagePayload) {
         let payloadData = payload.data
         let frameData = NSMutableData()
         var idByte = id.rawValue

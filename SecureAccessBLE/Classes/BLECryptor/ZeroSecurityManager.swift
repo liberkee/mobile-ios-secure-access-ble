@@ -17,22 +17,22 @@ struct ZeroSecurityManager: CryptoManager {
     /**
      Encryption message to message Data
 
-     - parameter message: incomming SIDMessage
+     - parameter message: incomming SorcMessage
 
      - returns: encrypted message data
      */
-    mutating func encryptMessage(_ message: SIDMessage) -> Data {
+    mutating func encryptMessage(_ message: SorcMessage) -> Data {
         return message.data as Data
     }
 
     /**
-     To decrypte incomming data to SID Message
+     To decrypte incomming data to SORC Message
 
      - parameter data: incomming Data, that will be decryted
 
-     - returns: SID message object decryted from incomming data
+     - returns: SORC message object decryted from incomming data
      */
-    mutating func decryptData(_ data: Data) -> SIDMessage {
-        return SIDMessage(rawData: data)
+    mutating func decryptData(_ data: Data) -> SorcMessage {
+        return SorcMessage(rawData: data)
     }
 }

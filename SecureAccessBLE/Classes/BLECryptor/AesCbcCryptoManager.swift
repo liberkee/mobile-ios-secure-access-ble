@@ -35,11 +35,11 @@ struct AesCbcCryptoManager: CryptoManager {
     /**
      To encrypt incomming message
 
-     - parameter message: incomming SID Message object that will be encrypted
+     - parameter message: incomming SORC Message object that will be encrypted
 
-     - returns: sending data encrypted from SID Message
+     - returns: sending data encrypted from SORC Message
      */
-    mutating func encryptMessage(_ message: SIDMessage) -> Data {
+    mutating func encryptMessage(_ message: SorcMessage) -> Data {
         do {
             let data = message.data
             let mod = (data.count + CryptoHeader.length) % 16
@@ -55,22 +55,22 @@ struct AesCbcCryptoManager: CryptoManager {
             return encDataWithMac as Data
 
         } catch {
-            fatalError("Can not encrypt SIDMessage")
+            fatalError("Can not encrypt SorcMessage")
         }
     }
 
     /**
-     To decrypte incomming data to SID Message
+     To decrypte incomming data to SORC Message
 
      - parameter data: incomming Data, that will be decryted
 
-     - returns: SID message object decryted from incomming data
+     - returns: SORC message object decryted from incomming data
      */
-    mutating func decryptData(_ data: Data) -> SIDMessage {
+    mutating func decryptData(_ data: Data) -> SorcMessage {
         do {
             guard checkMac(data) else {
                 debugPrint("MAC is invalid.")
-                return SIDMessage(id: SIDMessageID.notValid, payload: EmptyPayload())
+                return SorcMessage(id: SorcMessageID.notValid, payload: EmptyPayload())
             }
 
             let dataWithoutMac = data.subdata(in: 0 ..< data.count - 8) // NSMakeRange(0, data.count-8))
@@ -80,12 +80,12 @@ struct AesCbcCryptoManager: CryptoManager {
             decIV = dataWithoutMac.subdata(in: dataWithoutMac.count - 16 ..< dataWithoutMac.count).bytes
 
             let messageDataBytes = Array(decryptedBytes[1 ..< decryptedBytes.count - 1])
-            //            let message = SIDMessage(rawData: Data.withBytes(messageDataBytes))
-            let message = SIDMessage(rawData: Data(bytes: messageDataBytes))
+            //            let message = SorcMessage(rawData: Data.withBytes(messageDataBytes))
+            let message = SorcMessage(rawData: Data(bytes: messageDataBytes))
             return message
         } catch {
-            return SIDMessage(id: SIDMessageID.notValid, payload: EmptyPayload())
-            // fatalError("Can not decrypt SIDMessage")
+            return SorcMessage(id: SorcMessageID.notValid, payload: EmptyPayload())
+            // fatalError("Can not decrypt SorcMessage")
         }
     }
 
@@ -102,7 +102,7 @@ struct AesCbcCryptoManager: CryptoManager {
     func createEncData(_ data: Data, paddingLength: Int) throws -> Data {
         //        let paddingData = Data.withBytes([UInt8](repeating: 0x0, count: paddingLength))
         let paddingData = Data(bytes: [UInt8](repeating: 0x0, count: paddingLength))
-        let header = CryptoHeader(direction: .toSid, padding: UInt8(paddingLength))
+        let header = CryptoHeader(direction: .toSorc, padding: UInt8(paddingLength))
         let dataWithPadding = NSMutableData()
         dataWithPadding.append(header.data)
         dataWithPadding.append(data)
@@ -144,7 +144,7 @@ struct AesCbcCryptoManager: CryptoManager {
     func checkMac(_ data: Data) -> Bool {
         if data.count > 8 {
             let encodedData = data.subdata(in: 0 ..< data.count - 8) // NSMakeRange(0, data.count-8))
-            let sidMac = data.subdata(in: data.count - 8 ..< data.count) // NSMakeRange(data.count-8, 8)).arrayOfBytes()
+            let sorcMac = data.subdata(in: data.count - 8 ..< data.count) // NSMakeRange(data.count-8, 8)).arrayOfBytes()
 
             var mac = [UInt8](repeating: 0x0, count: 16)
             var macLength = 0
@@ -156,7 +156,7 @@ struct AesCbcCryptoManager: CryptoManager {
             CMAC_CTX_free(ctx)
             let shortMacSlice = mac[macLength - 8 ..< macLength]
             let shortMac = Array(shortMacSlice)
-            if sidMac.bytes == shortMac {
+            if sorcMac.bytes == shortMac {
                 return true
             } else {
                 return false
@@ -176,12 +176,12 @@ struct CryptoHeader {
     /**
      Define Message type as enumeration
 
-     - ToSid:       Message to SID
-     - ToPhone:     Message from SID to Phone
-     - NoDirection: Message has uncertainly direction
+     - toSorc:      Message to SORC
+     - toPhone:     Message from SORC to Phone
+     - noDirection: Message has uncertainly direction
      */
     enum CryptoMessageDirection: UInt8 {
-        case toSid = 0x00
+        case toSorc = 0x00
         case toPhone = 0x01
         case noDirection = 0xFF
     }

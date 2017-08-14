@@ -1,5 +1,5 @@
 //
-//  SIDCommunicator.swift
+//  SorcCommunicator.swift
 //  BLE
 //
 //  Created by Ke Song on 24.06.16.
@@ -10,10 +10,10 @@ import Foundation
 import CommonUtils
 
 /**
- *  SIDCommnicator takes a communication to SID and handles the response from SID.
+ *  SorcCommunicator takes a communication to SORC and handles the response from SORC.
  *  Sending and receiving message through data transfer
  */
-protocol SIDCommunicatorDelegate {
+protocol SorcCommunicatorDelegate {
     /**
      Communicator reports did received response data
 
@@ -23,8 +23,7 @@ protocol SIDCommunicatorDelegate {
     func communicatorDidReceivedData(_ messageData: Data, count: Int)
 }
 
-/// Sid communicator
-class SIDCommunicator: NSObject {
+class SorcCommunicator: NSObject {
 
     /// The netto message size (MTU minus frame header information)
     var messageFrameSize: Int {
@@ -32,7 +31,7 @@ class SIDCommunicator: NSObject {
     }
 
     /// The Communicator delegate object
-    var delegate: SIDCommunicatorDelegate?
+    var delegate: SorcCommunicatorDelegate?
 
     /// Sending data package
     var currentPackage: DataFramePackage?
@@ -80,9 +79,9 @@ class SIDCommunicator: NSObject {
     }
 
     /**
-     Sending data to connected SID
+     Sending data to connected SORC
 
-     - parameter sendData: the message data, that will be sent to SID
+     - parameter sendData: the message data, that will be sent to SORC
 
      - returns: if sending successful, if not the error description
      */
@@ -125,9 +124,9 @@ class SIDCommunicator: NSObject {
     // MARK: Private methods
 
     /**
-     Comming Dataframe will sent to SID peripheral
+     Comming Dataframe will sent to SORC peripheral
 
-     - parameter frame: Dataframe that will be sent to SID
+     - parameter frame: Dataframe that will be sent to SORC
      */
     fileprivate func sendFrame(_ frame: DataFrame) {
         transporter.sendData(frame.data)

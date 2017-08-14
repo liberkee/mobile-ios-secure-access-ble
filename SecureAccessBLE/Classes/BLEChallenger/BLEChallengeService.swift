@@ -39,7 +39,7 @@ protocol BLEChallengeServiceDelegate {
 
      - parameter message: the sending message object
      */
-    func challengerWantsSendMessage(_ message: SIDMessage)
+    func challengerWantsSendMessage(_ message: SorcMessage)
 
     /**
      Challenger did finished
@@ -63,32 +63,32 @@ protocol BLEChallengeServiceDelegate {
 
 /**
  *  BLE ChallengeService provides a mutual challenge / response mechanism.
- *  The challenge response mecfhanism shall mutually authenticate SID and smart device.
- *  A session key will be resulted to encrypt the SID smart device communication.
- *  prerequistite shall be that the smart device and SID posses a symmetric pre-shared key, that
+ *  The challenge response mecfhanism shall mutually authenticate SORC and smart device.
+ *  A session key will be resulted to encrypt the SORC smart device communication.
+ *  prerequistite shall be that the smart device and SORC posses a symmetric pre-shared key, that
  *  shall be provided by the secure access platform via the distributed lease token.
- *  The lease token should be encrypted with public key of smart device and SID and
+ *  The lease token should be encrypted with public key of smart device and SORC and
  *  signed by the platform server.
  *  More infos for challenge response protocol see also the reference:
  *  https://www.emsec.rb.de/media/crypto/veroeffentlichungen/2011/11/16/chameleon.pdf
  *  The challenge response mechanism shall operate as follow:
 
  *  1. The smartphone (App) picks a random 128-bit nonce nc and AES-encrypts nc with shared AES key: k(auth) results b0.
- *  2. b0 is sent to the SID
- *  3. SID decryts b0 r0 = encAES(k(auth), b0)
- *  4. SID permutes r0 r1 = P(r0)
- *  5. SID picks a random 128-bit nonce nr and encrypts nr in CBC mode b1 = encAES(k(auth), nr XOR b0)
- *  6. SID encrypts r1 in CBC mode b2 = encAES(k(auth); r1 XOR b1)
- *  7. SID sends b1 and b2 to the Smartphone App.
+ *  2. b0 is sent to the SORC
+ *  3. SORC decryts b0 r0 = encAES(k(auth), b0)
+ *  4. SORC permutes r0 r1 = P(r0)
+ *  5. SORC picks a random 128-bit nonce nr and encrypts nr in CBC mode b1 = encAES(k(auth), nr XOR b0)
+ *  6. SORC encrypts r1 in CBC mode b2 = encAES(k(auth); r1 XOR b1)
+ *  7. SORC sends b1 and b2 to the Smartphone App.
  *  8. The App decryts b2 in CBC mode: r3 = decAES (k(auth); b2) XOR b1
  *  9. The App checks if permuted noce is valid: P(invert)(r3) = nc, if not the protocol is aborted, if equal, the
- *      SID noce is decrypted: r4 = decAES(k(auth); b1) XOR b0
+ *      SORC noce is decrypted: r4 = decAES(k(auth); b1) XOR b0
  *  10. The decrypted nonce is permuted: r5 = P(r4) and AES-encrypted: b3 = encAES(k(auth); r5 XOR b2)
- *  11. b3 is sent to SID
- *  12. SID decrypts b3: r6 = decAES(k(auth); b3) XOR b2
- *  13. SID checks if the permuted nonce is valid: if P(invert)(r6) does not equal to nr, the protoco is aborted,
+ *  11. b3 is sent to SORC
+ *  12. SORC decrypts b3: r6 = decAES(k(auth); b3) XOR b2
+ *  13. SORC checks if the permuted nonce is valid: if P(invert)(r6) does not equal to nr, the protoco is aborted,
  *      if equal, the authentication is complete
- *  14. Both SID and App have the same session key:
+ *  14. Both SORC and App have the same session key:
  *      ks = nr[0...3] || nc[0...3] || nr[12...15] || nc[12...15]
  *
  *  note: || indicates concatenation and a[i...j] indicates the bytes 'i' to 'j' of an array a
@@ -111,14 +111,10 @@ struct BLEChallengeService {
     /// iverse of nr
     fileprivate var r5 = [UInt8]()
 
-    /// DeviceId as string
-    fileprivate let leaseId: String
-    /// Sid id as String
-    fileprivate let sidId: String
-    /// Lease token id as String
-    fileprivate let leaseTokenId: String
-    /// Sid access Key as String
-    fileprivate let sidAccessKey: String
+    fileprivate let leaseID: String
+    fileprivate let sorcID: String
+    fileprivate let leaseTokenID: String
+    fileprivate let sorcAccessKey: String
     /// Default cryptor
     fileprivate let crypto: AES
     /// Challenger Service Delegate object
@@ -127,23 +123,23 @@ struct BLEChallengeService {
     /**
      init function for BLE Challenger object
 
-     - parameter deviceId:     device id as String see also Moddel: SecureAccess.deviceId
-     - parameter sidId:        sid id as String see also Moddel: SecureAccess.sidId
-     - parameter leaseTokenId: lease token id as String see also Moddel: SecureAccess.leaseTokenId
-     - parameter sidAccessKey: sid access key as String see also Moddel: SecureAccess.sidAccessKey
+     - parameter leaseID: device id as String
+     - parameter sorcID: SORC id as String
+     - parameter leaseTokenID: lease token id as String
+     - parameter sorcAccessKey: SORC access key as String
 
      - returns: new object for BLE Challenger
      */
-    init?(leaseId: String, sidId: String, leaseTokenId: String, sidAccessKey: String) {
-        self.leaseId = leaseId
-        self.sidId = sidId
-        self.leaseTokenId = leaseTokenId
-        self.sidAccessKey = sidAccessKey
+    init?(leaseID: String, sorcID: String, leaseTokenID: String, sorcAccessKey: String) {
+        self.leaseID = leaseID
+        self.sorcID = sorcID
+        self.leaseTokenID = leaseTokenID
+        self.sorcAccessKey = sorcAccessKey
 
         //        self.nc = [0x0F,0x0E,0x0D,0x0C,0x0B,0x0A,0x09,0x08,0x07,0x06,0x05,0x04,0x03,0x02,0x01,0x01] as [UInt8]
         nc = AES.randomIV(16)
 
-        guard let sharedKey = self.sidAccessKey.dataFromHexadecimalString() else {
+        guard let sharedKey = self.sorcAccessKey.dataFromHexadecimalString() else {
             return nil
         }
 
@@ -166,9 +162,9 @@ struct BLEChallengeService {
         do {
             //            print ("begin to challenge with nc: \(Data.withBytes(self.nc))")
             try b0 = crypto.encrypt(nc)
-            let payload = PhoneToSidChallenge(leaseId: leaseId, sidID: sidId, leaseTokenID: leaseTokenId, challenge: b0)
+            let payload = PhoneToSorcChallenge(leaseID: leaseID, sorcID: sorcID, leaseTokenID: leaseTokenID, challenge: b0)
 
-            let message = SIDMessage(id: .challengePhone, payload: payload)
+            let message = SorcMessage(id: .challengePhone, payload: payload)
             delegate?.challengerWantsSendMessage(message)
         } catch {
             print("AES Encryption failed!")
@@ -177,18 +173,18 @@ struct BLEChallengeService {
     }
 
     /**
-     Handles all incoming challenge responses from SID.
+     Handles all incoming challenge responses from SORC.
 
-     - parameter response: received response as SID message
+     - parameter response: received response as SORC message
 
      - throws:
      */
-    mutating func handleReceivedChallengerMessage(_ message: SIDMessage) throws {
+    mutating func handleReceivedChallengerMessage(_ message: SorcMessage) throws {
         print("Resonse message with id:\(message.id)")
         switch message.id {
         case .ltAck:
             try beginChallenge()
-        case .badChallengeSidResponse:
+        case .badChallengeSorcResponse:
             if message.data.count >= 5 {
                 var blobMessageCounter = Int(0xFF & message.data[2]) << 24
                 blobMessageCounter += Int(0xFF & message.data[3]) << 16
@@ -201,7 +197,7 @@ struct BLEChallengeService {
                 print("BLE Challenge needs send blob!")
                 delegate?.challengerNeedsSendBlob(latestBlobCounter: nil)
             }
-        case .challengeSidResponse:
+        case .challengeSorcResponse:
             try continueChallenge(message)
         default:
             delegate?.challengerAbort(BLEChallengerError.noChallengeMessage)
@@ -209,14 +205,14 @@ struct BLEChallengeService {
     }
 
     /**
-     Aditional challenge message according to the first response messge from SID
+     Aditional challenge message according to the first response messge from SORC
 
      - parameter response: response message from first step challenge
 
      - throws: nothing
      */
-    fileprivate mutating func continueChallenge(_ response: SIDMessage) throws {
-        let message = SidToPhoneResponse(rawData: response.message)
+    fileprivate mutating func continueChallenge(_ response: SorcMessage) throws {
+        let message = SorcToPhoneResponse(rawData: response.message)
         if message.b1.count == 0 || message.b2.count == 0 {
             throw BLEChallengerError.challengeResponseIsCorrupt
         }
@@ -226,8 +222,8 @@ struct BLEChallengeService {
         try (nr, r5) = calculateN5(b0, b1: b1)
         try b3 = calculateB3(r5, b2: b2)
 
-        let payload = PhoneToSidResponse(response: b3)
-        let responseMessage = SIDMessage(id: SIDMessageID.challengePhoneResonse, payload: payload)
+        let payload = PhoneToSorcResponse(response: b3)
+        let responseMessage = SorcMessage(id: SorcMessageID.challengePhoneResonse, payload: payload)
         delegate?.challengerWantsSendMessage(responseMessage)
         if nr.count > 15 && nc.count > 15 {
             let sessionKey = [
@@ -283,7 +279,7 @@ struct BLEChallengeService {
      App decryts b2 in CBC mode: r3 = decAES (k(auth); b2) XOR b1
 
      - parameter b1: b1 = encAES(k(auth), nr XOR b0)
-     - parameter b2: response from SID
+     - parameter b2: response from SORC
 
      - throws: if challenge aborted
 
@@ -298,7 +294,7 @@ struct BLEChallengeService {
 
             //  check if P(invert)(r3) = nc, if not the protocol is aborted
             if nc != permutatedR3 {
-                delegate?.challengerWantsSendMessage(SIDMessage(id: SIDMessageID.badChallengePhoneResponse, payload: EmptyPayload()))
+                delegate?.challengerWantsSendMessage(SorcMessage(id: SorcMessageID.badChallengePhoneResponse, payload: EmptyPayload()))
                 throw BLEChallengerError.challengeResponseDoNotMatch
             }
             return r3
@@ -311,7 +307,7 @@ struct BLEChallengeService {
     /**
      To calculate r4 = decAES(k(auth); b2) XOR b1
 
-     - parameter b0: is sent to SID
+     - parameter b0: is sent to SORC
      - parameter b1: b1 = encAES(k(auth), nr XOR b0)
 
      - throws: decryption error
@@ -331,10 +327,10 @@ struct BLEChallengeService {
     }
 
     /**
-     To calculate b3 = encAES(k(auth); r5 XOR b2) sending to SID for second step challenge
+     To calculate b3 = encAES(k(auth); r5 XOR b2) sending to SORC for second step challenge
 
      - parameter r5: calculated from b0 and b1
-     - parameter b2: response from SID at first step challenge
+     - parameter b2: response from SORC at first step challenge
 
      - throws: Challenge Error if challenge aborted
 

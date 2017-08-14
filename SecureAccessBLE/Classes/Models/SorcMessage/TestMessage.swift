@@ -23,9 +23,9 @@ enum TestMessageType: UInt8 {
 }
 
 /**
- *  The sid message payload only for testing
+ *  The SORC message payload only for testing
  */
-struct TestMessage: SIDMessagePayload {
+struct TestMessage: SorcMessagePayload {
     ///  start value defined as NSData
     var data: Data
 
@@ -35,7 +35,7 @@ struct TestMessage: SIDMessagePayload {
      - parameter message:     the message data defined as NSData
      - parameter commandType: message type for testing, see definition for TestMessageType above
 
-     - returns: new Test message instance as Sid messag payload
+     - returns: new Test message instance as SORC messag payload
      */
     init(message: Data, commandType: TestMessageType) {
         let frameData = NSMutableData()
@@ -52,7 +52,7 @@ struct TestMessage: SIDMessagePayload {
 
      - parameter rawData: the data test message should habe
 
-     - returns: new test message instance as SID messag payload
+     - returns: new test message instance as SORC messag payload
      */
     init(rawData: Data) {
         data = rawData

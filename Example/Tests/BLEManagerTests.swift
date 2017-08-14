@@ -15,14 +15,14 @@ import CommonUtils
 class BLEManagerTests: XCTestCase {
 
     var bleManager: BLEManager!
-    var bleCommunicator: SIDCommunicator!
+    var bleCommunicator: SorcCommunicator!
     let centralManagerMock = CBCentralManagerMock()
     var connectionManager: SorcConnectionManager!
 
     override func setUp() {
         super.setUp()
         connectionManager = SorcConnectionManager(centralManager: centralManagerMock)
-        bleCommunicator = SIDCommunicator(transporter: connectionManager)
+        bleCommunicator = SorcCommunicator(transporter: connectionManager)
         bleManager = BLEManager(sorcConnectionManager: connectionManager, communicator: bleCommunicator)
         bleCommunicator.delegate = bleManager
     }
@@ -95,9 +95,9 @@ class BLEManagerTests: XCTestCase {
         /// Ble manager with established AES crypto manager
         bleManager.challengerFinishedWithSessionKey(mockSessionKey)
 
-        /// Service grant for .Lockstatus will sent to SID
+        /// Service grant for .Lockstatus will sent to SORC
         let payload = ServiceGrantRequest(grantID: ServiceGrantID.lockStatus)
-        let message = SIDMessage(id: SIDMessageID.serviceGrant, payload: payload)
+        let message = SorcMessage(id: SorcMessageID.serviceGrant, payload: payload)
 
         /// Sending is success or not
         let sendingSuccess = bleManager.sendMessage(message)
@@ -148,7 +148,7 @@ class BLEManagerTests: XCTestCase {
 
         /// To build sending blob message
         let payload = LTBlobPayload(blobData: mockBlobData)
-        let blobMessage = SIDMessage(id: .ltBlob, payload: payload!)
+        let blobMessage = SorcMessage(id: .ltBlob, payload: payload!)
 
         /// Sending success
         let sendingSuccess = bleManager.sendMessage(blobMessage)
