@@ -92,14 +92,6 @@ public class BLEManager: NSObject, BLEManagerType {
     /// The Default MTU Size
     static var mtuSize = 20
 
-    fileprivate var currentConnectionState = ConnectionState.notConnected {
-        didSet {
-            if currentConnectionState == .notConnected {
-                reset()
-            }
-        }
-    }
-
     fileprivate var currentEncryptionState: EncryptionState
 
     /// Chanllenger object
@@ -149,7 +141,7 @@ public class BLEManager: NSObject, BLEManagerType {
         .disposed(by: disposeBag)
 
         connectionManager.connectionChange.subscribeNext { [weak self] change in
-            self?.handleTransferConnectionStateChange(state: change.state)
+            self?.handleTransferConnectionStateChange(change)
         }
         .disposed(by: disposeBag)
     }
@@ -197,7 +189,6 @@ public class BLEManager: NSObject, BLEManagerType {
 
     public func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob) {
         sorcID = leaseToken.sorcID
-        connectionChange.onNext(ConnectionChange(state: .connecting(sorcID: sorcID), action: .connect))
         leaseTokenID = leaseToken.id
         leaseID = leaseToken.leaseID
         sidAccessKey = leaseToken.sorcAccessKey
@@ -207,16 +198,6 @@ public class BLEManager: NSObject, BLEManagerType {
     }
 
     public func disconnect() {
-        disconnectInternal()
-    }
-
-    private func disconnectInternal(action: ConnectionChange.Action = .disconnect) {
-        if case .disconnected = connectionChange.state { return }
-        currentConnectionState = .notConnected
-        connectionChange.onNext(ConnectionChange(
-            state: .disconnected,
-            action: action)
-        )
         connectionManager.disconnect()
     }
 
@@ -256,19 +237,27 @@ public class BLEManager: NSObject, BLEManagerType {
 
     // MARK: - Private methods
 
-    private func handleTransferConnectionStateChange(state: SorcConnectionManager.ConnectionChange.State) {
-        switch state {
-        case .connecting: break
+    private func handleTransferConnectionStateChange(_ change: SorcConnectionManager.ConnectionChange) {
+        switch change.state {
+        case let .connecting(sorcID):
+            connectionChange.onNext(.init(state: .connecting(sorcID: sorcID, state: .physical),
+                                          action: .connect(sorcID: sorcID)))
         case .connected:
-            currentConnectionState = .connected
-            sendMtuRequest()
+            sendMTURequest()
         case .disconnected:
-            if case .disconnected = connectionChange.state { return }
-            if isBluetoothEnabled.value {
-                currentConnectionState = .notConnected
-                // TODO: PLAM-951: Set proper action
-                connectionChange.onNext(ConnectionChange(state: .disconnected, action: .disconnect))
-            } else {
+            if connectionChange.state == .disconnected { return }
+            reset()
+            switch change.action {
+            case let .connectingFailed(sorcID):
+                connectionChange.onNext(.init(state: .disconnected,
+                                              action: .connectingFailed(sorcID: sorcID,
+                                                                        error: .physicalConnectingFailed)))
+            case .disconnect:
+                connectionChange.onNext(.init(state: .disconnected, action: .disconnect))
+            case .disconnected:
+                connectionChange.onNext(.init(state: .disconnected,
+                                              action: .connectionLost(error: .physicalConnectionLost)))
+            default: break
             }
         }
     }
@@ -291,14 +280,6 @@ public class BLEManager: NSObject, BLEManagerType {
     }
 
     /**
-     stop the sending and checking heartbeat timers
-     */
-    fileprivate func stopSendingHeartbeat() {
-        sendHeartbeatsTimer?.invalidate()
-        checkHeartbeatsResponseTimer?.invalidate()
-    }
-
-    /**
      Sending heartbeats message to SID
      */
     func startSendingHeartbeat() {
@@ -308,12 +289,27 @@ public class BLEManager: NSObject, BLEManagerType {
     }
 
     /**
+     stop the sending and checking heartbeat timers
+     */
+    fileprivate func stopSendingHeartbeat() {
+        sendHeartbeatsTimer?.invalidate()
+        checkHeartbeatsResponseTimer?.invalidate()
+    }
+
+    /**
      check out connection state if timer for checkheartbeat response fired
      */
     func checkoutHeartbeatsResponse() {
         if (lastHeartbeatResponseDate.timeIntervalSinceNow + heartbeatTimeout / 1000) < 0 {
-            disconnectInternal(action: .connectionLost(error: .heartbeatTimedOut))
+            disconnect(withAction: .connectionLost(error: .heartbeatTimedOut))
         }
+    }
+
+    fileprivate func sendMTURequest() {
+        connectionChange.onNext(.init(state: .connecting(sorcID: sorcID, state: .requestingMTU),
+                                      action: .physicalConnectionEstablished(sorcID: sorcID)))
+        let message = SIDMessage(id: SIDMessageID.mtuRequest, payload: MTUSize())
+        _ = self.sendMessage(message)
     }
 
     /**
@@ -322,28 +318,24 @@ public class BLEManager: NSObject, BLEManagerType {
     fileprivate func establishCrypto() {
         if sorcID.isEmpty || sidAccessKey.isEmpty {
             print("Not found sorcID or access key for cram")
+            disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
             return
         }
         challenger = BLEChallengeService(leaseId: leaseID, sidId: sorcID, leaseTokenId: leaseTokenID, sidAccessKey: sidAccessKey)
         challenger?.delegate = self
         if challenger == nil {
             print("Cram could not be initialized")
+            disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
             return
         }
         do {
             try challenger?.beginChallenge()
+            connectionChange.onNext(.init(state: .connecting(sorcID: sorcID, state: .challenging),
+                                          action: .mtuRequested(sorcID: sorcID)))
         } catch {
             print("BLEManager Error: beginChallenge error: \(error)")
-            disconnect()
+            disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
         }
-    }
-
-    /**
-     To send Mtu - message
-     */
-    fileprivate func sendMtuRequest() {
-        let message = SIDMessage(id: SIDMessageID.mtuRequest, payload: MTUSize())
-        _ = self.sendMessage(message)
     }
 
     /**
@@ -356,9 +348,11 @@ public class BLEManager: NSObject, BLEManagerType {
                 _ = sendMessage(message)
             } else {
                 print("Blob data error")
+                disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
             }
         } else {
             print("Blob data error")
+            disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
         }
     }
 
@@ -444,6 +438,11 @@ public class BLEManager: NSObject, BLEManagerType {
             return .triggerStatusUnkown
         }
     }
+
+    fileprivate func disconnect(withAction action: ConnectionChange.Action) {
+        connectionChange.onNext(.init(state: .disconnected, action: action))
+        disconnect()
+    }
 }
 
 // MARK: - BLEChallengeServiceDelegate
@@ -455,10 +454,9 @@ extension BLEManager: BLEChallengeServiceDelegate {
     }
 
     func challengerFinishedWithSessionKey(_ sessionKey: [UInt8]) {
-        guard currentConnectionState == .connected else { return }
         cryptoManager = AesCbcCryptoManager(key: sessionKey)
         currentEncryptionState = .encryptionEstablished
-        connectionChange.onNext(ConnectionChange(
+        connectionChange.onNext(.init(
             state: .connected(sorcID: sorcID),
             action: .connectionEstablished(sorcID: sorcID))
         )
@@ -466,16 +464,13 @@ extension BLEManager: BLEChallengeServiceDelegate {
     }
 
     func challengerAbort(_: BLEChallengerError) {
-        disconnect()
+        disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
     }
 
     func challengerNeedsSendBlob(latestBlobCounter: Int?) {
 
         guard latestBlobCounter == nil || blobCounter >= latestBlobCounter! else {
-            connectionChange.onNext(ConnectionChange(
-                state: .disconnected,
-                action: .connectingFailed(error: .blobOutdated, sorcID: sorcID))
-            )
+            disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .blobOutdated))
             return
         }
         sendBlob()
@@ -487,6 +482,8 @@ extension BLEManager: BLEChallengeServiceDelegate {
 extension BLEManager: SIDCommunicatorDelegate {
 
     func communicatorDidReceivedData(_ messageData: Data, count: Int) {
+
+        guard connectionManager.connectionChange.state == .connected(sorcID: sorcID) else { return }
 
         let noValidDataErrorMessage = "No valid data was received"
 
@@ -518,14 +515,13 @@ extension BLEManager: SIDCommunicatorDelegate {
             if currentEncryptionState == .shouldEncrypt {
                 establishCrypto()
             }
-
             // Challenger Message
         case .challengeSidResponse, .badChallengeSidResponse, .ltAck:
             do {
                 try challenger?.handleReceivedChallengerMessage(message)
             } catch {
                 print("BLEManager Error: handleReceivedChallengerMessage failed message: \(message)")
-                disconnect()
+                disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
             }
 
         case .ltBlobRequest:

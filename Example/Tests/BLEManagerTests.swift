@@ -41,6 +41,9 @@ class BLEManagerTests: XCTestCase {
         XCTAssertFalse(isBLEManagerConnected(), "BLE manager has wrong connection state")
 
         // simulate SORC connection
+        let leaseToken = LeaseToken(id: "id", leaseID: "leaseID", sorcID: "1a", sorcAccessKey: "key")
+        let leaseTokenBlob = LeaseTokenBlob(messageCounter: 1, data: "")
+        bleManager.connectToSorc(leaseToken: leaseToken, leaseTokenBlob: leaseTokenBlob)
         connectionManager.connectionChange.onNext(.init(state: .connected(sorcID: "1a"),
                                                         action: .connectionEstablished(sorcID: "1a")))
 
@@ -65,20 +68,13 @@ class BLEManagerTests: XCTestCase {
      To test ble manager sending and receiving message
      */
     func testSendingAndReceivingMessage() {
-        /// MTURequest message
-        let mtuMessage = SIDMessage(id: SIDMessageID.mtuRequest, payload: MTUSize())
 
-        /// Sending the MTURequest message
-        let sendingSuccess = bleManager.sendMessage(mtuMessage)
-
-        /// Tests if sending success
-        XCTAssertTrue(sendingSuccess.success == true, "BLE manager did failed by sending MTURequest")
-
-        /// Tests if sending error is NIL
-        XCTAssertNil(sendingSuccess.error, "BLE manager did failed by sending MTURequest")
-
-        /// Communicator reports receiving response data for MTU Response
-        bleCommunicator.delegate = bleManager
+        // simulate SORC connection, which triggers an mtu message
+        let leaseToken = LeaseToken(id: "id", leaseID: "leaseID", sorcID: "1a", sorcAccessKey: "key")
+        let leaseTokenBlob = LeaseTokenBlob(messageCounter: 1, data: "")
+        bleManager.connectToSorc(leaseToken: leaseToken, leaseTokenBlob: leaseTokenBlob)
+        connectionManager.connectionChange.onNext(.init(state: .connected(sorcID: "1a"),
+                                                        action: .connectionEstablished(sorcID: "1a")))
 
         /// MTU response data with size
         let bytes = [0x07, 0x9B, 0x00] as [UInt8]
