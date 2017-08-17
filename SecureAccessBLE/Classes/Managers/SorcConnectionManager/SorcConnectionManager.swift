@@ -10,12 +10,12 @@ import CommonUtils
 
 private class DiscoveredSorc {
 
-    let sorcID: String
+    let sorcID: SorcID
     var peripheral: CBPeripheralType
     let discoveryDate: Date
     let rssi: Int
 
-    init(sorcID: String, peripheral: CBPeripheralType, discoveryDate: Date, rssi: Int) {
+    init(sorcID: SorcID, peripheral: CBPeripheralType, discoveryDate: Date, rssi: Int) {
         self.sorcID = sorcID
         self.peripheral = peripheral
         self.discoveryDate = discoveryDate
@@ -47,11 +47,11 @@ private extension CBManagerState {
 }
 
 /// Manages the discovery and connection of SORCs
-class SorcConnectionManager: NSObject, DataTransfer {
+class SorcConnectionManager: NSObject, DataTransfer, SorcConnectionManagerType {
 
     let isPoweredOn: BehaviorSubject<Bool>
     let discoveryChange = ChangeSubject<DiscoveryChange>(state: [:])
-    let connectionChange = ChangeSubject<ConnectionChange>(state: .disconnected)
+    let connectionChange = ChangeSubject<DataConnectionChange>(state: .disconnected)
 
     let sentData = PublishSubject<Error?>()
     let receivedData = PublishSubject<Result<Data>>()
@@ -83,7 +83,7 @@ class SorcConnectionManager: NSObject, DataTransfer {
         return nil
     }
 
-    fileprivate var connectionState: ConnectionChange.State {
+    fileprivate var connectionState: DataConnectionChange.State {
         return connectionChange.state
     }
 
@@ -162,7 +162,7 @@ class SorcConnectionManager: NSObject, DataTransfer {
 
     // MARK: - Private methods
 
-    fileprivate func disconnect(withAction action: ConnectionChange.Action?) {
+    fileprivate func disconnect(withAction action: DataConnectionChange.Action?) {
         switch connectionState {
         case let .connecting(sorcID), let .connected(sorcID):
             if let peripheral = peripheralMatchingSorcID(sorcID) {

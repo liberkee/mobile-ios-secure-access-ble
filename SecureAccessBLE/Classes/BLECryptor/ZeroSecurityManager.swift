@@ -21,7 +21,7 @@ struct ZeroSecurityManager: CryptoManager {
 
      - returns: encrypted message data
      */
-    mutating func encryptMessage(_ message: SorcMessage) -> Data {
+    func encryptMessage(_ message: SorcMessage) -> Data {
         return message.data as Data
     }
 
@@ -32,7 +32,7 @@ struct ZeroSecurityManager: CryptoManager {
 
      - returns: SORC message object decryted from incomming data
      */
-    mutating func decryptData(_ data: Data) -> SorcMessage {
+    func decryptData(_ data: Data) -> SorcMessage {
         return SorcMessage(rawData: data)
     }
 }

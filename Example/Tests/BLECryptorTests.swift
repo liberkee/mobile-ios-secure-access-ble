@@ -17,7 +17,7 @@ class BLECryptorTests: XCTestCase {
     func testZeroSecurityCryption() {
 
         /// to initialize a zero Crypto manager for encrypting and decrypting
-        var zeroCryptor = ZeroSecurityManager()
+        let zeroCryptor = ZeroSecurityManager()
 
         /// Testing message with get MTU request
         let mtuRequestMessage = SorcMessage(id: SorcMessageID.mtuRequest, payload: MTUSize())

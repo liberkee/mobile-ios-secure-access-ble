@@ -8,11 +8,11 @@
 
 public struct SorcInfo: Equatable {
 
-    public let sorcID: String
+    public let sorcID: SorcID
     public let discoveryDate: Date
     public let rssi: Int
 
-    public init(sorcID: String, discoveryDate: Date, rssi: Int) {
+    public init(sorcID: SorcID, discoveryDate: Date, rssi: Int) {
         self.sorcID = sorcID
         self.discoveryDate = discoveryDate
         self.rssi = rssi

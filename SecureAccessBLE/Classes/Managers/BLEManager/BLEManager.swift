@@ -1,9 +1,8 @@
 //
 //  BLEManager.swift
-//  BLE
+//  SecureAccessBLE
 //
-//  Created by Ke Song on 25.06.16.
-//  Copyright © 2016 Huf Secure Mobile. All rights reserved.
+//  Copyright © 2017 Huf Secure Mobile. All rights reserved.
 //
 
 import UIKit
@@ -63,16 +62,6 @@ public enum ServiceGrantFeature {
 }
 
 /**
- Define encryption state as enum
- */
-enum EncryptionState {
-    /// Encryption is required, but not established
-    case shouldEncrypt
-    /// Encryption is required and established
-    case encryptionEstablished
-}
-
-/**
  Define connection status as enum
  */
 enum ConnectionState {
@@ -89,20 +78,13 @@ public class BLEManager: NSObject, BLEManagerType {
 
     public static let shared = BLEManager()
 
-    /// The Default MTU Size
-    static var mtuSize = 20
-
-    fileprivate var currentEncryptionState: EncryptionState
-
     /// Chanllenger object
     fileprivate var challenger: BLEChallengeService?
-    ///  The communicator objec
-    fileprivate let communicator: SorcCommunicator
 
     private var leaseID: String = ""
     private var leaseTokenID: String = ""
     private var sorcAccessKey: String = ""
-    fileprivate var sorcID: String = ""
+    fileprivate var sorcID: SorcID = ""
 
     /// Blob as String came from SecureAccess.blob
     fileprivate var blobData: String? = ""
@@ -111,29 +93,23 @@ public class BLEManager: NSObject, BLEManagerType {
     fileprivate var blobCounter: Int = 0
 
     fileprivate var sendHeartbeatsTimer: Timer?
-
     fileprivate var checkHeartbeatsResponseTimer: Timer?
-
     fileprivate var lastHeartbeatResponseDate = Date()
 
-    fileprivate let connectionManager: SorcConnectionManager
+    fileprivate let connectionManager: SorcConnectionManagerType
+    fileprivate let dataCommunicator: SorcDataCommunicator
+    fileprivate let messageCommunicator: SorcMessageCommunicator
 
     private let disposeBag = DisposeBag()
 
-    /**
-     A object that must confirm to the CryptoManager protocol
-
-     */
-    fileprivate var cryptoManager: CryptoManager = ZeroSecurityManager()
-
     // MARK: - Inits and deinit
 
-    init(sorcConnectionManager: SorcConnectionManager, communicator: SorcCommunicator) {
-        currentEncryptionState = .shouldEncrypt
+    init(sorcConnectionManager: SorcConnectionManagerType, dataCommunicator: SorcDataCommunicator,
+         messageCommunicator: SorcMessageCommunicator) {
         connectionManager = sorcConnectionManager
-        self.communicator = communicator
+        self.dataCommunicator = dataCommunicator
+        self.messageCommunicator = messageCommunicator
         super.init()
-        communicator.delegate = self
 
         connectionManager.isPoweredOn.subscribeNext { [weak self] isPoweredOn in
             self?.isBluetoothEnabled.onNext(isPoweredOn)
@@ -144,17 +120,21 @@ public class BLEManager: NSObject, BLEManagerType {
             self?.handleTransferConnectionStateChange(change)
         }
         .disposed(by: disposeBag)
+
+        messageCommunicator.messageReceived.subscribeNext { [weak self] result in
+            self?.handleMessageReceived(result: result)
+        }
+        .disposed(by: disposeBag)
     }
 
     convenience override init() {
         let sorcConnectionManager = SorcConnectionManager()
-        let communicator = SorcCommunicator(transporter: sorcConnectionManager)
-        self.init(sorcConnectionManager: sorcConnectionManager, communicator: communicator)
+        let dataCommunicator = SorcDataCommunicator(transporter: sorcConnectionManager)
+        let messageCommunicator = SorcMessageCommunicator(dataCommunicator: dataCommunicator)
+        self.init(sorcConnectionManager: sorcConnectionManager, dataCommunicator: dataCommunicator,
+                  messageCommunicator: messageCommunicator)
     }
 
-    /**
-     Deinit point
-     */
     deinit {
         disconnect()
     }
@@ -202,14 +182,12 @@ public class BLEManager: NSObject, BLEManagerType {
     }
 
     private func reset() {
-        communicator.resetCurrentPackage()
-        cryptoManager = ZeroSecurityManager()
-        currentEncryptionState = .shouldEncrypt
+        messageCommunicator.reset()
         stopSendingHeartbeat()
     }
 
     public func sendServiceGrantForFeature(_ feature: ServiceGrantFeature) {
-        guard currentEncryptionState == .encryptionEstablished && !transferIsBusy() else {
+        guard messageCommunicator.isEncryptionEnabled && !messageCommunicator.isBusy else {
             let status = failedStatusMatchingFeature(feature)
             receivedServiceGrantTriggerForStatus.onNext((status: status, error: nil))
             return
@@ -232,12 +210,12 @@ public class BLEManager: NSObject, BLEManagerType {
         }
 
         let message = SorcMessage(id: SorcMessageID.serviceGrant, payload: payload)
-        _ = sendMessage(message)
+        _ = messageCommunicator.sendMessage(message)
     }
 
     // MARK: - Private methods
 
-    private func handleTransferConnectionStateChange(_ change: SorcConnectionManager.ConnectionChange) {
+    private func handleTransferConnectionStateChange(_ change: DataConnectionChange) {
         switch change.state {
         case let .connecting(sorcID):
             connectionChange.onNext(.init(state: .connecting(sorcID: sorcID, state: .physical),
@@ -263,15 +241,6 @@ public class BLEManager: NSObject, BLEManagerType {
     }
 
     /**
-     Helper function repots if the transfer currently busy
-
-     - returns: Transfer busy
-     */
-    private func transferIsBusy() -> Bool {
-        return communicator.currentPackage != nil
-    }
-
-    /**
      start timers for sending heartbeat and checking heartbeat response
      */
     fileprivate func bleSchouldSendHeartbeat() {
@@ -285,7 +254,7 @@ public class BLEManager: NSObject, BLEManagerType {
     func startSendingHeartbeat() {
         let message = SorcMessage(id: SorcMessageID.heartBeatRequest, payload: MTUSize())
         // TODO: PLAM-1375 handle error
-        _ = self.sendMessage(message)
+        _ = messageCommunicator.sendMessage(message)
     }
 
     /**
@@ -309,7 +278,7 @@ public class BLEManager: NSObject, BLEManagerType {
         connectionChange.onNext(.init(state: .connecting(sorcID: sorcID, state: .requestingMTU),
                                       action: .physicalConnectionEstablished(sorcID: sorcID)))
         let message = SorcMessage(id: SorcMessageID.mtuRequest, payload: MTUSize())
-        _ = self.sendMessage(message)
+        _ = messageCommunicator.sendMessage(message)
     }
 
     /**
@@ -345,7 +314,7 @@ public class BLEManager: NSObject, BLEManagerType {
         if blobData?.isEmpty == false {
             if let payload = LTBlobPayload(blobData: blobData!) {
                 let message = SorcMessage(id: .ltBlob, payload: payload)
-                _ = sendMessage(message)
+                _ = messageCommunicator.sendMessage(message)
             } else {
                 print("Blob data error")
                 disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
@@ -356,30 +325,51 @@ public class BLEManager: NSObject, BLEManagerType {
         }
     }
 
-    // TODO: It is only internal because of tests
-    /**
-     Sends data over the transporter
-     When previous data is still in a sending state, the method will return **false** and an error message.
-     Otherwise it will return **true** and a no error string (nil)
+    private func handleMessageReceived(result: Result<SorcMessage>) {
 
-     - parameter message: The SorcMessage which should be send
+        guard connectionManager.connectionChange.state == .connected(sorcID: sorcID) else { return }
 
-     - returns:  (success: Bool, error: String?) A Tuple containing a success boolean and a error string or nil
-     */
-    func sendMessage(_ message: SorcMessage) -> (success: Bool, error: String?) {
-        if communicator.currentPackage != nil {
-            print("Sending package not empty!! Message \(message.id) will not be sent!!")
-            return (false, "Sending in progress")
-        } else {
-            let data = cryptoManager.encryptMessage(message)
-            return communicator.sendData(data)
+        let noValidDataErrorMessage = "No valid data was received"
+        guard case let .success(message) = result else {
+            handleServiceGrantTrigger(nil, error: noValidDataErrorMessage)
+            return
+        }
 
-            /*
-             print("Send Encrypted Message: \(data.toHexString())")
-             print("Same message decrypted: \(self.cryptoManager.decryptData(data).data.toHexString())")
-             let key = NSData.withBytes(self.cryptoManager.key)
-             print("With key: \(key.toHexString())")
-             */
+        switch message.id {
+            // MTU Size
+        case .mtuReceive:
+            let payload = MTUSize(rawData: message.message)
+            if let mtu = payload.mtuSize {
+                dataCommunicator.mtuSize = mtu
+            }
+            if !messageCommunicator.isEncryptionEnabled {
+                establishCrypto()
+            }
+            // Challenger Message
+        case .challengeSorcResponse, .badChallengeSorcResponse, .ltAck:
+            do {
+                try challenger?.handleReceivedChallengerMessage(message)
+            } catch {
+                print("BLEManager Error: handleReceivedChallengerMessage failed message: \(message)")
+                disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
+            }
+
+        case .ltBlobRequest:
+            let payload = BlobRequest(rawData: message.message)
+            if blobCounter > payload.blobMessageID {
+                sendBlob()
+            }
+
+        case .heartBeatResponse:
+            lastHeartbeatResponseDate = Date()
+            checkHeartbeatsResponseTimer?.fireDate = Date().addingTimeInterval(heartbeatTimeout / 1000)
+
+        default:
+            // Normal Message. E.g. ServiceGrant
+            let messageID = message.id
+            if messageID == SorcMessageID.serviceGrantTrigger {
+                handleServiceGrantTrigger(message, error: nil)
+            }
         }
     }
 
@@ -450,12 +440,11 @@ public class BLEManager: NSObject, BLEManagerType {
 extension BLEManager: BLEChallengeServiceDelegate {
 
     func challengerWantsSendMessage(_ message: SorcMessage) {
-        _ = sendMessage(message)
+        _ = messageCommunicator.sendMessage(message)
     }
 
-    func challengerFinishedWithSessionKey(_ sessionKey: [UInt8]) {
-        cryptoManager = AesCbcCryptoManager(key: sessionKey)
-        currentEncryptionState = .encryptionEstablished
+    func challengerFinishedWithSessionKey(_ key: [UInt8]) {
+        messageCommunicator.enableEncryption(withSessionKey: key)
         connectionChange.onNext(.init(
             state: .connected(sorcID: sorcID),
             action: .connectionEstablished(sorcID: sorcID))
@@ -474,73 +463,5 @@ extension BLEManager: BLEChallengeServiceDelegate {
             return
         }
         sendBlob()
-    }
-}
-
-// MARK: - SorcCommunicatorDelegate
-
-extension BLEManager: SorcCommunicatorDelegate {
-
-    func communicatorDidReceivedData(_ messageData: Data, count: Int) {
-
-        guard connectionManager.connectionChange.state == .connected(sorcID: sorcID) else { return }
-
-        let noValidDataErrorMessage = "No valid data was received"
-
-        guard messageData.count > 0 else {
-            handleServiceGrantTrigger(nil, error: noValidDataErrorMessage)
-            communicator.resetReceivedPackage()
-            return
-        }
-
-        let message = cryptoManager.decryptData(messageData)
-        guard message.id != .notValid else {
-            handleServiceGrantTrigger(nil, error: noValidDataErrorMessage)
-            communicator.resetReceivedPackage()
-            return
-        }
-
-        let pointer = (messageData as NSData).bytes.bindMemory(to: UInt32.self, capacity: messageData.count)
-        let count = count
-        let buffer = UnsafeBufferPointer<UInt32>(start: pointer, count: count)
-        _ = [UInt32](buffer)
-
-        switch message.id {
-            // MTU Size
-        case .mtuReceive:
-            let payload = MTUSize(rawData: message.message)
-            if let mtu = payload.mtuSize {
-                BLEManager.mtuSize = mtu
-            }
-            if currentEncryptionState == .shouldEncrypt {
-                establishCrypto()
-            }
-            // Challenger Message
-        case .challengeSorcResponse, .badChallengeSorcResponse, .ltAck:
-            do {
-                try challenger?.handleReceivedChallengerMessage(message)
-            } catch {
-                print("BLEManager Error: handleReceivedChallengerMessage failed message: \(message)")
-                disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
-            }
-
-        case .ltBlobRequest:
-            let payload = BlobRequest(rawData: message.message)
-            if blobCounter > payload.blobMessageID {
-                sendBlob()
-            }
-
-        case .heartBeatResponse:
-            lastHeartbeatResponseDate = Date()
-            checkHeartbeatsResponseTimer?.fireDate = Date().addingTimeInterval(heartbeatTimeout / 1000)
-
-        default:
-            // Normal Message. E.g. ServiceGrant
-            let messageID = message.id
-            if messageID == SorcMessageID.serviceGrantTrigger {
-                handleServiceGrantTrigger(message, error: nil)
-            }
-        }
-        communicator.resetReceivedPackage()
     }
 }

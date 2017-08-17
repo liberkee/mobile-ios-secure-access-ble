@@ -112,7 +112,7 @@ struct BLEChallengeService {
     fileprivate var r5 = [UInt8]()
 
     fileprivate let leaseID: String
-    fileprivate let sorcID: String
+    fileprivate let sorcID: SorcID
     fileprivate let leaseTokenID: String
     fileprivate let sorcAccessKey: String
     /// Default cryptor
@@ -124,13 +124,13 @@ struct BLEChallengeService {
      init function for BLE Challenger object
 
      - parameter leaseID: device id as String
-     - parameter sorcID: SORC id as String
+     - parameter sorcID: The SORC ID
      - parameter leaseTokenID: lease token id as String
      - parameter sorcAccessKey: SORC access key as String
 
      - returns: new object for BLE Challenger
      */
-    init?(leaseID: String, sorcID: String, leaseTokenID: String, sorcAccessKey: String) {
+    init?(leaseID: String, sorcID: SorcID, leaseTokenID: String, sorcAccessKey: String) {
         self.leaseID = leaseID
         self.sorcID = sorcID
         self.leaseTokenID = leaseTokenID

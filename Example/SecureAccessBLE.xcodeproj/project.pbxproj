@@ -15,11 +15,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		46B760681DA2637D003ADDB1 /* BLEChallengeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BLEChallengeService.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		46B7606C1DA2637D003ADDB1 /* AesCbcCryptoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AesCbcCryptoManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		46B760681DA2637D003ADDB1 /* BLEChallengeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BLEChallengeService.swift; sourceTree = "<group>"; };
+		46B7606C1DA2637D003ADDB1 /* AesCbcCryptoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AesCbcCryptoManager.swift; sourceTree = "<group>"; };
 		46B7606D1DA2637D003ADDB1 /* AesCbcTestCryptoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = AesCbcTestCryptoManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		46B7606E1DA2637D003ADDB1 /* CryptoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CryptoManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		46B7606F1DA2637D003ADDB1 /* ZeroSecurityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ZeroSecurityManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		46B7606E1DA2637D003ADDB1 /* CryptoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CryptoManager.swift; sourceTree = "<group>"; };
+		46B7606F1DA2637D003ADDB1 /* ZeroSecurityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ZeroSecurityManager.swift; sourceTree = "<group>"; };
 		46B760751DA2637D003ADDB1 /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "String+Extension.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		46B760771DA2637D003ADDB1 /* BLEHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEHelper.swift; sourceTree = "<group>"; };
 		46B7607C1DA2637D003ADDB1 /* PhoneToSorcChallenge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = PhoneToSorcChallenge.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -27,7 +27,7 @@
 		46B7607E1DA2637D003ADDB1 /* SorcToPhoneResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SorcToPhoneResponse.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		46B760801DA2637D003ADDB1 /* CustomPadding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPadding.swift; sourceTree = "<group>"; };
 		46B760821DA2637D003ADDB1 /* DataFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataFrame.swift; sourceTree = "<group>"; };
-		46B760831DA2637D003ADDB1 /* DataFramePackage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = DataFramePackage.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		46B760831DA2637D003ADDB1 /* DataFramePackage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = DataFramePackage.swift; sourceTree = "<group>"; };
 		46B760851DA2637D003ADDB1 /* BlobRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BlobRequest.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		46B760861DA2637D003ADDB1 /* LTBlobPayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = LTBlobPayload.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		46B760881DA2637D003ADDB1 /* ServiceGrantRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ServiceGrantRequest.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -44,8 +44,7 @@
 		C28A7D5203261E30CA436EC3 /* SecureAccessBLE.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = SecureAccessBLE.podspec; path = ../SecureAccessBLE.podspec; sourceTree = "<group>"; };
 		D955D40F7C47731B2AA178ED /* Pods_SecureAccessBLE_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SecureAccessBLE_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E51AAFD01F3E24190001C34B /* SorcInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SorcInfo.swift; sourceTree = "<group>"; };
-		E53079661F3B6DB0004EE9B7 /* DiscoveryChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = DiscoveryChange.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		E55B78AD1F39C55B0090D376 /* SorcConnectionManagerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SorcConnectionManagerExtensions.swift; sourceTree = "<group>"; };
+		E53079661F3B6DB0004EE9B7 /* DiscoveryChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = DiscoveryChange.swift; sourceTree = "<group>"; };
 		E55E6CDB1F4200E900C5934B /* Handshake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Handshake.swift; sourceTree = "<group>"; };
 		E55E6CDC1F4200E900C5934B /* MTUSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTUSize.swift; sourceTree = "<group>"; };
 		E55E6CDD1F4200E900C5934B /* SorcMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SorcMessage.swift; sourceTree = "<group>"; };
@@ -54,15 +53,19 @@
 		E565092C1F3333C1002771F8 /* SystemClock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemClock.swift; sourceTree = "<group>"; };
 		E573A7921EDC2BAA0093ABA8 /* LeaseToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaseToken.swift; sourceTree = "<group>"; };
 		E573A7931EDC2BD50093ABA8 /* LeaseTokenBlob.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeaseTokenBlob.swift; sourceTree = "<group>"; };
-		E59E01651F387BE5006F114D /* BLEManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BLEManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		E59E01651F387BE5006F114D /* BLEManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BLEManager.swift; sourceTree = "<group>"; };
 		E59E01661F387BE5006F114D /* BLEManagerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEManagerType.swift; sourceTree = "<group>"; };
 		E59E01671F387BE5006F114D /* ConnectionChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionChange.swift; sourceTree = "<group>"; };
 		E59E01681F387BE5006F114D /* MockBLEManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockBLEManager.swift; sourceTree = "<group>"; };
 		E59E01691F387BE5006F114D /* SimulatableBLEManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatableBLEManager.swift; sourceTree = "<group>"; };
 		E59E016A1F387BE5006F114D /* DataTransfer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataTransfer.swift; sourceTree = "<group>"; };
-		E59E016B1F387BE5006F114D /* SorcCommunicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SorcCommunicator.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		E59E016C1F387BE5006F114D /* SorcConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SorcConnectionManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		E59E016B1F387BE5006F114D /* SorcDataCommunicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SorcDataCommunicator.swift; sourceTree = "<group>"; };
 		E59E016D1F38B295006F114D /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
+		E5B037801F4591F7006149B3 /* DataConnectionChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataConnectionChange.swift; sourceTree = "<group>"; };
+		E5B037811F4591F7006149B3 /* SorcConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SorcConnectionManager.swift; sourceTree = "<group>"; };
+		E5B037821F4591F7006149B3 /* SorcConnectionManagerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SorcConnectionManagerExtensions.swift; sourceTree = "<group>"; };
+		E5B037831F4591F7006149B3 /* SorcConnectionManagerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SorcConnectionManagerType.swift; sourceTree = "<group>"; };
+		E5B037881F45B1A0006149B3 /* SorcMessageCommunicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SorcMessageCommunicator.swift; sourceTree = "<group>"; };
 		E5E308D21F324E6800C1537F /* CBWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBWrapper.swift; sourceTree = "<group>"; };
 		E5FBD9B81F18DA4A0091F0B0 /* SorcConnectionManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SorcConnectionManagerTests.swift; sourceTree = "<group>"; };
 		EE99F13EBAEE0CDC40DBE8F5 /* Pods-SecureAccessBLE_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -284,10 +287,10 @@
 			isa = PBXGroup;
 			children = (
 				E59E01641F387BE5006F114D /* BLEManager */,
-				E59E016B1F387BE5006F114D /* SorcCommunicator.swift */,
+				E59E016B1F387BE5006F114D /* SorcDataCommunicator.swift */,
 				E59E016A1F387BE5006F114D /* DataTransfer.swift */,
-				E59E016C1F387BE5006F114D /* SorcConnectionManager.swift */,
-				E55B78AD1F39C55B0090D376 /* SorcConnectionManagerExtensions.swift */,
+				E5B037871F45B193006149B3 /* SorcMessageCommunicator */,
+				E5B0377F1F4591F7006149B3 /* SorcConnectionManager */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -295,15 +298,34 @@
 		E59E01641F387BE5006F114D /* BLEManager */ = {
 			isa = PBXGroup;
 			children = (
-				E59E01651F387BE5006F114D /* BLEManager.swift */,
 				E59E01661F387BE5006F114D /* BLEManagerType.swift */,
-				E59E01671F387BE5006F114D /* ConnectionChange.swift */,
+				E59E01651F387BE5006F114D /* BLEManager.swift */,
 				E59E01681F387BE5006F114D /* MockBLEManager.swift */,
 				E59E01691F387BE5006F114D /* SimulatableBLEManager.swift */,
 				E53079661F3B6DB0004EE9B7 /* DiscoveryChange.swift */,
+				E59E01671F387BE5006F114D /* ConnectionChange.swift */,
 				E51AAFD01F3E24190001C34B /* SorcInfo.swift */,
 			);
 			path = BLEManager;
+			sourceTree = "<group>";
+		};
+		E5B0377F1F4591F7006149B3 /* SorcConnectionManager */ = {
+			isa = PBXGroup;
+			children = (
+				E5B037801F4591F7006149B3 /* DataConnectionChange.swift */,
+				E5B037811F4591F7006149B3 /* SorcConnectionManager.swift */,
+				E5B037821F4591F7006149B3 /* SorcConnectionManagerExtensions.swift */,
+				E5B037831F4591F7006149B3 /* SorcConnectionManagerType.swift */,
+			);
+			path = SorcConnectionManager;
+			sourceTree = "<group>";
+		};
+		E5B037871F45B193006149B3 /* SorcMessageCommunicator */ = {
+			isa = PBXGroup;
+			children = (
+				E5B037881F45B1A0006149B3 /* SorcMessageCommunicator.swift */,
+			);
+			path = SorcMessageCommunicator;
 			sourceTree = "<group>";
 		};
 		E5E308D11F324E5900C1537F /* CBWrapper */ = {

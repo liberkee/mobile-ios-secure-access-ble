@@ -1,43 +1,35 @@
 //
-//  SorcCommunicator.swift
-//  BLE
+//  SorcDataCommunicator.swift
+//  SecureAccessBLE
 //
-//  Created by Ke Song on 24.06.16.
 //  Copyright © 2016 Huf Secure Mobile. All rights reserved.
 //
 
 import Foundation
 import CommonUtils
 
-/**
- *  SorcCommunicator takes a communication to SORC and handles the response from SORC.
- *  Sending and receiving message through data transfer
- */
-protocol SorcCommunicatorDelegate {
-    /**
-     Communicator reports did received response data
+/// Sends and receives data by sending separate frames based on the current MTU size.
+class SorcDataCommunicator {
 
-     - parameter messageData: received data
-     - parameter count:       received data length
-     */
-    func communicatorDidReceivedData(_ messageData: Data, count: Int)
-}
+    let dataReceived = PublishSubject<Data>()
 
-class SorcCommunicator: NSObject {
+    /// Updating the MTU size only takes effect on the next data package sent, not the current one.
+    var mtuSize = 20
 
     /// The netto message size (MTU minus frame header information)
-    var messageFrameSize: Int {
-        return BLEManager.mtuSize - 4
+    private var messageFrameSize: Int {
+        return mtuSize - 4
     }
 
-    /// The Communicator delegate object
-    var delegate: SorcCommunicatorDelegate?
+    var isBusy: Bool {
+        return currentPackage != nil
+    }
 
     /// Sending data package
-    var currentPackage: DataFramePackage?
+    private var currentPackage: DataFramePackage?
 
     /// The receiveing package
-    fileprivate var currentReceivingPackage: DataFramePackage?
+    private var currentReceivingPackage: DataFramePackage?
 
     /**
      A object that must confirm to the DataTransfer protocol
@@ -55,7 +47,6 @@ class SorcCommunicator: NSObject {
      */
     init(transporter: DataTransfer) {
         self.transporter = transporter
-        super.init()
 
         transporter.sentData.subscribeNext { [weak self] error in
             if let error = error {
@@ -85,11 +76,10 @@ class SorcCommunicator: NSObject {
 
      - returns: if sending successful, if not the error description
      */
-    func sendData(_ sendData: Data) -> (success: Bool, error: String?) {
+    func sendData(_ data: Data) -> (success: Bool, error: String?) {
         if currentPackage != nil {
             return (false, "Sending in progress")
         } else {
-            let data = sendData
             // debugPrint("----------------------------------------")
             // debugPrint("Send Encrypted Message: \(data.toHexString())")
             // debugPrint("Same message decrypted: \(self.cryptoManager.decryptData(data).data.toHexString())")
@@ -107,27 +97,16 @@ class SorcCommunicator: NSObject {
         }
     }
 
-    /**
-     Reset sending package to nil
-     */
     func resetCurrentPackage() {
         currentPackage = nil
     }
 
-    /**
-     Reset received package to nil
-     */
-    func resetReceivedPackage() {
+    private func resetReceivedPackage() {
         currentReceivingPackage = nil
     }
 
     // MARK: Private methods
 
-    /**
-     Comming Dataframe will sent to SORC peripheral
-
-     - parameter frame: Dataframe that will be sent to SORC
-     */
     fileprivate func sendFrame(_ frame: DataFrame) {
         transporter.sendData(frame.data)
     }
@@ -137,7 +116,7 @@ class SorcCommunicator: NSObject {
         if let currentFrame = self.currentPackage?.currentFrame {
             sendFrame(currentFrame)
         } else {
-            if let _ = self.currentPackage?.message {
+            if currentPackage?.message != nil {
                 resetCurrentPackage()
             }
         }
@@ -152,10 +131,9 @@ class SorcCommunicator: NSObject {
 
         if frame.type == .single || frame.type == .eop {
             if let messageData = self.currentReceivingPackage?.message {
-                delegate?.communicatorDidReceivedData(messageData as Data, count: data.count / 4)
-            } else {
-                delegate?.communicatorDidReceivedData(Data(), count: 0)
+                dataReceived.onNext(messageData)
             }
+            resetReceivedPackage()
         }
     }
 }

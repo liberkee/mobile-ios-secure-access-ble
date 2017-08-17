@@ -23,7 +23,7 @@ struct Handshake: SorcMessagePayload {
 
      - returns: Hand shake object as SORC message payload
      */
-    init(deviceID: String, sorcID: String, leaseID: String) {
+    init(deviceID: String, sorcID: SorcID, leaseID: String) {
         let frameData = NSMutableData()
         frameData.append(deviceID.data(using: String.Encoding.ascii)!)
         frameData.append(sorcID.data(using: String.Encoding.ascii)!)

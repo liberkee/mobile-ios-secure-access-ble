@@ -11,69 +11,6 @@ import CommonUtils
 extension SorcConnectionManager {
 
     typealias CreateTimer = (@escaping () -> Void) -> Timer
-
-    struct ConnectionChange: ChangeType {
-
-        let state: State
-        let action: Action
-
-        static func initialWithState(_ state: State) -> ConnectionChange {
-            return ConnectionChange(state: state, action: .initial)
-        }
-
-        enum State {
-            case disconnected
-            case connecting(sorcID: SorcID)
-            case connected(sorcID: SorcID)
-        }
-
-        enum Action {
-            case initial
-            case connect(sorcID: SorcID)
-            case connectionEstablished(sorcID: SorcID)
-            case connectingFailed(sorcID: SorcID)
-            case disconnect(sorcID: SorcID)
-            case disconnected(sorcID: SorcID)
-        }
-    }
-}
-
-extension SorcConnectionManager.ConnectionChange: Equatable {
-
-    static func ==(lhs: SorcConnectionManager.ConnectionChange, rhs: SorcConnectionManager.ConnectionChange) -> Bool {
-        return lhs.state == rhs.state
-            && lhs.action == rhs.action
-    }
-}
-
-extension SorcConnectionManager.ConnectionChange.State: Equatable {
-
-    static func ==(lhs: SorcConnectionManager.ConnectionChange.State,
-                   rhs: SorcConnectionManager.ConnectionChange.State) -> Bool {
-        switch (lhs, rhs) {
-        case (.disconnected, .disconnected): return true
-        case let (.connecting(lSorcID), .connecting(rSorcID)) where lSorcID == rSorcID: return true
-        case let (.connected(lSorcID), .connected(rSorcID)) where lSorcID == rSorcID: return true
-        default: return false
-        }
-    }
-}
-
-extension SorcConnectionManager.ConnectionChange.Action: Equatable {
-
-    static func ==(lhs: SorcConnectionManager.ConnectionChange.Action,
-                   rhs: SorcConnectionManager.ConnectionChange.Action) -> Bool {
-        switch (lhs, rhs) {
-        case (.initial, .initial): return true
-        case let (.connect(lSorcID), .connect(rSorcID)) where lSorcID == rSorcID: return true
-        case let (.connectionEstablished(lSorcID), .connectionEstablished(rSorcID)) where lSorcID == rSorcID:
-            return true
-        case let (.connectingFailed(lSorcID), .connectingFailed(rSorcID)) where lSorcID == rSorcID: return true
-        case (.disconnect, .disconnect): return true
-        case let (.disconnected(lSorcID), .disconnected(rSorcID)) where lSorcID == rSorcID: return true
-        default: return false
-        }
-    }
 }
 
 // MARK: - CBCentralManagerDelegate
