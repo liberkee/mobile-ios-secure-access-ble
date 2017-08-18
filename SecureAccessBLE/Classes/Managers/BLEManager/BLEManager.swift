@@ -62,64 +62,58 @@ public enum ServiceGrantFeature {
 }
 
 /**
- Define connection status as enum
- */
-enum ConnectionState {
-    /// not connected status
-    case notConnected
-    /// connected status
-    case connected
-}
-
-/**
  The BLEManager manages the communication with BLE peripherals
  */
 public class BLEManager: NSObject, BLEManagerType {
 
     public static let shared = BLEManager()
 
-    /// Chanllenger object
-    fileprivate var challenger: BLEChallengeService?
+    // MARK: - Public
 
-    private var leaseID: String = ""
-    private var leaseTokenID: String = ""
-    private var sorcAccessKey: String = ""
-    fileprivate var sorcID: SorcID = ""
+    // MARK: Configuration
 
-    /// Blob as String came from SecureAccess.blob
-    fileprivate var blobData: String? = ""
+    // TODO: PLAM-959 update after init possible?
 
-    /// Blob counter came from SecureAccess.blob
-    fileprivate var blobCounter: Int = 0
+    public var heartbeatInterval: Double = 2000.0
 
-    fileprivate var sendHeartbeatsTimer: Timer?
-    fileprivate var checkHeartbeatsResponseTimer: Timer?
-    fileprivate var lastHeartbeatResponseDate = Date()
+    public var heartbeatTimeout: Double = 4000.0
 
-    fileprivate let connectionManager: SorcConnectionManagerType
-    fileprivate let dataCommunicator: SorcDataCommunicator
+    // MARK: Interface
+
+    public var isBluetoothEnabled: BehaviorSubject<Bool> {
+        return sorcConnectionManager.isPoweredOn
+    }
+
+    // MARK: Discovery
+
+    public var discoveryChange: ChangeSubject<DiscoveryChange> {
+        return sorcConnectionManager.discoveryChange
+    }
+
+    // MARK: Connection
+
+    public var connectionChange: ChangeSubject<ConnectionChange> {
+        return connectionManager.connectionChange
+    }
+
+    // MARK: Service
+
+    public let receivedServiceGrantTriggerForStatus = PublishSubject<(status: ServiceGrantTriggerStatus?, error: String?)>()
+
+    fileprivate let sorcConnectionManager: SorcConnectionManager
+    fileprivate let connectionManager: ConnectionManager
     fileprivate let messageCommunicator: SorcMessageCommunicator
 
     private let disposeBag = DisposeBag()
 
     // MARK: - Inits and deinit
 
-    init(sorcConnectionManager: SorcConnectionManagerType, dataCommunicator: SorcDataCommunicator,
+    init(sorcConnectionManager: SorcConnectionManager, connectionManager: ConnectionManager,
          messageCommunicator: SorcMessageCommunicator) {
-        connectionManager = sorcConnectionManager
-        self.dataCommunicator = dataCommunicator
+        self.sorcConnectionManager = sorcConnectionManager
+        self.connectionManager = connectionManager
         self.messageCommunicator = messageCommunicator
         super.init()
-
-        connectionManager.isPoweredOn.subscribeNext { [weak self] isPoweredOn in
-            self?.isBluetoothEnabled.onNext(isPoweredOn)
-        }
-        .disposed(by: disposeBag)
-
-        connectionManager.connectionChange.subscribeNext { [weak self] change in
-            self?.handleTransferConnectionStateChange(change)
-        }
-        .disposed(by: disposeBag)
 
         messageCommunicator.messageReceived.subscribeNext { [weak self] result in
             self?.handleMessageReceived(result: result)
@@ -131,7 +125,9 @@ public class BLEManager: NSObject, BLEManagerType {
         let sorcConnectionManager = SorcConnectionManager()
         let dataCommunicator = SorcDataCommunicator(transporter: sorcConnectionManager)
         let messageCommunicator = SorcMessageCommunicator(dataCommunicator: dataCommunicator)
-        self.init(sorcConnectionManager: sorcConnectionManager, dataCommunicator: dataCommunicator,
+        let connectionManager = ConnectionManager(sorcConnectionManager: sorcConnectionManager,
+                                                  messageCommunicator: messageCommunicator)
+        self.init(sorcConnectionManager: sorcConnectionManager, connectionManager: connectionManager,
                   messageCommunicator: messageCommunicator)
     }
 
@@ -139,51 +135,14 @@ public class BLEManager: NSObject, BLEManagerType {
         disconnect()
     }
 
-    // MARK: - Public
-
-    // MARK: Configuration
-
-    public var heartbeatInterval: Double = 2000.0
-
-    public var heartbeatTimeout: Double = 4000.0
-
-    // MARK: Interface
-
-    public let isBluetoothEnabled = BehaviorSubject(value: false)
-
-    // MARK: Discovery
-
-    public var discoveryChange: ChangeSubject<DiscoveryChange> {
-        return connectionManager.discoveryChange
-    }
-
-    // MARK: - Connection
-
-    public let connectionChange = ChangeSubject<ConnectionChange>(state: .disconnected)
-
-    // MARK: Service
-
-    public let receivedServiceGrantTriggerForStatus = PublishSubject<(status: ServiceGrantTriggerStatus?, error: String?)>()
-
     // MARK: Actions
 
     public func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob) {
-        sorcID = leaseToken.sorcID
-        leaseTokenID = leaseToken.id
-        leaseID = leaseToken.leaseID
-        sorcAccessKey = leaseToken.sorcAccessKey
-        blobData = leaseTokenBlob.data
-        blobCounter = leaseTokenBlob.messageCounter
-        connectionManager.connectToSorc(sorcID)
+        connectionManager.connectToSorc(leaseToken: leaseToken, leaseTokenBlob: leaseTokenBlob)
     }
 
     public func disconnect() {
         connectionManager.disconnect()
-    }
-
-    private func reset() {
-        messageCommunicator.reset()
-        stopSendingHeartbeat()
     }
 
     public func sendServiceGrantForFeature(_ feature: ServiceGrantFeature) {
@@ -215,203 +174,50 @@ public class BLEManager: NSObject, BLEManagerType {
 
     // MARK: - Private methods
 
-    private func handleTransferConnectionStateChange(_ change: DataConnectionChange) {
-        switch change.state {
-        case let .connecting(sorcID):
-            connectionChange.onNext(.init(state: .connecting(sorcID: sorcID, state: .physical),
-                                          action: .connect(sorcID: sorcID)))
-        case .connected:
-            sendMTURequest()
-        case .disconnected:
-            if connectionChange.state == .disconnected { return }
-            reset()
-            switch change.action {
-            case let .connectingFailed(sorcID):
-                connectionChange.onNext(.init(state: .disconnected,
-                                              action: .connectingFailed(sorcID: sorcID,
-                                                                        error: .physicalConnectingFailed)))
-            case .disconnect:
-                connectionChange.onNext(.init(state: .disconnected, action: .disconnect))
-            case .disconnected:
-                connectionChange.onNext(.init(state: .disconnected,
-                                              action: .connectionLost(error: .physicalConnectionLost)))
-            default: break
-            }
-        }
-    }
-
-    /**
-     start timers for sending heartbeat and checking heartbeat response
-     */
-    fileprivate func bleSchouldSendHeartbeat() {
-        sendHeartbeatsTimer = Timer.scheduledTimer(timeInterval: heartbeatInterval / 1000, target: self, selector: #selector(BLEManager.startSendingHeartbeat), userInfo: nil, repeats: true)
-        checkHeartbeatsResponseTimer = Timer.scheduledTimer(timeInterval: heartbeatTimeout / 1000, target: self, selector: #selector(BLEManager.checkoutHeartbeatsResponse), userInfo: nil, repeats: true)
-    }
-
-    /**
-     Sending heartbeats message to SORC
-     */
-    func startSendingHeartbeat() {
-        let message = SorcMessage(id: SorcMessageID.heartBeatRequest, payload: MTUSize())
-        // TODO: PLAM-1375 handle error
-        _ = messageCommunicator.sendMessage(message)
-    }
-
-    /**
-     stop the sending and checking heartbeat timers
-     */
-    fileprivate func stopSendingHeartbeat() {
-        sendHeartbeatsTimer?.invalidate()
-        checkHeartbeatsResponseTimer?.invalidate()
-    }
-
-    /**
-     check out connection state if timer for checkheartbeat response fired
-     */
-    func checkoutHeartbeatsResponse() {
-        if (lastHeartbeatResponseDate.timeIntervalSinceNow + heartbeatTimeout / 1000) < 0 {
-            disconnect(withAction: .connectionLost(error: .heartbeatTimedOut))
-        }
-    }
-
-    fileprivate func sendMTURequest() {
-        connectionChange.onNext(.init(state: .connecting(sorcID: sorcID, state: .requestingMTU),
-                                      action: .physicalConnectionEstablished(sorcID: sorcID)))
-        let message = SorcMessage(id: SorcMessageID.mtuRequest, payload: MTUSize())
-        _ = messageCommunicator.sendMessage(message)
-    }
-
-    /**
-     Initialize BLEChallengeService to establish Crypto
-     */
-    fileprivate func establishCrypto() {
-        if sorcID.isEmpty || sorcAccessKey.isEmpty {
-            print("Not found sorcID or access key for cram")
-            disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
-            return
-        }
-        challenger = BLEChallengeService(leaseID: leaseID, sorcID: sorcID, leaseTokenID: leaseTokenID, sorcAccessKey: sorcAccessKey)
-        challenger?.delegate = self
-        if challenger == nil {
-            print("Cram could not be initialized")
-            disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
-            return
-        }
-        do {
-            try challenger?.beginChallenge()
-            connectionChange.onNext(.init(state: .connecting(sorcID: sorcID, state: .challenging),
-                                          action: .mtuRequested(sorcID: sorcID)))
-        } catch {
-            print("BLEManager Error: beginChallenge error: \(error)")
-            disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
-        }
-    }
-
-    /**
-     Sending Blob to SORC peripheral
-     */
-    fileprivate func sendBlob() {
-        if blobData?.isEmpty == false {
-            if let payload = LTBlobPayload(blobData: blobData!) {
-                let message = SorcMessage(id: .ltBlob, payload: payload)
-                _ = messageCommunicator.sendMessage(message)
-            } else {
-                print("Blob data error")
-                disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
-            }
-        } else {
-            print("Blob data error")
-            disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
-        }
-    }
-
     private func handleMessageReceived(result: Result<SorcMessage>) {
 
-        guard connectionManager.connectionChange.state == .connected(sorcID: sorcID) else { return }
+        guard case .connected = connectionManager.connectionChange.state else { return }
+
+        // TODO: PLAM-959: only handle this if connected established
+
+        // TODO: PLAM-959 handle message error only once (heartbeat or service trigger?)
 
         let noValidDataErrorMessage = "No valid data was received"
         guard case let .success(message) = result else {
-            handleServiceGrantTrigger(nil, error: noValidDataErrorMessage)
+            // handleServiceGrantTrigger(nil, error: noValidDataErrorMessage)
             return
         }
+        var error: String?
 
-        switch message.id {
-            // MTU Size
-        case .mtuReceive:
-            let payload = MTUSize(rawData: message.message)
-            if let mtu = payload.mtuSize {
-                dataCommunicator.mtuSize = mtu
-            }
-            if !messageCommunicator.isEncryptionEnabled {
-                establishCrypto()
-            }
-            // Challenger Message
-        case .challengeSorcResponse, .badChallengeSorcResponse, .ltAck:
-            do {
-                try challenger?.handleReceivedChallengerMessage(message)
-            } catch {
-                print("BLEManager Error: handleReceivedChallengerMessage failed message: \(message)")
-                disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
-            }
+        guard message.id == SorcMessageID.serviceGrantTrigger else { return }
 
-        case .ltBlobRequest:
-            let payload = BlobRequest(rawData: message.message)
-            if blobCounter > payload.blobMessageID {
-                sendBlob()
-            }
-
-        case .heartBeatResponse:
-            lastHeartbeatResponseDate = Date()
-            checkHeartbeatsResponseTimer?.fireDate = Date().addingTimeInterval(heartbeatTimeout / 1000)
-
-        default:
-            // Normal Message. E.g. ServiceGrant
-            let messageID = message.id
-            if messageID == SorcMessageID.serviceGrantTrigger {
-                handleServiceGrantTrigger(message, error: nil)
-            }
-        }
-    }
-
-    /**
-     Response message from SORC will be handled with reporting ServiceGrantTriggerStatus
-
-     - parameter message: the Response message came from SORC
-     - parameter error:   error description if that not nil
-     */
-    fileprivate func handleServiceGrantTrigger(_ message: SorcMessage?, error: String?) {
-
-        var theStatus: ServiceGrantTriggerStatus = .triggerStatusUnkown
-        guard let trigger = message.map({ ServiceGrantTrigger(rawData: $0.message) }) else {
-            receivedServiceGrantTriggerForStatus.onNext((status: theStatus, error: error))
-            return
-        }
+        var status: ServiceGrantTriggerStatus = .triggerStatusUnkown
+        let trigger = ServiceGrantTrigger(rawData: message.message)
 
         switch trigger.id {
-        case .lock: theStatus = (trigger.status == .success) ? .lockSuccess : .lockFailed
-        case .unlock: theStatus = (trigger.status == .success) ? .unlockSuccess : .unlockFailed
-        case .enableIgnition: theStatus = (trigger.status == .success) ? .enableIgnitionSuccess : .enableIgnitionFailed
-        case .disableIgnition: theStatus = (trigger.status == .success) ? .disableIgnitionSuccess : .disableIgnitionFailed
+        case .lock: status = (trigger.status == .success) ? .lockSuccess : .lockFailed
+        case .unlock: status = (trigger.status == .success) ? .unlockSuccess : .unlockFailed
+        case .enableIgnition: status = (trigger.status == .success) ? .enableIgnitionSuccess : .enableIgnitionFailed
+        case .disableIgnition: status = (trigger.status == .success) ? .disableIgnitionSuccess : .disableIgnitionFailed
         case .lockStatus:
             if trigger.result == ServiceGrantTrigger.ServiceGrantResult.locked {
-                theStatus = .lockStatusLocked
+                status = .lockStatusLocked
             } else if trigger.result == ServiceGrantTrigger.ServiceGrantResult.unlocked {
-                theStatus = .lockStatusUnlocked
+                status = .lockStatusUnlocked
             }
         case .ignitionStatus:
             if trigger.result == ServiceGrantTrigger.ServiceGrantResult.enabled {
-                theStatus = .ignitionStatusEnabled
+                status = .ignitionStatusEnabled
             } else if trigger.result == ServiceGrantTrigger.ServiceGrantResult.disabled {
-                theStatus = .ignitionStatusDisabled
+                status = .ignitionStatusDisabled
             }
         default:
-            theStatus = .triggerStatusUnkown
+            status = .triggerStatusUnkown
         }
-        let error = error
-        if theStatus == .triggerStatusUnkown {
+        if status == .triggerStatusUnkown {
             print("BLEManager handleServiceGrantTrigger: Trigger status unknown.")
         }
-        receivedServiceGrantTriggerForStatus.onNext((status: theStatus, error: error))
+        receivedServiceGrantTriggerForStatus.onNext((status: status, error: error))
     }
 
     private func failedStatusMatchingFeature(_ feature: ServiceGrantFeature) -> ServiceGrantTriggerStatus {
@@ -427,41 +233,5 @@ public class BLEManager: NSObject, BLEManagerType {
         default:
             return .triggerStatusUnkown
         }
-    }
-
-    fileprivate func disconnect(withAction action: ConnectionChange.Action) {
-        connectionChange.onNext(.init(state: .disconnected, action: action))
-        disconnect()
-    }
-}
-
-// MARK: - BLEChallengeServiceDelegate
-
-extension BLEManager: BLEChallengeServiceDelegate {
-
-    func challengerWantsSendMessage(_ message: SorcMessage) {
-        _ = messageCommunicator.sendMessage(message)
-    }
-
-    func challengerFinishedWithSessionKey(_ key: [UInt8]) {
-        messageCommunicator.enableEncryption(withSessionKey: key)
-        connectionChange.onNext(.init(
-            state: .connected(sorcID: sorcID),
-            action: .connectionEstablished(sorcID: sorcID))
-        )
-        bleSchouldSendHeartbeat()
-    }
-
-    func challengerAbort(_: BLEChallengerError) {
-        disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
-    }
-
-    func challengerNeedsSendBlob(latestBlobCounter: Int?) {
-
-        guard latestBlobCounter == nil || blobCounter >= latestBlobCounter! else {
-            disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .blobOutdated))
-            return
-        }
-        sendBlob()
     }
 }

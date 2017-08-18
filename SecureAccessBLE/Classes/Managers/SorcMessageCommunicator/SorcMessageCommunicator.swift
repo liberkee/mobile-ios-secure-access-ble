@@ -49,6 +49,8 @@ class SorcMessageCommunicator {
                 return
             }
 
+            strongSelf.updateMTUSizeIfReceived(message: message)
+
             strongSelf.messageReceived.onNext(.success(message))
         }
         .disposed(by: disposeBag)
@@ -87,5 +89,13 @@ class SorcMessageCommunicator {
     func reset() {
         dataCommunicator.resetCurrentPackage()
         cryptoManager = ZeroSecurityManager()
+    }
+
+    // MARK: Private methods
+
+    private func updateMTUSizeIfReceived(message: SorcMessage) {
+        if case .mtuReceive = message.id, let mtuSize = MTUSize(rawData: message.message).mtuSize {
+            dataCommunicator.mtuSize = mtuSize
+        }
     }
 }
