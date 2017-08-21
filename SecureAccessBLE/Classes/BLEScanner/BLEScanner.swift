@@ -172,6 +172,7 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
      Start BLE-Scanner to scan perihperals with allowing duplicatesKey options
      */
     func startScan() {
+        guard centralManager.state == .poweredOn else { return }
         centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: 1])
     }
 
@@ -190,9 +191,7 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
         consoleLog("BLEScanner Central updated state: \(central.state)")
 
         bleScannerDelegate?.didUpdateState()
-        if central.state == .poweredOn {
-            startScan()
-        }
+        startScan()
     }
 
     /**

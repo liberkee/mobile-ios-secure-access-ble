@@ -52,8 +52,8 @@ public protocol BLEManagerType: class {
 
     /**
      Starts the discovery of peripherals if it's not already running.
-     
-     - Note: Must be called when the app becomes active again after beiing in the background to ensure that discovery 
+
+     - Note: Must be called when the app becomes active again after being in the background to ensure that discovery
      is resumed.
      */
     func startDiscovery()
