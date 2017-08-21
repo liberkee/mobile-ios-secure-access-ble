@@ -171,7 +171,7 @@ open class BLEScanner: NSObject, DataTransfer, CBCentralManagerDelegate, CBPerip
     /**
      Start BLE-Scanner to scan perihperals with allowing duplicatesKey options
      */
-    private func startScan() {
+    func startScan() {
         centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: 1])
     }
 

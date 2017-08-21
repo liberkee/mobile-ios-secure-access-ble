@@ -94,6 +94,10 @@ public class SimulatableBLEManager: BLEManagerType {
 
     // MARK: - Actions
 
+    public func startDiscovery() {
+        currentManager.startDiscovery()
+    }
+
     public func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob) {
         currentManager.connectToSorc(leaseToken: leaseToken, leaseTokenBlob: leaseTokenBlob)
     }
