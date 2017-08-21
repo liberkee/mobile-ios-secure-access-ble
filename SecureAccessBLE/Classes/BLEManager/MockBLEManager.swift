@@ -57,6 +57,8 @@ class MockBLEManager: BLEManagerType {
 
     // MARK: - Actions
 
+    public func startDiscovery() {}
+
     public func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob _: LeaseTokenBlob) {
         let sorcId = leaseToken.sorcId
         connectionChange.onNext(ConnectionChange(state: .connecting(sorcId: sorcId), action: .connect))

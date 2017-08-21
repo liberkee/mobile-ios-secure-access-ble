@@ -227,6 +227,10 @@ public class BLEManager: NSObject, BLEManagerType {
 
     // MARK: Actions
 
+    public func startDiscovery() {
+        scanner.startScan()
+    }
+
     public func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob) {
         sidId = leaseToken.sorcId
         connectionChange.onNext(ConnectionChange(state: .connecting(sorcId: sidId), action: .connect))

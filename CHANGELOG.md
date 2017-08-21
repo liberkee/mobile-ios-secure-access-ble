@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 ### Added
+- 2017-08-21 : (PLAM-1412)  : Provide method to start discovery again.
+
 ### Changed
 ### Removed
 ### Fixed
