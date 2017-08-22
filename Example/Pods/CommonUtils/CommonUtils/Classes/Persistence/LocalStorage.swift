@@ -15,9 +15,10 @@ public protocol LocalStorage {
     /**
      Loads the locally saved data as object
 
+     - parameter object: The object to be saved locally
      - returns: The saved object or `nil` if it doesn't exist
      */
-    func loadObject<T: BaseMappable>() -> T?
+    func loadObject<T: BaseMappable>(context: MapContext?) -> T?
 
     /**
      Loads the locally saved data as array
