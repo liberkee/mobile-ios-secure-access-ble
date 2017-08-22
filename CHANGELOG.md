@@ -9,6 +9,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 ### Fixed
 
+## [1.1.0] - 2017-08-22
+
+### Added
+- 2017-08-21 : (PLAM-1412)  : Provide method to start discovery again.
+
 ## [1.0.14] - 2017-08-02
 
 ### Changed
