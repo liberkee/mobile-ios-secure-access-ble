@@ -11,6 +11,8 @@ import Foundation
 /**
  *  Default Cryptomanager with 'Zero' key, if encryption was not estabilisched
  */
+
+// TODO: PLAM-959 remove class
 struct ZeroSecurityManager: CryptoManager {
     /// default key [Zero] for zero security Cryptor
     var key: [UInt8] = [0x00] as [UInt8]

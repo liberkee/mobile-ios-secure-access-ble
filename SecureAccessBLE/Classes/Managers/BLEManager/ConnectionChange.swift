@@ -43,10 +43,10 @@ extension ConnectionChange {
         public static func ==(lhs: State, rhs: State) -> Bool {
             switch (lhs, rhs) {
             case (.disconnected, .disconnected): return true
-            case let (.connecting(lSorcID, lState), .connecting(rSorcID, rState))
-                where lSorcID == rSorcID && lState == rState: return true
-            case let (.connected(lSorcID), .connected(rSorcID)) where lSorcID == rSorcID:
-                return true
+            case let (.connecting(lSorcID, lState), .connecting(rSorcID, rState)):
+                return lSorcID == rSorcID && lState == rState
+            case let (.connected(lSorcID), .connected(rSorcID)):
+                return lSorcID == rSorcID
             default:
                 return false
             }
@@ -54,7 +54,7 @@ extension ConnectionChange {
 
         public enum ConnectingState {
             case physical
-            case requestingMTU
+            case transport
             case challenging
         }
     }
@@ -67,7 +67,7 @@ extension ConnectionChange {
         case initial
         case connect(sorcID: SorcID)
         case physicalConnectionEstablished(sorcID: SorcID)
-        case mtuRequested(sorcID: SorcID)
+        case transportConnectionEstablished(sorcID: SorcID)
         case connectionEstablished(sorcID: SorcID)
         case connectingFailed(sorcID: SorcID, error: ConnectingFailedError)
         case disconnect
@@ -75,18 +75,24 @@ extension ConnectionChange {
 
         public static func ==(lhs: Action, rhs: Action) -> Bool {
             switch (lhs, rhs) {
-            case (.initial, .initial): return true
-            case let (.connect(lSorcID), .connect(rSorcID)) where lSorcID == rSorcID: return true
-            case let (.physicalConnectionEstablished(lSorcID), .physicalConnectionEstablished(rSorcID))
-                where lSorcID == rSorcID: return true
-            case let (.mtuRequested(lSorcID), .mtuRequested(rSorcID)) where lSorcID == rSorcID: return true
-            case let (.connectionEstablished(lSorcID), .connectionEstablished(rSorcID))
-                where lSorcID == rSorcID: return true
-            case let (.connectingFailed(lError, lSorcID), .connectingFailed(rError, rSorcID))
-                where lError == rError && lSorcID == rSorcID: return true
-            case (.disconnect, .disconnect): return true
-            case let (.connectionLost(lError), .connectionLost(rError)) where lError == rError: return true
-            default: return false
+            case (.initial, .initial):
+                return true
+            case let (.connect(lSorcID), .connect(rSorcID)):
+                return lSorcID == rSorcID
+            case let (.physicalConnectionEstablished(lSorcID), .physicalConnectionEstablished(rSorcID)):
+                return lSorcID == rSorcID
+            case let (.transportConnectionEstablished(lSorcID), .transportConnectionEstablished(rSorcID)):
+                return lSorcID == rSorcID
+            case let (.connectionEstablished(lSorcID), .connectionEstablished(rSorcID)):
+                return lSorcID == rSorcID
+            case let (.connectingFailed(lError, lSorcID), .connectingFailed(rError, rSorcID)):
+                return lError == rError && lSorcID == rSorcID
+            case (.disconnect, .disconnect):
+                return true
+            case let (.connectionLost(lError), .connectionLost(rError)):
+                return lError == rError
+            default:
+                return false
             }
         }
     }
@@ -95,6 +101,7 @@ extension ConnectionChange {
 /// The errors that can occur if the connection attempt fails
 public enum ConnectingFailedError {
     case physicalConnectingFailed
+    case transportConnectingFailed
     case challengeFailed
     case blobOutdated
 }

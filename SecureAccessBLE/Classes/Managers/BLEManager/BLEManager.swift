@@ -93,7 +93,7 @@ public class BLEManager: NSObject, BLEManagerType {
     // MARK: Connection
 
     public var connectionChange: ChangeSubject<ConnectionChange> {
-        return connectionManager.connectionChange
+        return messageCommunicator.connectionChange
     }
 
     // MARK: Service
@@ -101,17 +101,14 @@ public class BLEManager: NSObject, BLEManagerType {
     public let receivedServiceGrantTriggerForStatus = PublishSubject<(status: ServiceGrantTriggerStatus?, error: String?)>()
 
     fileprivate let sorcConnectionManager: SorcConnectionManager
-    fileprivate let connectionManager: ConnectionManager
     fileprivate let messageCommunicator: SorcMessageCommunicator
 
     private let disposeBag = DisposeBag()
 
     // MARK: - Inits and deinit
 
-    init(sorcConnectionManager: SorcConnectionManager, connectionManager: ConnectionManager,
-         messageCommunicator: SorcMessageCommunicator) {
+    init(sorcConnectionManager: SorcConnectionManager, messageCommunicator: SorcMessageCommunicator) {
         self.sorcConnectionManager = sorcConnectionManager
-        self.connectionManager = connectionManager
         self.messageCommunicator = messageCommunicator
         super.init()
 
@@ -123,12 +120,9 @@ public class BLEManager: NSObject, BLEManagerType {
 
     convenience override init() {
         let sorcConnectionManager = SorcConnectionManager()
-        let dataCommunicator = SorcDataCommunicator(transporter: sorcConnectionManager)
+        let dataCommunicator = SorcDataCommunicator(sorcConnectionManager: sorcConnectionManager)
         let messageCommunicator = SorcMessageCommunicator(dataCommunicator: dataCommunicator)
-        let connectionManager = ConnectionManager(sorcConnectionManager: sorcConnectionManager,
-                                                  messageCommunicator: messageCommunicator)
-        self.init(sorcConnectionManager: sorcConnectionManager, connectionManager: connectionManager,
-                  messageCommunicator: messageCommunicator)
+        self.init(sorcConnectionManager: sorcConnectionManager, messageCommunicator: messageCommunicator)
     }
 
     deinit {
@@ -138,11 +132,11 @@ public class BLEManager: NSObject, BLEManagerType {
     // MARK: Actions
 
     public func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob) {
-        connectionManager.connectToSorc(leaseToken: leaseToken, leaseTokenBlob: leaseTokenBlob)
+        messageCommunicator.connectToSorc(leaseToken: leaseToken, leaseTokenBlob: leaseTokenBlob)
     }
 
     public func disconnect() {
-        connectionManager.disconnect()
+        messageCommunicator.disconnect()
     }
 
     public func sendServiceGrantForFeature(_ feature: ServiceGrantFeature) {
@@ -176,7 +170,7 @@ public class BLEManager: NSObject, BLEManagerType {
 
     private func handleMessageReceived(result: Result<SorcMessage>) {
 
-        guard case .connected = connectionManager.connectionChange.state else { return }
+        guard case .connected = messageCommunicator.connectionChange.state else { return }
 
         // TODO: PLAM-959: only handle this if connected established
 

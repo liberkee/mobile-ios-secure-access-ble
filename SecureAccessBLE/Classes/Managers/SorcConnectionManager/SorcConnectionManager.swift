@@ -47,7 +47,7 @@ private extension CBManagerState {
 }
 
 /// Manages the discovery and connection of SORCs
-class SorcConnectionManager: NSObject, DataTransfer, SorcConnectionManagerType {
+class SorcConnectionManager: NSObject, SorcConnectionManagerType {
 
     let isPoweredOn: BehaviorSubject<Bool>
     let discoveryChange = ChangeSubject<DiscoveryChange>(state: [:])
