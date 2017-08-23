@@ -64,7 +64,7 @@ struct SorcMessage {
 
     /// The real data that a SORC Message carried over
     var message: Data {
-        return data.subdata(in: 1 ..< data.count) // NSMakeRange(1, data.count-1))
+        return data.count > 1 ? data.subdata(in: 1 ..< data.count) : Data()
     }
 
     /// Start value of SORC message as NSData

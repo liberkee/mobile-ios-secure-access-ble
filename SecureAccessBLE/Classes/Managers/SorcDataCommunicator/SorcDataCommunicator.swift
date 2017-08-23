@@ -191,8 +191,6 @@ class SorcDataCommunicator {
 
         if frame.type == .single || frame.type == .eop {
             if let messageData = self.currentReceivingPackage?.message {
-
-                /// TODO: PLAM-959 Check if empty data causes issues
                 let message = SorcMessage(rawData: messageData)
                 if case .mtuReceive = message.id, let mtuSize = MTUSize(rawData: message.message).mtuSize {
                     handleMTUReceived(mtuSize: mtuSize)

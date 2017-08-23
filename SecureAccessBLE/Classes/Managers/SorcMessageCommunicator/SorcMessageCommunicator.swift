@@ -271,7 +271,6 @@ class SorcMessageCommunicator {
     }
 
     private func handleDataReceivedWhileChallenging(data: Data) {
-        guard data.count > 0 else { return }
         let message = SorcMessage(rawData: data)
         switch message.id {
         case .challengeSorcResponse, .badChallengeSorcResponse, .ltAck:
@@ -290,11 +289,6 @@ class SorcMessageCommunicator {
     }
 
     private func handleDataReceivedWhileConnected(data: Data) {
-        guard data.count > 0 else {
-            messageReceived.onNext(.error(Error.receivedInvalidData))
-            return
-        }
-
         let message = cryptoManager.decryptData(data)
 
         if case .heartBeatResponse = message.id {
