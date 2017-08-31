@@ -1,19 +1,18 @@
 //
 //  SorcMessagePayload.swift
-//  HSM
+//  SecureAccessBLE
 //
-//  Created by Sebastian Stüssel on 20.09.15.
-//  Copyright © 2015 Sebastian Stüssel. All rights reserved.
+//  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
 import Foundation
 
 /**
- *  General defined SORC message payload, with NSData object type
+ *  General defined SORC message payload, with Data object type
  */
 protocol SorcMessagePayload {
 
-    /// message payload defined as NSData
+    /// message payload defined as Data
     var data: Data { set get }
 }
 

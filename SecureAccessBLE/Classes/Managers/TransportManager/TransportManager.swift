@@ -1,30 +1,28 @@
 //
-//  SorcDataCommunicator.swift
+//  TransportManager.swift
 //  SecureAccessBLE
 //
-//  Copyright © 2016 Huf Secure Mobile. All rights reserved.
+//  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-import Foundation
 import CommonUtils
 
 /// Sends and receives data by sending separate frames based on the current MTU size.
-class SorcDataCommunicator {
+class TransportManager: TransportManagerType {
 
     let connectionChange = ChangeSubject<TransportConnectionChange>(state: .disconnected)
-    let dataReceived = PublishSubject<Data>()
+
+    let dataSent = PublishSubject<Result<Data>>()
+    let dataReceived = PublishSubject<Result<Data>>()
+
+    private let defaultMTUSize = 20
 
     /// Updating the MTU size only takes effect on the next data package sent, not the current one.
-    private var mtuSize = 20
+    private var mtuSize: Int
 
     /// The netto message size (MTU minus frame header information)
     private var messageFrameSize: Int {
         return mtuSize - 4
-    }
-
-    /// TODO: PLAM-959 Communicate back if a package was sent so that queuing becomes possible?
-    var isBusy: Bool {
-        return currentPackage != nil
     }
 
     /// Sending data package
@@ -33,40 +31,34 @@ class SorcDataCommunicator {
     /// The receiveing package
     private var currentReceivingPackage: DataFramePackage?
 
-    private let sorcConnectionManager: SorcConnectionManager
+    private let connectionManager: ConnectionManagerType
 
     private let disposeBag = DisposeBag()
+
+    private var actionLeadingToDisconnect: TransportConnectionChange.Action?
 
     /**
      Init point
 
      - returns: self as communicator object
      */
-    init(sorcConnectionManager: SorcConnectionManager) {
-        self.sorcConnectionManager = sorcConnectionManager
+    init(connectionManager: ConnectionManagerType) {
+        mtuSize = defaultMTUSize
 
-        sorcConnectionManager.connectionChange.subscribeNext { [weak self] change in
-            self?.handleDataConnectionChange(change)
+        self.connectionManager = connectionManager
+
+        connectionManager.connectionChange.subscribeNext { [weak self] change in
+            self?.handlePhysicalConnectionChange(change)
         }
         .disposed(by: disposeBag)
 
-        sorcConnectionManager.sentData.subscribeNext { [weak self] error in
-            if let error = error {
-                // TODO: PLAM-1374 handle error
-            } else {
-                self?.handleSentData()
-            }
+        connectionManager.sentData.subscribeNext { [weak self] error in
+            self?.handleSentData(error: error)
         }
         .disposed(by: disposeBag)
 
-        sorcConnectionManager.receivedData.subscribeNext { [weak self] result in
-            switch result {
-            case let .success(data):
-                self?.handleReceivedData(data)
-            case let .error(error):
-                // TODO: PLAM-1374 handle error
-                break
-            }
+        connectionManager.receivedData.subscribeNext { [weak self] result in
+            self?.handleReceivedDataResult(result)
         }
         .disposed(by: disposeBag)
     }
@@ -80,7 +72,7 @@ class SorcDataCommunicator {
                                           action: .connect(sorcID: sorcID)))
         }
 
-        sorcConnectionManager.connectToSorc(sorcID)
+        connectionManager.connectToSorc(sorcID)
     }
 
     func disconnect() {
@@ -94,11 +86,14 @@ class SorcDataCommunicator {
 
      - returns: if sending successful, if not the error description
      */
-    func sendData(_ data: Data) -> (success: Bool, error: String?) {
+    func sendData(_ data: Data) {
         // TODO: PLAM-959 add preconditions
+        // TODO: PLAM-959 add queuing
 
-        if currentPackage != nil {
-            return (false, "Sending in progress")
+        print("BLA: try sending data: \(data.toHexString())")
+
+        if currentPackage != nil || currentReceivingPackage != nil {
+            print("BLA Sending/Receiving in progress")
         } else {
             // debugPrint("----------------------------------------")
             // debugPrint("Send Encrypted Message: \(data.toHexString())")
@@ -111,17 +106,18 @@ class SorcDataCommunicator {
             if let currentFrame = self.currentPackage?.currentFrame {
                 sendFrame(currentFrame)
             } else {
-                return (false, "DataFramePackage has no frames to send")
+                print("DataFramePackage has no frames to send")
             }
-            return (true, nil)
         }
     }
 
     private func resetCurrentPackage() {
+        print("BLA resetCurrentPackage")
         currentPackage = nil
     }
 
     private func resetReceivedPackage() {
+        print("BLA resetReceivedPackage")
         currentReceivingPackage = nil
     }
 
@@ -132,16 +128,18 @@ class SorcDataCommunicator {
         case .connecting, .connected: break
         default: return
         }
-        reset()
-        connectionChange.onNext(.init(state: .disconnected, action: action))
-        sorcConnectionManager.disconnect()
+        actionLeadingToDisconnect = action
+        connectionManager.disconnect()
     }
 
     private func reset() {
         resetCurrentPackage()
+        resetReceivedPackage()
+        mtuSize = defaultMTUSize
+        actionLeadingToDisconnect = nil
     }
 
-    private func handleDataConnectionChange(_ change: DataConnectionChange) {
+    private func handlePhysicalConnectionChange(_ change: PhysicalConnectionChange) {
         switch change.state {
         case .connecting: break
         case let .connected(dataSorcID):
@@ -151,7 +149,12 @@ class SorcDataCommunicator {
             sendMTURequest()
         case .disconnected:
             if connectionChange.state == .disconnected { return }
+            let actionLeadingToDisconnect = self.actionLeadingToDisconnect
             reset()
+            if let action = actionLeadingToDisconnect {
+                connectionChange.onNext(.init(state: .disconnected, action: action))
+                return
+            }
             switch change.action {
             case let .connectingFailed(sorcID):
                 connectionChange.onNext(.init(state: .disconnected,
@@ -159,7 +162,7 @@ class SorcDataCommunicator {
                                                                         error: .physicalConnectingFailed)))
             case .disconnect:
                 connectionChange.onNext(.init(state: .disconnected, action: .disconnect))
-            case .disconnected:
+            case .connectionLost:
                 connectionChange.onNext(.init(state: .disconnected,
                                               action: .connectionLost(error: .physicalConnectionLost)))
             default: break
@@ -168,21 +171,49 @@ class SorcDataCommunicator {
     }
 
     private func sendFrame(_ frame: DataFrame) {
-        sorcConnectionManager.sendData(frame.data)
+        connectionManager.sendData(frame.data)
     }
 
-    private func handleSentData() {
-        currentPackage?.currentIndex += 1
-        if let currentFrame = self.currentPackage?.currentFrame {
+    private func handleSentData(error: Error?) {
+        // TODO: PLAM-1374 handle error
+
+        if let error = error {
+            resetCurrentPackage()
+            dataSent.onNext(.failure(error))
+            return
+        }
+
+        guard let currentPackage = currentPackage else { return }
+        currentPackage.currentIndex += 1
+        if let currentFrame = currentPackage.currentFrame {
             sendFrame(currentFrame)
         } else {
-            if currentPackage?.message != nil {
-                resetCurrentPackage()
-            }
+            dataSent.onNext(.success(currentPackage.message))
+            resetCurrentPackage()
+        }
+    }
+
+    private func handleReceivedDataResult(_ result: Result<Data>) {
+        switch connectionChange.state {
+        case let .connecting(_, connectingState) where connectingState == .requestingMTU:
+            break
+        case .connected:
+            break
+        default:
+            return
+        }
+
+        switch result {
+        case let .success(data):
+            handleReceivedData(data)
+        case let .failure(error):
+            handleReceivedDataError(error)
         }
     }
 
     private func handleReceivedData(_ data: Data) {
+        print("BLA handleReceivedData")
+
         if currentReceivingPackage == nil {
             currentReceivingPackage = DataFramePackage()
         }
@@ -190,24 +221,39 @@ class SorcDataCommunicator {
         currentReceivingPackage?.frames.append(frame)
 
         if frame.type == .single || frame.type == .eop {
-            if let messageData = self.currentReceivingPackage?.message {
-                let message = SorcMessage(rawData: messageData)
-                if case .mtuReceive = message.id, let mtuSize = MTUSize(rawData: message.message).mtuSize {
-                    handleMTUReceived(mtuSize: mtuSize)
-                } else {
-                    dataReceived.onNext(messageData)
-                }
-            }
+            guard let package = self.currentReceivingPackage else { return }
+
             resetReceivedPackage()
+            let messageData = package.message
+            let message = SorcMessage(rawData: messageData)
+            if case .mtuReceive = message.id, let mtuSize = MTUSize(rawData: message.message).mtuSize {
+                print("BLA mtuReceive: \(message.data.toHexString())")
+                handleMTUReceived(mtuSize: mtuSize)
+            } else {
+                dataReceived.onNext(.success(messageData))
+            }
+        }
+    }
+
+    private func handleReceivedDataError(_ error: Error) {
+        // TODO: PLAM-1374 handle error
+        print("BLA handleReceivedData error")
+
+        if case let .connecting(sorcID, connectingState) = connectionChange.state, connectingState == .requestingMTU {
+            disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .transportConnectingFailed))
+        } else {
+            dataReceived.onNext(.failure(error))
         }
     }
 
     private func sendMTURequest() {
+        print("BLA sendMTURequest")
         let message = SorcMessage(id: SorcMessageID.mtuRequest, payload: MTUSize())
         sendData(message.data)
     }
 
     private func handleMTUReceived(mtuSize: Int) {
+        print("BLA handleMTUReceived")
         guard case let .connecting(sorcID, connectingState) = connectionChange.state,
             connectingState == .requestingMTU else { return }
 

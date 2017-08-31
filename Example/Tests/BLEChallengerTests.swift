@@ -1,9 +1,8 @@
 //
 //  BLEChallengerTests.swift
-//  BLE
+//  SecureAccessBLE
 //
-//  Created by Ke Song on 04.07.16.
-//  Copyright © 2016 Huf Secure Mobile. All rights reserved.
+//  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
 import XCTest

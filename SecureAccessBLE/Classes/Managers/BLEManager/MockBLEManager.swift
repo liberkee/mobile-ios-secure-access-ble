@@ -2,7 +2,6 @@
 //  MockBLEManager.swift
 //  SecureAccessBLE
 //
-//  Created by Torsten Lehmann on 26.05.17.
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 

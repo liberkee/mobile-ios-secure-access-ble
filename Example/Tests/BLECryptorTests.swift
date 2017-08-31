@@ -1,9 +1,8 @@
 //
-//  BLECtyptorTests.swift
-//  BLE
+//  BLECryptorTests.swift
+//  SecureAccessBLE
 //
-//  Created by Ke Song on 04.07.16.
-//  Copyright © 2016 Huf Secure Mobile. All rights reserved.
+//  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
 import XCTest
@@ -57,7 +56,7 @@ class BLECryptorTests: XCTestCase {
         var aesCryptor = AesCbcCryptoManager(key: sessionKey)
 
         /// Sending message for service grant .LockStatus
-        let sendingMessage = SorcMessage(id: SorcMessageID.serviceGrant, payload: ServiceGrantRequest(grantID: ServiceGrantID.lockStatus))
+        let sendingMessage = SorcMessage(id: SorcMessageID.serviceGrant, payload: ServiceGrantRequest(grantID: FeatureServiceGrantID.lockStatus))
 
         /// Received data from SORC, for Servicetrigger results "LOCKED"
         let receivedServiceTrigerData = [0xD3, 0x7D, 0x36, 0x92, 0xBE, 0xB0, 0xF2, 0xDE, 0x36, 0xD8, 0x75, 0xF9, 0xBB, 0x4C, 0xF3, 0x00, 0xF5, 0xF9, 0x54, 0x83, 0x62, 0x54, 0xBF, 0xAF] as [UInt8]
@@ -71,14 +70,14 @@ class BLECryptorTests: XCTestCase {
         /// Testing if received message will be correctly decrypted
         XCTAssertNotNil(receivedMessage, "Crypto manager returned NIL for decrpting message!")
 
-        /// To builde service grant trigger with decrypted SORC message
-        let serviceGrantTrigger = ServiceGrantTrigger(rawData: receivedMessage.message)
+        let response = ServiceGrantResponse(sorcID: "1a", message: receivedMessage)!
 
         /// Testing if service grant trigger has ID .Lockstatus
-        XCTAssertEqual(serviceGrantTrigger.id, ServiceGrantID.lockStatus, "Crypto manager returned wrong service grant ID!")
+        XCTAssertEqual(response.serviceGrantID, FeatureServiceGrantID.lockStatus.rawValue, "Crypto manager returned wrong service grant ID!")
 
         /// Testing if service grant trigger has result .Locked
-        XCTAssertEqual(serviceGrantTrigger.result, ServiceGrantTrigger.ServiceGrantResult.locked, "Crypto manager returned wrong service grant result!")
+        let triggerResult = FeatureResult(rawValue: response.responseData)!
+        XCTAssertEqual(triggerResult, FeatureResult.locked, "Crypto manager returned wrong service grant result!")
     }
 
     func test_AesCbcCryptoManager_decryptData_ifMacIsInvalid_messageIdIsNotValid() {

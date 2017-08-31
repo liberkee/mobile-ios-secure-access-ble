@@ -2,7 +2,6 @@
 //  BLEManagerType.swift
 //  SecureAccessBLE
 //
-//  Created by Torsten Lehmann on 24.05.17.
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 

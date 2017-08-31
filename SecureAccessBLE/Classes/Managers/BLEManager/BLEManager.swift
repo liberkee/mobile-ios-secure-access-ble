@@ -2,16 +2,15 @@
 //  BLEManager.swift
 //  SecureAccessBLE
 //
-//  Copyright © 2017 Huf Secure Mobile. All rights reserved.
+//  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-import UIKit
 import CryptoSwift
 import CommonUtils
 
 /**
  Defines the ServiceGrantTriggersStatus anwered from SORC, see also the definations for
- ServiceGrantID, ServiceGrantStatus and ServiceGrantResult defined in 'ServiceGrantTrigger.swift'
+ FeatureServiceGrantID, ServiceGrantStatus and ServiceGrantResult defined in 'ServiceGrantTrigger.swift'
  */
 public enum ServiceGrantTriggerStatus: Int {
 
@@ -43,9 +42,6 @@ public enum ServiceGrantTriggerStatus: Int {
     case triggerStatusUnkown
 }
 
-/**
- Defination for sending message features as enumerating
- */
 public enum ServiceGrantFeature {
     /// feature for unlocking cars door
     case open
@@ -59,6 +55,40 @@ public enum ServiceGrantFeature {
     case lockStatus
     /// feature for calling up ignition-status
     case ignitionStatus
+}
+
+enum FeatureServiceGrantID: UInt16 {
+    /// To unlock vehicles door
+    case unlock = 0x01
+    /// To lock vehicles door
+    case lock = 0x02
+    /// To call up vehicles lock status
+    case lockStatus = 0x03
+    /// To enable Ignition
+    case enableIgnition = 0x04
+    /// To disable Ignition
+    case disableIgnition = 0x05
+    /// To call up Ignition status
+    case ignitionStatus = 0x06
+    /// Others
+    case notValid = 0xFF
+}
+
+/**
+ Is the Service Grant response to a Trigger service Grant request message defined as enumerating
+
+ - Locked:   Door was Locked
+ - Unlocked: Door was Unlocked
+ - Enabled:  Ignition was enabled
+ - Disabled: Ignition was disabled
+ - Unknown:  Unknown result
+ */
+enum FeatureResult: String {
+    case locked = "LOCKED"
+    case unlocked = "UNLOCKED"
+    case enabled = "ENABLED"
+    case disabled = "DISABLED"
+    case unknown = "UNKNOWN"
 }
 
 /**
@@ -81,48 +111,43 @@ public class BLEManager: NSObject, BLEManagerType {
     // MARK: Interface
 
     public var isBluetoothEnabled: BehaviorSubject<Bool> {
-        return sorcConnectionManager.isPoweredOn
+        return sorcManager.isBluetoothEnabled
     }
 
     // MARK: Discovery
 
     public var discoveryChange: ChangeSubject<DiscoveryChange> {
-        return sorcConnectionManager.discoveryChange
+        return sorcManager.discoveryChange
     }
 
     // MARK: Connection
 
     public var connectionChange: ChangeSubject<ConnectionChange> {
-        return messageCommunicator.connectionChange
+        return sorcManager.connectionChange
     }
 
     // MARK: Service
 
     public let receivedServiceGrantTriggerForStatus = PublishSubject<(status: ServiceGrantTriggerStatus?, error: String?)>()
 
-    fileprivate let sorcConnectionManager: SorcConnectionManager
-    fileprivate let messageCommunicator: SorcMessageCommunicator
+    fileprivate let sorcManager: SorcManagerType
 
     private let disposeBag = DisposeBag()
 
     // MARK: - Inits and deinit
 
-    init(sorcConnectionManager: SorcConnectionManager, messageCommunicator: SorcMessageCommunicator) {
-        self.sorcConnectionManager = sorcConnectionManager
-        self.messageCommunicator = messageCommunicator
+    init(sorcManager: SorcManagerType) {
+        self.sorcManager = sorcManager
         super.init()
 
-        messageCommunicator.messageReceived.subscribeNext { [weak self] result in
-            self?.handleMessageReceived(result: result)
+        sorcManager.serviceGrantResultReceived.subscribeNext { [weak self] result in
+            self?.handleServiceGrantResult(result)
         }
         .disposed(by: disposeBag)
     }
 
     convenience override init() {
-        let sorcConnectionManager = SorcConnectionManager()
-        let dataCommunicator = SorcDataCommunicator(sorcConnectionManager: sorcConnectionManager)
-        let messageCommunicator = SorcMessageCommunicator(dataCommunicator: dataCommunicator)
-        self.init(sorcConnectionManager: sorcConnectionManager, messageCommunicator: messageCommunicator)
+        self.init(sorcManager: SorcManager())
     }
 
     deinit {
@@ -132,78 +157,79 @@ public class BLEManager: NSObject, BLEManagerType {
     // MARK: Actions
 
     public func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob) {
-        messageCommunicator.connectToSorc(leaseToken: leaseToken, leaseTokenBlob: leaseTokenBlob)
+        sorcManager.connectToSorc(leaseToken: leaseToken, leaseTokenBlob: leaseTokenBlob)
     }
 
     public func disconnect() {
-        messageCommunicator.disconnect()
+        sorcManager.disconnect()
     }
 
     public func sendServiceGrantForFeature(_ feature: ServiceGrantFeature) {
-        guard messageCommunicator.isEncryptionEnabled && !messageCommunicator.isBusy else {
-            let status = failedStatusMatchingFeature(feature)
-            receivedServiceGrantTriggerForStatus.onNext((status: status, error: nil))
-            return
-        }
+        guard case .connected = sorcManager.connectionChange.state else { return }
 
-        let payload: SorcMessagePayload
+        let serviceGrantID: FeatureServiceGrantID
         switch feature {
         case .open:
-            payload = ServiceGrantRequest(grantID: ServiceGrantID.unlock)
+            serviceGrantID = .unlock
         case .close:
-            payload = ServiceGrantRequest(grantID: ServiceGrantID.lock)
+            serviceGrantID = .lock
         case .ignitionStart:
-            payload = ServiceGrantRequest(grantID: ServiceGrantID.enableIgnition)
+            serviceGrantID = .enableIgnition
         case .ignitionStop:
-            payload = ServiceGrantRequest(grantID: ServiceGrantID.disableIgnition)
+            serviceGrantID = .disableIgnition
         case .lockStatus:
-            payload = ServiceGrantRequest(grantID: ServiceGrantID.lockStatus)
+            serviceGrantID = .lockStatus
         case .ignitionStatus:
-            payload = ServiceGrantRequest(grantID: ServiceGrantID.ignitionStatus)
+            serviceGrantID = .ignitionStatus
         }
 
-        let message = SorcMessage(id: SorcMessageID.serviceGrant, payload: payload)
-        _ = messageCommunicator.sendMessage(message)
+        sorcManager.requestServiceGrant(serviceGrantID.rawValue)
     }
 
     // MARK: - Private methods
 
-    private func handleMessageReceived(result: Result<SorcMessage>) {
+    private func handleServiceGrantResult(_ result: ServiceGrantResult) {
 
-        guard case .connected = messageCommunicator.connectionChange.state else { return }
+        // PLAM-959: needs work
 
-        // TODO: PLAM-959: only handle this if connected established
+        guard case .connected = sorcManager.connectionChange.state else { return }
 
-        // TODO: PLAM-959 handle message error only once (heartbeat or service trigger?)
-
-        let noValidDataErrorMessage = "No valid data was received"
-        guard case let .success(message) = result else {
-            // handleServiceGrantTrigger(nil, error: noValidDataErrorMessage)
+        guard case let .success(response) = result else {
+            receivedServiceGrantTriggerForStatus.onNext(
+                (status: .triggerStatusUnkown, error: "Service grant result failure.")
+            )
             return
         }
-        var error: String?
-
-        guard message.id == SorcMessageID.serviceGrantTrigger else { return }
 
         var status: ServiceGrantTriggerStatus = .triggerStatusUnkown
-        let trigger = ServiceGrantTrigger(rawData: message.message)
 
-        switch trigger.id {
-        case .lock: status = (trigger.status == .success) ? .lockSuccess : .lockFailed
-        case .unlock: status = (trigger.status == .success) ? .unlockSuccess : .unlockFailed
-        case .enableIgnition: status = (trigger.status == .success) ? .enableIgnitionSuccess : .enableIgnitionFailed
-        case .disableIgnition: status = (trigger.status == .success) ? .disableIgnitionSuccess : .disableIgnitionFailed
+        let serviceGrantID = FeatureServiceGrantID(rawValue: response.serviceGrantID) ?? .notValid
+        switch serviceGrantID {
+        case .lock:
+            status = (response.status == .success) ? .lockSuccess : .lockFailed
+        case .unlock:
+            status = (response.status == .success) ? .unlockSuccess : .unlockFailed
+        case .enableIgnition:
+            status = (response.status == .success) ? .enableIgnitionSuccess : .enableIgnitionFailed
+        case .disableIgnition:
+            status = (response.status == .success) ? .disableIgnitionSuccess : .disableIgnitionFailed
         case .lockStatus:
-            if trigger.result == ServiceGrantTrigger.ServiceGrantResult.locked {
+            let resultCode = resultCodeForResponseData(response.responseData)
+            switch resultCode {
+            case .locked:
                 status = .lockStatusLocked
-            } else if trigger.result == ServiceGrantTrigger.ServiceGrantResult.unlocked {
+            case .unlocked:
                 status = .lockStatusUnlocked
+            default: break
             }
         case .ignitionStatus:
-            if trigger.result == ServiceGrantTrigger.ServiceGrantResult.enabled {
+            let resultCode = resultCodeForResponseData(response.responseData)
+            switch resultCode {
+            case .enabled:
                 status = .ignitionStatusEnabled
-            } else if trigger.result == ServiceGrantTrigger.ServiceGrantResult.disabled {
+            case .disabled:
                 status = .ignitionStatusDisabled
+            default: break
             }
         default:
             status = .triggerStatusUnkown
@@ -211,7 +237,14 @@ public class BLEManager: NSObject, BLEManagerType {
         if status == .triggerStatusUnkown {
             print("BLEManager handleServiceGrantTrigger: Trigger status unknown.")
         }
-        receivedServiceGrantTriggerForStatus.onNext((status: status, error: error))
+        receivedServiceGrantTriggerForStatus.onNext((status: status, error: nil))
+    }
+
+    private func resultCodeForResponseData(_ data: String) -> FeatureResult {
+        guard !data.isEmpty,
+            let resultCode = FeatureResult(rawValue: data)
+        else { return .unknown }
+        return resultCode
     }
 
     private func failedStatusMatchingFeature(_ feature: ServiceGrantFeature) -> ServiceGrantTriggerStatus {

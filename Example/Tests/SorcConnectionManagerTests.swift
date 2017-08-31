@@ -2,7 +2,6 @@
 //  SorcConnectionManagerTests.swift
 //  SecureAccessBLE
 //
-//  Created by Torsten Lehmann on 14.07.17.
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
@@ -118,7 +117,7 @@ class SorcConnectionManagerTests: XCTestCase {
     let sorcID1 = "82f6ed49-b70d-4c9e-afa1-4b0377d0de5f"
     let sorcID2 = "a8c5e6b9-9df1-4194-a214-88636a048fcb"
 
-    func test_isPoweredOn_ifCentralManagerIsPoweredOn_returnsTrue() {
+    func test_isBluetoothEnabled_ifCentralManagerIsPoweredOn_returnsTrue() {
 
         // Given
         let centralManager = CBCentralManagerMock()
@@ -126,10 +125,10 @@ class SorcConnectionManagerTests: XCTestCase {
         let connectionManager = SorcConnectionManager(centralManager: centralManager)
 
         // Then
-        XCTAssertTrue(connectionManager.isPoweredOn.value)
+        XCTAssertTrue(connectionManager.isBluetoothEnabled.value)
     }
 
-    func test_isPoweredOn_ifCentralManagerIsNotPoweredOn_returnsFalse() {
+    func test_isBluetoothEnabled_ifCentralManagerIsNotPoweredOn_returnsFalse() {
 
         // Given
         let centralManager = CBCentralManagerMock()
@@ -137,7 +136,7 @@ class SorcConnectionManagerTests: XCTestCase {
         let connectionManager = SorcConnectionManager(centralManager: centralManager)
 
         // Then
-        XCTAssertFalse(connectionManager.isPoweredOn.value)
+        XCTAssertFalse(connectionManager.isBluetoothEnabled.value)
     }
 
     func test_connectToSorc_ifSorcIsNotDiscovered_itDoesNotMoveToConnectingStateAndItDoesNotTryToConnectToAPeripheral() {
@@ -165,7 +164,7 @@ class SorcConnectionManagerTests: XCTestCase {
         prepareDiscoveredSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
                               centralManager: centralManager)
 
-        var receivedConnectionChange: DataConnectionChange!
+        var receivedConnectionChange: PhysicalConnectionChange!
         _ = connectionManager.connectionChange.subscribeNext { change in
             receivedConnectionChange = change
         }
@@ -174,8 +173,8 @@ class SorcConnectionManagerTests: XCTestCase {
         connectionManager.connectToSorc(sorcID1)
 
         // Then
-        let expected = DataConnectionChange(state: .connecting(sorcID: sorcID1),
-                                            action: .connect(sorcID: sorcID1))
+        let expected = PhysicalConnectionChange(state: .connecting(sorcID: sorcID1),
+                                                action: .connect(sorcID: sorcID1))
         XCTAssertEqual(receivedConnectionChange, expected)
         XCTAssertEqual(centralManager.connectCalledWithPeripheral?.identifier, peripheral.identifier)
     }
@@ -189,7 +188,7 @@ class SorcConnectionManagerTests: XCTestCase {
         prepareConnectingSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
                               centralManager: centralManager)
 
-        var receivedConnectionChange: DataConnectionChange!
+        var receivedConnectionChange: PhysicalConnectionChange!
         _ = connectionManager.connectionChange.subscribeNext { change in
             receivedConnectionChange = change
         }
@@ -198,8 +197,8 @@ class SorcConnectionManagerTests: XCTestCase {
         connectionManager.connectToSorc(sorcID1)
 
         // Then
-        let expected = DataConnectionChange(state: .connecting(sorcID: sorcID1),
-                                            action: .initial)
+        let expected = PhysicalConnectionChange(state: .connecting(sorcID: sorcID1),
+                                                action: .initial)
         XCTAssertEqual(receivedConnectionChange, expected)
         XCTAssertEqual(centralManager.connectCalledWithPeripheral?.identifier, peripheral.identifier)
     }
@@ -215,7 +214,7 @@ class SorcConnectionManagerTests: XCTestCase {
         let peripheral2 = CBPeripheralMock()
         prepareDiscoveredSorc(sorcID2, peripheral: peripheral2, connectionManager: connectionManager, centralManager: centralManager)
 
-        var receivedConnectionChange: DataConnectionChange!
+        var receivedConnectionChange: PhysicalConnectionChange!
         _ = connectionManager.connectionChange.subscribeNext { change in
             receivedConnectionChange = change
         }
@@ -224,8 +223,8 @@ class SorcConnectionManagerTests: XCTestCase {
         connectionManager.connectToSorc(sorcID2)
 
         // Then
-        let expected = DataConnectionChange(state: .connecting(sorcID: sorcID2),
-                                            action: .connect(sorcID: sorcID2))
+        let expected = PhysicalConnectionChange(state: .connecting(sorcID: sorcID2),
+                                                action: .connect(sorcID: sorcID2))
         XCTAssertEqual(receivedConnectionChange, expected)
         XCTAssertEqual(centralManager.connectCalledWithPeripheral?.identifier, peripheral2.identifier)
     }
@@ -239,7 +238,7 @@ class SorcConnectionManagerTests: XCTestCase {
         prepareConnectedSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
                              centralManager: centralManager)
 
-        var receivedConnectionChange: DataConnectionChange!
+        var receivedConnectionChange: PhysicalConnectionChange!
         _ = connectionManager.connectionChange.subscribeNext { change in
             receivedConnectionChange = change
         }
@@ -248,8 +247,8 @@ class SorcConnectionManagerTests: XCTestCase {
         connectionManager.connectToSorc(sorcID1)
 
         // Then
-        let expected = DataConnectionChange(state: .connected(sorcID: sorcID1),
-                                            action: .initial)
+        let expected = PhysicalConnectionChange(state: .connected(sorcID: sorcID1),
+                                                action: .initial)
         XCTAssertEqual(receivedConnectionChange, expected)
         XCTAssertNil(centralManager.connectCalledWithPeripheral)
     }
@@ -267,7 +266,7 @@ class SorcConnectionManagerTests: XCTestCase {
         prepareDiscoveredSorc(sorcID2, peripheral: peripheral2, connectionManager: connectionManager,
                               centralManager: centralManager)
 
-        var receivedConnectionChange: DataConnectionChange!
+        var receivedConnectionChange: PhysicalConnectionChange!
         _ = connectionManager.connectionChange.subscribeNext { change in
             receivedConnectionChange = change
         }
@@ -278,8 +277,8 @@ class SorcConnectionManagerTests: XCTestCase {
         // Then
         XCTAssertEqual(centralManager.cancelConnectionCalledWithPeripheral?.identifier, peripheral1.identifier)
 
-        let expected = DataConnectionChange(state: .connecting(sorcID: sorcID2),
-                                            action: .connect(sorcID: sorcID2))
+        let expected = PhysicalConnectionChange(state: .connecting(sorcID: sorcID2),
+                                                action: .connect(sorcID: sorcID2))
         XCTAssertEqual(receivedConnectionChange, expected)
 
         XCTAssertEqual(centralManager.connectCalledWithPeripheral?.identifier, peripheral2.identifier)
@@ -299,7 +298,7 @@ class SorcConnectionManagerTests: XCTestCase {
             receivedDiscoveryChange = change
         }
 
-        var receivedConnectionChange: DataConnectionChange!
+        var receivedConnectionChange: PhysicalConnectionChange!
         _ = connectionManager.connectionChange.subscribeNext { change in
             receivedConnectionChange = change
         }
@@ -313,8 +312,8 @@ class SorcConnectionManagerTests: XCTestCase {
         XCTAssert(!receivedDiscoveryChange.state.keys.contains(sorcID1))
         XCTAssertEqual(receivedDiscoveryChange.action, .disconnect(sorcID: sorcID1))
 
-        let expected = DataConnectionChange(state: .disconnected,
-                                            action: .disconnect(sorcID: sorcID1))
+        let expected = PhysicalConnectionChange(state: .disconnected,
+                                                action: .disconnect(sorcID: sorcID1))
         XCTAssertEqual(receivedConnectionChange, expected)
     }
 
@@ -332,7 +331,7 @@ class SorcConnectionManagerTests: XCTestCase {
             receivedDiscoveryChange = change
         }
 
-        var receivedConnectionChange: DataConnectionChange!
+        var receivedConnectionChange: PhysicalConnectionChange!
         _ = connectionManager.connectionChange.subscribeNext { change in
             receivedConnectionChange = change
         }
@@ -346,8 +345,8 @@ class SorcConnectionManagerTests: XCTestCase {
         XCTAssert(!receivedDiscoveryChange.state.keys.contains(sorcID1))
         XCTAssertEqual(receivedDiscoveryChange.action, .disconnect(sorcID: sorcID1))
 
-        let expected = DataConnectionChange(state: .disconnected,
-                                            action: .disconnect(sorcID: sorcID1))
+        let expected = PhysicalConnectionChange(state: .disconnected,
+                                                action: .disconnect(sorcID: sorcID1))
         XCTAssertEqual(receivedConnectionChange, expected)
     }
 
@@ -385,22 +384,22 @@ class SorcConnectionManagerTests: XCTestCase {
         XCTAssertNil(peripheral.writeValueCalledWithArguments)
     }
 
-    func test_centralManagerDidUpdateState_sendsIsPoweredOnUpdate() {
+    func test_centralManagerDidUpdateState_sendsIsBluetoothEnabledUpdate() {
 
         // Given
         let centralManager = CBCentralManagerMock()
         let connectionManager = SorcConnectionManager(centralManager: centralManager)
 
-        var isPoweredOnUpdate: Bool?
-        _ = connectionManager.isPoweredOn.subscribeNext { isPoweredOn in
-            isPoweredOnUpdate = isPoweredOn
+        var isBluetoothEnabledUpdate: Bool?
+        _ = connectionManager.isBluetoothEnabled.subscribeNext { isBluetoothEnabled in
+            isBluetoothEnabledUpdate = isBluetoothEnabled
         }
 
         // When
         connectionManager.centralManagerDidUpdateState_(centralManager)
 
         // Then
-        XCTAssertFalse(isPoweredOnUpdate!)
+        XCTAssertFalse(isBluetoothEnabledUpdate!)
     }
 
     func test_centralManagerDidUpdateState_ifCentralManagerIsPoweredOn_itScansForPeripheralsAllowingDuplicates() {
@@ -577,7 +576,7 @@ class SorcConnectionManagerTests: XCTestCase {
         prepareConnectingSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
                               centralManager: centralManager)
 
-        var receivedConnectionChange: DataConnectionChange!
+        var receivedConnectionChange: PhysicalConnectionChange!
         _ = connectionManager.connectionChange.subscribeNext { change in
             receivedConnectionChange = change
         }
@@ -586,7 +585,7 @@ class SorcConnectionManagerTests: XCTestCase {
         connectionManager.centralManager_(centralManager, didFailToConnect: peripheral, error: nil)
 
         // Then
-        let expected = DataConnectionChange(state: .disconnected, action: .connectingFailed(sorcID: sorcID1))
+        let expected = PhysicalConnectionChange(state: .disconnected, action: .connectingFailed(sorcID: sorcID1))
         XCTAssertEqual(receivedConnectionChange, expected)
     }
 
@@ -626,7 +625,7 @@ class SorcConnectionManagerTests: XCTestCase {
             receivedDiscoveryChange = change
         }
 
-        var receivedConnectionChange: DataConnectionChange!
+        var receivedConnectionChange: PhysicalConnectionChange!
         _ = connectionManager.connectionChange.subscribeNext { change in
             receivedConnectionChange = change
         }
@@ -638,7 +637,7 @@ class SorcConnectionManagerTests: XCTestCase {
         XCTAssert(!receivedDiscoveryChange.state.keys.contains(sorcID1))
         XCTAssertEqual(receivedDiscoveryChange.action, .disconnected(sorcID: sorcID1))
 
-        let expected = DataConnectionChange(state: .disconnected, action: .disconnected(sorcID: sorcID1))
+        let expected = PhysicalConnectionChange(state: .disconnected, action: .connectionLost(sorcID: sorcID1))
         XCTAssertEqual(receivedConnectionChange, expected)
     }
 
@@ -706,7 +705,7 @@ class SorcConnectionManagerTests: XCTestCase {
         prepareConnectingSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
                               centralManager: centralManager)
 
-        var receivedConnectionChange: DataConnectionChange!
+        var receivedConnectionChange: PhysicalConnectionChange!
         _ = connectionManager.connectionChange.subscribeNext { change in
             receivedConnectionChange = change
         }
@@ -715,8 +714,8 @@ class SorcConnectionManagerTests: XCTestCase {
         connectionManager.peripheral_(peripheral, didDiscoverServices: NSError(domain: "", code: 0, userInfo: nil))
 
         // Then
-        let expected = DataConnectionChange(state: .disconnected,
-                                            action: .connectingFailed(sorcID: sorcID1))
+        let expected = PhysicalConnectionChange(state: .disconnected,
+                                                action: .connectingFailed(sorcID: sorcID1))
         XCTAssertEqual(receivedConnectionChange, expected)
     }
 
@@ -738,7 +737,7 @@ class SorcConnectionManagerTests: XCTestCase {
         prepareConnectingSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
                               centralManager: centralManager)
 
-        var receivedConnectionChange: DataConnectionChange!
+        var receivedConnectionChange: PhysicalConnectionChange!
         _ = connectionManager.connectionChange.subscribeNext { change in
             receivedConnectionChange = change
         }
@@ -747,8 +746,8 @@ class SorcConnectionManagerTests: XCTestCase {
         connectionManager.peripheral_(peripheral, didDiscoverCharacteristicsFor: service, error: nil)
 
         // Then
-        let expected = DataConnectionChange(state: .connected(sorcID: sorcID1),
-                                            action: .connectionEstablished(sorcID: sorcID1))
+        let expected = PhysicalConnectionChange(state: .connected(sorcID: sorcID1),
+                                                action: .connectionEstablished(sorcID: sorcID1))
         XCTAssertEqual(receivedConnectionChange, expected)
 
         if let arguments = peripheral.setNotifyValueCalledWithArguments {
@@ -771,7 +770,7 @@ class SorcConnectionManagerTests: XCTestCase {
         prepareConnectingSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
                               centralManager: centralManager)
 
-        var receivedConnectionChange: DataConnectionChange!
+        var receivedConnectionChange: PhysicalConnectionChange!
         _ = connectionManager.connectionChange.subscribeNext { change in
             receivedConnectionChange = change
         }
@@ -781,8 +780,8 @@ class SorcConnectionManagerTests: XCTestCase {
                                       error: NSError(domain: "", code: 0, userInfo: nil))
 
         // Then
-        let expected = DataConnectionChange(state: .disconnected,
-                                            action: .connectingFailed(sorcID: sorcID1))
+        let expected = PhysicalConnectionChange(state: .disconnected,
+                                                action: .connectingFailed(sorcID: sorcID1))
         XCTAssertEqual(receivedConnectionChange, expected)
     }
 
@@ -820,7 +819,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         var receivedDataError: Error?
         _ = connectionManager.receivedData.subscribeNext { result in
-            if case let .error(error) = result {
+            if case let .failure(error) = result {
                 receivedDataError = error
             }
         }

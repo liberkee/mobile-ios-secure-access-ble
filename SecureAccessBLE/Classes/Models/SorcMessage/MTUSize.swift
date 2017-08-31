@@ -1,9 +1,8 @@
 //
 //  MTUSize.swift
-//  HSM
+//  SecureAccessBLE
 //
-//  Created by Sebastian Stüssel on 28.09.15.
-//  Copyright © 2015 Sebastian Stüssel. All rights reserved.
+//  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
 import Foundation

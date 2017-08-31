@@ -2,10 +2,8 @@
 //  DataFrame.swift
 //  TransportTest
 //
-//  Created by Sebastian Stüssel on 20.08.15.
-//  Copyright (c) 2015 Rocket Apes. All rights reserved.
+//  Copyright (c) 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
-import UIKit
 
 /**
  Defines all used message fragments types in enumerating

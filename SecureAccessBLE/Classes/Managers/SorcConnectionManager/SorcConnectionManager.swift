@@ -2,7 +2,7 @@
 //  SorcConnectionManager.swift
 //  SecureAccessBLE
 //
-//  Copyright © 2016 Huf Secure Mobile. All rights reserved.
+//  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
 import CoreBluetooth
@@ -47,11 +47,11 @@ private extension CBManagerState {
 }
 
 /// Manages the discovery and connection of SORCs
-class SorcConnectionManager: NSObject, SorcConnectionManagerType {
+class SorcConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProviderType, ScannerType {
 
-    let isPoweredOn: BehaviorSubject<Bool>
+    let isBluetoothEnabled: BehaviorSubject<Bool>
     let discoveryChange = ChangeSubject<DiscoveryChange>(state: [:])
-    let connectionChange = ChangeSubject<DataConnectionChange>(state: .disconnected)
+    let connectionChange = ChangeSubject<PhysicalConnectionChange>(state: .disconnected)
 
     let sentData = PublishSubject<Error?>()
     let receivedData = PublishSubject<Result<Data>>()
@@ -83,7 +83,7 @@ class SorcConnectionManager: NSObject, SorcConnectionManagerType {
         return nil
     }
 
-    fileprivate var connectionState: DataConnectionChange.State {
+    fileprivate var connectionState: PhysicalConnectionChange.State {
         return connectionChange.state
     }
 
@@ -91,7 +91,7 @@ class SorcConnectionManager: NSObject, SorcConnectionManagerType {
                   createTimer: CreateTimer) {
 
         self.systemClock = systemClock
-        isPoweredOn = BehaviorSubject(value: centralManager.state == .poweredOn)
+        isBluetoothEnabled = BehaviorSubject(value: centralManager.state == .poweredOn)
         super.init()
 
         self.centralManager = centralManager
@@ -162,7 +162,7 @@ class SorcConnectionManager: NSObject, SorcConnectionManagerType {
 
     // MARK: - Private methods
 
-    fileprivate func disconnect(withAction action: DataConnectionChange.Action?) {
+    fileprivate func disconnect(withAction action: PhysicalConnectionChange.Action?) {
         switch connectionState {
         case let .connecting(sorcID), let .connected(sorcID):
             if let peripheral = peripheralMatchingSorcID(sorcID) {
@@ -232,7 +232,7 @@ extension SorcConnectionManager {
     func centralManagerDidUpdateState_(_ central: CBCentralManagerType) {
         consoleLog("SorcConnectionManager Central updated state: \(central.state)")
 
-        isPoweredOn.onNext(central.state == .poweredOn)
+        isBluetoothEnabled.onNext(central.state == .poweredOn)
         if central.state == .poweredOn {
             startScan()
         } else {
@@ -276,7 +276,7 @@ extension SorcConnectionManager {
 
         discoveredSorcs[sorcID] = nil
         updateDiscoveryChange(action: .disconnected(sorcID: sorcID))
-        connectionChange.onNext(.init(state: .disconnected, action: .disconnected(sorcID: sorcID)))
+        connectionChange.onNext(.init(state: .disconnected, action: .connectionLost(sorcID: sorcID)))
     }
 }
 
@@ -327,7 +327,7 @@ extension SorcConnectionManager {
     func peripheral_(_: CBPeripheralType, didUpdateValueFor characteristic: CBCharacteristicType, error: Error?) {
         guard characteristic.uuid == CBUUID(string: notifyCharacteristicID) else { return }
         if let error = error {
-            receivedData.onNext(.error(error))
+            receivedData.onNext(.failure(error))
         } else if let data = characteristic.value {
             receivedData.onNext(.success(data))
         } else {

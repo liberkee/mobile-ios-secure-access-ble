@@ -1,13 +1,11 @@
 //
 //  TestMessage.swift
-//  HSM
+//  SecureAccessBLE
 //
-//  Created by Sebastian Stüssel on 19.09.15.
-//  Copyright © 2015 Sebastian Stüssel. All rights reserved.
+//  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
 import Foundation
-import UIKit
 
 /**
  The test message types defined as enumerating

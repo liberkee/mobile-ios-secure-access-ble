@@ -2,11 +2,8 @@
 //  SorcMessage.swift
 //  TransportTest
 //
-//  Created by Sebastian Stüssel on 21.08.15.
-//  Copyright (c) 2015 Rocket Apes. All rights reserved.
+//  Copyright (c) 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
-
-import UIKit
 
 /**
  Defines the message type as enumerating, for application layer, session layer and also for testing
@@ -51,7 +48,7 @@ enum SorcMessageID: UInt8 {
 /**
  *  All message come from SORC or send to SORC have same Message formate
  */
-struct SorcMessage {
+struct SorcMessage: Equatable {
     var id: SorcMessageID {
         var byteArray = [UInt8](repeating: 0x0, count: 1)
         (data as Data).copyBytes(to: &byteArray, count: 1)
@@ -67,11 +64,11 @@ struct SorcMessage {
         return data.count > 1 ? data.subdata(in: 1 ..< data.count) : Data()
     }
 
-    /// Start value of SORC message as NSData
+    /// Start value of SORC message as Data
     var data: Data = Data(bytes: UnsafePointer<UInt8>(([0x00] as [UInt8])), count: 1)
 
     /**
-     Initializatio point of SORC message instance
+     Initialization point of SORC message instance
 
      - parameter rawData: raw data, SORC message should contain
 
@@ -96,5 +93,10 @@ struct SorcMessage {
         frameData.append(&idByte, length: 1)
         frameData.append(payloadData as Data)
         data = frameData as Data
+    }
+
+    static func ==(lhs: SorcMessage, rhs: SorcMessage) -> Bool {
+        return lhs.id == rhs.id
+            && lhs.message == rhs.message
     }
 }

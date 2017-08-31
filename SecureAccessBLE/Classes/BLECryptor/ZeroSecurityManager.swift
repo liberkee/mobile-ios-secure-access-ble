@@ -1,9 +1,8 @@
 //
 //  ZeroSecurityManager.swift
-//  HSM
+//  SecureAccessBLE
 //
-//  Created by Sebastian Stüssel on 18.09.15.
-//  Copyright © 2015 Sebastian Stüssel. All rights reserved.
+//  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
 import Foundation

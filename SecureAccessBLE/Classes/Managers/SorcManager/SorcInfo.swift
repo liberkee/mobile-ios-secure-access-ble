@@ -2,7 +2,6 @@
 //  SorcInfo.swift
 //  SecureAccessBLE
 //
-//  Created by Torsten Lehmann on 09.08.17.
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 

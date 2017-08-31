@@ -2,14 +2,13 @@
 //  LeaseToken.swift
 //  SecureAccessBLE
 //
-//  Created by Torsten Lehmann on 29.05.17.
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
 import Foundation
 
 /// A lease token used in establishing a connection to a SORC
-public struct LeaseToken {
+public struct LeaseToken: Equatable {
 
     public let id: String
     public let leaseID: String
@@ -21,5 +20,12 @@ public struct LeaseToken {
         self.leaseID = leaseID
         self.sorcID = sorcID
         self.sorcAccessKey = sorcAccessKey
+    }
+
+    public static func ==(lhs: LeaseToken, rhs: LeaseToken) -> Bool {
+        return lhs.id == rhs.id
+            && lhs.leaseID == rhs.leaseID
+            && lhs.sorcID == rhs.sorcID
+            && lhs.sorcAccessKey == rhs.sorcAccessKey
     }
 }

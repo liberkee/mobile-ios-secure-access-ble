@@ -1,12 +1,9 @@
 //
 //  LTBlobPayload.swift
-//  HSM
+//  SecureAccessBLE
 //
-//  Created by Sebastian Stüssel on 29.01.16.
-//  Copyright © 2016 Sebastian Stüssel. All rights reserved.
+//  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
-
-import UIKit
 
 /**
  *  Message payload with blob data

@@ -2,11 +2,8 @@
 //  DataFramePackage.swift
 //  TransportTest
 //
-//  Created by Sebastian Stüssel on 20.08.15.
-//  Copyright (c) 2015 Rocket Apes. All rights reserved.
+//  Copyright (c) 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
-
-import UIKit
 
 /// Creates and holds data Frames for a SorcMessage
 class DataFramePackage: NSObject {
@@ -29,7 +26,7 @@ class DataFramePackage: NSObject {
         let data = NSMutableData()
 
         for frame in frames {
-            data.append(frame.message as Data)
+            data.append(frame.message)
         }
         return data as Data
     }

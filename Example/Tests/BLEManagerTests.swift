@@ -1,9 +1,8 @@
 //
 //  BLEManagerTests.swift
-//  BLE
+//  SecureAccessBLE
 //
-//  Created by Ke Song on 06.07.16.
-//  Copyright © 2016 Huf Secure Mobile. All rights reserved.
+//  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
 import XCTest
@@ -96,7 +95,7 @@ class BLEManagerTests: XCTestCase {
     //        bleManager.challengerFinishedWithSessionKey(mockSessionKey)
     //
     //        /// Service grant for .Lockstatus will sent to SORC
-    //        let payload = ServiceGrantRequest(grantID: ServiceGrantID.lockStatus)
+    //        let payload = ServiceGrantRequest(grantID: FeatureServiceGrantID.lockStatus)
     //        let message = SorcMessage(id: SorcMessageID.serviceGrant, payload: payload)
     //
     //        /// Sending is success or not
@@ -126,7 +125,7 @@ class BLEManagerTests: XCTestCase {
     //        let serviceGrantTrigger = ServiceGrantTrigger(rawData: receivedMessage.message)
     //
     //        /// Testing if service grant trigger has ID .Lockstatus
-    //        XCTAssertEqual(serviceGrantTrigger.id, ServiceGrantID.lockStatus, "BLE manager received wrong service grant ID!")
+    //        XCTAssertEqual(serviceGrantTrigger.id, FeatureServiceGrantID.lockStatus, "BLE manager received wrong service grant ID!")
     //
     //        /// Testing if service grant trigger has result .Locked
     //        XCTAssertEqual(serviceGrantTrigger.result, ServiceGrantTrigger.ServiceGrantResult.locked, "BLE manager received wrong service grant result!")

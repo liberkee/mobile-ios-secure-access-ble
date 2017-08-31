@@ -2,11 +2,9 @@
 //  DiscoveryChange.swift
 //  SecureAccessBLE
 //
-//  Created by Torsten Lehmann on 09.08.17.
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-import Foundation
 import CommonUtils
 
 /// A change (state and last action) that describes the discovery transitions

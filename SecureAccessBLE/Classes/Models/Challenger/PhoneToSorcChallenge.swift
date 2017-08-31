@@ -1,12 +1,9 @@
 //
 //  PhoneToSorcChallenge.swift
-//  BLE
+//  SecureAccessBLE
 //
-//  Created by Ke Song on 20.06.16.
-//  Copyright © 2016 Huf Secure Mobile. All rights reserved.
+//  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
-
-import UIKit
 
 /**
  A SorcMessage Payload for a BLE challenger
