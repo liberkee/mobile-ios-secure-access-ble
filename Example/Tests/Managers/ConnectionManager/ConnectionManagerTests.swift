@@ -1,5 +1,5 @@
 //
-//  SorcConnectionManagerTests.swift
+//  ConnectionManagerTests.swift
 //  SecureAccessBLE
 //
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
@@ -89,7 +89,7 @@ class CBCharacteristicMock: CBCharacteristicType {
     var value: Data?
 }
 
-extension SorcConnectionManager {
+extension ConnectionManager {
 
     convenience init(centralManager: CBCentralManagerType, createTimer: CreateTimer? = nil) {
 
@@ -108,7 +108,7 @@ extension SorcConnectionManager {
     }
 }
 
-class SorcConnectionManagerTests: XCTestCase {
+class ConnectionManagerTests: XCTestCase {
 
     let notifyCharacteristicID = "d1d7a6b6-457e-458a-b237-a9df99b3d98b"
     let writeCharacteristicID = "c8e58f23-9417-41c6-97a8-70f6b2c8cab9"
@@ -122,7 +122,7 @@ class SorcConnectionManagerTests: XCTestCase {
         // Given
         let centralManager = CBCentralManagerMock()
         centralManager.state = .poweredOn
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
 
         // Then
         XCTAssertTrue(connectionManager.isBluetoothEnabled.value)
@@ -133,7 +133,7 @@ class SorcConnectionManagerTests: XCTestCase {
         // Given
         let centralManager = CBCentralManagerMock()
         centralManager.state = .poweredOff
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
 
         // Then
         XCTAssertFalse(connectionManager.isBluetoothEnabled.value)
@@ -143,7 +143,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Given
         let centralManager = CBCentralManagerMock()
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
 
         // When
         connectionManager.connectToSorc(sorcID1)
@@ -159,7 +159,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Given
         let centralManager = CBCentralManagerMock()
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
         let peripheral = CBPeripheralMock()
         prepareDiscoveredSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
                               centralManager: centralManager)
@@ -183,7 +183,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Given
         let centralManager = CBCentralManagerMock()
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
         let peripheral = CBPeripheralMock()
         prepareConnectingSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
                               centralManager: centralManager)
@@ -207,7 +207,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Given
         let centralManager = CBCentralManagerMock()
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
         let peripheral1 = CBPeripheralMock()
         prepareConnectingSorc(sorcID1, peripheral: peripheral1, connectionManager: connectionManager, centralManager: centralManager)
 
@@ -233,7 +233,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Given
         let centralManager = CBCentralManagerMock()
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
         let peripheral = CBPeripheralMock()
         prepareConnectedSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
                              centralManager: centralManager)
@@ -257,7 +257,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Given
         let centralManager = CBCentralManagerMock()
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
         let peripheral1 = CBPeripheralMock()
         prepareConnectedSorc(sorcID1, peripheral: peripheral1, connectionManager: connectionManager,
                              centralManager: centralManager)
@@ -288,7 +288,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Given
         let centralManager = CBCentralManagerMock()
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
         let peripheral = CBPeripheralMock()
         prepareConnectingSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
                               centralManager: centralManager)
@@ -321,7 +321,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Given
         let centralManager = CBCentralManagerMock()
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
         let peripheral = CBPeripheralMock()
         prepareConnectedSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
                              centralManager: centralManager)
@@ -354,7 +354,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Given
         let centralManager = CBCentralManagerMock()
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
         let peripheral = CBPeripheralMock()
         prepareConnectedSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
                              centralManager: centralManager)
@@ -373,7 +373,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Given
         let centralManager = CBCentralManagerMock()
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
         let peripheral = CBPeripheralMock()
         let data = Data(bytes: [42])
 
@@ -388,7 +388,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Given
         let centralManager = CBCentralManagerMock()
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
 
         var isBluetoothEnabledUpdate: Bool?
         _ = connectionManager.isBluetoothEnabled.subscribeNext { isBluetoothEnabled in
@@ -407,7 +407,7 @@ class SorcConnectionManagerTests: XCTestCase {
         // Given
         let centralManager = CBCentralManagerMock()
         centralManager.state = .poweredOn
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
 
         // When
         connectionManager.centralManagerDidUpdateState_(centralManager)
@@ -423,7 +423,7 @@ class SorcConnectionManagerTests: XCTestCase {
         // Given
         let centralManager = CBCentralManagerMock()
         centralManager.state = .poweredOn
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
 
         let peripheral = CBPeripheralMock()
         prepareDiscoveredSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
@@ -449,7 +449,7 @@ class SorcConnectionManagerTests: XCTestCase {
         let centralManager = CBCentralManagerMock()
         let now = Date(timeIntervalSince1970: 0)
         let systemClock = SystemClockMock(currentNow: now)
-        let connectionManager = SorcConnectionManager(centralManager: centralManager, systemClock: systemClock)
+        let connectionManager = ConnectionManager(centralManager: centralManager, systemClock: systemClock)
 
         let peripheral = CBPeripheralMock()
 
@@ -477,7 +477,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Given
         let centralManager = CBCentralManagerMock()
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
 
         let peripheral = CBPeripheralMock()
         let advertisementData = [String: Any]()
@@ -501,7 +501,7 @@ class SorcConnectionManagerTests: XCTestCase {
         let centralManager = CBCentralManagerMock()
         let moment1 = Date(timeIntervalSince1970: 1)
         let systemClock = SystemClockMock(currentNow: moment1)
-        let connectionManager = SorcConnectionManager(centralManager: centralManager, systemClock: systemClock)
+        let connectionManager = ConnectionManager(centralManager: centralManager, systemClock: systemClock)
 
         let peripheralA = CBPeripheralMock()
 
@@ -536,7 +536,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Given
         let centralManager = CBCentralManagerMock()
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
 
         let peripheral = CBPeripheralMock()
 
@@ -554,7 +554,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Given
         let centralManager = CBCentralManagerMock()
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
 
         let peripheral = CBPeripheralMock()
 
@@ -569,7 +569,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Given
         let centralManager = CBCentralManagerMock()
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
 
         let peripheral = CBPeripheralMock()
 
@@ -593,7 +593,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Given
         let centralManager = CBCentralManagerMock()
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
 
         let peripheral = CBPeripheralMock()
 
@@ -613,7 +613,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Given
         let centralManager = CBCentralManagerMock()
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
 
         let peripheral = CBPeripheralMock()
 
@@ -645,7 +645,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Given
         let centralManager = CBCentralManagerMock()
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
 
         let peripheral = CBPeripheralMock()
 
@@ -673,7 +673,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Given
         let centralManager = CBCentralManagerMock()
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
         let peripheral = CBPeripheralMock()
         let service = CBServiceMock()
         peripheral.services_ = [service]
@@ -697,7 +697,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Given
         let centralManager = CBCentralManagerMock()
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
         let peripheral = CBPeripheralMock()
         let service = CBServiceMock()
         peripheral.services_ = [service]
@@ -723,7 +723,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Given
         let centralManager = CBCentralManagerMock()
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
         let peripheral = CBPeripheralMock()
         let service = CBServiceMock()
         peripheral.services_ = [service]
@@ -762,7 +762,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Given
         let centralManager = CBCentralManagerMock()
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
         let peripheral = CBPeripheralMock()
         let service = CBServiceMock()
         peripheral.services_ = [service]
@@ -789,7 +789,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Given
         let centralManager = CBCentralManagerMock()
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
         let notifyCharacteristic = CBCharacteristicMock()
         notifyCharacteristic.value = Data(base64Encoded: "data")
         notifyCharacteristic.uuid = CBUUID(string: notifyCharacteristicID)
@@ -812,7 +812,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Given
         let centralManager = CBCentralManagerMock()
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
         let notifyCharacteristic = CBCharacteristicMock()
         notifyCharacteristic.value = Data(base64Encoded: "data")
         notifyCharacteristic.uuid = CBUUID(string: notifyCharacteristicID)
@@ -837,7 +837,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Given
         let centralManager = CBCentralManagerMock()
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
         let writeCharacteristic = CBCharacteristicMock()
         writeCharacteristic.uuid = CBUUID(string: writeCharacteristicID)
 
@@ -857,7 +857,7 @@ class SorcConnectionManagerTests: XCTestCase {
 
         // Given
         let centralManager = CBCentralManagerMock()
-        let connectionManager = SorcConnectionManager(centralManager: centralManager)
+        let connectionManager = ConnectionManager(centralManager: centralManager)
         let writeCharacteristic = CBCharacteristicMock()
         writeCharacteristic.uuid = CBUUID(string: writeCharacteristicID)
 
@@ -882,13 +882,13 @@ class SorcConnectionManagerTests: XCTestCase {
         let systemClock = SystemClockMock(currentNow: Date(timeIntervalSince1970: 0))
 
         var fireTimer: (() -> Void)!
-        let createTimer: SorcConnectionManager.CreateTimer = { block in
+        let createTimer: ConnectionManager.CreateTimer = { block in
             fireTimer = block
             return Timer()
         }
 
-        let connectionManager = SorcConnectionManager(centralManager: centralManager, systemClock: systemClock,
-                                                      createTimer: createTimer)
+        let connectionManager = ConnectionManager(centralManager: centralManager, systemClock: systemClock,
+                                                  createTimer: createTimer)
 
         prepareDiscoveredSorc(sorcID1, peripheral: CBPeripheralMock(), connectionManager: connectionManager, centralManager: centralManager)
 
@@ -909,13 +909,13 @@ class SorcConnectionManagerTests: XCTestCase {
         let systemClock = SystemClockMock(currentNow: Date(timeIntervalSince1970: 0))
 
         var fireTimer: (() -> Void)!
-        let createTimer: SorcConnectionManager.CreateTimer = { block in
+        let createTimer: ConnectionManager.CreateTimer = { block in
             fireTimer = block
             return Timer()
         }
 
-        let connectionManager = SorcConnectionManager(centralManager: centralManager, systemClock: systemClock,
-                                                      createTimer: createTimer)
+        let connectionManager = ConnectionManager(centralManager: centralManager, systemClock: systemClock,
+                                                  createTimer: createTimer)
 
         prepareConnectedSorc(sorcID1, peripheral: CBPeripheralMock(), connectionManager: connectionManager, centralManager: centralManager)
 
@@ -930,7 +930,7 @@ class SorcConnectionManagerTests: XCTestCase {
     }
 
     private func prepareDiscoveredSorc(_ sorcID: SorcID, peripheral: CBPeripheralType,
-                                       connectionManager: SorcConnectionManager, centralManager: CBCentralManagerMock,
+                                       connectionManager: ConnectionManager, centralManager: CBCentralManagerMock,
                                        rssi: Int = 0) {
 
         let strippedSorcID = sorcID.replacingOccurrences(of: "-", with: "").dataFromHexadecimalString()!
@@ -942,7 +942,7 @@ class SorcConnectionManagerTests: XCTestCase {
     }
 
     private func prepareConnectingSorc(_ sorcID: SorcID, peripheral: CBPeripheralType,
-                                       connectionManager: SorcConnectionManager, centralManager: CBCentralManagerMock) {
+                                       connectionManager: ConnectionManager, centralManager: CBCentralManagerMock) {
 
         prepareDiscoveredSorc(sorcID, peripheral: peripheral, connectionManager: connectionManager,
                               centralManager: centralManager)
@@ -952,7 +952,7 @@ class SorcConnectionManagerTests: XCTestCase {
     }
 
     private func prepareConnectedSorc(_ sorcID: SorcID, peripheral: CBPeripheralMock,
-                                      connectionManager: SorcConnectionManager, centralManager: CBCentralManagerMock) {
+                                      connectionManager: ConnectionManager, centralManager: CBCentralManagerMock) {
 
         prepareDiscoveredSorc(sorcID, peripheral: peripheral, connectionManager: connectionManager,
                               centralManager: centralManager)

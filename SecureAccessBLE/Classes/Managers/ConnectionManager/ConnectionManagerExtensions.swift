@@ -1,5 +1,5 @@
 //
-//  SorcConnectionManagerExtensions.swift
+//  ConnectionManagerExtensions.swift
 //  SecureAccessBLE
 //
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
@@ -8,14 +8,14 @@
 import CoreBluetooth
 import CommonUtils
 
-extension SorcConnectionManager {
+extension ConnectionManager {
 
     typealias CreateTimer = (@escaping () -> Void) -> Timer
 }
 
 // MARK: - CBCentralManagerDelegate
 
-extension SorcConnectionManager: CBCentralManagerDelegate {
+extension ConnectionManager: CBCentralManagerDelegate {
 
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         centralManagerDidUpdateState_(central as CBCentralManagerType)
@@ -43,7 +43,7 @@ extension SorcConnectionManager: CBCentralManagerDelegate {
 
 // MARK: - CBPeripheralDelegate
 
-extension SorcConnectionManager: CBPeripheralDelegate {
+extension ConnectionManager: CBPeripheralDelegate {
 
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         peripheral_(peripheral as CBPeripheralType, didDiscoverServices: error)

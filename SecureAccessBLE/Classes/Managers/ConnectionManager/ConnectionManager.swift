@@ -1,5 +1,5 @@
 //
-//  SorcConnectionManager.swift
+//  ConnectionManager.swift
 //  SecureAccessBLE
 //
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
@@ -47,7 +47,7 @@ private extension CBManagerState {
 }
 
 /// Manages the discovery and connection of SORCs
-class SorcConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProviderType, ScannerType {
+class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProviderType, ScannerType {
 
     let isBluetoothEnabled: BehaviorSubject<Bool>
     let discoveryChange = ChangeSubject<DiscoveryChange>(state: [:])
@@ -126,7 +126,7 @@ class SorcConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusPro
     /// If a connection to an undiscovered SORC is tried it fails silently.
     func connectToSorc(_ sorcID: SorcID) {
         guard let peripheral = peripheralMatchingSorcID(sorcID) else {
-            print("SorcConnectionManager: Try to connect to SORC that is not discovered.")
+            print("ConnectionManager: Try to connect to SORC that is not discovered.")
             return
         }
         switch connectionState {
@@ -227,10 +227,10 @@ class SorcConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusPro
 
 // MARK: - CBCentralManagerDelegate_
 
-extension SorcConnectionManager {
+extension ConnectionManager {
 
     func centralManagerDidUpdateState_(_ central: CBCentralManagerType) {
-        consoleLog("SorcConnectionManager Central updated state: \(central.state)")
+        consoleLog("ConnectionManager Central updated state: \(central.state)")
 
         isBluetoothEnabled.onNext(central.state == .poweredOn)
         if central.state == .poweredOn {
@@ -282,7 +282,7 @@ extension SorcConnectionManager {
 
 // MARK: - CBPeripheralDelegate_
 
-extension SorcConnectionManager {
+extension ConnectionManager {
 
     func peripheral_(_ peripheral: CBPeripheralType, didDiscoverServices error: Error?) {
 
@@ -331,7 +331,7 @@ extension SorcConnectionManager {
         } else if let data = characteristic.value {
             receivedData.onNext(.success(data))
         } else {
-            print("SorcConnectionManager: No error but characteristic value was nil which is unexpected.")
+            print("ConnectionManager: No error but characteristic value was nil which is unexpected.")
         }
     }
 

@@ -30,7 +30,7 @@ class SorcManager: SorcManagerType {
     }
 
     convenience init() {
-        let connectionManager = SorcConnectionManager()
+        let connectionManager = ConnectionManager()
         let transportManager = TransportManager(connectionManager: connectionManager)
         let securityManager = SecurityManager(transportManager: transportManager)
         let sessionManager = SessionManager(securityManager: securityManager)

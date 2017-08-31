@@ -16,7 +16,7 @@ class SecurityManager: SecurityManagerType {
     let messageSent = PublishSubject<Result<SorcMessage>>()
     let messageReceived = PublishSubject<Result<SorcMessage>>()
 
-    private var challenger: BLEChallengeService?
+    private var challenger: ChallengeService?
 
     private var leaseID: String = ""
     private var leaseTokenID: String = ""
@@ -109,7 +109,7 @@ class SecurityManager: SecurityManagerType {
             disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
             return
         }
-        challenger = BLEChallengeService(leaseID: leaseID, sorcID: sorcID, leaseTokenID: leaseTokenID, sorcAccessKey: sorcAccessKey)
+        challenger = ChallengeService(leaseID: leaseID, sorcID: sorcID, leaseTokenID: leaseTokenID, sorcAccessKey: sorcAccessKey)
         challenger?.delegate = self
         if challenger == nil {
             disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
@@ -236,9 +236,9 @@ class SecurityManager: SecurityManagerType {
     }
 }
 
-// MARK: - BLEChallengeServiceDelegate
+// MARK: - ChallengeServiceDelegate
 
-extension SecurityManager: BLEChallengeServiceDelegate {
+extension SecurityManager: ChallengeServiceDelegate {
 
     func challengerWantsSendMessage(_ message: SorcMessage) {
         sendMessageInternal(message)
@@ -252,7 +252,7 @@ extension SecurityManager: BLEChallengeServiceDelegate {
         )
     }
 
-    func challengerAbort(_: BLEChallengerError) {
+    func challengerAbort(_: ChallengeError) {
         disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
     }
 

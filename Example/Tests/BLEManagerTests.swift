@@ -16,11 +16,11 @@ class BLEManagerTests: XCTestCase {
     //    var bleManager: BLEManager!
     //    var bleCommunicator: SorcDataCommunicator!
     //    let centralManagerMock = CBCentralManagerMock()
-    //    var connectionManager: SorcConnectionManager!
+    //    var connectionManager: ConnectionManager!
     //
     //    override func setUp() {
     //        super.setUp()
-    //        connectionManager = SorcConnectionManager(centralManager: centralManagerMock)
+    //        connectionManager = ConnectionManager(centralManager: centralManagerMock)
     //        bleCommunicator = SorcDataCommunicator(transporter: connectionManager)
     //        bleManager = BLEManager(sorcConnectionManager: connectionManager, communicator: bleCommunicator)
     //        bleCommunicator.delegate = bleManager

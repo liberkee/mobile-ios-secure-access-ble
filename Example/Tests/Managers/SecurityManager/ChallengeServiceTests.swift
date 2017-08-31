@@ -1,5 +1,5 @@
 //
-//  BLEChallengerTests.swift
+//  ChallengeServiceTests.swift
 //  SecureAccessBLE
 //
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
@@ -9,7 +9,7 @@ import XCTest
 import CryptoSwift
 @testable import SecureAccessBLE
 
-class BLEChallengerTests: XCTestCase {
+class ChallengeServiceTests: XCTestCase {
 
     /**
      Helper functio for xor calculation

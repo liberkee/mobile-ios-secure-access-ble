@@ -1,5 +1,5 @@
 //
-//  BLEChallengeService.swift
+//  ChallengeService.swift
 //  SecureAccessBLE
 //
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
@@ -11,7 +11,7 @@ import CryptoSwift
  Defines errors for Challenge and (en)decryption
 
  */
-enum BLEChallengerError: Error {
+enum ChallengeError: Error {
     /// wrong resonse donot match
     case challengeResponseDoNotMatch
     /// Response was not accepted
@@ -31,7 +31,7 @@ enum BLEChallengerError: Error {
 /**
  *  All delegate functions, the BLE-Challenger offers
  */
-protocol BLEChallengeServiceDelegate {
+protocol ChallengeServiceDelegate {
     /**
      Challenger reports need to send message
 
@@ -51,7 +51,7 @@ protocol BLEChallengeServiceDelegate {
 
      - parameter error: error description
      */
-    func challengerAbort(_ error: BLEChallengerError)
+    func challengerAbort(_ error: ChallengeError)
 
     /**
      Challenger will send blob
@@ -91,7 +91,7 @@ protocol BLEChallengeServiceDelegate {
  *
  *  note: || indicates concatenation and a[i...j] indicates the bytes 'i' to 'j' of an array a
  */
-struct BLEChallengeService {
+struct ChallengeService {
     /// random generated
     fileprivate var nc: [UInt8]
     /// original data
@@ -116,7 +116,7 @@ struct BLEChallengeService {
     /// Default cryptor
     fileprivate let crypto: AES
     /// Challenger Service Delegate object
-    var delegate: BLEChallengeServiceDelegate?
+    var delegate: ChallengeServiceDelegate?
 
     /**
      init function for BLE Challenger object
@@ -166,7 +166,7 @@ struct BLEChallengeService {
             delegate?.challengerWantsSendMessage(message)
         } catch {
             print("AES Encryption failed!")
-            throw BLEChallengerError.aesEncryptionFailed
+            throw ChallengeError.aesEncryptionFailed
         }
     }
 
@@ -198,7 +198,7 @@ struct BLEChallengeService {
         case .challengeSorcResponse:
             try continueChallenge(message)
         default:
-            delegate?.challengerAbort(BLEChallengerError.noChallengeMessage)
+            delegate?.challengerAbort(ChallengeError.noChallengeMessage)
         }
     }
 
@@ -212,7 +212,7 @@ struct BLEChallengeService {
     fileprivate mutating func continueChallenge(_ response: SorcMessage) throws {
         let message = SorcToPhoneResponse(rawData: response.message)
         if message.b1.count == 0 || message.b2.count == 0 {
-            throw BLEChallengerError.challengeResponseIsCorrupt
+            throw ChallengeError.challengeResponseIsCorrupt
         }
         b1 = message.b1
         b2 = message.b2
@@ -293,12 +293,12 @@ struct BLEChallengeService {
             //  check if P(invert)(r3) = nc, if not the protocol is aborted
             if nc != permutatedR3 {
                 delegate?.challengerWantsSendMessage(SorcMessage(id: SorcMessageID.badChallengePhoneResponse, payload: EmptyPayload()))
-                throw BLEChallengerError.challengeResponseDoNotMatch
+                throw ChallengeError.challengeResponseDoNotMatch
             }
             return r3
 
         } catch {
-            throw BLEChallengerError.aesEncryptionFailed
+            throw ChallengeError.aesEncryptionFailed
         }
     }
 
@@ -320,7 +320,7 @@ struct BLEChallengeService {
             return (nr, n5)
 
         } catch {
-            throw BLEChallengerError.aesDecryptionFailed
+            throw ChallengeError.aesDecryptionFailed
         }
     }
 
@@ -340,7 +340,7 @@ struct BLEChallengeService {
             let b3 = try crypto.encrypt(b3Temp) /// , padding: ZeroByte())
             return b3
         } catch {
-            throw BLEChallengerError.aesEncryptionFailed
+            throw ChallengeError.aesEncryptionFailed
         }
     }
 }
