@@ -25,23 +25,14 @@ class TransportManager: TransportManagerType {
         return mtuSize - 4
     }
 
-    /// Sending data package
-    private var currentPackage: DataFramePackage?
-
-    /// The receiveing package
-    private var currentReceivingPackage: DataFramePackage?
+    private var sendingPackage: DataFramePackage?
+    private var receivingPackage: DataFramePackage?
 
     private let connectionManager: ConnectionManagerType
-
     private let disposeBag = DisposeBag()
 
     private var actionLeadingToDisconnect: TransportConnectionChange.Action?
 
-    /**
-     Init point
-
-     - returns: self as communicator object
-     */
     init(connectionManager: ConnectionManagerType) {
         mtuSize = defaultMTUSize
 
@@ -79,20 +70,13 @@ class TransportManager: TransportManagerType {
         disconnect(withAction: .disconnect)
     }
 
-    /**
-     Sending data to connected SORC
-
-     - parameter sendData: the message data, that will be sent to SORC
-
-     - returns: if sending successful, if not the error description
-     */
     func sendData(_ data: Data) {
         // TODO: PLAM-959 add preconditions
         // TODO: PLAM-959 add queuing
 
         print("BLA: try sending data: \(data.toHexString())")
 
-        if currentPackage != nil || currentReceivingPackage != nil {
+        if sendingPackage != nil || receivingPackage != nil {
             print("BLA Sending/Receiving in progress")
         } else {
             // debugPrint("----------------------------------------")
@@ -102,8 +86,8 @@ class TransportManager: TransportManagerType {
             // debugPrint("With key: \(key.toHexString())")
             // debugPrint("-----------  sended message with id: \(message.id) -------------")
 
-            currentPackage = DataFramePackage(messageData: data, frameSize: messageFrameSize)
-            if let currentFrame = self.currentPackage?.currentFrame {
+            sendingPackage = DataFramePackage(messageData: data, frameSize: messageFrameSize)
+            if let currentFrame = self.sendingPackage?.currentFrame {
                 sendFrame(currentFrame)
             } else {
                 print("DataFramePackage has no frames to send")
@@ -113,12 +97,12 @@ class TransportManager: TransportManagerType {
 
     private func resetCurrentPackage() {
         print("BLA resetCurrentPackage")
-        currentPackage = nil
+        sendingPackage = nil
     }
 
     private func resetReceivedPackage() {
         print("BLA resetReceivedPackage")
-        currentReceivingPackage = nil
+        receivingPackage = nil
     }
 
     // MARK: Private methods
@@ -183,12 +167,12 @@ class TransportManager: TransportManagerType {
             return
         }
 
-        guard let currentPackage = currentPackage else { return }
-        currentPackage.currentIndex += 1
-        if let currentFrame = currentPackage.currentFrame {
+        guard let sendingPackage = sendingPackage else { return }
+        sendingPackage.currentIndex += 1
+        if let currentFrame = sendingPackage.currentFrame {
             sendFrame(currentFrame)
         } else {
-            dataSent.onNext(.success(currentPackage.message))
+            dataSent.onNext(.success(sendingPackage.message))
             resetCurrentPackage()
         }
     }
@@ -214,14 +198,14 @@ class TransportManager: TransportManagerType {
     private func handleReceivedData(_ data: Data) {
         print("BLA handleReceivedData")
 
-        if currentReceivingPackage == nil {
-            currentReceivingPackage = DataFramePackage()
+        if receivingPackage == nil {
+            receivingPackage = DataFramePackage()
         }
         let frame = DataFrame(rawData: data)
-        currentReceivingPackage?.frames.append(frame)
+        receivingPackage?.frames.append(frame)
 
         if frame.type == .single || frame.type == .eop {
-            guard let package = self.currentReceivingPackage else { return }
+            guard let package = self.receivingPackage else { return }
 
             resetReceivedPackage()
             let messageData = package.message
