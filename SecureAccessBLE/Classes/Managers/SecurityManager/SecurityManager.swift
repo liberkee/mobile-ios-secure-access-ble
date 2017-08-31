@@ -11,6 +11,10 @@ import CommonUtils
 /// Sends/encrypts and receives/decrypts SORC messages.
 class SecurityManager: SecurityManagerType {
 
+    enum Error: Swift.Error {
+        case decryptionFailed
+    }
+
     let connectionChange = ChangeSubject<SecureConnectionChange>(state: .disconnected)
 
     let messageSent = PublishSubject<Result<SorcMessage>>()
@@ -229,7 +233,9 @@ class SecurityManager: SecurityManagerType {
         switch result {
         case let .success(data):
             let message = cryptoManager.decryptData(data)
-            messageReceived.onNext(.success(message))
+            let messageResult: Result<SorcMessage> = message.id != SorcMessageID.notValid ?
+                .success(message) : .failure(Error.decryptionFailed)
+            messageReceived.onNext(messageResult)
         case let .failure(error):
             messageReceived.onNext(.failure(error))
         }

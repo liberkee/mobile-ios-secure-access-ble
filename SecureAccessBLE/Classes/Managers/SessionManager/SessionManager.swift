@@ -76,18 +76,18 @@ class SessionManager: SessionManagerType {
             id: SorcMessageID.serviceGrant,
             payload: ServiceGrantRequest(serviceGrantID: serviceGrantID)
         )
-        enqueueMessage(message)
+        do {
+            try enqueueMessage(message)
+        } catch {
+            serviceGrantResultReceived.onNext(.failure(.queueIsFull))
+        }
     }
 
     // MARK: - Private methods
 
-    private func enqueueMessage(_ message: SorcMessage) {
-        do {
-            NSLog("BLA: enqueueMessage: \(message.id)")
-            try messageQueue.enqueue(message)
-        } catch {
-            // TODO: PLAM-959 notify client that queue is full
-        }
+    private func enqueueMessage(_ message: SorcMessage) throws {
+        NSLog("BLA: enqueueMessage: \(message.id)")
+        try messageQueue.enqueue(message)
         sendNextMessageIfPossible()
     }
 
@@ -139,7 +139,7 @@ class SessionManager: SessionManagerType {
         guard !waitingForResponse else { return }
         NSLog("BLA startSendingHeartbeat: \(Date())")
         let message = SorcMessage(id: SorcMessageID.heartBeatRequest, payload: MTUSize())
-        enqueueMessage(message)
+        try? enqueueMessage(message)
     }
 
     private func stopSendingHeartbeat() {
@@ -233,18 +233,14 @@ class SessionManager: SessionManagerType {
         case .heartBeatResponse:
             handleSorcResponded()
         case .serviceGrantTrigger:
-            // TODO: PLAM-959 use next item of queue
             guard let response = ServiceGrantResponse(sorcID: sorcID, message: message) else {
                 serviceGrantResultReceived.onNext(.failure(.receivedInvalidData))
                 return
             }
             handleSorcResponded()
             serviceGrantResultReceived.onNext(.success(response))
-        case .notValid:
-            // TODO: PLAM-959 If this happens then we maybe never get a response?
-            // TODO: PLAM-959 use next item of queue?
-            break
-        default: break
+        default:
+            return
         }
 
         sendNextMessageIfPossible()

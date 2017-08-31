@@ -19,23 +19,3 @@ protocol TransportManagerType {
 
     func sendData(_ data: Data)
 }
-
-// TODO: PLAM-959
-
-// struct SendingDataChange: ChangeType {
-//    let state:
-//
-//    enum State {
-//        case inactive
-//        case sending
-//    }
-//
-//    enum Action {
-//        case sendData(Data)
-//        case
-//    }
-// }
-//
-// struct ReceivingDataChange: ChangeType {
-//
-// }

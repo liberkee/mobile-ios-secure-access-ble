@@ -26,11 +26,14 @@ public enum ServiceGrantResult: Equatable {
     public enum Error: Swift.Error, CustomStringConvertible {
 
         case receivedInvalidData
+        case queueIsFull
 
         public var description: String {
             switch self {
             case .receivedInvalidData:
                 return "Invalid data was received."
+            case .queueIsFull:
+                return "Queue is full."
             }
         }
     }
