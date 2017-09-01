@@ -28,7 +28,10 @@ public struct DiscoveryChange: ChangeType {
         /// The SORC was discovered
         case discovered(sorcID: SorcID)
 
-        /// The SORC was discovered again
+        /// The SORC was discovered again or its info changed.
+        ///
+        /// Note: Can produce a lot of updates as a result of RSSI changes.
+        /// Consider filtering this action out if you don't need it.
         case rediscovered(sorcID: SorcID)
 
         /// Discovered SORCs were not discovered recently and hence considered lost
