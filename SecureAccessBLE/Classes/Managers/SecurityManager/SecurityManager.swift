@@ -67,8 +67,10 @@ class SecurityManager: SecurityManagerType {
         blobCounter = leaseTokenBlob.messageCounter
 
         if connectionChange.state == .disconnected {
-            connectionChange.onNext(.init(state: .connecting(sorcID: sorcID, state: .physical),
-                                          action: .connect(sorcID: sorcID)))
+            connectionChange.onNext(.init(
+                state: .connecting(sorcID: sorcID, state: .physical),
+                action: .connect(sorcID: sorcID)
+            ))
         }
 
         transportManager.connectToSorc(sorcID)
@@ -83,16 +85,14 @@ class SecurityManager: SecurityManagerType {
         sendMessageInternal(message)
     }
 
-    // MARK: - Private methods
+    // MARK: - Private methods -
 
-    fileprivate func sendMessageInternal(_ message: SorcMessage) {
-        let data = cryptoManager.encryptMessage(message)
-        transportManager.sendData(data)
+    private func reset() {
+        actionLeadingToDisconnect = nil
+        cryptoManager = ZeroSecurityManager()
     }
 
-    fileprivate func enableEncryption(withSessionKey key: [UInt8]) {
-        cryptoManager = AesCbcCryptoManager(key: key)
-    }
+    // MARK: - Connection handling
 
     fileprivate func disconnect(withAction action: SecureConnectionChange.Action) {
         switch connectionChange.state {
@@ -103,10 +103,59 @@ class SecurityManager: SecurityManagerType {
         transportManager.disconnect()
     }
 
-    private func reset() {
-        actionLeadingToDisconnect = nil
-        cryptoManager = ZeroSecurityManager()
+    private func handleTransportConnectionChange(_ transportChange: TransportConnectionChange) {
+
+        switch transportChange.state {
+        case let .connecting(transportSorcID, transportConnectingState):
+            switch transportConnectingState {
+            case .physical: break
+            case .requestingMTU:
+                guard case let .connecting(sorcID, .physical) = connectionChange.state, sorcID == transportSorcID else {
+                    return
+                }
+                connectionChange.onNext(.init(
+                    state: .connecting(sorcID: sorcID, state: .transport),
+                    action: .physicalConnectionEstablished(sorcID: sorcID)
+                ))
+            }
+        case let .connected(sorcID):
+            guard connectionChange.state == .connecting(sorcID: sorcID, state: .transport) else { return }
+            establishCrypto()
+        case .disconnected:
+            if connectionChange.state == .disconnected { return }
+            let actionLeadingToDisconnect = self.actionLeadingToDisconnect
+            reset()
+            if let action = actionLeadingToDisconnect {
+                connectionChange.onNext(.init(
+                    state: .disconnected,
+                    action: action
+                ))
+                return
+            }
+            switch transportChange.action {
+            case let .connectingFailed(sorcID, transportError):
+                let error = SecureConnectionChange.ConnectingFailedError(transportConnectingFailedError: transportError)
+                connectionChange.onNext(.init(
+                    state: .disconnected,
+                    action: .connectingFailed(sorcID: sorcID, error: error)
+                ))
+            case .disconnect:
+                connectionChange.onNext(.init(
+                    state: .disconnected,
+                    action: .disconnect
+                ))
+            case let .connectionLost(transportError):
+                let error = SecureConnectionChange.ConnectionLostError(transportConnectionLostError: transportError)
+                connectionChange.onNext(.init(
+                    state: .disconnected,
+                    action: .connectionLost(error: error)
+                ))
+            default: break
+            }
+        }
     }
+
+    // MARK: - Challenging
 
     private func establishCrypto() {
         if sorcID.isEmpty || sorcAccessKey.isEmpty {
@@ -122,8 +171,8 @@ class SecurityManager: SecurityManagerType {
         do {
             connectionChange.onNext(.init(
                 state: .connecting(sorcID: sorcID, state: .challenging),
-                action: .transportConnectionEstablished(sorcID: sorcID))
-            )
+                action: .transportConnectionEstablished(sorcID: sorcID)
+            ))
             try challenger?.beginChallenge()
         } catch {
             disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
@@ -145,43 +194,15 @@ class SecurityManager: SecurityManagerType {
         }
     }
 
-    private func handleTransportConnectionChange(_ transportChange: TransportConnectionChange) {
+    fileprivate func enableEncryption(withSessionKey key: [UInt8]) {
+        cryptoManager = AesCbcCryptoManager(key: key)
+    }
 
-        switch transportChange.state {
-        case let .connecting(transportSorcID, transportConnectingState):
-            switch transportConnectingState {
-            case .physical: break
-            case .requestingMTU:
-                guard case let .connecting(sorcID, .physical) = connectionChange.state, sorcID == transportSorcID else {
-                    return
-                }
-                connectionChange.onNext(.init(state: .connecting(sorcID: sorcID, state: .transport),
-                                              action: .physicalConnectionEstablished(sorcID: sorcID)))
-            }
-        case let .connected(sorcID):
-            guard connectionChange.state == .connecting(sorcID: sorcID, state: .transport) else { return }
-            establishCrypto()
-        case .disconnected:
-            if connectionChange.state == .disconnected { return }
-            let actionLeadingToDisconnect = self.actionLeadingToDisconnect
-            reset()
-            if let action = actionLeadingToDisconnect {
-                connectionChange.onNext(.init(state: .disconnected, action: action))
-                return
-            }
-            switch transportChange.action {
-            case let .connectingFailed(sorcID, transportError):
-                let error = SecureConnectionChange.ConnectingFailedError(transportConnectingFailedError: transportError)
-                connectionChange.onNext(.init(state: .disconnected,
-                                              action: .connectingFailed(sorcID: sorcID, error: error)))
-            case .disconnect:
-                connectionChange.onNext(.init(state: .disconnected, action: .disconnect))
-            case let .connectionLost(transportError):
-                let error = SecureConnectionChange.ConnectionLostError(transportConnectionLostError: transportError)
-                connectionChange.onNext(.init(state: .disconnected, action: .connectionLost(error: error)))
-            default: break
-            }
-        }
+    // MARK: - Message handling
+
+    fileprivate func sendMessageInternal(_ message: SorcMessage) {
+        let data = cryptoManager.encryptMessage(message)
+        transportManager.sendData(data)
     }
 
     private func handleDataSent(result: Result<Data>) {
@@ -280,8 +301,8 @@ private extension SecureConnectionChange.ConnectingFailedError {
         switch transportConnectingFailedError {
         case .physicalConnectingFailed:
             self = .physicalConnectingFailed
-        case .transportConnectingFailed:
-            self = .transportConnectingFailed
+        case .invalidMTUResponse:
+            self = .invalidMTUResponse
         }
     }
 }

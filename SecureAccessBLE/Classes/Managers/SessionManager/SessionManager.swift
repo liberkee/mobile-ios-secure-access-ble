@@ -58,8 +58,10 @@ class SessionManager: SessionManagerType {
         else { return }
 
         if connectionChange.state == .disconnected {
-            connectionChange.onNext(.init(state: .connecting(sorcID: leaseToken.sorcID, state: .physical),
-                                          action: .connect(sorcID: leaseToken.sorcID)))
+            connectionChange.onNext(.init(
+                state: .connecting(sorcID: leaseToken.sorcID, state: .physical),
+                action: .connect(sorcID: leaseToken.sorcID)
+            ))
         }
 
         securityManager.connectToSorc(leaseToken: leaseToken, leaseTokenBlob: leaseTokenBlob)
@@ -83,7 +85,115 @@ class SessionManager: SessionManagerType {
         }
     }
 
-    // MARK: - Private methods
+    // MARK: - Private methods -
+
+    private func reset() {
+        stopSendingHeartbeat()
+        lastMessageSent = nil
+        waitingForResponse = false
+        actionLeadingToDisconnect = nil
+        messageQueue = BoundedQueue(maximumElements: maximumEnqueuedMessages)
+    }
+
+    // MARK: - Connection handling
+
+    private func disconnect(withAction action: ConnectionChange.Action) {
+        switch connectionChange.state {
+        case .connecting, .connected: break
+        default: return
+        }
+        NSLog("BLA handleConnectionChange disconnect(withAction")
+        actionLeadingToDisconnect = action
+        securityManager.disconnect()
+    }
+
+    private func handleSecureConnectionChange(_ secureChange: SecureConnectionChange) {
+
+        switch secureChange.state {
+        case let .connecting(securitySorcID, secureConnectingState):
+            handleSecureConnectionChangeConnecting(
+                securitySorcID: securitySorcID,
+                secureConnectingState: secureConnectingState
+            )
+        case let .connected(sorcID):
+            handleSecureConnectionChangeConnected(sorcID: sorcID)
+        case .disconnected:
+            handleSecureConnectionChangeDisconnected(secureChangeAction: secureChange.action)
+        }
+    }
+
+    private func handleSecureConnectionChangeConnecting(
+        securitySorcID: SorcID,
+        secureConnectingState: SecureConnectionChange.State.ConnectingState
+    ) {
+
+        switch secureConnectingState {
+        case .physical: break
+        case .transport:
+            guard case let .connecting(sorcID, .physical) = connectionChange.state, sorcID == securitySorcID else {
+                return
+            }
+            connectionChange.onNext(.init(
+                state: .connecting(sorcID: sorcID, state: .transport),
+                action: .physicalConnectionEstablished(sorcID: sorcID)
+            ))
+        case .challenging:
+            guard case let .connecting(sorcID, .transport) = connectionChange.state, sorcID == securitySorcID else {
+                return
+            }
+            connectionChange.onNext(.init(
+                state: .connecting(sorcID: sorcID, state: .challenging),
+                action: .transportConnectionEstablished(sorcID: sorcID)
+            ))
+        }
+    }
+
+    private func handleSecureConnectionChangeConnected(sorcID: SorcID) {
+
+        guard connectionChange.state == .connecting(sorcID: sorcID, state: .challenging) else { return }
+        connectionChange.onNext(.init(
+            state: .connected(sorcID: sorcID),
+            action: .connectionEstablished(sorcID: sorcID)
+        ))
+        scheduleHeartbeatTimers()
+    }
+
+    private func handleSecureConnectionChangeDisconnected(secureChangeAction: SecureConnectionChange.Action) {
+
+        if connectionChange.state == .disconnected { return }
+        let actionLeadingToDisconnect = self.actionLeadingToDisconnect
+        reset()
+        if let action = actionLeadingToDisconnect {
+            connectionChange.onNext(.init(
+                state: .disconnected,
+                action: action
+            ))
+            return
+        }
+        NSLog("BLA handleConnectionChange disconnected")
+        switch secureChangeAction {
+        case let .connectingFailed(sorcID, secureConnectingFailedError):
+            let error = ConnectingFailedError(secureConnectingFailedError: secureConnectingFailedError)
+            connectionChange.onNext(.init(
+                state: .disconnected,
+                action: .connectingFailed(sorcID: sorcID, error: error)
+            ))
+        case .disconnect:
+            connectionChange.onNext(.init(
+                state: .disconnected,
+                action: .disconnect
+            ))
+        case let .connectionLost(secureConnectionLostError):
+            let error = ConnectionLostError(secureConnectionLostError: secureConnectionLostError)
+            connectionChange.onNext(.init(
+                state: .disconnected,
+                action: .connectionLost(error: error)
+            ))
+        default: break
+        }
+    }
+
+    // MARK: - Message handling
 
     private func enqueueMessage(_ message: SorcMessage) throws {
         NSLog("BLA: enqueueMessage: \(message.id)")
@@ -99,23 +209,49 @@ class SessionManager: SessionManagerType {
         securityManager.sendMessage(message)
     }
 
-    private func disconnect(withAction action: ConnectionChange.Action) {
-        switch connectionChange.state {
-        case .connecting, .connected: break
-        default: return
+    private func handleMessageSent(result: Result<SorcMessage>) {
+        // TODO: PLAM-959 do we need this?
+        // When it goes wrong, do we retry or send the next one or close connection?
+        switch result {
+        case .success:
+            NSLog("BLA sent message")
+        case .failure:
+            NSLog("BLA sent message error")
         }
-        NSLog("BLA handleConnectionChange disconnect(withAction")
-        actionLeadingToDisconnect = action
-        securityManager.disconnect()
     }
 
-    private func reset() {
-        stopSendingHeartbeat()
-        lastMessageSent = nil
+    private func handleMessageReceived(result: Result<SorcMessage>) {
+        guard case let .connected(sorcID) = connectionChange.state else { return }
+
         waitingForResponse = false
-        actionLeadingToDisconnect = nil
-        messageQueue = BoundedQueue(maximumElements: maximumEnqueuedMessages)
+
+        guard case let .success(message) = result else {
+            if lastMessageSent?.id == .serviceGrant {
+                serviceGrantResultReceived.onNext(.failure(.receivedInvalidData))
+            }
+            return
+        }
+
+        NSLog("BLA handleMessageReceived: \(message.id)")
+
+        switch message.id {
+        case .heartBeatResponse:
+            rescheduleHeartbeat()
+        case .serviceGrantTrigger:
+            guard let response = ServiceGrantResponse(sorcID: sorcID, message: message) else {
+                serviceGrantResultReceived.onNext(.failure(.receivedInvalidData))
+                return
+            }
+            rescheduleHeartbeat()
+            serviceGrantResultReceived.onNext(.success(response))
+        default:
+            return
+        }
+
+        sendNextMessageIfPossible()
     }
+
+    // MARK: - Heartbeat handling
 
     private func scheduleHeartbeatTimers() {
         NSLog("BLA: scheduleHeartbeatTimers")
@@ -156,97 +292,7 @@ class SessionManager: SessionManagerType {
         }
     }
 
-    private func handleSecureConnectionChange(_ secureChange: SecureConnectionChange) {
-
-        switch secureChange.state {
-        case let .connecting(securitySorcID, secureConnectingState):
-            switch secureConnectingState {
-            case .physical: break
-            case .transport:
-                guard case let .connecting(sorcID, .physical) = connectionChange.state, sorcID == securitySorcID else {
-                    return
-                }
-                connectionChange.onNext(.init(state: .connecting(sorcID: sorcID, state: .transport),
-                                              action: .physicalConnectionEstablished(sorcID: sorcID)))
-            case .challenging:
-                guard case let .connecting(sorcID, .transport) = connectionChange.state, sorcID == securitySorcID else {
-                    return
-                }
-                connectionChange.onNext(.init(state: .connecting(sorcID: sorcID, state: .challenging),
-                                              action: .transportConnectionEstablished(sorcID: sorcID)))
-            }
-        case let .connected(sorcID):
-            guard connectionChange.state == .connecting(sorcID: sorcID, state: .challenging) else { return }
-            connectionChange.onNext(.init(state: .connected(sorcID: sorcID),
-                                          action: .connectionEstablished(sorcID: sorcID)))
-            scheduleHeartbeatTimers()
-        case .disconnected:
-            if connectionChange.state == .disconnected { return }
-            let actionLeadingToDisconnect = self.actionLeadingToDisconnect
-            reset()
-            if let action = actionLeadingToDisconnect {
-                connectionChange.onNext(.init(state: .disconnected, action: action))
-                return
-            }
-            NSLog("BLA handleConnectionChange disconnected")
-            switch secureChange.action {
-            case let .connectingFailed(sorcID, secureConnectingFailedError):
-                let error = ConnectingFailedError(secureConnectingFailedError: secureConnectingFailedError)
-                connectionChange.onNext(.init(state: .disconnected,
-                                              action: .connectingFailed(sorcID: sorcID, error: error)))
-            case .disconnect:
-                connectionChange.onNext(.init(state: .disconnected, action: .disconnect))
-            case let .connectionLost(secureConnectionLostError):
-                let error = ConnectionLostError(secureConnectionLostError: secureConnectionLostError)
-                connectionChange.onNext(.init(state: .disconnected, action: .connectionLost(error: error)))
-            default: break
-            }
-        }
-    }
-
-    private func handleMessageSent(result: Result<SorcMessage>) {
-        // TODO: PLAM-959 do we need this?
-        // When it goes wrong, do we retry or send the next one or close connection?
-        switch result {
-        case .success:
-            NSLog("BLA sent message")
-        case .failure:
-            NSLog("BLA sent message error")
-        }
-    }
-
-    private func handleMessageReceived(result: Result<SorcMessage>) {
-        guard case let .connected(sorcID) = connectionChange.state else { return }
-
-        waitingForResponse = false
-
-        guard case let .success(message) = result else {
-            if lastMessageSent?.id == .serviceGrant {
-                serviceGrantResultReceived.onNext(.failure(.receivedInvalidData))
-            }
-            return
-        }
-
-        NSLog("BLA handleMessageReceived: \(message.id)")
-
-        switch message.id {
-        case .heartBeatResponse:
-            handleSorcResponded()
-        case .serviceGrantTrigger:
-            guard let response = ServiceGrantResponse(sorcID: sorcID, message: message) else {
-                serviceGrantResultReceived.onNext(.failure(.receivedInvalidData))
-                return
-            }
-            handleSorcResponded()
-            serviceGrantResultReceived.onNext(.success(response))
-        default:
-            return
-        }
-
-        sendNextMessageIfPossible()
-    }
-
-    private func handleSorcResponded() {
+    private func rescheduleHeartbeat() {
         lastHeartbeatResponseDate = Date()
         NSLog("BLA: handleSorcResponded \(lastHeartbeatResponseDate)")
         checkHeartbeatsResponseTimer?.fireDate = lastHeartbeatResponseDate.addingTimeInterval(heartbeatTimeout / 1000)
@@ -261,8 +307,8 @@ private extension ConnectingFailedError {
         switch secureConnectingFailedError {
         case .physicalConnectingFailed:
             self = .physicalConnectingFailed
-        case .transportConnectingFailed:
-            self = .transportConnectingFailed
+        case .invalidMTUResponse:
+            self = .invalidMTUResponse
         case .challengeFailed:
             self = .challengeFailed
         case .blobOutdated:

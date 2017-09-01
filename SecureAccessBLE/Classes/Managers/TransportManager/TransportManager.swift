@@ -43,12 +43,12 @@ class TransportManager: TransportManagerType {
         }
         .disposed(by: disposeBag)
 
-        connectionManager.sentData.subscribeNext { [weak self] error in
+        connectionManager.dataSent.subscribeNext { [weak self] error in
             self?.handleSentData(error: error)
         }
         .disposed(by: disposeBag)
 
-        connectionManager.receivedData.subscribeNext { [weak self] result in
+        connectionManager.dataReceived.subscribeNext { [weak self] result in
             self?.handleReceivedDataResult(result)
         }
         .disposed(by: disposeBag)
@@ -59,8 +59,10 @@ class TransportManager: TransportManagerType {
             || connectionChange.state == .connecting(sorcID: sorcID, state: .physical) else { return }
 
         if connectionChange.state == .disconnected {
-            connectionChange.onNext(.init(state: .connecting(sorcID: sorcID, state: .physical),
-                                          action: .connect(sorcID: sorcID)))
+            connectionChange.onNext(.init(
+                state: .connecting(sorcID: sorcID, state: .physical),
+                action: .connect(sorcID: sorcID)
+            ))
         }
 
         connectionManager.connectToSorc(sorcID)
@@ -95,6 +97,8 @@ class TransportManager: TransportManagerType {
         }
     }
 
+    // MARK: - Private methods -
+
     private func resetCurrentPackage() {
         print("BLA resetCurrentPackage")
         sendingPackage = nil
@@ -125,30 +129,47 @@ class TransportManager: TransportManagerType {
 
     private func handlePhysicalConnectionChange(_ change: PhysicalConnectionChange) {
         switch change.state {
+
         case .connecting: break
         case let .connected(dataSorcID):
-            guard case let .connecting(sorcID, .physical) = connectionChange.state, sorcID == dataSorcID else { return }
-            connectionChange.onNext(.init(state: .connecting(sorcID: sorcID, state: .requestingMTU),
-                                          action: .physicalConnectionEstablished(sorcID: sorcID)))
+            guard case let .connecting(sorcID, .physical) = connectionChange.state,
+                sorcID == dataSorcID else { return }
+
+            connectionChange.onNext(.init(
+                state: .connecting(sorcID: sorcID, state: .requestingMTU),
+                action: .physicalConnectionEstablished(sorcID: sorcID)
+            ))
             sendMTURequest()
+
         case .disconnected:
             if connectionChange.state == .disconnected { return }
+
             let actionLeadingToDisconnect = self.actionLeadingToDisconnect
             reset()
             if let action = actionLeadingToDisconnect {
-                connectionChange.onNext(.init(state: .disconnected, action: action))
+                connectionChange.onNext(.init(
+                    state: .disconnected,
+                    action: action
+                ))
                 return
             }
+
             switch change.action {
             case let .connectingFailed(sorcID):
-                connectionChange.onNext(.init(state: .disconnected,
-                                              action: .connectingFailed(sorcID: sorcID,
-                                                                        error: .physicalConnectingFailed)))
+                connectionChange.onNext(.init(
+                    state: .disconnected,
+                    action: .connectingFailed(sorcID: sorcID, error: .physicalConnectingFailed)
+                ))
             case .disconnect:
-                connectionChange.onNext(.init(state: .disconnected, action: .disconnect))
+                connectionChange.onNext(.init(
+                    state: .disconnected,
+                    action: .disconnect
+                ))
             case .connectionLost:
-                connectionChange.onNext(.init(state: .disconnected,
-                                              action: .connectionLost(error: .physicalConnectionLost)))
+                connectionChange.onNext(.init(
+                    state: .disconnected,
+                    action: .connectionLost(error: .physicalConnectionLost)
+                ))
             default: break
             }
         }
@@ -179,7 +200,7 @@ class TransportManager: TransportManagerType {
 
     private func handleReceivedDataResult(_ result: Result<Data>) {
         switch connectionChange.state {
-        case let .connecting(_, connectingState) where connectingState == .requestingMTU:
+        case .connecting(_, .requestingMTU):
             break
         case .connected:
             break
@@ -196,7 +217,7 @@ class TransportManager: TransportManagerType {
     }
 
     private func handleReceivedData(_ data: Data) {
-        print("BLA handleReceivedData")
+        print("BLA handleReceivedData: \(data.toHexString())")
 
         if receivingPackage == nil {
             receivingPackage = DataFramePackage()
@@ -204,18 +225,24 @@ class TransportManager: TransportManagerType {
         let frame = DataFrame(rawData: data)
         receivingPackage?.frames.append(frame)
 
-        if frame.type == .single || frame.type == .eop {
-            guard let package = self.receivingPackage else { return }
+        guard frame.type == .single || frame.type == .eop,
+            let package = self.receivingPackage else { return }
 
-            resetReceivedPackage()
-            let messageData = package.message
+        resetReceivedPackage()
+        let messageData = package.message
+
+        print("BLA handleReceivedMessageData: \(messageData.toHexString())")
+
+        if case let .connecting(sorcID, .requestingMTU) = connectionChange.state {
             let message = SorcMessage(rawData: messageData)
-            if case .mtuReceive = message.id, let mtuSize = MTUSize(rawData: message.message).mtuSize {
+            if message.id == .mtuReceive, let mtuSize = MTUSize(rawData: message.message).mtuSize {
                 print("BLA mtuReceive: \(message.data.toHexString())")
                 handleMTUReceived(mtuSize: mtuSize)
             } else {
-                dataReceived.onNext(.success(messageData))
+                disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .invalidMTUResponse))
             }
+        } else {
+            dataReceived.onNext(.success(messageData))
         }
     }
 
@@ -223,8 +250,8 @@ class TransportManager: TransportManagerType {
         // TODO: PLAM-1374 handle error
         print("BLA handleReceivedData error")
 
-        if case let .connecting(sorcID, connectingState) = connectionChange.state, connectingState == .requestingMTU {
-            disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .transportConnectingFailed))
+        if case let .connecting(sorcID, .requestingMTU) = connectionChange.state {
+            disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .invalidMTUResponse))
         } else {
             dataReceived.onNext(.failure(error))
         }
@@ -238,11 +265,12 @@ class TransportManager: TransportManagerType {
 
     private func handleMTUReceived(mtuSize: Int) {
         print("BLA handleMTUReceived")
-        guard case let .connecting(sorcID, connectingState) = connectionChange.state,
-            connectingState == .requestingMTU else { return }
+        guard case let .connecting(sorcID, .requestingMTU) = connectionChange.state else { return }
 
         self.mtuSize = mtuSize
-        connectionChange.onNext(.init(state: .connected(sorcID: sorcID),
-                                      action: .connectionEstablished(sorcID: sorcID)))
+        connectionChange.onNext(.init(
+            state: .connected(sorcID: sorcID),
+            action: .connectionEstablished(sorcID: sorcID)
+        ))
     }
 }

@@ -785,7 +785,7 @@ class ConnectionManagerTests: XCTestCase {
         XCTAssertEqual(receivedConnectionChange, expected)
     }
 
-    func test_peripheralDidUpdateValue_ifNotifyCharacteristicAndErrorIsNil_receivedDataSuccess() {
+    func test_peripheralDidUpdateValue_ifNotifyCharacteristicAndErrorIsNil_dataReceivedSuccess() {
 
         // Given
         let centralManager = CBCentralManagerMock()
@@ -794,10 +794,10 @@ class ConnectionManagerTests: XCTestCase {
         notifyCharacteristic.value = Data(base64Encoded: "data")
         notifyCharacteristic.uuid = CBUUID(string: notifyCharacteristicID)
 
-        var receivedData: Data?
-        _ = connectionManager.receivedData.subscribeNext { result in
+        var dataReceived: Data?
+        _ = connectionManager.dataReceived.subscribeNext { result in
             if case let .success(data) = result {
-                receivedData = data
+                dataReceived = data
             }
         }
 
@@ -805,10 +805,10 @@ class ConnectionManagerTests: XCTestCase {
         connectionManager.peripheral_(CBPeripheralMock(), didUpdateValueFor: notifyCharacteristic, error: nil)
 
         // Then
-        XCTAssertEqual(receivedData, Data(base64Encoded: "data"))
+        XCTAssertEqual(dataReceived, Data(base64Encoded: "data"))
     }
 
-    func test_peripheralDidUpdateValue_ifNotifyCharacteristicAndErrorExists_receivedDataError() {
+    func test_peripheralDidUpdateValue_ifNotifyCharacteristicAndErrorExists_dataReceivedError() {
 
         // Given
         let centralManager = CBCentralManagerMock()
@@ -817,10 +817,10 @@ class ConnectionManagerTests: XCTestCase {
         notifyCharacteristic.value = Data(base64Encoded: "data")
         notifyCharacteristic.uuid = CBUUID(string: notifyCharacteristicID)
 
-        var receivedDataError: Error?
-        _ = connectionManager.receivedData.subscribeNext { result in
+        var dataReceivedError: Error?
+        _ = connectionManager.dataReceived.subscribeNext { result in
             if case let .failure(error) = result {
-                receivedDataError = error
+                dataReceivedError = error
             }
         }
 
@@ -830,10 +830,10 @@ class ConnectionManagerTests: XCTestCase {
         connectionManager.peripheral_(CBPeripheralMock(), didUpdateValueFor: notifyCharacteristic, error: error)
 
         // Then
-        XCTAssertEqual(receivedDataError! as NSError, error)
+        XCTAssertEqual(dataReceivedError! as NSError, error)
     }
 
-    func test_peripheralDidWriteValue_ifWriteCharacteristicAndErrorIsNil_sentDataErrorIsNil() {
+    func test_peripheralDidWriteValue_ifWriteCharacteristicAndErrorIsNil_dataSentErrorIsNil() {
 
         // Given
         let centralManager = CBCentralManagerMock()
@@ -841,19 +841,19 @@ class ConnectionManagerTests: XCTestCase {
         let writeCharacteristic = CBCharacteristicMock()
         writeCharacteristic.uuid = CBUUID(string: writeCharacteristicID)
 
-        var sentDataError: Error?
-        _ = connectionManager.sentData.subscribeNext { error in
-            sentDataError = error
+        var dataSentError: Error?
+        _ = connectionManager.dataSent.subscribeNext { error in
+            dataSentError = error
         }
 
         // When
         connectionManager.peripheral_(CBPeripheralMock(), didWriteValueFor: writeCharacteristic, error: nil)
 
         // Then
-        XCTAssertNil(sentDataError)
+        XCTAssertNil(dataSentError)
     }
 
-    func test_peripheralDidWriteValue_ifWriteCharacteristicAndErrorExists_sentDataErrorExists() {
+    func test_peripheralDidWriteValue_ifWriteCharacteristicAndErrorExists_dataSentErrorExists() {
 
         // Given
         let centralManager = CBCentralManagerMock()
@@ -861,9 +861,9 @@ class ConnectionManagerTests: XCTestCase {
         let writeCharacteristic = CBCharacteristicMock()
         writeCharacteristic.uuid = CBUUID(string: writeCharacteristicID)
 
-        var sentDataError: Error?
-        _ = connectionManager.sentData.subscribeNext { error in
-            sentDataError = error
+        var dataSentError: Error?
+        _ = connectionManager.dataSent.subscribeNext { error in
+            dataSentError = error
         }
 
         let error = NSError(domain: "", code: 0, userInfo: nil)
@@ -872,7 +872,7 @@ class ConnectionManagerTests: XCTestCase {
         connectionManager.peripheral_(CBPeripheralMock(), didWriteValueFor: writeCharacteristic, error: error)
 
         // Then
-        XCTAssertEqual(sentDataError! as NSError, error)
+        XCTAssertEqual(dataSentError! as NSError, error)
     }
 
     func test_filterTimerFired_ifDiscoveredSorcIsOutdatedAndNotConnected_removesIt() {

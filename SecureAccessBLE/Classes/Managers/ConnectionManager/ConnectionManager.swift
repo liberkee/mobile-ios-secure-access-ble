@@ -53,8 +53,8 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     let discoveryChange = ChangeSubject<DiscoveryChange>(state: [:])
     let connectionChange = ChangeSubject<PhysicalConnectionChange>(state: .disconnected)
 
-    let sentData = PublishSubject<Error?>()
-    let receivedData = PublishSubject<Result<Data>>()
+    let dataSent = PublishSubject<Error?>()
+    let dataReceived = PublishSubject<Result<Data>>()
 
     fileprivate let deviceID = "EF82084D-BFAD-4ABE-90EE-2552C20C5765"
     fileprivate let serviceID = "d1cf0603-b501-4569-a4b9-e47ad3f628a5"
@@ -327,9 +327,9 @@ extension ConnectionManager {
     func peripheral_(_: CBPeripheralType, didUpdateValueFor characteristic: CBCharacteristicType, error: Error?) {
         guard characteristic.uuid == CBUUID(string: notifyCharacteristicID) else { return }
         if let error = error {
-            receivedData.onNext(.failure(error))
+            dataReceived.onNext(.failure(error))
         } else if let data = characteristic.value {
-            receivedData.onNext(.success(data))
+            dataReceived.onNext(.success(data))
         } else {
             print("ConnectionManager: No error but characteristic value was nil which is unexpected.")
         }
@@ -337,6 +337,6 @@ extension ConnectionManager {
 
     func peripheral_(_: CBPeripheralType, didWriteValueFor characteristic: CBCharacteristicType, error: Error?) {
         guard characteristic.uuid == CBUUID(string: writeCharacteristicID) else { return }
-        sentData.onNext(error)
+        dataSent.onNext(error)
     }
 }

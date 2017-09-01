@@ -96,7 +96,7 @@ extension TransportConnectionChange {
     /// The errors that can occur if the connection attempt fails
     enum ConnectingFailedError: Error {
         case physicalConnectingFailed
-        case transportConnectingFailed
+        case invalidMTUResponse
     }
 
     /// The errors that can occur if the connection is lost

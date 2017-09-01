@@ -56,8 +56,8 @@
 		E50403261F55C12D0008DF02 /* BluetoothStatusProviderType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothStatusProviderType.swift; sourceTree = "<group>"; };
 		E50403271F55C12D0008DF02 /* PhysicalConnectionChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicalConnectionChange.swift; sourceTree = "<group>"; };
 		E50403281F55C12D0008DF02 /* ScannerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerType.swift; sourceTree = "<group>"; };
-		E50403291F55C15E0008DF02 /* ConnectionManagerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionManagerType.swift; sourceTree = "<group>"; };
-		E504032B1F55C30D0008DF02 /* TransportManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportManager.swift; sourceTree = "<group>"; };
+		E50403291F55C15E0008DF02 /* ConnectionManagerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ConnectionManagerType.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		E504032B1F55C30D0008DF02 /* TransportManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = TransportManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		E504032C1F55C32F0008DF02 /* TransportConnectionChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportConnectionChange.swift; sourceTree = "<group>"; };
 		E504032E1F56CEFA0008DF02 /* SecurityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityManager.swift; sourceTree = "<group>"; };
 		E504032F1F56CEFA0008DF02 /* SecurityManagerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityManagerType.swift; sourceTree = "<group>"; };
@@ -73,9 +73,9 @@
 		E5CF3ADB1F56FD51009C95A0 /* BoundedQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundedQueue.swift; sourceTree = "<group>"; };
 		E5CF3ADD1F56FDBC009C95A0 /* BoundedQueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoundedQueueTests.swift; sourceTree = "<group>"; };
 		E5CF3ADF1F585024009C95A0 /* SecureConnectionChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureConnectionChange.swift; sourceTree = "<group>"; };
-		E5CF3AE01F586E74009C95A0 /* ConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionManager.swift; sourceTree = "<group>"; };
+		E5CF3AE01F586E74009C95A0 /* ConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ConnectionManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		E5CF3AE11F586E74009C95A0 /* ConnectionManagerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionManagerExtensions.swift; sourceTree = "<group>"; };
-		E5CF3AE21F586EB7009C95A0 /* ConnectionManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConnectionManagerTests.swift; sourceTree = "<group>"; };
+		E5CF3AE21F586EB7009C95A0 /* ConnectionManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ConnectionManagerTests.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		E5CF3AE51F586EF4009C95A0 /* SecurityManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecurityManagerTests.swift; sourceTree = "<group>"; };
 		E5CF3AEA1F58705C009C95A0 /* AesCbcCryptoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AesCbcCryptoManager.swift; sourceTree = "<group>"; };
 		E5CF3AEB1F58705C009C95A0 /* AesCbcTestCryptoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AesCbcTestCryptoManager.swift; sourceTree = "<group>"; };

@@ -98,7 +98,7 @@ extension SecureConnectionChange {
     /// The errors that can occur if the connection attempt fails
     public enum ConnectingFailedError: Error {
         case physicalConnectingFailed
-        case transportConnectingFailed
+        case invalidMTUResponse
         case challengeFailed
         case blobOutdated
     }

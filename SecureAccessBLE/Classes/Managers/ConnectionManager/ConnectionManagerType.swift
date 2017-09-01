@@ -12,8 +12,8 @@ protocol ConnectionManagerType {
 
     var connectionChange: ChangeSubject<PhysicalConnectionChange> { get }
 
-    var sentData: PublishSubject<Error?> { get }
-    var receivedData: PublishSubject<Result<Data>> { get }
+    var dataSent: PublishSubject<Error?> { get }
+    var dataReceived: PublishSubject<Result<Data>> { get }
 
     func connectToSorc(_ sorcID: SorcID)
     func disconnect()
