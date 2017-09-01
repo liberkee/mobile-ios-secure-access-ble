@@ -1,6 +1,6 @@
 //
 //  EventSignal.swift
-//  SecureAccessBLE
+//  CommonUtils
 //
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //

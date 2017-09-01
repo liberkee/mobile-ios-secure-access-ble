@@ -84,9 +84,6 @@
 		E5CF3AEE1F58708D009C95A0 /* ChallengeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeService.swift; sourceTree = "<group>"; };
 		E5CF3AEF1F587164009C95A0 /* ChallengeServiceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeServiceTests.swift; sourceTree = "<group>"; };
 		E5E308D21F324E6800C1537F /* CBWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBWrapper.swift; sourceTree = "<group>"; };
-		E5E9B47E1F5944EF00A78F0B /* EventSignal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventSignal.swift; sourceTree = "<group>"; };
-		E5E9B47F1F59464F00A78F0B /* StateSignal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateSignal.swift; sourceTree = "<group>"; };
-		E5E9B4801F59465700A78F0B /* ChangeSignal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangeSignal.swift; sourceTree = "<group>"; };
 		EE99F13EBAEE0CDC40DBE8F5 /* Pods-SecureAccessBLE_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -126,7 +123,6 @@
 		46B760761DA2637D003ADDB1 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
-				E5E9B47D1F5944E300A78F0B /* Signals */,
 				46B760771DA2637D003ADDB1 /* BLEHelper.swift */,
 				E565092C1F3333C1002771F8 /* SystemClock.swift */,
 				E59E016D1F38B295006F114D /* Result.swift */,
@@ -429,16 +425,6 @@
 				E5E308D21F324E6800C1537F /* CBWrapper.swift */,
 			);
 			path = CBWrapper;
-			sourceTree = "<group>";
-		};
-		E5E9B47D1F5944E300A78F0B /* Signals */ = {
-			isa = PBXGroup;
-			children = (
-				E5E9B47E1F5944EF00A78F0B /* EventSignal.swift */,
-				E5E9B47F1F59464F00A78F0B /* StateSignal.swift */,
-				E5E9B4801F59465700A78F0B /* ChangeSignal.swift */,
-			);
-			path = Signals;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
