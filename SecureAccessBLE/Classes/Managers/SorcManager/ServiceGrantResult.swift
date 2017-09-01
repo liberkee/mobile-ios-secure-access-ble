@@ -48,10 +48,10 @@ public struct ServiceGrantResponse: Equatable {
         case notAllowed = 0x03
     }
 
-    let sorcID: SorcID
-    let serviceGrantID: ServiceGrantID
-    let status: Status
-    let responseData: String
+    public let sorcID: SorcID
+    public let serviceGrantID: ServiceGrantID
+    public let status: Status
+    public let responseData: String
 
     public static func ==(lhs: ServiceGrantResponse, rhs: ServiceGrantResponse) -> Bool {
         return lhs.sorcID == rhs.sorcID

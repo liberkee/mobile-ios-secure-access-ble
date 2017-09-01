@@ -30,20 +30,6 @@ protocol ServiceGrant: SorcMessagePayload {
 
 // MARK: - extension endpoint
 extension ServiceGrant {
-    /**
-     optional init with grant id
-
-     - parameter grantID: ID that Service grant should have
-
-     - returns: new Service grant object
-     */
-    init(grantID: FeatureServiceGrantID) {
-        let frameData = NSMutableData()
-        var grantIDValue = grantID.rawValue
-        frameData.append(&grantIDValue, length: 2)
-        self.init()
-        data = frameData as Data
-    }
 
     init(serviceGrantID: ServiceGrantID) {
         let frameData = NSMutableData()

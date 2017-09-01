@@ -69,10 +69,6 @@
 		E565092C1F3333C1002771F8 /* SystemClock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemClock.swift; sourceTree = "<group>"; };
 		E573A7921EDC2BAA0093ABA8 /* LeaseToken.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeaseToken.swift; sourceTree = "<group>"; };
 		E573A7931EDC2BD50093ABA8 /* LeaseTokenBlob.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeaseTokenBlob.swift; sourceTree = "<group>"; };
-		E59E01651F387BE5006F114D /* BLEManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BLEManager.swift; sourceTree = "<group>"; };
-		E59E01661F387BE5006F114D /* BLEManagerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEManagerType.swift; sourceTree = "<group>"; };
-		E59E01681F387BE5006F114D /* MockBLEManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockBLEManager.swift; sourceTree = "<group>"; };
-		E59E01691F387BE5006F114D /* SimulatableBLEManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatableBLEManager.swift; sourceTree = "<group>"; };
 		E59E016D1F38B295006F114D /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		E5CF3ADB1F56FD51009C95A0 /* BoundedQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundedQueue.swift; sourceTree = "<group>"; };
 		E5CF3ADD1F56FDBC009C95A0 /* BoundedQueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoundedQueueTests.swift; sourceTree = "<group>"; };
@@ -395,20 +391,8 @@
 				E504032D1F56CEFA0008DF02 /* SecurityManager */,
 				E50403171F55BFA00008DF02 /* TransportManager */,
 				E50403251F55C12D0008DF02 /* ConnectionManager */,
-				E59E01641F387BE5006F114D /* BLEManager */,
 			);
 			path = Managers;
-			sourceTree = "<group>";
-		};
-		E59E01641F387BE5006F114D /* BLEManager */ = {
-			isa = PBXGroup;
-			children = (
-				E59E01661F387BE5006F114D /* BLEManagerType.swift */,
-				E59E01651F387BE5006F114D /* BLEManager.swift */,
-				E59E01681F387BE5006F114D /* MockBLEManager.swift */,
-				E59E01691F387BE5006F114D /* SimulatableBLEManager.swift */,
-			);
-			path = BLEManager;
 			sourceTree = "<group>";
 		};
 		E5CF3ADC1F56FDAC009C95A0 /* Helper */ = {

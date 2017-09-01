@@ -7,29 +7,29 @@
 
 import CommonUtils
 
-class SorcManager: SorcManagerType {
+public class SorcManager: SorcManagerType {
 
     private let bluetoothStatusProvider: BluetoothStatusProviderType
     private let scanner: ScannerType
     private let sessionManager: SessionManagerType
 
-    var isBluetoothEnabled: StateSignal<Bool> {
+    public var isBluetoothEnabled: StateSignal<Bool> {
         return bluetoothStatusProvider.isBluetoothEnabled.asSignal()
     }
 
-    var discoveryChange: ChangeSignal<DiscoveryChange> {
+    public var discoveryChange: ChangeSignal<DiscoveryChange> {
         return scanner.discoveryChange.asSignal()
     }
 
-    var connectionChange: ChangeSignal<ConnectionChange> {
+    public var connectionChange: ChangeSignal<ConnectionChange> {
         return sessionManager.connectionChange.asSignal()
     }
 
-    var serviceGrantResultReceived: EventSignal<ServiceGrantResult> {
+    public var serviceGrantResultReceived: EventSignal<ServiceGrantResult> {
         return sessionManager.serviceGrantResultReceived.asSignal()
     }
 
-    convenience init() {
+    public convenience init() {
         let connectionManager = ConnectionManager()
         let transportManager = TransportManager(connectionManager: connectionManager)
         let securityManager = SecurityManager(transportManager: transportManager)
@@ -52,15 +52,15 @@ class SorcManager: SorcManagerType {
         self.sessionManager = sessionManager
     }
 
-    func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob) {
+    public func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob) {
         sessionManager.connectToSorc(leaseToken: leaseToken, leaseTokenBlob: leaseTokenBlob)
     }
 
-    func disconnect() {
+    public func disconnect() {
         sessionManager.disconnect()
     }
 
-    func requestServiceGrant(_ serviceGrantID: ServiceGrantID) {
+    public func requestServiceGrant(_ serviceGrantID: ServiceGrantID) {
         sessionManager.requestServiceGrant(serviceGrantID)
     }
 }

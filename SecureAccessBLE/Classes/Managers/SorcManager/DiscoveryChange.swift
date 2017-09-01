@@ -17,6 +17,11 @@ public struct DiscoveryChange: ChangeType {
         return DiscoveryChange(state: state, action: .initial)
     }
 
+    public init(state: State, action: Action) {
+        self.state = state
+        self.action = action
+    }
+
     public enum Action {
         case initial
 
