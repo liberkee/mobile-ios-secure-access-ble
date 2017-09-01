@@ -73,43 +73,20 @@ class TransportManager: TransportManagerType {
     }
 
     func sendData(_ data: Data) {
-        // TODO: PLAM-959 add preconditions
-        // TODO: PLAM-959 add queuing
-
-        print("BLA: try sending data: \(data.toHexString())")
-
-        if sendingPackage != nil || receivingPackage != nil {
-            print("BLA Sending/Receiving in progress")
-        } else {
-            // debugPrint("----------------------------------------")
-            // debugPrint("Send Encrypted Message: \(data.toHexString())")
-            // debugPrint("Same message decrypted: \(self.cryptoManager.decryptData(data).data.toHexString())")
-            // let key = NSData.withBytes(self.cryptoManager.key)
-            // debugPrint("With key: \(key.toHexString())")
-            // debugPrint("-----------  sended message with id: \(message.id) -------------")
-
-            sendingPackage = DataFramePackage(messageData: data, frameSize: messageFrameSize)
-            if let currentFrame = self.sendingPackage?.currentFrame {
-                sendFrame(currentFrame)
-            } else {
-                print("DataFramePackage has no frames to send")
-            }
-        }
+        guard case .connected = connectionChange.state else { return }
+        sendDataInternal(data)
     }
 
     // MARK: - Private methods -
 
-    private func resetCurrentPackage() {
-        print("BLA resetCurrentPackage")
-        sendingPackage = nil
+    private func reset() {
+        resetSendingPackage()
+        resetReceivingPackage()
+        mtuSize = defaultMTUSize
+        actionLeadingToDisconnect = nil
     }
 
-    private func resetReceivedPackage() {
-        print("BLA resetReceivedPackage")
-        receivingPackage = nil
-    }
-
-    // MARK: Private methods
+    // MARK: - Connecting handling
 
     private func disconnect(withAction action: TransportConnectionChange.Action) {
         switch connectionChange.state {
@@ -118,13 +95,6 @@ class TransportManager: TransportManagerType {
         }
         actionLeadingToDisconnect = action
         connectionManager.disconnect()
-    }
-
-    private func reset() {
-        resetCurrentPackage()
-        resetReceivedPackage()
-        mtuSize = defaultMTUSize
-        actionLeadingToDisconnect = nil
     }
 
     private func handlePhysicalConnectionChange(_ change: PhysicalConnectionChange) {
@@ -175,6 +145,42 @@ class TransportManager: TransportManagerType {
         }
     }
 
+    // MARK: - MTU handling
+
+    private func sendMTURequest() {
+        print("BLA sendMTURequest")
+        let message = SorcMessage(id: SorcMessageID.mtuRequest, payload: MTUSize())
+        sendDataInternal(message.data)
+    }
+
+    private func handleMTUReceived(mtuSize: Int) {
+        print("BLA handleMTUReceived")
+        guard case let .connecting(sorcID, .requestingMTU) = connectionChange.state else { return }
+
+        self.mtuSize = mtuSize
+        connectionChange.onNext(.init(
+            state: .connected(sorcID: sorcID),
+            action: .connectionEstablished(sorcID: sorcID)
+        ))
+    }
+
+    // MARK: - Data package and frame handling
+
+    private func sendDataInternal(_ data: Data) {
+        print("BLA: try sending data: \(data.toHexString())")
+
+        if sendingPackage != nil || receivingPackage != nil {
+            print("BLA Sending/Receiving in progress")
+        } else {
+            sendingPackage = DataFramePackage(messageData: data, frameSize: messageFrameSize)
+            if let currentFrame = self.sendingPackage?.currentFrame {
+                sendFrame(currentFrame)
+            } else {
+                print("DataFramePackage has no frames to send")
+            }
+        }
+    }
+
     private func sendFrame(_ frame: DataFrame) {
         connectionManager.sendData(frame.data)
     }
@@ -183,7 +189,7 @@ class TransportManager: TransportManagerType {
         // TODO: PLAM-1374 handle error
 
         if let error = error {
-            resetCurrentPackage()
+            resetSendingPackage()
             dataSent.onNext(.failure(error))
             return
         }
@@ -194,15 +200,13 @@ class TransportManager: TransportManagerType {
             sendFrame(currentFrame)
         } else {
             dataSent.onNext(.success(sendingPackage.message))
-            resetCurrentPackage()
+            resetSendingPackage()
         }
     }
 
     private func handleReceivedDataResult(_ result: Result<Data>) {
         switch connectionChange.state {
-        case .connecting(_, .requestingMTU):
-            break
-        case .connected:
+        case .connecting(_, .requestingMTU), .connected:
             break
         default:
             return
@@ -228,7 +232,7 @@ class TransportManager: TransportManagerType {
         guard frame.type == .single || frame.type == .eop,
             let package = self.receivingPackage else { return }
 
-        resetReceivedPackage()
+        resetReceivingPackage()
         let messageData = package.message
 
         print("BLA handleReceivedMessageData: \(messageData.toHexString())")
@@ -257,20 +261,13 @@ class TransportManager: TransportManagerType {
         }
     }
 
-    private func sendMTURequest() {
-        print("BLA sendMTURequest")
-        let message = SorcMessage(id: SorcMessageID.mtuRequest, payload: MTUSize())
-        sendData(message.data)
+    private func resetSendingPackage() {
+        print("BLA resetCurrentPackage")
+        sendingPackage = nil
     }
 
-    private func handleMTUReceived(mtuSize: Int) {
-        print("BLA handleMTUReceived")
-        guard case let .connecting(sorcID, .requestingMTU) = connectionChange.state else { return }
-
-        self.mtuSize = mtuSize
-        connectionChange.onNext(.init(
-            state: .connected(sorcID: sorcID),
-            action: .connectionEstablished(sorcID: sorcID)
-        ))
+    private func resetReceivingPackage() {
+        print("BLA resetReceivedPackage")
+        receivingPackage = nil
     }
 }
