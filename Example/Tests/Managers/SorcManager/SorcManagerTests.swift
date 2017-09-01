@@ -92,7 +92,7 @@ class SorcManagerTests: XCTestCase {
         bluetoothStatusProvider.isBluetoothEnabled.onNext(true)
 
         // When
-        let isEnabled = sorcManager.isBluetoothEnabled.value
+        let isEnabled = sorcManager.isBluetoothEnabled.state
 
         // Then
         XCTAssertTrue(isEnabled)
@@ -102,7 +102,7 @@ class SorcManagerTests: XCTestCase {
 
         // Given
         var receivedStatus: Bool?
-        _ = sorcManager.isBluetoothEnabled.subscribeNext { status in
+        _ = sorcManager.isBluetoothEnabled.subscribe { status in
             receivedStatus = status
         }
 
@@ -131,7 +131,7 @@ class SorcManagerTests: XCTestCase {
 
         // Given
         var receivedChange: DiscoveryChange?
-        _ = sorcManager.discoveryChange.subscribeNext { change in
+        _ = sorcManager.discoveryChange.subscribe { change in
             receivedChange = change
         }
 
@@ -188,7 +188,7 @@ class SorcManagerTests: XCTestCase {
 
         // Given
         var receivedChange: ConnectionChange?
-        _ = sorcManager.connectionChange.subscribeNext { change in
+        _ = sorcManager.connectionChange.subscribe { change in
             receivedChange = change
         }
 
@@ -216,7 +216,7 @@ class SorcManagerTests: XCTestCase {
 
         // Given
         var receivedResult: ServiceGrantResult?
-        _ = sorcManager.serviceGrantResultReceived.subscribeNext { result in
+        _ = sorcManager.serviceGrantResultReceived.subscribe { result in
             receivedResult = result
         }
 

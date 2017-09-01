@@ -8,22 +8,22 @@
 import CommonUtils
 
 /// Defines what a manager of SORCs provides
-protocol SorcManagerType {
+public protocol SorcManagerType {
 
     // MARK: - Interface
 
     /// The bluetooth enabled status
-    var isBluetoothEnabled: BehaviorSubject<Bool> { get }
+    var isBluetoothEnabled: StateSignal<Bool> { get }
 
     // MARK: - Discovery
 
     /// The state of SORC discovery with the action that led to this state
-    var discoveryChange: ChangeSubject<DiscoveryChange> { get }
+    var discoveryChange: ChangeSignal<DiscoveryChange> { get }
 
     // MARK: - Connection
 
     /// The state of the connection with the action that led to this state
-    var connectionChange: ChangeSubject<ConnectionChange> { get }
+    var connectionChange: ChangeSignal<ConnectionChange> { get }
 
     /**
      Connects to a SORC
@@ -41,7 +41,7 @@ protocol SorcManagerType {
     // MARK: - Service
 
     /// A service grant result was received
-    var serviceGrantResultReceived: PublishSubject<ServiceGrantResult> { get }
+    var serviceGrantResultReceived: EventSignal<ServiceGrantResult> { get }
 
     /**
      Requests a service grant from the connected SORC

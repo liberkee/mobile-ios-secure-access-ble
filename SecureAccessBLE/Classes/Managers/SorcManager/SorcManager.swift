@@ -13,20 +13,20 @@ class SorcManager: SorcManagerType {
     private let scanner: ScannerType
     private let sessionManager: SessionManagerType
 
-    var isBluetoothEnabled: BehaviorSubject<Bool> {
-        return bluetoothStatusProvider.isBluetoothEnabled
+    var isBluetoothEnabled: StateSignal<Bool> {
+        return bluetoothStatusProvider.isBluetoothEnabled.asSignal()
     }
 
-    var discoveryChange: ChangeSubject<DiscoveryChange> {
-        return scanner.discoveryChange
+    var discoveryChange: ChangeSignal<DiscoveryChange> {
+        return scanner.discoveryChange.asSignal()
     }
 
-    var connectionChange: ChangeSubject<ConnectionChange> {
-        return sessionManager.connectionChange
+    var connectionChange: ChangeSignal<ConnectionChange> {
+        return sessionManager.connectionChange.asSignal()
     }
 
-    var serviceGrantResultReceived: PublishSubject<ServiceGrantResult> {
-        return sessionManager.serviceGrantResultReceived
+    var serviceGrantResultReceived: EventSignal<ServiceGrantResult> {
+        return sessionManager.serviceGrantResultReceived.asSignal()
     }
 
     convenience init() {

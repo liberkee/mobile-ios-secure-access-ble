@@ -28,19 +28,35 @@ class MockBLEManager: BLEManagerType {
 
     // MARK: - Interface
 
-    public let isBluetoothEnabled = BehaviorSubject(value: true)
+    public var isBluetoothEnabled: StateSignal<Bool> {
+        return isBluetoothEnabledSubject.asSignal()
+    }
+
+    private let isBluetoothEnabledSubject = BehaviorSubject(value: true)
 
     // MARK: - Discovery
 
-    public let discoveryChange = ChangeSubject<DiscoveryChange>(state: [:])
+    public var discoveryChange: ChangeSignal<DiscoveryChange> {
+        return discoveryChangeSubject.asSignal()
+    }
+
+    private let discoveryChangeSubject = ChangeSubject<DiscoveryChange>(state: [:])
 
     // MARK: - Connection
 
-    public let connectionChange = ChangeSubject<ConnectionChange>(state: .disconnected)
+    public var connectionChange: ChangeSignal<ConnectionChange> {
+        return connectionChangeSubject.asSignal()
+    }
+
+    private let connectionChangeSubject = ChangeSubject<ConnectionChange>(state: .disconnected)
 
     // MARK: - Service
 
-    public let receivedServiceGrantTriggerForStatus = PublishSubject<(status: ServiceGrantTriggerStatus?, error: String?)>()
+    public var receivedServiceGrantTriggerForStatus: EventSignal<(status: ServiceGrantTriggerStatus?, error: String?)> {
+        return receivedServiceGrantTriggerForStatusSubject.asSignal()
+    }
+
+    private let receivedServiceGrantTriggerForStatusSubject = PublishSubject<(status: ServiceGrantTriggerStatus?, error: String?)>()
 
     // MARK: - Private properties
 
@@ -56,7 +72,7 @@ class MockBLEManager: BLEManagerType {
     init(discoveredSorcsProvider: DiscoveredSorcsProviderType) {
         self.discoveredSorcsProvider = discoveredSorcsProvider
         discoveredSorcsProvider.discoveredSorcInfos.subscribeNext { [weak self] sorcInfos in
-            self?.discoveryChange.onNext(.init(state: sorcInfos, action: .initial))
+            self?.discoveryChangeSubject.onNext(.init(state: sorcInfos, action: .initial))
         }
         .disposed(by: disposeBag)
     }
@@ -65,11 +81,11 @@ class MockBLEManager: BLEManagerType {
 
     public func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob _: LeaseTokenBlob) {
         let sorcID = leaseToken.sorcID
-        connectionChange.onNext(ConnectionChange(state: .connecting(sorcID: sorcID, state: .physical),
-                                                 action: .connect(sorcID: sorcID)))
+        connectionChangeSubject.onNext(ConnectionChange(state: .connecting(sorcID: sorcID, state: .physical),
+                                                        action: .connect(sorcID: sorcID)))
         let connectWorkItem = DispatchWorkItem { [weak self] in
             guard let strongSelf = self else { return }
-            strongSelf.connectionChange.onNext(ConnectionChange(
+            strongSelf.connectionChangeSubject.onNext(ConnectionChange(
                 state: .connected(sorcID: sorcID),
                 action: .connectionEstablished(sorcID: sorcID))
             )
@@ -85,7 +101,7 @@ class MockBLEManager: BLEManagerType {
         connectWorkItem = nil
         serviceWorkItem?.cancel()
         serviceWorkItem = nil
-        connectionChange.onNext(ConnectionChange(state: .disconnected, action: .disconnect))
+        connectionChangeSubject.onNext(ConnectionChange(state: .disconnected, action: .disconnect))
     }
 
     public func sendServiceGrantForFeature(_ feature: ServiceGrantFeature) {
@@ -113,7 +129,7 @@ class MockBLEManager: BLEManagerType {
             case .ignitionStatus:
                 triggerStatus = strongSelf.ignitionDisabled ? .ignitionStatusDisabled : .ignitionStatusEnabled
             }
-            strongSelf.receivedServiceGrantTriggerForStatus.onNext((status: triggerStatus, error: nil))
+            strongSelf.receivedServiceGrantTriggerForStatusSubject.onNext((status: triggerStatus, error: nil))
         }
 
         DispatchQueue.main.asyncAfter(deadline: deadline, execute: workItem)

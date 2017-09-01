@@ -77,19 +77,35 @@ public class SimulatableBLEManager: BLEManagerType {
 
     // MARK: - Interface
 
-    public let isBluetoothEnabled = BehaviorSubject<Bool>(value: false)
+    public var isBluetoothEnabled: StateSignal<Bool> {
+        return isBluetoothEnabledSubject.asSignal()
+    }
+
+    private let isBluetoothEnabledSubject = BehaviorSubject(value: true)
 
     // MARK: - Discovery
 
-    public let discoveryChange = ChangeSubject<DiscoveryChange>(state: [:])
+    public var discoveryChange: ChangeSignal<DiscoveryChange> {
+        return discoveryChangeSubject.asSignal()
+    }
+
+    private let discoveryChangeSubject = ChangeSubject<DiscoveryChange>(state: [:])
 
     // MARK: - Connection
 
-    public let connectionChange = ChangeSubject<ConnectionChange>(state: .disconnected)
+    public var connectionChange: ChangeSignal<ConnectionChange> {
+        return connectionChangeSubject.asSignal()
+    }
+
+    private let connectionChangeSubject = ChangeSubject<ConnectionChange>(state: .disconnected)
 
     // MARK: - Service
 
-    public let receivedServiceGrantTriggerForStatus = PublishSubject<(status: ServiceGrantTriggerStatus?, error: String?)>()
+    public var receivedServiceGrantTriggerForStatus: EventSignal<(status: ServiceGrantTriggerStatus?, error: String?)> {
+        return receivedServiceGrantTriggerForStatusSubject.asSignal()
+    }
+
+    private let receivedServiceGrantTriggerForStatusSubject = PublishSubject<(status: ServiceGrantTriggerStatus?, error: String?)>()
 
     // MARK: - Actions
 
@@ -111,23 +127,23 @@ public class SimulatableBLEManager: BLEManagerType {
 
         let disposeBag = DisposeBag()
 
-        manager.isBluetoothEnabled.subscribeNext { [weak self] enabled in
-            self?.isBluetoothEnabled.onNext(enabled)
+        manager.isBluetoothEnabled.subscribe { [weak self] enabled in
+            self?.isBluetoothEnabledSubject.onNext(enabled)
         }
         .disposed(by: disposeBag)
 
-        manager.discoveryChange.subscribeNext { [weak self] change in
-            self?.discoveryChange.onNext(change)
+        manager.discoveryChange.subscribe { [weak self] change in
+            self?.discoveryChangeSubject.onNext(change)
         }
         .disposed(by: disposeBag)
 
-        manager.connectionChange.subscribeNext { [weak self] change in
-            self?.connectionChange.onNext(change)
+        manager.connectionChange.subscribe { [weak self] change in
+            self?.connectionChangeSubject.onNext(change)
         }
         .disposed(by: disposeBag)
 
-        manager.receivedServiceGrantTriggerForStatus.subscribeNext { [weak self] result in
-            self?.receivedServiceGrantTriggerForStatus.onNext(result)
+        manager.receivedServiceGrantTriggerForStatus.subscribe { [weak self] result in
+            self?.receivedServiceGrantTriggerForStatusSubject.onNext(result)
         }
         .disposed(by: disposeBag)
 

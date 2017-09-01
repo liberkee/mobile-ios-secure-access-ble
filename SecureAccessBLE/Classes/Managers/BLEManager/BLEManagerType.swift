@@ -25,22 +25,22 @@ public protocol BLEManagerType: class {
     // MARK: - Interface
 
     /// The bluetoothEnabled status
-    var isBluetoothEnabled: BehaviorSubject<Bool> { get }
+    var isBluetoothEnabled: StateSignal<Bool> { get }
 
     // MARK: - Discovery
 
     /// The state of SORC discovery with the action that led to this state
-    var discoveryChange: ChangeSubject<DiscoveryChange> { get }
+    var discoveryChange: ChangeSignal<DiscoveryChange> { get }
 
     // MARK: - Connection
 
     /// The state of the connection with the action that led to this state
-    var connectionChange: ChangeSubject<ConnectionChange> { get }
+    var connectionChange: ChangeSignal<ConnectionChange> { get }
 
     // MARK: - Service
 
     /// A service grant trigger was received
-    var receivedServiceGrantTriggerForStatus: PublishSubject<(status: ServiceGrantTriggerStatus?, error: String?)> { get }
+    var receivedServiceGrantTriggerForStatus: EventSignal<(status: ServiceGrantTriggerStatus?, error: String?)> { get }
 
     // MARK: - Actions
 

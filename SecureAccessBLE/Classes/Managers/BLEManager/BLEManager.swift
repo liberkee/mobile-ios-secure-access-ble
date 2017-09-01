@@ -110,25 +110,29 @@ public class BLEManager: NSObject, BLEManagerType {
 
     // MARK: Interface
 
-    public var isBluetoothEnabled: BehaviorSubject<Bool> {
+    public var isBluetoothEnabled: StateSignal<Bool> {
         return sorcManager.isBluetoothEnabled
     }
 
     // MARK: Discovery
 
-    public var discoveryChange: ChangeSubject<DiscoveryChange> {
+    public var discoveryChange: ChangeSignal<DiscoveryChange> {
         return sorcManager.discoveryChange
     }
 
     // MARK: Connection
 
-    public var connectionChange: ChangeSubject<ConnectionChange> {
+    public var connectionChange: ChangeSignal<ConnectionChange> {
         return sorcManager.connectionChange
     }
 
     // MARK: Service
 
-    public let receivedServiceGrantTriggerForStatus = PublishSubject<(status: ServiceGrantTriggerStatus?, error: String?)>()
+    public var receivedServiceGrantTriggerForStatus: EventSignal<(status: ServiceGrantTriggerStatus?, error: String?)> {
+        return receivedServiceGrantTriggerForStatusSubject.asSignal()
+    }
+
+    private let receivedServiceGrantTriggerForStatusSubject = PublishSubject<(status: ServiceGrantTriggerStatus?, error: String?)>()
 
     fileprivate let sorcManager: SorcManagerType
 
@@ -140,7 +144,7 @@ public class BLEManager: NSObject, BLEManagerType {
         self.sorcManager = sorcManager
         super.init()
 
-        sorcManager.serviceGrantResultReceived.subscribeNext { [weak self] result in
+        sorcManager.serviceGrantResultReceived.subscribe { [weak self] result in
             self?.handleServiceGrantResult(result)
         }
         .disposed(by: disposeBag)
@@ -195,7 +199,7 @@ public class BLEManager: NSObject, BLEManagerType {
         guard case .connected = sorcManager.connectionChange.state else { return }
 
         guard case let .success(response) = result else {
-            receivedServiceGrantTriggerForStatus.onNext(
+            receivedServiceGrantTriggerForStatusSubject.onNext(
                 (status: .triggerStatusUnkown, error: "Service grant result failure.")
             )
             return
@@ -237,7 +241,7 @@ public class BLEManager: NSObject, BLEManagerType {
         if status == .triggerStatusUnkown {
             print("BLEManager handleServiceGrantTrigger: Trigger status unknown.")
         }
-        receivedServiceGrantTriggerForStatus.onNext((status: status, error: nil))
+        receivedServiceGrantTriggerForStatusSubject.onNext((status: status, error: nil))
     }
 
     private func resultCodeForResponseData(_ data: String) -> FeatureResult {
