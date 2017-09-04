@@ -206,13 +206,25 @@ class SecurityManager: SecurityManagerType {
     }
 
     private func handleDataSent(result: Result<Data>) {
-        // TODO: PLAM-959 do we need this?
-        // When it goes wrong, do we retry or send the next one or close connection?
-        switch result {
-        case .success:
-            print("BLA sent data package")
-        case .failure:
-            print("BLA sent data package error")
+        switch connectionChange.state {
+        case .connecting(_, .challenging):
+            handleDataSentWhileChallenging(result: result)
+        case .connected:
+            handleDataSentWhileConnected(result: result)
+        default:
+            return
+        }
+    }
+
+    private func handleDataSentWhileChallenging(result: Result<Data>) {
+        if case .failure = result {
+            disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
+        }
+    }
+
+    private func handleDataSentWhileConnected(result: Result<Data>) {
+        if case let .failure(error) = result {
+            messageReceived.onNext(.failure(error))
         }
     }
 

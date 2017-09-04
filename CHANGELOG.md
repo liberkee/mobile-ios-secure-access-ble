@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [2.0.0] - Unreleased
 
 ### Added
+- 2017-09-04 : (PLAM-1374)  : Added error handling for sending and receiving data
+
 ### Changed
 - 2017-08-14 : (PLAM-964)   : Rename `SID` to `SORC`
 - 2017-08-14 : (PLAM-962)   : Provide proper actions for disconnected state in `BLEManager`

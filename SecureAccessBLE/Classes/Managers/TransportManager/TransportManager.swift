@@ -186,8 +186,6 @@ class TransportManager: TransportManagerType {
     }
 
     private func handleSentData(error: Error?) {
-        // TODO: PLAM-1374 handle error
-
         if let error = error {
             resetSendingPackage()
             dataSent.onNext(.failure(error))
@@ -251,7 +249,6 @@ class TransportManager: TransportManagerType {
     }
 
     private func handleReceivedDataError(_ error: Error) {
-        // TODO: PLAM-1374 handle error
         print("BLA handleReceivedData error")
 
         if case let .connecting(sorcID, .requestingMTU) = connectionChange.state {

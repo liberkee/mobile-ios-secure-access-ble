@@ -210,13 +210,8 @@ class SessionManager: SessionManagerType {
     }
 
     private func handleMessageSent(result: Result<SorcMessage>) {
-        // TODO: PLAM-959 do we need this?
-        // When it goes wrong, do we retry or send the next one or close connection?
-        switch result {
-        case .success:
-            NSLog("BLA sent message")
-        case .failure:
-            NSLog("BLA sent message error")
+        if case .failure = result, lastMessageSent?.id == .serviceGrant {
+            serviceGrantResultReceived.onNext(.failure(.sendingFailed))
         }
     }
 
