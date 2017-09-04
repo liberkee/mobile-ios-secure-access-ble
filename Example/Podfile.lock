@@ -9,23 +9,26 @@ PODS:
     - CommonUtils (~> 0.0.5)
     - CryptoSwift (= 0.6.7)
   - SwiftFormat/CLI (0.29.4)
+  - SwiftLint (0.22.0)
 
 DEPENDENCIES:
   - SecureAccessBLE (from `../`)
   - SwiftFormat/CLI
+  - SwiftLint
 
 EXTERNAL SOURCES:
   SecureAccessBLE:
-    :path: ../
+    :path: "../"
 
 SPEC CHECKSUMS:
   CommonUtils: e699cb0bf3fd6598ace78bc8ad558b4e715b814b
   CryptoSwift: 685ae257941e5447474348a2b545583e1a16b573
   KeychainAccess: a986406022dfc7c634c691ad3bec670cc6a32002
-  ObjectMapper: 042708195cc46c20871cbcbec0453826398273fd
+  ObjectMapper: '042708195cc46c20871cbcbec0453826398273fd'
   SecureAccessBLE: b65a8f5750fe9b269e1b065e31e5b860ceab54ea
   SwiftFormat: 9622786b0f3f23ddb57f151a114e81f32285e11b
+  SwiftLint: 1134786caedd2caab0560d2f36b76414a5a56808
 
-PODFILE CHECKSUM: ee47eafbcee3134a8c497577d1904b09754c813c
+PODFILE CHECKSUM: 6175b3c721e08b101cfdd7b3cf5080d02813c59a
 
 COCOAPODS: 1.2.1

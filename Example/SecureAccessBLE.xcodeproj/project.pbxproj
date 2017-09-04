@@ -325,6 +325,7 @@
 				607FACE31AFB9204008FA782 /* Resources */,
 				2BA5EF7B8784A3EBF3432720 /* [CP] Embed Pods Frameworks */,
 				6633209C33D8BFA868007188 /* [CP] Copy Pods Resources */,
+				992167D31F5D93B0005D1C67 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -426,6 +427,19 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		992167D31F5D93B0005D1C67 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/SwiftLint/swiftlint\" --config ../.swiftlint.yml";
 		};
 		E58008D51EC9A8020000F40D /* Run SwiftFormat */ = {
 			isa = PBXShellScriptBuildPhase;
