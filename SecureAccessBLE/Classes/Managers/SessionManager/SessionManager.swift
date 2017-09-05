@@ -8,7 +8,7 @@
 import Foundation
 import CommonUtils
 
-/// Sends and receives SORC messages. Handles encryption/decryption.
+/// Sends and receives service messages. Manages heartbeats.
 class SessionManager: SessionManagerType {
 
     let connectionChange = ChangeSubject<ConnectionChange>(state: .disconnected)
@@ -24,8 +24,13 @@ class SessionManager: SessionManagerType {
     private var sendHeartbeatsTimer: Timer?
     private var checkHeartbeatsResponseTimer: Timer?
     private var lastHeartbeatResponseDate = Date()
+    
+    /// Used to know how to handle a response based on what we sent before
     private var lastMessageSent: SorcMessage?
+    
     private var waitingForResponse = false
+    
+    /// Used to know what action we need to send out after disconnect on lower layers happened
     private var actionLeadingToDisconnect: ConnectionChange.Action?
 
     private let maximumEnqueuedMessages = 3

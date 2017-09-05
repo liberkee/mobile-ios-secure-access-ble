@@ -31,6 +31,7 @@ class TransportManager: TransportManagerType {
     private let connectionManager: ConnectionManagerType
     private let disposeBag = DisposeBag()
 
+    /// Used to know what action we need to send out after disconnect on lower layers happened
     private var actionLeadingToDisconnect: TransportConnectionChange.Action?
 
     init(connectionManager: ConnectionManagerType) {

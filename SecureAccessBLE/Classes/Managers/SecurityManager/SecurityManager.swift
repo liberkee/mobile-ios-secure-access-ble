@@ -33,6 +33,7 @@ class SecurityManager: SecurityManagerType {
     private var cryptoManager: CryptoManager = ZeroSecurityManager()
     private let disposeBag = DisposeBag()
 
+    /// Used to know what action we need to send out after disconnect on lower layers happened
     private var actionLeadingToDisconnect: SecureConnectionChange.Action?
 
     init(transportManager: TransportManagerType) {
