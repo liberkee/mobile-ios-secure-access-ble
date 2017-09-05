@@ -10,11 +10,19 @@ import Foundation
 /// A lease token blob used in establishing a connection to a SORC
 public struct LeaseTokenBlob: Equatable {
 
+    enum Error: Swift.Error {
+        case dataIsEmpty
+    }
+
     public let messageCounter: Int
     public let data: String
 
-    public init(messageCounter: Int, data: String) {
+    public init(messageCounter: Int, data: String) throws {
         self.messageCounter = messageCounter
+
+        guard !data.isEmpty else {
+            throw Error.dataIsEmpty
+        }
         self.data = data
     }
 

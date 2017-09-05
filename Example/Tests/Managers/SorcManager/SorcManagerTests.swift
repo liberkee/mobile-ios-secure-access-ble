@@ -183,8 +183,8 @@ class SorcManagerTests: XCTestCase {
     func test_connectToSorc_itDelegatesTheCallToSessionManager() {
 
         // Given
-        let leaseToken = LeaseToken(id: "id", leaseID: "leaseID", sorcID: "sorcID", sorcAccessKey: "key")
-        let leaseTokenBlob = LeaseTokenBlob(messageCounter: 1, data: "")
+        let leaseToken = try! LeaseToken(id: "id", leaseID: "leaseID", sorcID: "sorcID", sorcAccessKey: "key")
+        let leaseTokenBlob = try! LeaseTokenBlob(messageCounter: 1, data: "1a")
 
         // When
         sorcManager.connectToSorc(leaseToken: leaseToken, leaseTokenBlob: leaseTokenBlob)

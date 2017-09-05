@@ -20,14 +20,14 @@ class SecurityManager: SecurityManagerType {
     let messageSent = PublishSubject<Result<SorcMessage>>()
     let messageReceived = PublishSubject<Result<SorcMessage>>()
 
-    private var challenger: ChallengeService?
+    private var challenger: Challenger?
 
-    private var leaseID: String = ""
-    private var leaseTokenID: String = ""
-    private var sorcAccessKey: String = ""
-    fileprivate var sorcID: SorcID = ""
-    private var blobData: String? = ""
-    fileprivate var blobCounter: Int = 0
+    private var leaseToken: LeaseToken?
+    fileprivate var leaseTokenBlob: LeaseTokenBlob?
+
+    fileprivate var sorcID: SorcID? {
+        return leaseToken?.sorcID
+    }
 
     private let transportManager: TransportManagerType
     private var cryptoManager: CryptoManager = ZeroSecurityManager()
@@ -60,12 +60,9 @@ class SecurityManager: SecurityManagerType {
             || connectionChange.state == .connecting(sorcID: leaseToken.sorcID, state: .physical)
         else { return }
 
-        sorcID = leaseToken.sorcID
-        leaseTokenID = leaseToken.id
-        leaseID = leaseToken.leaseID
-        sorcAccessKey = leaseToken.sorcAccessKey
-        blobData = leaseTokenBlob.data
-        blobCounter = leaseTokenBlob.messageCounter
+        self.leaseToken = leaseToken
+        self.leaseTokenBlob = leaseTokenBlob
+        let sorcID = leaseToken.sorcID
 
         if connectionChange.state == .disconnected {
             connectionChange.onNext(.init(
@@ -159,36 +156,30 @@ class SecurityManager: SecurityManagerType {
     // MARK: - Challenging
 
     private func establishCrypto() {
-        if sorcID.isEmpty || sorcAccessKey.isEmpty {
+        guard let leaseToken = leaseToken else { return }
+        let sorcID = leaseToken.sorcID
+        guard let challenger = Challenger(leaseToken: leaseToken) else {
             disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
             return
         }
-        challenger = ChallengeService(leaseID: leaseID, sorcID: sorcID, leaseTokenID: leaseTokenID, sorcAccessKey: sorcAccessKey)
-        challenger?.delegate = self
-        if challenger == nil {
-            disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
-            return
-        }
+        self.challenger = challenger
+        challenger.delegate = self
         do {
             connectionChange.onNext(.init(
                 state: .connecting(sorcID: sorcID, state: .challenging),
                 action: .transportConnectionEstablished(sorcID: sorcID)
             ))
-            try challenger?.beginChallenge()
+            try challenger.beginChallenge()
         } catch {
             disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
         }
     }
 
     fileprivate func sendBlob() {
-        if blobData?.isEmpty == false {
-            if let payload = LTBlobPayload(blobData: blobData!) {
-                let message = SorcMessage(id: .ltBlob, payload: payload)
-                sendMessageInternal(message)
-            } else {
-                print("BLA Blob data error")
-                disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
-            }
+        guard let sorcID = self.sorcID, let blobData = leaseTokenBlob?.data else { return }
+        if let payload = LTBlobPayload(blobData: blobData) {
+            let message = SorcMessage(id: .ltBlob, payload: payload)
+            sendMessageInternal(message)
         } else {
             print("BLA Blob data error")
             disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
@@ -218,6 +209,7 @@ class SecurityManager: SecurityManagerType {
     }
 
     private func handleDataSentWhileChallenging(result: Result<Data>) {
+        guard let sorcID = self.sorcID else { return }
         if case .failure = result {
             disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
         }
@@ -241,6 +233,7 @@ class SecurityManager: SecurityManagerType {
     }
 
     private func handleDataReceivedWhileChallenging(result: Result<Data>) {
+        guard let sorcID = self.sorcID else { return }
         guard case let .success(data) = result else {
             disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
             return
@@ -255,8 +248,9 @@ class SecurityManager: SecurityManagerType {
                 disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
             }
         case .ltBlobRequest:
+            guard let messageCounter = leaseTokenBlob?.messageCounter else { return }
             let payload = BlobRequest(rawData: message.message)
-            if blobCounter > payload.blobMessageID {
+            if messageCounter > payload.blobMessageID {
                 sendBlob()
             }
         default: break
@@ -276,15 +270,16 @@ class SecurityManager: SecurityManagerType {
     }
 }
 
-// MARK: - ChallengeServiceDelegate
+// MARK: - ChallengerDelegate
 
-extension SecurityManager: ChallengeServiceDelegate {
+extension SecurityManager: ChallengerDelegate {
 
     func challengerWantsSendMessage(_ message: SorcMessage) {
         sendMessageInternal(message)
     }
 
     func challengerFinishedWithSessionKey(_ key: [UInt8]) {
+        guard let sorcID = self.sorcID else { return }
         enableEncryption(withSessionKey: key)
         connectionChange.onNext(.init(
             state: .connected(sorcID: sorcID),
@@ -293,12 +288,13 @@ extension SecurityManager: ChallengeServiceDelegate {
     }
 
     func challengerAbort(_: ChallengeError) {
+        guard let sorcID = self.sorcID else { return }
         disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
     }
 
     func challengerNeedsSendBlob(latestBlobCounter: Int?) {
-
-        guard latestBlobCounter == nil || blobCounter >= latestBlobCounter! else {
+        guard let sorcID = self.sorcID, let messageCounter = leaseTokenBlob?.messageCounter else { return }
+        guard latestBlobCounter == nil || messageCounter >= latestBlobCounter! else {
             disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .blobOutdated))
             return
         }

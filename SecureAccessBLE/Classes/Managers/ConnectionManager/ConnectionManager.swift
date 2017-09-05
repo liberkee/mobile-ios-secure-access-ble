@@ -59,10 +59,12 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     let dataSent = PublishSubject<Error?>()
     let dataReceived = PublishSubject<Result<Data>>()
 
-    fileprivate let deviceID = "EF82084D-BFAD-4ABE-90EE-2552C20C5765"
     fileprivate let serviceID = "d1cf0603-b501-4569-a4b9-e47ad3f628a5"
     fileprivate let notifyCharacteristicID = "d1d7a6b6-457e-458a-b237-a9df99b3d98b"
     fileprivate let writeCharacteristicID = "c8e58f23-9417-41c6-97a8-70f6b2c8cab9"
+
+    /// The duration a SORC is considered outdated if last discovery date is longer ago than this duration
+    private let sorcOutdatedDurationSeconds: Double = 5
 
     fileprivate var writeCharacteristic: CBCharacteristicType?
     fileprivate var notifyCharacteristic: CBCharacteristicType?
@@ -74,9 +76,6 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     fileprivate var filterTimer: Timer?
 
     private let appActivityStatusProvider: AppActivityStatusProviderType
-
-    /// The duration a SORC is considered outdated if last discovery date is longer ago than this duration
-    private let sorcOutdatedDurationSeconds: Double = 5
 
     /// The SORCs that were discovered and were not removed by the filterTimer
     fileprivate var discoveredSorcs = [SorcID: DiscoveredSorc]()

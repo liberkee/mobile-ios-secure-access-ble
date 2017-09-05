@@ -194,7 +194,7 @@ class ConnectionManagerTests: XCTestCase {
         XCTAssertTrue(connectionManager.discoveryChange.state.discoveryIsEnabled)
     }
 
-    func test_startDiscovery_ifCentralManagerIsNotPoweredOn_nothingIsCalled() {
+    func test_startDiscovery_ifCentralManagerIsNotPoweredOn_nothingIsCalledAndDiscoveryIsEnabled() {
 
         // Given
         centralManager.state = .poweredOff
@@ -205,7 +205,7 @@ class ConnectionManagerTests: XCTestCase {
 
         // Then
         XCTAssertNil(centralManager.scanForPeripheralsCalledWithArguments)
-        XCTAssertFalse(connectionManager.discoveryChange.state.discoveryIsEnabled)
+        XCTAssertTrue(connectionManager.discoveryChange.state.discoveryIsEnabled)
     }
 
     func test_stopDiscovery_stopsScanOnCentralAndDiscoveryIsNotEnabled() {

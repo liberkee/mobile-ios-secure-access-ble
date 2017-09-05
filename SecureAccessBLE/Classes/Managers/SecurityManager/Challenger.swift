@@ -1,5 +1,5 @@
 //
-//  ChallengeService.swift
+//  Challenger.swift
 //  SecureAccessBLE
 //
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
@@ -31,7 +31,7 @@ enum ChallengeError: Error {
 /**
  *  All delegate functions, the BLE-Challenger offers
  */
-protocol ChallengeServiceDelegate {
+protocol ChallengerDelegate: class {
     /**
      Challenger reports need to send message
 
@@ -60,7 +60,7 @@ protocol ChallengeServiceDelegate {
 }
 
 /**
- *  BLE ChallengeService provides a mutual challenge / response mechanism.
+ *  BLE Challenger provides a mutual challenge / response mechanism.
  *  The challenge response mecfhanism shall mutually authenticate SORC and smart device.
  *  A session key will be resulted to encrypt the SORC smart device communication.
  *  prerequistite shall be that the smart device and SORC posses a symmetric pre-shared key, that
@@ -91,7 +91,7 @@ protocol ChallengeServiceDelegate {
  *
  *  note: || indicates concatenation and a[i...j] indicates the bytes 'i' to 'j' of an array a
  */
-struct ChallengeService {
+class Challenger {
     /// random generated
     fileprivate var nc: [UInt8]
     /// original data
@@ -116,7 +116,7 @@ struct ChallengeService {
     /// Default cryptor
     fileprivate let crypto: AES
     /// Challenger Service Delegate object
-    var delegate: ChallengeServiceDelegate?
+    weak var delegate: ChallengerDelegate?
 
     /**
      init function for BLE Challenger object
@@ -128,11 +128,11 @@ struct ChallengeService {
 
      - returns: new object for BLE Challenger
      */
-    init?(leaseID: String, sorcID: SorcID, leaseTokenID: String, sorcAccessKey: String) {
-        self.leaseID = leaseID
-        self.sorcID = sorcID
-        self.leaseTokenID = leaseTokenID
-        self.sorcAccessKey = sorcAccessKey
+    init?(leaseToken: LeaseToken) {
+        leaseID = leaseToken.leaseID
+        sorcID = leaseToken.sorcID
+        leaseTokenID = leaseToken.id
+        sorcAccessKey = leaseToken.sorcAccessKey
 
         //        self.nc = [0x0F,0x0E,0x0D,0x0C,0x0B,0x0A,0x09,0x08,0x07,0x06,0x05,0x04,0x03,0x02,0x01,0x01] as [UInt8]
         nc = AES.randomIV(16)
@@ -156,7 +156,7 @@ struct ChallengeService {
 
      - throws: Challenger Error if Encryption failed
      */
-    mutating func beginChallenge() throws {
+    func beginChallenge() throws {
         do {
             //            print ("begin to challenge with nc: \(Data.withBytes(self.nc))")
             try b0 = crypto.encrypt(nc)
@@ -177,7 +177,7 @@ struct ChallengeService {
 
      - throws:
      */
-    mutating func handleReceivedChallengerMessage(_ message: SorcMessage) throws {
+    func handleReceivedChallengerMessage(_ message: SorcMessage) throws {
         print("Resonse message with id:\(message.id)")
         switch message.id {
         case .ltAck:
@@ -209,7 +209,7 @@ struct ChallengeService {
 
      - throws: nothing
      */
-    fileprivate mutating func continueChallenge(_ response: SorcMessage) throws {
+    fileprivate func continueChallenge(_ response: SorcMessage) throws {
         let message = SorcToPhoneResponse(rawData: response.message)
         if message.b1.count == 0 || message.b2.count == 0 {
             throw ChallengeError.challengeResponseIsCorrupt
