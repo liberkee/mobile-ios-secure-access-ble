@@ -10,7 +10,7 @@ jazzy \
   --clean \
   --author 'Huf Secure Mobile GmbH' \
   --github_url "https://github.com/hufsm/mobile-ios-ble" \
-  --xcodebuild-arguments -workspace,./../Example/SecureAccessBLE.xcworkspace,-scheme,SecureAccessBLE \
+  --xcodebuild-arguments -workspace,./../Example/SecureAccessBLE.xcworkspace,-scheme,SecureAccessBLE-Example \
   --module 'SecureAccessBLE' \
   --output '../Docs' \
   --min-acl 'internal' # Could also be 'private'
