@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [2.0.0] - Unreleased
 
 ### Added
+- 2017-09-05 : (PLAM-1455)  : Resume scanning after app did enter foreground
 - 2017-09-04 : (PLAM-1374)  : Added error handling for sending and receiving data
 
 ### Changed

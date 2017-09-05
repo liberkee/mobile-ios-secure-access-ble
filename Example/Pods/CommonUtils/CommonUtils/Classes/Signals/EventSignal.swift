@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import CommonUtils
 
 /// A signal that sends events
 public class EventSignal<Event> {

@@ -19,7 +19,20 @@ private class MockBluetoothStatusProvider: BluetoothStatusProviderType {
 }
 
 private class MockScanner: ScannerType {
-    let discoveryChange = ChangeSubject<DiscoveryChange>(state: [:])
+    let discoveryChange = ChangeSubject<DiscoveryChange>(state: .init(
+        discoveredSorcs: SorcInfos(),
+        discoveryIsEnabled: false
+    ))
+
+    var startDiscoveryCalled = false
+    func startDiscovery() {
+        startDiscoveryCalled = true
+    }
+
+    var stopDiscoveryCalled = false
+    func stopDiscovery() {
+        stopDiscoveryCalled = true
+    }
 }
 
 private class MockSessionManager: SessionManagerType {
@@ -113,18 +126,37 @@ class SorcManagerTests: XCTestCase {
         XCTAssertTrue(receivedStatus!)
     }
 
+    func test_startDiscovery_delegatesCallToScanner() {
+
+        // When
+        sorcManager.startDiscovery()
+
+        // Then
+        XCTAssertTrue(scanner.startDiscoveryCalled)
+    }
+
+    func test_stopDiscovery_delegatesCallToScanner() {
+
+        // When
+        sorcManager.stopDiscovery()
+
+        // Then
+        XCTAssertTrue(scanner.stopDiscoveryCalled)
+    }
+
     func test_discoveryChange_ifScannerHasDiscoveredSorcs_itContainsDiscoveredSorcs() {
 
         // Given
         let sorcInfo = SorcInfo.stableTestInstance
-        let scannerDiscoveredSorcs = [sorcInfo.sorcID: sorcInfo]
-        scanner.discoveryChange.onNext(.init(state: scannerDiscoveredSorcs, action: .initial))
+        let scannerDiscoveredSorcs = SorcInfos([sorcInfo.sorcID: sorcInfo])
+        let newState = DiscoveryChange.State(discoveredSorcs: scannerDiscoveredSorcs, discoveryIsEnabled: true)
+        scanner.discoveryChange.onNext(.init(state: newState, action: .initial))
 
         // When
-        let discoveredSorcs = sorcManager.discoveryChange.state
+        let actualState = sorcManager.discoveryChange.state
 
         // Then
-        XCTAssertEqual(discoveredSorcs, scannerDiscoveredSorcs)
+        XCTAssertEqual(actualState, newState)
     }
 
     func test_discoveryChange_ifScannerDiscoversNewSorc_itNotifiesNewDiscoveredSorc() {
@@ -137,7 +169,9 @@ class SorcManagerTests: XCTestCase {
 
         let newSorcInfo = SorcInfo.stableTestInstance
         let newSorcID = newSorcInfo.sorcID
-        let change = DiscoveryChange(state: [newSorcID: newSorcInfo], action: .discovered(sorcID: newSorcID))
+        let discoveredSorcs = SorcInfos([newSorcID: newSorcInfo])
+        let newState = DiscoveryChange.State(discoveredSorcs: discoveredSorcs, discoveryIsEnabled: true)
+        let change = DiscoveryChange(state: newState, action: .discovered(sorcID: newSorcID))
 
         // When
         scanner.discoveryChange.onNext(change)

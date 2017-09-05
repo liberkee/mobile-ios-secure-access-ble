@@ -50,7 +50,10 @@ private extension CBManagerState {
 class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProviderType, ScannerType {
 
     let isBluetoothEnabled: BehaviorSubject<Bool>
-    let discoveryChange = ChangeSubject<DiscoveryChange>(state: [:])
+    let discoveryChange = ChangeSubject<DiscoveryChange>(state: .init(
+        discoveredSorcs: SorcInfos(),
+        discoveryIsEnabled: false
+    ))
     let connectionChange = ChangeSubject<PhysicalConnectionChange>(state: .disconnected)
 
     let dataSent = PublishSubject<Error?>()
@@ -70,11 +73,15 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     /// Timer to remove outdated discovered SORCs
     fileprivate var filterTimer: Timer?
 
+    private let appActivityStatusProvider: AppActivityStatusProviderType
+
     /// The duration a SORC is considered outdated if last discovery date is longer ago than this duration
     private let sorcOutdatedDurationSeconds: Double = 5
 
     /// The SORCs that were discovered and were not removed by the filterTimer
     fileprivate var discoveredSorcs = [SorcID: DiscoveredSorc]()
+
+    private let disposeBag = DisposeBag()
 
     fileprivate var connectedSorc: DiscoveredSorc? {
         if case let .connected(sorcID) = connectionState {
@@ -87,40 +94,42 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
         return connectionChange.state
     }
 
-    required init(centralManager: CBCentralManagerType, systemClock: SystemClockType,
-                  createTimer: CreateTimer) {
+    required init(
+        centralManager: CBCentralManagerType,
+        systemClock: SystemClockType,
+        createTimer: CreateTimer,
+        appActivityStatusProvider: AppActivityStatusProviderType
+    ) {
 
         self.systemClock = systemClock
         isBluetoothEnabled = BehaviorSubject(value: centralManager.state == .poweredOn)
+        self.appActivityStatusProvider = appActivityStatusProvider
         super.init()
 
         self.centralManager = centralManager
         centralManager.delegate = self
 
         filterTimer = createTimer(removeOutdatedSorcs)
-    }
 
-    convenience override init() {
-        let centralManager = CBCentralManager(delegate: nil, queue: nil,
-                                              options: [CBPeripheralManagerOptionShowPowerAlertKey: 0])
-        let systemClock = SystemClock()
-
-        let createTimer: CreateTimer = { block in
-            /// The interval a timer is triggered to remove outdated discovered SORCs
-            let removeOutdatedSorcsTimerIntervalSeconds: Double = 2
-            return Timer(timeInterval: removeOutdatedSorcsTimerIntervalSeconds, repeats: true, block: { _ in block() })
+        _ = appActivityStatusProvider.appDidBecomeActive.subscribe { [weak self] in
+            self?.handleAppDidBecomeActive()
         }
-
-        self.init(
-            centralManager: centralManager,
-            systemClock: systemClock,
-            createTimer: createTimer
-        )
     }
 
     deinit {
         disconnect()
         filterTimer?.invalidate()
+    }
+
+    func startDiscovery() {
+        updateDiscoveryChange(action: .startDiscovery)
+        guard centralManager.state == .poweredOn else { return }
+        centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: 1])
+    }
+
+    func stopDiscovery() {
+        centralManager.stopScan()
+        updateDiscoveryChange(action: .stopDiscovery)
     }
 
     /// If a connection to an undiscovered SORC is tried it fails silently.
@@ -177,8 +186,10 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
         }
     }
 
-    fileprivate func startScan() {
-        centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: 1])
+    private func handleAppDidBecomeActive() {
+        if discoveryChange.state.discoveryIsEnabled {
+            startDiscovery()
+        }
     }
 
     private func removeOutdatedSorcs() {
@@ -211,13 +222,32 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     }
 
     fileprivate func updateDiscoveryChange(action: DiscoveryChange.Action) {
-        var sorcInfos = [SorcID: SorcInfo]()
-        for sorc in discoveredSorcs.values {
-            let sorcInfo = SorcInfo(discoveredSorc: sorc)
-            sorcInfos[sorcInfo.sorcID] = sorcInfo
+        // TODO: PLAM-1455 check if enabled or not
+        let state = discoveryChange.state
+        switch action {
+        case .startDiscovery:
+            guard !state.discoveryIsEnabled else { return }
+            discoveryChange.onNext(.init(
+                state: state.withDiscoveryIsEnabled(true),
+                action: action
+            ))
+        case .stopDiscovery:
+            guard state.discoveryIsEnabled else { return }
+            discoveryChange.onNext(.init(
+                state: state.withDiscoveryIsEnabled(false),
+                action: action
+            ))
+        default:
+            var sorcInfos = SorcInfos()
+            for sorc in discoveredSorcs.values {
+                let sorcInfo = SorcInfo(discoveredSorc: sorc)
+                sorcInfos[sorcInfo.sorcID] = sorcInfo
+            }
+            discoveryChange.onNext(.init(
+                state: .init(discoveredSorcs: sorcInfos, discoveryIsEnabled: state.discoveryIsEnabled),
+                action: action
+            ))
         }
-        let change = DiscoveryChange(state: sorcInfos, action: action)
-        discoveryChange.onNext(change)
     }
 
     fileprivate func peripheralMatchingSorcID(_ sorcID: SorcID) -> CBPeripheralType? {
@@ -233,8 +263,11 @@ extension ConnectionManager {
         consoleLog("ConnectionManager Central updated state: \(central.state)")
 
         isBluetoothEnabled.onNext(central.state == .poweredOn)
+
         if central.state == .poweredOn {
-            startScan()
+            if discoveryChange.state.discoveryIsEnabled {
+                startDiscovery()
+            }
         } else {
             resetDiscoveredSorcs()
         }
@@ -242,7 +275,8 @@ extension ConnectionManager {
 
     func centralManager_(_: CBCentralManagerType, didDiscover peripheral: CBPeripheralType,
                          advertisementData: [String: Any], rssi RSSI: NSNumber) {
-        guard let manufacturerData = advertisementData[CBAdvertisementDataManufacturerDataKey] as? Data,
+        guard discoveryChange.state.discoveryIsEnabled,
+            let manufacturerData = advertisementData[CBAdvertisementDataManufacturerDataKey] as? Data,
             let sorcID = manufacturerData.uuidString else { return }
 
         let sorc = DiscoveredSorc(sorcID: sorcID, peripheral: peripheral, discoveryDate: systemClock.now(), rssi: RSSI.intValue)

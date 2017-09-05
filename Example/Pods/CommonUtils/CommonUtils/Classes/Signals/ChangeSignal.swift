@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import CommonUtils
 
 /// A signal that sends out updates to its current change.
 /// On subscribe it sends out an initial action defined by `ChangeType.initalWithState(_:)`.

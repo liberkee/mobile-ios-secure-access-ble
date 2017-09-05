@@ -41,7 +41,7 @@
 		BDD2935451DD295A50BFBCF1 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		C28A7D5203261E30CA436EC3 /* SecureAccessBLE.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = SecureAccessBLE.podspec; path = ../SecureAccessBLE.podspec; sourceTree = "<group>"; };
 		D955D40F7C47731B2AA178ED /* Pods_SecureAccessBLE_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SecureAccessBLE_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E50403061F546FFF0008DF02 /* SorcManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SorcManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		E50403061F546FFF0008DF02 /* SorcManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SorcManager.swift; sourceTree = "<group>"; };
 		E504030A1F5553830008DF02 /* SorcManagerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SorcManagerType.swift; sourceTree = "<group>"; };
 		E504030B1F5553F50008DF02 /* ConnectionChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionChange.swift; sourceTree = "<group>"; };
 		E504030C1F5553F50008DF02 /* DiscoveryChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryChange.swift; sourceTree = "<group>"; };
@@ -56,11 +56,12 @@
 		E50403261F55C12D0008DF02 /* BluetoothStatusProviderType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BluetoothStatusProviderType.swift; sourceTree = "<group>"; };
 		E50403271F55C12D0008DF02 /* PhysicalConnectionChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicalConnectionChange.swift; sourceTree = "<group>"; };
 		E50403281F55C12D0008DF02 /* ScannerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScannerType.swift; sourceTree = "<group>"; };
-		E50403291F55C15E0008DF02 /* ConnectionManagerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ConnectionManagerType.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		E50403291F55C15E0008DF02 /* ConnectionManagerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ConnectionManagerType.swift; sourceTree = "<group>"; };
 		E504032B1F55C30D0008DF02 /* TransportManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = TransportManager.swift; sourceTree = "<group>"; };
 		E504032C1F55C32F0008DF02 /* TransportConnectionChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportConnectionChange.swift; sourceTree = "<group>"; };
 		E504032E1F56CEFA0008DF02 /* SecurityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityManager.swift; sourceTree = "<group>"; };
 		E504032F1F56CEFA0008DF02 /* SecurityManagerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityManagerType.swift; sourceTree = "<group>"; };
+		E50C4E901F5EDD050081B619 /* Dependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dependencies.swift; sourceTree = "<group>"; };
 		E55E6CDB1F4200E900C5934B /* Handshake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Handshake.swift; sourceTree = "<group>"; };
 		E55E6CDC1F4200E900C5934B /* MTUSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTUSize.swift; sourceTree = "<group>"; };
 		E55E6CDD1F4200E900C5934B /* SorcMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SorcMessage.swift; sourceTree = "<group>"; };
@@ -73,7 +74,7 @@
 		E5CF3ADB1F56FD51009C95A0 /* BoundedQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundedQueue.swift; sourceTree = "<group>"; };
 		E5CF3ADD1F56FDBC009C95A0 /* BoundedQueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoundedQueueTests.swift; sourceTree = "<group>"; };
 		E5CF3ADF1F585024009C95A0 /* SecureConnectionChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureConnectionChange.swift; sourceTree = "<group>"; };
-		E5CF3AE01F586E74009C95A0 /* ConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ConnectionManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		E5CF3AE01F586E74009C95A0 /* ConnectionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ConnectionManager.swift; sourceTree = "<group>"; };
 		E5CF3AE11F586E74009C95A0 /* ConnectionManagerExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionManagerExtensions.swift; sourceTree = "<group>"; };
 		E5CF3AE21F586EB7009C95A0 /* ConnectionManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ConnectionManagerTests.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		E5CF3AE51F586EF4009C95A0 /* SecurityManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecurityManagerTests.swift; sourceTree = "<group>"; };
@@ -84,6 +85,8 @@
 		E5CF3AEE1F58708D009C95A0 /* ChallengeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChallengeService.swift; sourceTree = "<group>"; };
 		E5CF3AEF1F587164009C95A0 /* ChallengeServiceTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChallengeServiceTests.swift; sourceTree = "<group>"; };
 		E5E308D21F324E6800C1537F /* CBWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBWrapper.swift; sourceTree = "<group>"; };
+		E5E8F8EE1F5EAE9700B629A5 /* AppActivityStatusProviderType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppActivityStatusProviderType.swift; sourceTree = "<group>"; };
+		E5E8F8EF1F5EAF2800B629A5 /* AppActivityStatusProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppActivityStatusProvider.swift; sourceTree = "<group>"; };
 		EE99F13EBAEE0CDC40DBE8F5 /* Pods-SecureAccessBLE_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -123,10 +126,13 @@
 		46B760761DA2637D003ADDB1 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				E50C4E901F5EDD050081B619 /* Dependencies.swift */,
 				46B760771DA2637D003ADDB1 /* BLEHelper.swift */,
 				E565092C1F3333C1002771F8 /* SystemClock.swift */,
 				E59E016D1F38B295006F114D /* Result.swift */,
 				E5CF3ADB1F56FD51009C95A0 /* BoundedQueue.swift */,
+				E5E8F8EE1F5EAE9700B629A5 /* AppActivityStatusProviderType.swift */,
+				E5E8F8EF1F5EAF2800B629A5 /* AppActivityStatusProvider.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";

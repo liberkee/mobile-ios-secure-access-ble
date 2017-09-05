@@ -23,6 +23,12 @@ public protocol SorcManagerType {
     /// The state of SORC discovery with the action that led to this state
     var discoveryChange: ChangeSignal<DiscoveryChange> { get }
 
+    /// Starts discovery of SORCs
+    func startDiscovery()
+
+    /// Stops discovery of SORCs
+    func stopDiscovery()
+
     // MARK: - Connection
 
     /// The state of the connection with the action that led to this state

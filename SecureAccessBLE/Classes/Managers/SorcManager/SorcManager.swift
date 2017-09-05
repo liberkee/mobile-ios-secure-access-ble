@@ -9,6 +9,10 @@ import CommonUtils
 
 public class SorcManager: SorcManagerType {
 
+    public static func make() -> SorcManager {
+        return Dependencies.shared.makeSorcManager()
+    }
+
     private let bluetoothStatusProvider: BluetoothStatusProviderType
     private let scanner: ScannerType
     private let sessionManager: SessionManagerType
@@ -29,19 +33,6 @@ public class SorcManager: SorcManagerType {
         return sessionManager.serviceGrantResultReceived.asSignal()
     }
 
-    public convenience init() {
-        let connectionManager = ConnectionManager()
-        let transportManager = TransportManager(connectionManager: connectionManager)
-        let securityManager = SecurityManager(transportManager: transportManager)
-        let sessionManager = SessionManager(securityManager: securityManager)
-
-        self.init(
-            bluetoothStatusProvider: connectionManager,
-            scanner: connectionManager,
-            sessionManager: sessionManager
-        )
-    }
-
     init(
         bluetoothStatusProvider: BluetoothStatusProviderType,
         scanner: ScannerType,
@@ -50,6 +41,14 @@ public class SorcManager: SorcManagerType {
         self.bluetoothStatusProvider = bluetoothStatusProvider
         self.scanner = scanner
         self.sessionManager = sessionManager
+    }
+
+    public func startDiscovery() {
+        scanner.startDiscovery()
+    }
+
+    public func stopDiscovery() {
+        scanner.stopDiscovery()
     }
 
     public func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob) {

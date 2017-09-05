@@ -10,10 +10,10 @@ import CommonUtils
 /// A change (state and last action) that describes the discovery transitions
 public struct DiscoveryChange: ChangeType {
 
-    public let state: [SorcID: SorcInfo]
+    public let state: State
     public let action: Action
 
-    public static func initialWithState(_ state: [SorcID: SorcInfo]) -> DiscoveryChange {
+    public static func initialWithState(_ state: State) -> DiscoveryChange {
         return DiscoveryChange(state: state, action: .initial)
     }
 
@@ -21,8 +21,42 @@ public struct DiscoveryChange: ChangeType {
         self.state = state
         self.action = action
     }
+}
 
-    public enum Action {
+extension DiscoveryChange: Equatable {
+
+    public static func ==(lhs: DiscoveryChange, rhs: DiscoveryChange) -> Bool {
+        return lhs.state == rhs.state
+            && lhs.action == rhs.action
+    }
+}
+
+extension DiscoveryChange {
+
+    public struct State: Equatable {
+
+        public let discoveredSorcs: SorcInfos
+        public let discoveryIsEnabled: Bool
+
+        public static func ==(lhs: State, rhs: State) -> Bool {
+            return lhs.discoveredSorcs == rhs.discoveredSorcs
+                && lhs.discoveryIsEnabled == rhs.discoveryIsEnabled
+        }
+
+        public init(discoveredSorcs: SorcInfos, discoveryIsEnabled: Bool) {
+            self.discoveredSorcs = discoveredSorcs
+            self.discoveryIsEnabled = discoveryIsEnabled
+        }
+
+        public func withDiscoveryIsEnabled(_ enabled: Bool) -> State {
+            return State(discoveredSorcs: discoveredSorcs, discoveryIsEnabled: enabled)
+        }
+    }
+}
+
+extension DiscoveryChange {
+
+    public enum Action: Equatable {
         case initial
 
         /// The SORC was discovered
@@ -45,29 +79,58 @@ public struct DiscoveryChange: ChangeType {
 
         /// Discovered SORCs were cleared
         case reset
-    }
-}
 
-extension DiscoveryChange: Equatable {
+        case startDiscovery
 
-    public static func ==(lhs: DiscoveryChange, rhs: DiscoveryChange) -> Bool {
-        return lhs.state == rhs.state
-            && lhs.action == rhs.action
-    }
-}
+        case stopDiscovery
 
-extension DiscoveryChange.Action: Equatable {
-
-    public static func ==(lhs: DiscoveryChange.Action, rhs: DiscoveryChange.Action) -> Bool {
-        switch (lhs, rhs) {
-        case (.initial, .initial): return true
-        case let (.discovered(lSorcID), .discovered(rSorcID)) where lSorcID == rSorcID: return true
-        case let (.rediscovered(lSorcID), .rediscovered(rSorcID)) where lSorcID == rSorcID: return true
-        case let (.lost(lSorcIDs), .lost(rSorcIDs)) where lSorcIDs == rSorcIDs: return true
-        case let (.disconnect(lSorcID), .disconnect(rSorcID)) where lSorcID == rSorcID: return true
-        case let (.disconnected(lSorcID), .disconnected(rSorcID)) where lSorcID == rSorcID: return true
-        case (.reset, .reset): return true
-        default: return false
+        public static func ==(lhs: Action, rhs: Action) -> Bool {
+            switch (lhs, rhs) {
+            case (.initial, .initial): return true
+            case let (.discovered(lSorcID), .discovered(rSorcID)) where lSorcID == rSorcID: return true
+            case let (.rediscovered(lSorcID), .rediscovered(rSorcID)) where lSorcID == rSorcID: return true
+            case let (.lost(lSorcIDs), .lost(rSorcIDs)) where lSorcIDs == rSorcIDs: return true
+            case let (.disconnect(lSorcID), .disconnect(rSorcID)) where lSorcID == rSorcID: return true
+            case let (.disconnected(lSorcID), .disconnected(rSorcID)) where lSorcID == rSorcID: return true
+            case (.reset, .reset): return true
+            case (.startDiscovery, .startDiscovery): return true
+            case (.stopDiscovery, .stopDiscovery): return true
+            default: return false
+            }
         }
+    }
+}
+
+public struct SorcInfos: Equatable {
+
+    private var sorcInfoByID: [SorcID: SorcInfo]
+
+    public init(_ sorcInfoByID: [SorcID: SorcInfo] = [:]) {
+        self.sorcInfoByID = sorcInfoByID
+    }
+
+    public subscript(sorcID: SorcID) -> SorcInfo? {
+        get {
+            return sorcInfoByID[sorcID]
+        }
+        set {
+            sorcInfoByID[sorcID] = newValue
+        }
+    }
+
+    public var sorcIDs: [SorcID] {
+        return Array(sorcInfoByID.keys)
+    }
+
+    public var isEmpty: Bool {
+        return sorcInfoByID.isEmpty
+    }
+
+    public func contains(_ sorcID: SorcID) -> Bool {
+        return sorcInfoByID.keys.contains(sorcID)
+    }
+
+    public static func ==(lhs: SorcInfos, rhs: SorcInfos) -> Bool {
+        return lhs.sorcInfoByID == rhs.sorcInfoByID
     }
 }

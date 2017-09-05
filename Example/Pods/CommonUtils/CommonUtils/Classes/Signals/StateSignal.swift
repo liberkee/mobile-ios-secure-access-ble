@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import CommonUtils
 
 /// A signal that sends out updates to its current state
 public class StateSignal<State> {

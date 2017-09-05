@@ -8,6 +8,7 @@
 import XCTest
 @testable import SecureAccessBLE
 import CoreBluetooth
+import CommonUtils
 
 class SystemClockMock: SystemClockType {
 
@@ -32,6 +33,16 @@ class CBCentralManagerMock: CBCentralManagerType {
 
     var state: CBManagerState = .unknown
 
+    var scanForPeripheralsCalledWithArguments: (serviceUUIDs: [CBUUID]?, options: [String: Any]?)?
+    func scanForPeripherals(withServices serviceUUIDs: [CBUUID]?, options: [String: Any]?) {
+        scanForPeripheralsCalledWithArguments = (serviceUUIDs: serviceUUIDs, options: options)
+    }
+
+    var stopScanCalled = false
+    func stopScan() {
+        stopScanCalled = true
+    }
+
     var connectCalledWithPeripheral: CBPeripheralType?
     func connect(_ peripheral: CBPeripheralType, options _: [String: Any]?) {
         connectCalledWithPeripheral = peripheral
@@ -40,11 +51,6 @@ class CBCentralManagerMock: CBCentralManagerType {
     var cancelConnectionCalledWithPeripheral: CBPeripheralType?
     func cancelPeripheralConnection(_ peripheral: CBPeripheralType) {
         cancelConnectionCalledWithPeripheral = peripheral
-    }
-
-    var scanForPeripheralsCalledWithArguments: (serviceUUIDs: [CBUUID]?, options: [String: Any]?)
-    func scanForPeripherals(withServices serviceUUIDs: [CBUUID]?, options: [String: Any]?) {
-        scanForPeripheralsCalledWithArguments = (serviceUUIDs: serviceUUIDs, options: options)
     }
 }
 
@@ -89,6 +95,14 @@ class CBCharacteristicMock: CBCharacteristicType {
     var value: Data?
 }
 
+class AppActivityStatusProviderMock: AppActivityStatusProviderType {
+    var appDidBecomeActive: EventSignal<()> {
+        return appDidBecomeActiveSubject.asSignal()
+    }
+
+    let appDidBecomeActiveSubject = PublishSubject<()>()
+}
+
 extension ConnectionManager {
 
     convenience init(centralManager: CBCentralManagerType, createTimer: CreateTimer? = nil) {
@@ -96,7 +110,13 @@ extension ConnectionManager {
         let createTimer: CreateTimer = createTimer ?? { block in
             Timer(timeInterval: 1000, repeats: false, block: { _ in block() })
         }
-        self.init(centralManager: centralManager, systemClock: SystemClock(), createTimer: createTimer)
+        let appActivityStatusProvider = AppActivityStatusProvider(notificationCenter: NotificationCenter.default)
+        self.init(
+            centralManager: centralManager,
+            systemClock: SystemClock(),
+            createTimer: createTimer,
+            appActivityStatusProvider: appActivityStatusProvider
+        )
     }
 
     convenience init(centralManager: CBCentralManagerType, systemClock: SystemClockType) {
@@ -104,7 +124,26 @@ extension ConnectionManager {
         let createTimer: CreateTimer = { block in
             Timer(timeInterval: 1000, repeats: false, block: { _ in block() })
         }
-        self.init(centralManager: centralManager, systemClock: systemClock, createTimer: createTimer)
+        let appActivityStatusProvider = AppActivityStatusProvider(notificationCenter: NotificationCenter.default)
+        self.init(
+            centralManager: centralManager,
+            systemClock: systemClock,
+            createTimer: createTimer,
+            appActivityStatusProvider: appActivityStatusProvider
+        )
+    }
+
+    convenience init(centralManager: CBCentralManagerType, appActivityStatusProvider: AppActivityStatusProviderType) {
+
+        let createTimer: CreateTimer = { block in
+            Timer(timeInterval: 1000, repeats: false, block: { _ in block() })
+        }
+        self.init(
+            centralManager: centralManager,
+            systemClock: SystemClock(),
+            createTimer: createTimer,
+            appActivityStatusProvider: appActivityStatusProvider
+        )
     }
 }
 
@@ -117,10 +156,11 @@ class ConnectionManagerTests: XCTestCase {
     let sorcID1 = "82f6ed49-b70d-4c9e-afa1-4b0377d0de5f"
     let sorcID2 = "a8c5e6b9-9df1-4194-a214-88636a048fcb"
 
+    let centralManager = CBCentralManagerMock()
+
     func test_isBluetoothEnabled_ifCentralManagerIsPoweredOn_returnsTrue() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         centralManager.state = .poweredOn
         let connectionManager = ConnectionManager(centralManager: centralManager)
 
@@ -131,7 +171,6 @@ class ConnectionManagerTests: XCTestCase {
     func test_isBluetoothEnabled_ifCentralManagerIsNotPoweredOn_returnsFalse() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         centralManager.state = .poweredOff
         let connectionManager = ConnectionManager(centralManager: centralManager)
 
@@ -139,10 +178,53 @@ class ConnectionManagerTests: XCTestCase {
         XCTAssertFalse(connectionManager.isBluetoothEnabled.value)
     }
 
+    func test_startDiscovery_ifCentralManagerIsPoweredOn_scanForPeripheralsIsCalledAndDiscoveryIsEnabled() {
+
+        // Given
+        centralManager.state = .poweredOn
+        let connectionManager = ConnectionManager(centralManager: centralManager)
+
+        // When
+        connectionManager.startDiscovery()
+
+        // Then
+        let arguments = centralManager.scanForPeripheralsCalledWithArguments!
+        XCTAssertNil(arguments.serviceUUIDs)
+        XCTAssertTrue(arguments.options![CBCentralManagerScanOptionAllowDuplicatesKey] as! Int == 1)
+        XCTAssertTrue(connectionManager.discoveryChange.state.discoveryIsEnabled)
+    }
+
+    func test_startDiscovery_ifCentralManagerIsNotPoweredOn_nothingIsCalled() {
+
+        // Given
+        centralManager.state = .poweredOff
+        let connectionManager = ConnectionManager(centralManager: centralManager)
+
+        // When
+        connectionManager.startDiscovery()
+
+        // Then
+        XCTAssertNil(centralManager.scanForPeripheralsCalledWithArguments)
+        XCTAssertFalse(connectionManager.discoveryChange.state.discoveryIsEnabled)
+    }
+
+    func test_stopDiscovery_stopsScanOnCentralAndDiscoveryIsNotEnabled() {
+
+        // Given discovery is enabled
+        let connectionManager = ConnectionManager(centralManager: centralManager)
+        startDiscovery(connectionManager: connectionManager, centralManager: centralManager)
+
+        // When
+        connectionManager.stopDiscovery()
+
+        // Then
+        XCTAssertTrue(centralManager.stopScanCalled)
+        XCTAssertFalse(connectionManager.discoveryChange.state.discoveryIsEnabled)
+    }
+
     func test_connectToSorc_ifSorcIsNotDiscovered_itDoesNotMoveToConnectingStateAndItDoesNotTryToConnectToAPeripheral() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let connectionManager = ConnectionManager(centralManager: centralManager)
 
         // When
@@ -158,7 +240,6 @@ class ConnectionManagerTests: XCTestCase {
     func test_connectToSorc_ifDisconnected_itMovesToConnectingStateAndItTriesToConnectToPeripheral() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let connectionManager = ConnectionManager(centralManager: centralManager)
         let peripheral = CBPeripheralMock()
         prepareDiscoveredSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
@@ -182,7 +263,6 @@ class ConnectionManagerTests: XCTestCase {
     func test_connectToSorc_ifConnectingToSameSorc_itStaysInConnectingStateAndItTriesToConnectToPeripheralAgain() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let connectionManager = ConnectionManager(centralManager: centralManager)
         let peripheral = CBPeripheralMock()
         prepareConnectingSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
@@ -206,7 +286,6 @@ class ConnectionManagerTests: XCTestCase {
     func test_connectToSorc_ifConnectingToOtherSorc_itMovesToConnectingToOtherSorcStateAndItTriesToConnectToOtherPeripheral() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let connectionManager = ConnectionManager(centralManager: centralManager)
         let peripheral1 = CBPeripheralMock()
         prepareConnectingSorc(sorcID1, peripheral: peripheral1, connectionManager: connectionManager, centralManager: centralManager)
@@ -232,7 +311,6 @@ class ConnectionManagerTests: XCTestCase {
     func test_connectToSorc_ifAlreadyConnectedToSameSorc_itDoesNotConnectAgain() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let connectionManager = ConnectionManager(centralManager: centralManager)
         let peripheral = CBPeripheralMock()
         prepareConnectedSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
@@ -256,7 +334,6 @@ class ConnectionManagerTests: XCTestCase {
     func test_connectToSorc_ifConnectedToAnotherSorc_itDisconnectsFromTheCurrentPeripheralAndTriesToConnectToTheNewPeripheral() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let connectionManager = ConnectionManager(centralManager: centralManager)
         let peripheral1 = CBPeripheralMock()
         prepareConnectedSorc(sorcID1, peripheral: peripheral1, connectionManager: connectionManager,
@@ -287,7 +364,6 @@ class ConnectionManagerTests: XCTestCase {
     func test_disconnect_ifItsConnecting_itCancelsTheConnectionAndMovesToDisconnectedState() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let connectionManager = ConnectionManager(centralManager: centralManager)
         let peripheral = CBPeripheralMock()
         prepareConnectingSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
@@ -309,7 +385,7 @@ class ConnectionManagerTests: XCTestCase {
         // Then
         XCTAssertEqual(centralManager.cancelConnectionCalledWithPeripheral?.identifier, peripheral.identifier)
 
-        XCTAssert(!receivedDiscoveryChange.state.keys.contains(sorcID1))
+        XCTAssert(!receivedDiscoveryChange.state.discoveredSorcs.contains(sorcID1))
         XCTAssertEqual(receivedDiscoveryChange.action, .disconnect(sorcID: sorcID1))
 
         let expected = PhysicalConnectionChange(state: .disconnected,
@@ -320,7 +396,6 @@ class ConnectionManagerTests: XCTestCase {
     func test_disconnect_ifItsConnected_itCancelsTheConnectionAndMovesToDisconnectedState() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let connectionManager = ConnectionManager(centralManager: centralManager)
         let peripheral = CBPeripheralMock()
         prepareConnectedSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
@@ -342,7 +417,7 @@ class ConnectionManagerTests: XCTestCase {
         // Then
         XCTAssertEqual(centralManager.cancelConnectionCalledWithPeripheral?.identifier, peripheral.identifier)
 
-        XCTAssert(!receivedDiscoveryChange.state.keys.contains(sorcID1))
+        XCTAssert(!receivedDiscoveryChange.state.discoveredSorcs.contains(sorcID1))
         XCTAssertEqual(receivedDiscoveryChange.action, .disconnect(sorcID: sorcID1))
 
         let expected = PhysicalConnectionChange(state: .disconnected,
@@ -353,7 +428,6 @@ class ConnectionManagerTests: XCTestCase {
     func test_sendData_ifItsConnected_itWritesTheDataToThePeripheralWithResponse() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let connectionManager = ConnectionManager(centralManager: centralManager)
         let peripheral = CBPeripheralMock()
         prepareConnectedSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
@@ -372,7 +446,6 @@ class ConnectionManagerTests: XCTestCase {
     func test_sendData_ifItsNotConnected_itDoesNotWriteTheDataToThePeripheral() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let connectionManager = ConnectionManager(centralManager: centralManager)
         let peripheral = CBPeripheralMock()
         let data = Data(bytes: [42])
@@ -387,7 +460,6 @@ class ConnectionManagerTests: XCTestCase {
     func test_centralManagerDidUpdateState_sendsIsBluetoothEnabledUpdate() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let connectionManager = ConnectionManager(centralManager: centralManager)
 
         var isBluetoothEnabledUpdate: Bool?
@@ -402,18 +474,17 @@ class ConnectionManagerTests: XCTestCase {
         XCTAssertFalse(isBluetoothEnabledUpdate!)
     }
 
-    func test_centralManagerDidUpdateState_ifCentralManagerIsPoweredOn_itScansForPeripheralsAllowingDuplicates() {
+    func test_centralManagerDidUpdateState_ifCentralManagerIsPoweredOnAndDiscoveryIsEnabled_itScansForPeripheralsAllowingDuplicates() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
-        centralManager.state = .poweredOn
         let connectionManager = ConnectionManager(centralManager: centralManager)
+        startDiscovery(connectionManager: connectionManager, centralManager: centralManager)
 
         // When
         connectionManager.centralManagerDidUpdateState_(centralManager)
 
         // Then
-        let arguments = centralManager.scanForPeripheralsCalledWithArguments
+        let arguments = centralManager.scanForPeripheralsCalledWithArguments!
         XCTAssertNil(arguments.serviceUUIDs)
         XCTAssertTrue(arguments.options![CBCentralManagerScanOptionAllowDuplicatesKey] as! Int == 1)
     }
@@ -421,7 +492,6 @@ class ConnectionManagerTests: XCTestCase {
     func test_centralManagerDidUpdateState_ifCentralManagerIsNotPoweredOn_itResetsDiscoveredSorcs() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         centralManager.state = .poweredOn
         let connectionManager = ConnectionManager(centralManager: centralManager)
 
@@ -439,17 +509,17 @@ class ConnectionManagerTests: XCTestCase {
         connectionManager.centralManagerDidUpdateState_(centralManager)
 
         // Then
-        XCTAssert(receivedDiscoveryChange.state.isEmpty)
+        XCTAssert(receivedDiscoveryChange.state.discoveredSorcs.isEmpty)
         XCTAssertEqual(receivedDiscoveryChange.action, .reset)
     }
 
     func test_centralManagerDidDiscoverPeripheral_ifManufacturerDataKeyIsSet_addsSorcToDiscoveredSorcs() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let now = Date(timeIntervalSince1970: 0)
         let systemClock = SystemClockMock(currentNow: now)
         let connectionManager = ConnectionManager(centralManager: centralManager, systemClock: systemClock)
+        startDiscovery(connectionManager: connectionManager, centralManager: centralManager)
 
         let peripheral = CBPeripheralMock()
 
@@ -468,16 +538,17 @@ class ConnectionManagerTests: XCTestCase {
                                           rssi: 60)
 
         // Then
-        XCTAssert(receivedDiscoveryChange.state.keys.contains(sorcID1))
-        XCTAssertEqual(receivedDiscoveryChange.state[sorcID1]!, SorcInfo(sorcID: sorcID1, discoveryDate: now, rssi: 60))
+        XCTAssert(receivedDiscoveryChange.state.discoveredSorcs.contains(sorcID1))
+        XCTAssertEqual(receivedDiscoveryChange.state.discoveredSorcs[sorcID1]!, SorcInfo(sorcID: sorcID1, discoveryDate: now, rssi: 60))
         XCTAssertEqual(receivedDiscoveryChange.action, .discovered(sorcID: sorcID1))
     }
 
     func test_centralManagerDidDiscoverPeripheral_ifManufacturerDataKeyIsNotSet_doesNotUpdateDiscoveredSorcs() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
+        centralManager.state = .poweredOn
         let connectionManager = ConnectionManager(centralManager: centralManager)
+        connectionManager.startDiscovery()
 
         let peripheral = CBPeripheralMock()
         let advertisementData = [String: Any]()
@@ -498,7 +569,6 @@ class ConnectionManagerTests: XCTestCase {
     func test_centralManagerDidDiscoverPeripheral_ifSorcIsAlreadyDiscovered_updatesSorcInfo() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let moment1 = Date(timeIntervalSince1970: 1)
         let systemClock = SystemClockMock(currentNow: moment1)
         let connectionManager = ConnectionManager(centralManager: centralManager, systemClock: systemClock)
@@ -526,16 +596,14 @@ class ConnectionManagerTests: XCTestCase {
                                           advertisementData: advertisementData, rssi: 60)
 
         // Then
-        XCTAssert(receivedDiscoveryChange.state.keys.contains(sorcID1))
-        XCTAssertEqual(receivedDiscoveryChange.state[sorcID1]!, SorcInfo(sorcID: sorcID1, discoveryDate: moment2,
-                                                                         rssi: 60))
+        XCTAssert(receivedDiscoveryChange.state.discoveredSorcs.contains(sorcID1))
+        XCTAssertEqual(receivedDiscoveryChange.state.discoveredSorcs[sorcID1]!, SorcInfo(sorcID: sorcID1, discoveryDate: moment2, rssi: 60))
         XCTAssertEqual(receivedDiscoveryChange.action, .rediscovered(sorcID: sorcID1))
     }
 
     func test_centralManagerDidConnectPeripheral_ifItsConnectingAndPeripheralIsDiscovered_triesToDiscoverServicesOfPeripheral() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let connectionManager = ConnectionManager(centralManager: centralManager)
 
         let peripheral = CBPeripheralMock()
@@ -553,7 +621,6 @@ class ConnectionManagerTests: XCTestCase {
     func test_centralManagerDidConnectPeripheral_ifItsNotConnecting_doesNotTryToDiscoverServices() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let connectionManager = ConnectionManager(centralManager: centralManager)
 
         let peripheral = CBPeripheralMock()
@@ -568,7 +635,6 @@ class ConnectionManagerTests: XCTestCase {
     func test_centralManagerDidFailToConnect_ifItsConnectingAndPeripheralIsDiscovered_connectionStateDisconnected() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let connectionManager = ConnectionManager(centralManager: centralManager)
 
         let peripheral = CBPeripheralMock()
@@ -592,7 +658,6 @@ class ConnectionManagerTests: XCTestCase {
     func test_centralManagerDidFailToConnect_ifItsNotConnecting_connectionStateNotUpdated() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let connectionManager = ConnectionManager(centralManager: centralManager)
 
         let peripheral = CBPeripheralMock()
@@ -612,7 +677,6 @@ class ConnectionManagerTests: XCTestCase {
     func test_centralManagerDidDisconnectPeripheral_ifItsConnected_removesDiscoveredSorcAndConnectionStateDisconnected() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let connectionManager = ConnectionManager(centralManager: centralManager)
 
         let peripheral = CBPeripheralMock()
@@ -634,7 +698,7 @@ class ConnectionManagerTests: XCTestCase {
         connectionManager.centralManager_(centralManager, didDisconnectPeripheral: peripheral, error: nil)
 
         // Then
-        XCTAssert(!receivedDiscoveryChange.state.keys.contains(sorcID1))
+        XCTAssert(!receivedDiscoveryChange.state.discoveredSorcs.contains(sorcID1))
         XCTAssertEqual(receivedDiscoveryChange.action, .disconnected(sorcID: sorcID1))
 
         let expected = PhysicalConnectionChange(state: .disconnected, action: .connectionLost(sorcID: sorcID1))
@@ -644,7 +708,6 @@ class ConnectionManagerTests: XCTestCase {
     func test_centralManagerDidDisconnectPeripheral_ifItsNotConnected_doesNothing() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let connectionManager = ConnectionManager(centralManager: centralManager)
 
         let peripheral = CBPeripheralMock()
@@ -661,7 +724,7 @@ class ConnectionManagerTests: XCTestCase {
         connectionManager.centralManager_(centralManager, didDisconnectPeripheral: peripheral, error: nil)
 
         // Then
-        XCTAssert(receivedDiscoveryChange.state.keys.contains(sorcID1))
+        XCTAssert(receivedDiscoveryChange.state.discoveredSorcs.contains(sorcID1))
         XCTAssertEqual(receivedDiscoveryChange.action, .initial)
 
         if case .connecting = connectionManager.connectionChange.state {} else {
@@ -672,7 +735,6 @@ class ConnectionManagerTests: XCTestCase {
     func test_peripheralDidDiscoverServices_ifItsConnectingAndPeripheralIsDiscoveredAndErrorIsNil_triesToDiscoverCharacteristicsForService() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let connectionManager = ConnectionManager(centralManager: centralManager)
         let peripheral = CBPeripheralMock()
         let service = CBServiceMock()
@@ -696,7 +758,6 @@ class ConnectionManagerTests: XCTestCase {
     func test_peripheralDidDiscoverServices_ifItsConnectingAndPeripheralIsDiscoveredAndErrorExists_connectingFailed() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let connectionManager = ConnectionManager(centralManager: centralManager)
         let peripheral = CBPeripheralMock()
         let service = CBServiceMock()
@@ -722,7 +783,6 @@ class ConnectionManagerTests: XCTestCase {
     func test_peripheralDidDiscoverCharacteristics_ifItsConnectingAndPeripheralIsDiscoveredAndErrorIsNil_connectedAndSetNotifyValue() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let connectionManager = ConnectionManager(centralManager: centralManager)
         let peripheral = CBPeripheralMock()
         let service = CBServiceMock()
@@ -761,7 +821,6 @@ class ConnectionManagerTests: XCTestCase {
     func test_peripheralDidDiscoverCharacteristics_ifItsConnectingAndPeripheralIsDiscoveredAndErrorExists_connectingFailed() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let connectionManager = ConnectionManager(centralManager: centralManager)
         let peripheral = CBPeripheralMock()
         let service = CBServiceMock()
@@ -788,7 +847,6 @@ class ConnectionManagerTests: XCTestCase {
     func test_peripheralDidUpdateValue_ifNotifyCharacteristicAndErrorIsNil_dataReceivedSuccess() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let connectionManager = ConnectionManager(centralManager: centralManager)
         let notifyCharacteristic = CBCharacteristicMock()
         notifyCharacteristic.value = Data(base64Encoded: "data")
@@ -811,7 +869,6 @@ class ConnectionManagerTests: XCTestCase {
     func test_peripheralDidUpdateValue_ifNotifyCharacteristicAndErrorExists_dataReceivedError() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let connectionManager = ConnectionManager(centralManager: centralManager)
         let notifyCharacteristic = CBCharacteristicMock()
         notifyCharacteristic.value = Data(base64Encoded: "data")
@@ -836,7 +893,6 @@ class ConnectionManagerTests: XCTestCase {
     func test_peripheralDidWriteValue_ifWriteCharacteristicAndErrorIsNil_dataSentErrorIsNil() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let connectionManager = ConnectionManager(centralManager: centralManager)
         let writeCharacteristic = CBCharacteristicMock()
         writeCharacteristic.uuid = CBUUID(string: writeCharacteristicID)
@@ -856,7 +912,6 @@ class ConnectionManagerTests: XCTestCase {
     func test_peripheralDidWriteValue_ifWriteCharacteristicAndErrorExists_dataSentErrorExists() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let connectionManager = ConnectionManager(centralManager: centralManager)
         let writeCharacteristic = CBCharacteristicMock()
         writeCharacteristic.uuid = CBUUID(string: writeCharacteristicID)
@@ -878,7 +933,6 @@ class ConnectionManagerTests: XCTestCase {
     func test_filterTimerFired_ifDiscoveredSorcIsOutdatedAndNotConnected_removesIt() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let systemClock = SystemClockMock(currentNow: Date(timeIntervalSince1970: 0))
 
         var fireTimer: (() -> Void)!
@@ -887,8 +941,12 @@ class ConnectionManagerTests: XCTestCase {
             return Timer()
         }
 
-        let connectionManager = ConnectionManager(centralManager: centralManager, systemClock: systemClock,
-                                                  createTimer: createTimer)
+        let connectionManager = ConnectionManager(
+            centralManager: centralManager,
+            systemClock: systemClock,
+            createTimer: createTimer,
+            appActivityStatusProvider: AppActivityStatusProvider(notificationCenter: NotificationCenter.default)
+        )
 
         prepareDiscoveredSorc(sorcID1, peripheral: CBPeripheralMock(), connectionManager: connectionManager, centralManager: centralManager)
 
@@ -899,13 +957,12 @@ class ConnectionManagerTests: XCTestCase {
         fireTimer()
 
         // Then
-        XCTAssert(!connectionManager.discoveryChange.state.keys.contains(sorcID1))
+        XCTAssert(!connectionManager.discoveryChange.state.discoveredSorcs.contains(sorcID1))
     }
 
     func test_filterTimerFired_ifDiscoveredSorcIsOutdatedAndConnected_keepsIt() {
 
         // Given
-        let centralManager = CBCentralManagerMock()
         let systemClock = SystemClockMock(currentNow: Date(timeIntervalSince1970: 0))
 
         var fireTimer: (() -> Void)!
@@ -914,8 +971,12 @@ class ConnectionManagerTests: XCTestCase {
             return Timer()
         }
 
-        let connectionManager = ConnectionManager(centralManager: centralManager, systemClock: systemClock,
-                                                  createTimer: createTimer)
+        let connectionManager = ConnectionManager(
+            centralManager: centralManager,
+            systemClock: systemClock,
+            createTimer: createTimer,
+            appActivityStatusProvider: AppActivityStatusProvider(notificationCenter: NotificationCenter.default)
+        )
 
         prepareConnectedSorc(sorcID1, peripheral: CBPeripheralMock(), connectionManager: connectionManager, centralManager: centralManager)
 
@@ -926,13 +987,56 @@ class ConnectionManagerTests: XCTestCase {
         fireTimer()
 
         // Then
-        XCTAssert(connectionManager.discoveryChange.state.keys.contains(sorcID1))
+        XCTAssert(connectionManager.discoveryChange.state.discoveredSorcs.contains(sorcID1))
+    }
+
+    func test_appDidBecomeActive_ifCentralManagerIsPoweredOnAndDiscoveryIsEnabled_itScansForPeripheralsAllowingDuplicates() {
+
+        // Given
+        let appActivityStatusProvider = AppActivityStatusProviderMock()
+        let connectionManager = ConnectionManager(
+            centralManager: centralManager,
+            appActivityStatusProvider: appActivityStatusProvider
+        )
+        startDiscovery(connectionManager: connectionManager, centralManager: centralManager)
+
+        // When
+        appActivityStatusProvider.appDidBecomeActiveSubject.onNext()
+
+        // Then
+        let arguments = centralManager.scanForPeripheralsCalledWithArguments!
+        XCTAssertNil(arguments.serviceUUIDs)
+        XCTAssertTrue(arguments.options![CBCentralManagerScanOptionAllowDuplicatesKey] as! Int == 1)
+    }
+
+    func test_appDidBecomeActive_ifCentralManagerIsPoweredOnAndDiscoveryIsNotEnabled_itDoesNothing() {
+
+        // Given
+        centralManager.state = .poweredOn
+        let appActivityStatusProvider = AppActivityStatusProviderMock()
+        _ = ConnectionManager(
+            centralManager: centralManager,
+            appActivityStatusProvider: appActivityStatusProvider
+        )
+
+        // When
+        appActivityStatusProvider.appDidBecomeActiveSubject.onNext()
+
+        // Then
+        XCTAssertNil(centralManager.scanForPeripheralsCalledWithArguments)
+    }
+
+    private func startDiscovery(connectionManager: ConnectionManager, centralManager: CBCentralManagerMock) {
+        centralManager.state = .poweredOn
+        connectionManager.startDiscovery()
+        centralManager.scanForPeripheralsCalledWithArguments = nil
     }
 
     private func prepareDiscoveredSorc(_ sorcID: SorcID, peripheral: CBPeripheralType,
                                        connectionManager: ConnectionManager, centralManager: CBCentralManagerMock,
                                        rssi: Int = 0) {
 
+        startDiscovery(connectionManager: connectionManager, centralManager: centralManager)
         let strippedSorcID = sorcID.replacingOccurrences(of: "-", with: "").dataFromHexadecimalString()!
         let advertisementData: [String: Any] = [
             CBAdvertisementDataManufacturerDataKey: strippedSorcID,
