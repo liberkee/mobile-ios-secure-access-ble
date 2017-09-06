@@ -950,7 +950,7 @@ class ConnectionManagerTests: XCTestCase {
 
         prepareDiscoveredSorc(sorcID1, peripheral: CBPeripheralMock(), connectionManager: connectionManager, centralManager: centralManager)
 
-        // Moving system time forward 6 seconds, sorcOutdatedDurationSeconds == 5
+        // Moving system time forward 6 seconds, sorcOutdatedDuration == 5
         systemClock.currentNow = Date(timeIntervalSince1970: 6)
 
         // When
@@ -980,7 +980,7 @@ class ConnectionManagerTests: XCTestCase {
 
         prepareConnectedSorc(sorcID1, peripheral: CBPeripheralMock(), connectionManager: connectionManager, centralManager: centralManager)
 
-        // Moving system time forward 6 seconds, sorcOutdatedDurationSeconds == 5
+        // Moving system time forward 6 seconds, sorcOutdatedDuration == 5
         systemClock.currentNow = Date(timeIntervalSince1970: 6)
 
         // When

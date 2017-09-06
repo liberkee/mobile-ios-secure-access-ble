@@ -61,7 +61,9 @@
 		E504032C1F55C32F0008DF02 /* TransportConnectionChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransportConnectionChange.swift; sourceTree = "<group>"; };
 		E504032E1F56CEFA0008DF02 /* SecurityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityManager.swift; sourceTree = "<group>"; };
 		E504032F1F56CEFA0008DF02 /* SecurityManagerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityManagerType.swift; sourceTree = "<group>"; };
-		E50C4E901F5EDD050081B619 /* Dependencies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dependencies.swift; sourceTree = "<group>"; };
+		E50C4E911F5F3F380081B619 /* SorcManagerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SorcManagerConfiguration.swift; sourceTree = "<group>"; };
+		E50C4E921F5FDC8B0081B619 /* SessionManagerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManagerConfiguration.swift; sourceTree = "<group>"; };
+		E50C4E931F5FDDDF0081B619 /* ConnectionManagerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionManagerConfiguration.swift; sourceTree = "<group>"; };
 		E55E6CDB1F4200E900C5934B /* Handshake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Handshake.swift; sourceTree = "<group>"; };
 		E55E6CDC1F4200E900C5934B /* MTUSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MTUSize.swift; sourceTree = "<group>"; };
 		E55E6CDD1F4200E900C5934B /* SorcMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SorcMessage.swift; sourceTree = "<group>"; };
@@ -126,7 +128,6 @@
 		46B760761DA2637D003ADDB1 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
-				E50C4E901F5EDD050081B619 /* Dependencies.swift */,
 				46B760771DA2637D003ADDB1 /* BLEHelper.swift */,
 				E565092C1F3333C1002771F8 /* SystemClock.swift */,
 				E59E016D1F38B295006F114D /* Result.swift */,
@@ -260,6 +261,7 @@
 			children = (
 				E504030A1F5553830008DF02 /* SorcManagerType.swift */,
 				E50403061F546FFF0008DF02 /* SorcManager.swift */,
+				E50C4E911F5F3F380081B619 /* SorcManagerConfiguration.swift */,
 				E504030B1F5553F50008DF02 /* ConnectionChange.swift */,
 				E504030C1F5553F50008DF02 /* DiscoveryChange.swift */,
 				E504030D1F5553F50008DF02 /* SorcInfo.swift */,
@@ -273,6 +275,7 @@
 			children = (
 				E50403161F55607F0008DF02 /* SessionManagerType.swift */,
 				E50403101F5556830008DF02 /* SessionManager.swift */,
+				E50C4E921F5FDC8B0081B619 /* SessionManagerConfiguration.swift */,
 			);
 			path = SessionManager;
 			sourceTree = "<group>";
@@ -331,6 +334,7 @@
 				E50403291F55C15E0008DF02 /* ConnectionManagerType.swift */,
 				E50403271F55C12D0008DF02 /* PhysicalConnectionChange.swift */,
 				E5CF3AE01F586E74009C95A0 /* ConnectionManager.swift */,
+				E50C4E931F5FDDDF0081B619 /* ConnectionManagerConfiguration.swift */,
 				E5CF3AE11F586E74009C95A0 /* ConnectionManagerExtensions.swift */,
 			);
 			path = ConnectionManager;

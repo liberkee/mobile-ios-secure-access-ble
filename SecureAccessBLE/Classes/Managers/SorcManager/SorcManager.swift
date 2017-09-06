@@ -9,10 +9,6 @@ import CommonUtils
 
 public class SorcManager: SorcManagerType {
 
-    public static func make() -> SorcManager {
-        return Dependencies.shared.makeSorcManager()
-    }
-
     private let bluetoothStatusProvider: BluetoothStatusProviderType
     private let scanner: ScannerType
     private let sessionManager: SessionManagerType
@@ -61,5 +57,50 @@ public class SorcManager: SorcManagerType {
 
     public func requestServiceGrant(_ serviceGrantID: ServiceGrantID) {
         sessionManager.requestServiceGrant(serviceGrantID)
+    }
+}
+
+extension SorcManager {
+
+    /// Initializes a `SorcManager`. After initialization keep a strong reference to this instance as long as you need it.
+    ///
+    /// Note: Only use one instance at a time.
+    public convenience init(configuration: SorcManager.Configuration = SorcManager.Configuration()) {
+
+        // ConnectionManager
+
+        let connectionConfiguration = ConnectionManager.Configuration(
+            serviceID: configuration.serviceID,
+            notifyCharacteristicID: configuration.notifyCharacteristicID,
+            writeCharacteristicID: configuration.writeCharacteristicID,
+            sorcOutdatedDuration: configuration.sorcOutdatedDuration,
+            removeOutdatedSorcsInterval: configuration.removeOutdatedSorcsInterval
+        )
+        let connectionManager = ConnectionManager(configuration: connectionConfiguration)
+
+        // TransportManager
+
+        let transportManager = TransportManager(connectionManager: connectionManager)
+
+        // SecurityManager
+
+        let securityManager = SecurityManager(transportManager: transportManager)
+
+        // SessionManager
+
+        let sessionConfiguration = SessionManager.Configuration(
+            heartbeatInterval: configuration.heartbeatInterval,
+            heartbeatTimeout: configuration.heartbeatTimeout,
+            maximumEnqueuedMessages: configuration.maximumEnqueuedMessages
+        )
+        let sessionManager = SessionManager(securityManager: securityManager, configuration: sessionConfiguration)
+
+        // SorcManager
+
+        self.init(
+            bluetoothStatusProvider: connectionManager,
+            scanner: connectionManager,
+            sessionManager: sessionManager
+        )
     }
 }

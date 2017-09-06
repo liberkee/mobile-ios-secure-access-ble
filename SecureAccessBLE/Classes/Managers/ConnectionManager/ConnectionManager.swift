@@ -59,12 +59,15 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     let dataSent = PublishSubject<Error?>()
     let dataReceived = PublishSubject<Result<Data>>()
 
-    fileprivate let serviceID = "d1cf0603-b501-4569-a4b9-e47ad3f628a5"
-    fileprivate let notifyCharacteristicID = "d1d7a6b6-457e-458a-b237-a9df99b3d98b"
-    fileprivate let writeCharacteristicID = "c8e58f23-9417-41c6-97a8-70f6b2c8cab9"
+    fileprivate let configuration: Configuration
 
-    /// The duration a SORC is considered outdated if last discovery date is longer ago than this duration
-    private let sorcOutdatedDurationSeconds: Double = 5
+    fileprivate var writeCharacteristicID: String {
+        return configuration.writeCharacteristicID
+    }
+
+    fileprivate var notifyCharacteristicID: String {
+        return configuration.notifyCharacteristicID
+    }
 
     fileprivate var writeCharacteristic: CBCharacteristicType?
     fileprivate var notifyCharacteristic: CBCharacteristicType?
@@ -97,12 +100,14 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
         centralManager: CBCentralManagerType,
         systemClock: SystemClockType,
         createTimer: CreateTimer,
-        appActivityStatusProvider: AppActivityStatusProviderType
+        appActivityStatusProvider: AppActivityStatusProviderType,
+        configuration: Configuration = Configuration()
     ) {
 
         self.systemClock = systemClock
         isBluetoothEnabled = BehaviorSubject(value: centralManager.state == .poweredOn)
         self.appActivityStatusProvider = appActivityStatusProvider
+        self.configuration = configuration
         super.init()
 
         self.centralManager = centralManager
@@ -134,7 +139,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     /// If a connection to an undiscovered SORC is tried it fails silently.
     func connectToSorc(_ sorcID: SorcID) {
         guard let peripheral = peripheralMatchingSorcID(sorcID) else {
-            print("ConnectionManager: Try to connect to SORC that is not discovered.")
+            debugPrint("ConnectionManager: Try to connect to SORC that is not discovered.")
             return
         }
         switch connectionState {
@@ -193,7 +198,8 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
 
     private func removeOutdatedSorcs() {
         let outdatedSorcs = Array(discoveredSorcs.values).filter { (sorc) -> Bool in
-            let outdated = systemClock.timeIntervalSinceNow(for: sorc.discoveryDate) < -sorcOutdatedDurationSeconds
+            let discoveredAgoInterval = systemClock.timeIntervalSinceNow(for: sorc.discoveryDate)
+            let outdated = discoveredAgoInterval < -configuration.sorcOutdatedDuration
             return outdated && sorc.sorcID != self.connectedSorc?.sorcID
         }
         let outdatedSorcIDs = outdatedSorcs.map { $0.sorcID }
@@ -254,6 +260,35 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     }
 }
 
+extension ConnectionManager {
+
+    convenience init(configuration: ConnectionManager.Configuration = Configuration()) {
+
+        let centralManager = CBCentralManager(delegate: nil, queue: nil,
+                                              options: [CBPeripheralManagerOptionShowPowerAlertKey: 0])
+
+        let systemClock = SystemClock()
+
+        let createTimer: ConnectionManager.CreateTimer = { block in
+            Timer(
+                timeInterval: configuration.removeOutdatedSorcsInterval,
+                repeats: true,
+                block: { _ in block() }
+            )
+        }
+
+        let appActivityStatusProvider = AppActivityStatusProvider(notificationCenter: NotificationCenter.default)
+
+        self.init(
+            centralManager: centralManager,
+            systemClock: systemClock,
+            createTimer: createTimer,
+            appActivityStatusProvider: appActivityStatusProvider,
+            configuration: configuration
+        )
+    }
+}
+
 // MARK: - CBCentralManagerDelegate_
 
 extension ConnectionManager {
@@ -289,7 +324,7 @@ extension ConnectionManager {
             peripheralMatchingSorcID(sorcID)?.identifier == peripheral.identifier else { return }
 
         peripheral.delegate = self
-        peripheral.discoverServices([CBUUID(string: serviceID)])
+        peripheral.discoverServices([CBUUID(string: configuration.serviceID)])
     }
 
     func centralManager_(_: CBCentralManagerType, didFailToConnect peripheral: CBPeripheralType, error: Error?) {
@@ -364,7 +399,7 @@ extension ConnectionManager {
         } else if let data = characteristic.value {
             dataReceived.onNext(.success(data))
         } else {
-            print("ConnectionManager: No error but characteristic value was nil which is unexpected.")
+            debugPrint("ConnectionManager: No error but characteristic value was nil which is unexpected.")
         }
     }
 

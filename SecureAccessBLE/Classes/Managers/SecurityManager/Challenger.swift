@@ -158,14 +158,14 @@ class Challenger {
      */
     func beginChallenge() throws {
         do {
-            //            print ("begin to challenge with nc: \(Data.withBytes(self.nc))")
+            // debugPrint("begin to challenge with nc: \(Data.withBytes(self.nc))")
             try b0 = crypto.encrypt(nc)
             let payload = PhoneToSorcChallenge(leaseID: leaseID, sorcID: sorcID, leaseTokenID: leaseTokenID, challenge: b0)
 
             let message = SorcMessage(id: .challengePhone, payload: payload)
             delegate?.challengerWantsSendMessage(message)
         } catch {
-            print("AES Encryption failed!")
+            debugPrint("AES Encryption failed!")
             throw ChallengeError.aesEncryptionFailed
         }
     }
@@ -178,7 +178,7 @@ class Challenger {
      - throws:
      */
     func handleReceivedChallengerMessage(_ message: SorcMessage) throws {
-        print("Resonse message with id:\(message.id)")
+        debugPrint("Resonse message with id:\(message.id)")
         switch message.id {
         case .ltAck:
             try beginChallenge()
@@ -189,10 +189,10 @@ class Challenger {
                 blobMessageCounter += Int(0xFF & message.data[4]) << 8
                 blobMessageCounter += Int(0xFF & message.data[5])
 
-                print("Box is asking for a newer blob version than: \(blobMessageCounter)")
+                debugPrint("Box is asking for a newer blob version than: \(blobMessageCounter)")
                 delegate?.challengerNeedsSendBlob(latestBlobCounter: Int(blobMessageCounter))
             } else {
-                print("BLE Challenge needs send blob!")
+                debugPrint("BLE Challenge needs send blob!")
                 delegate?.challengerNeedsSendBlob(latestBlobCounter: nil)
             }
         case .challengeSorcResponse:
@@ -230,7 +230,7 @@ class Challenger {
                 nr[12], nr[13], nr[14], nr[15],
                 nc[12], nc[13], nc[14], nc[15],
             ]
-            print("challenger finished with session key: \(Data(bytes: sessionKey))")
+            debugPrint("challenger finished with session key: \(Data(bytes: sessionKey))")
             delegate?.challengerFinishedWithSessionKey(sessionKey)
         }
     }

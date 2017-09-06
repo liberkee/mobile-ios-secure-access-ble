@@ -15,10 +15,9 @@ class SessionManager: SessionManagerType {
 
     let serviceGrantResultReceived = PublishSubject<ServiceGrantResult>()
 
-    var heartbeatInterval: Double = 2000.0
-    var heartbeatTimeout: Double = 6000.0
-
     private let securityManager: SecurityManagerType
+    private let configuration: Configuration
+
     private let disposeBag = DisposeBag()
 
     private var sendHeartbeatsTimer: Timer?
@@ -33,13 +32,13 @@ class SessionManager: SessionManagerType {
     /// Used to know what action we need to send out after disconnect on lower layers happened
     private var actionLeadingToDisconnect: ConnectionChange.Action?
 
-    private let maximumEnqueuedMessages = 3
     private lazy var messageQueue: BoundedQueue<SorcMessage> = {
-        BoundedQueue(maximumElements: self.maximumEnqueuedMessages)
+        BoundedQueue(maximumElements: self.configuration.maximumEnqueuedMessages)
     }()
 
-    init(securityManager: SecurityManagerType) {
+    init(securityManager: SecurityManagerType, configuration: Configuration = Configuration()) {
         self.securityManager = securityManager
+        self.configuration = configuration
 
         securityManager.connectionChange.subscribeNext { [weak self] change in
             self?.handleSecureConnectionChange(change)
@@ -97,7 +96,7 @@ class SessionManager: SessionManagerType {
         lastMessageSent = nil
         waitingForResponse = false
         actionLeadingToDisconnect = nil
-        messageQueue = BoundedQueue(maximumElements: maximumEnqueuedMessages)
+        messageQueue = BoundedQueue(maximumElements: configuration.maximumEnqueuedMessages)
     }
 
     // MARK: - Connection handling
@@ -256,14 +255,14 @@ class SessionManager: SessionManagerType {
     private func scheduleHeartbeatTimers() {
         NSLog("BLA: scheduleHeartbeatTimers")
         sendHeartbeatsTimer = Timer.scheduledTimer(
-            timeInterval: heartbeatInterval / 1000,
+            timeInterval: configuration.heartbeatInterval,
             target: self,
             selector: #selector(SessionManager.startSendingHeartbeat),
             userInfo: nil,
             repeats: true
         )
         checkHeartbeatsResponseTimer = Timer.scheduledTimer(
-            timeInterval: heartbeatTimeout / 1000,
+            timeInterval: configuration.heartbeatTimeout,
             target: self,
             selector: #selector(SessionManager.checkOutHeartbeatResponse),
             userInfo: nil,
@@ -286,7 +285,7 @@ class SessionManager: SessionManagerType {
 
     @objc func checkOutHeartbeatResponse() {
         NSLog("BLA checkOutHeartbeatResponse")
-        if (lastHeartbeatResponseDate.timeIntervalSinceNow + heartbeatTimeout / 1000) < 0 {
+        if (lastHeartbeatResponseDate.timeIntervalSinceNow + configuration.heartbeatTimeout) < 0 {
             NSLog("checkOutHeartbeatResponse timedout")
             disconnect(withAction: .connectionLost(error: .heartbeatTimedOut))
         }
@@ -295,7 +294,8 @@ class SessionManager: SessionManagerType {
     private func rescheduleHeartbeat() {
         lastHeartbeatResponseDate = Date()
         NSLog("BLA: handleSorcResponded \(lastHeartbeatResponseDate)")
-        checkHeartbeatsResponseTimer?.fireDate = lastHeartbeatResponseDate.addingTimeInterval(heartbeatTimeout / 1000)
+        checkHeartbeatsResponseTimer?.fireDate = lastHeartbeatResponseDate
+            .addingTimeInterval(configuration.heartbeatTimeout)
     }
 }
 
