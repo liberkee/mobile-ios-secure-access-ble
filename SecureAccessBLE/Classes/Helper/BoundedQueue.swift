@@ -36,4 +36,8 @@ struct BoundedQueue<T> {
         elements.removeFirst()
         return element
     }
+
+    mutating func clear() {
+        elements.removeAll()
+    }
 }

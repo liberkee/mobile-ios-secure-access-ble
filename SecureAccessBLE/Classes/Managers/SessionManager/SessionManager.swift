@@ -96,7 +96,7 @@ class SessionManager: SessionManagerType {
         lastMessageSent = nil
         waitingForResponse = false
         actionLeadingToDisconnect = nil
-        messageQueue = BoundedQueue(maximumElements: configuration.maximumEnqueuedMessages)
+        messageQueue.clear()
     }
 
     // MARK: - Connection handling
@@ -214,20 +214,29 @@ class SessionManager: SessionManagerType {
     }
 
     private func handleMessageSent(result: Result<SorcMessage>) {
-        if case .failure = result, lastMessageSent?.id == .serviceGrant {
-            serviceGrantResultReceived.onNext(.failure(.sendingFailed))
+        guard case .connected = connectionChange.state,
+            case .failure = result,
+            waitingForResponse else { return }
+
+        waitingForResponse = false
+
+        if lastMessageSent?.id == .serviceGrant {
+            handleServiceGrantRequestFailed(error: .sendingFailed)
         }
+        lastMessageSent = nil
     }
 
     private func handleMessageReceived(result: Result<SorcMessage>) {
-        guard case let .connected(sorcID) = connectionChange.state else { return }
+        guard case let .connected(sorcID) = connectionChange.state,
+            waitingForResponse else { return }
 
         waitingForResponse = false
 
         guard case let .success(message) = result else {
             if lastMessageSent?.id == .serviceGrant {
-                serviceGrantResultReceived.onNext(.failure(.receivedInvalidData))
+                handleServiceGrantRequestFailed(error: .receivedInvalidData)
             }
+            lastMessageSent = nil
             return
         }
 
@@ -238,7 +247,7 @@ class SessionManager: SessionManagerType {
             rescheduleHeartbeat()
         case .serviceGrantTrigger:
             guard let response = ServiceGrantResponse(sorcID: sorcID, message: message) else {
-                serviceGrantResultReceived.onNext(.failure(.receivedInvalidData))
+                handleServiceGrantRequestFailed(error: .receivedInvalidData)
                 return
             }
             rescheduleHeartbeat()
@@ -248,6 +257,12 @@ class SessionManager: SessionManagerType {
         }
 
         sendNextMessageIfPossible()
+    }
+
+    private func handleServiceGrantRequestFailed(error: ServiceGrantResult.Error) {
+        messageQueue.clear()
+        startSendingHeartbeat()
+        serviceGrantResultReceived.onNext(.failure(error))
     }
 
     // MARK: - Heartbeat handling

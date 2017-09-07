@@ -82,4 +82,18 @@ class BoundedQueueTests: XCTestCase {
         // Then
         XCTAssertTrue(queue.isEmpty)
     }
+
+    func test_clear_ifQueueIsNotEmpty_queueIsEmpty() throws {
+
+        // Given
+        var queue = BoundedQueue<String>(maximumElements: 2)
+        try queue.enqueue("element1")
+        try queue.enqueue("element2")
+
+        // When
+        queue.clear()
+
+        // Then
+        XCTAssertTrue(queue.isEmpty)
+    }
 }
