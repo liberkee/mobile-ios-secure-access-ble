@@ -227,7 +227,6 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     }
 
     fileprivate func updateDiscoveryChange(action: DiscoveryChange.Action) {
-        // TODO: PLAM-1455 check if enabled or not
         let state = discoveryChange.state
         switch action {
         case .startDiscovery:

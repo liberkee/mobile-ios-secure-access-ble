@@ -203,6 +203,5 @@ class SessionManagerTests: XCTestCase {
     }
 
     //    private func prepareConnected() {
-    //        // TODO: PLAM-959
     //    }
 }

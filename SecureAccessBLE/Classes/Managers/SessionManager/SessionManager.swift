@@ -349,8 +349,6 @@ extension ServiceGrantResponse {
     init?(sorcID: SorcID, message: SorcMessage) {
         self.sorcID = sorcID
 
-        // TODO: PLAM-959 test this
-
         let messageData = message.message
 
         var idByteArray = [UInt8](repeating: 0x0, count: 2)
