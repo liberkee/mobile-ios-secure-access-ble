@@ -5,10 +5,10 @@ PODS:
   - CryptoSwift (0.6.7)
   - KeychainAccess (3.0.2)
   - ObjectMapper (2.2.6)
-  - SecureAccessBLE (1.0.14):
+  - SecureAccessBLE (1.1.0):
     - CommonUtils (~> 0.0.5)
     - CryptoSwift (= 0.6.7)
-  - SwiftFormat/CLI (0.29.4)
+  - SwiftFormat/CLI (0.29.5)
 
 DEPENDENCIES:
   - CommonUtils (from `https://github.com/hufsm/mobile-ios-common-utils.git`, branch `PLAM-959_ble`)
@@ -24,7 +24,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   CommonUtils:
-    :commit: 5c79cb5058ded7d448f488c2fd4d5fe5c97c7c33
+    :commit: b3f26cf7c5abb78a8ea424423135ae0441915bb2
     :git: https://github.com/hufsm/mobile-ios-common-utils.git
 
 SPEC CHECKSUMS:
@@ -32,8 +32,8 @@ SPEC CHECKSUMS:
   CryptoSwift: 685ae257941e5447474348a2b545583e1a16b573
   KeychainAccess: a986406022dfc7c634c691ad3bec670cc6a32002
   ObjectMapper: 042708195cc46c20871cbcbec0453826398273fd
-  SecureAccessBLE: 97b292ff4649c3806156feba4606ce2b2d9ff459
-  SwiftFormat: 9622786b0f3f23ddb57f151a114e81f32285e11b
+  SecureAccessBLE: 9656a3ed872b453500d6bbc6680759e288a98bbc
+  SwiftFormat: 9aadf994b01d08400d3d1b0112116d50e468ebd7
 
 PODFILE CHECKSUM: bb013764ddc4a685f7bb97d990828011f3fa84a4
 

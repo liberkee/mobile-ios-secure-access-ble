@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [2.0.0] - Unreleased
 
 ### Added
+- 2017-09-07 : (PLAM-1500)  : Added/Fixed jazzy code documentation config
 - 2017-09-06 : (PLAM-1071)  : Make constants customizable
 - 2017-09-05 : (PLAM-1455)  : Resume scanning after app did enter foreground
 - 2017-09-04 : (PLAM-1374)  : Added error handling for sending and receiving data
@@ -18,6 +19,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 ### Fixed
+
+## [1.1.0] - 2017-08-22
+
+### Added
+- 2017-08-21 : (PLAM-1412)  : Provide method to start discovery again.
 
 ## [1.0.14] - 2017-08-02
 

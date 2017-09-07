@@ -32,7 +32,7 @@
 import Foundation
 
 /// The current SwiftFormat version
-public let version = "0.29.4"
+public let version = "0.29.5"
 
 /// An enumeration of the types of error that may be thrown by SwiftFormat
 public enum FormatError: Error, CustomStringConvertible {
@@ -141,7 +141,7 @@ public func enumerateFiles(withInputURL inputURL: URL,
             for url in files {
                 queue.async(group: group) {
                     let outputURL = outputURL.map {
-                        URL(fileURLWithPath: $0.path + url.path.substring(from: inputURL.path.characters.endIndex))
+                        URL(fileURLWithPath: $0.path + url.path[inputURL.path.characters.endIndex ..< url.path.endIndex])
                     }
                     enumerate(inputURL: url, outputURL: outputURL, options: options, block: block)
                 }
