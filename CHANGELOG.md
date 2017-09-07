@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 ### Added
+- 2017-09-07 : (PLAM-1500)  : Added/Fixed jazzy code documentation config 
+
 ### Changed
 ### Removed
 ### Fixed
