@@ -1,5 +1,5 @@
 //
-//  NSString+Extension.swift
+//  StringExtension.swift
 //  SecureAccessBLE
 //
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.

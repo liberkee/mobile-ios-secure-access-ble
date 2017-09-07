@@ -11,7 +11,6 @@ import Foundation
 public struct LeaseToken: Equatable {
 
     enum Error: Swift.Error {
-        case sorcIDIsEmpty
         case sorcAccessKeyIsEmpty
     }
 
@@ -23,10 +22,6 @@ public struct LeaseToken: Equatable {
     public init(id: String, leaseID: String, sorcID: SorcID, sorcAccessKey: String) throws {
         self.id = id
         self.leaseID = leaseID
-
-        guard !sorcID.isEmpty else {
-            throw Error.sorcIDIsEmpty
-        }
         self.sorcID = sorcID
 
         guard !sorcAccessKey.isEmpty else {

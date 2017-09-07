@@ -31,13 +31,9 @@ struct PhoneToSorcChallenge: SorcMessagePayload {
      The SORC id as a string.
      Read-only, can be only set through a initializer.
      */
-    var sorcID: SorcID {
+    var sorcID: SorcID? {
         let part = data.subdata(in: 36 ..< 72) // 36 chars
-        if let sorcID = NSString(data: part, encoding: String.Encoding.utf8.rawValue) {
-            return sorcID as String
-        } else {
-            return ""
-        }
+        return String(data: part, encoding: .utf8).flatMap { UUID(uuidString: $0) }
     }
 
     /**
@@ -73,15 +69,15 @@ struct PhoneToSorcChallenge: SorcMessagePayload {
     init(leaseID: String, sorcID: SorcID, leaseTokenID: String, challenge: [UInt8]) {
         let data = NSMutableData()
 
-        if let stringData = leaseID.data(using: String.Encoding.utf8) {
+        if let stringData = leaseID.data(using: .utf8) {
             data.append(stringData)
         }
-        if let stringData = sorcID.data(using: String.Encoding.utf8) {
+        if let stringData = sorcID.lowercasedUUIDString.data(using: .utf8) {
             data.append(stringData)
         }
 
         let lowerCaseTokenID = leaseTokenID.lowercased()
-        if let stringData = lowerCaseTokenID.data(using: String.Encoding.utf8) {
+        if let stringData = lowerCaseTokenID.data(using: .utf8) {
             data.append(stringData)
         }
         data.append(challenge, length: challenge.count)

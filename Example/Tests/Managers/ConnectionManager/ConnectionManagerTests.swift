@@ -153,8 +153,8 @@ class ConnectionManagerTests: XCTestCase {
     let writeCharacteristicID = "c8e58f23-9417-41c6-97a8-70f6b2c8cab9"
     let serviceID = "d1cf0603-b501-4569-a4b9-e47ad3f628a5"
 
-    let sorcID1 = "82f6ed49-b70d-4c9e-afa1-4b0377d0de5f"
-    let sorcID2 = "a8c5e6b9-9df1-4194-a214-88636a048fcb"
+    let sorcID1 = UUID(uuidString: "82f6ed49-b70d-4c9e-afa1-4b0377d0de5f")!
+    let sorcID2 = UUID(uuidString: "a8c5e6b9-9df1-4194-a214-88636a048fcb")!
 
     let centralManager = CBCentralManagerMock()
 
@@ -523,7 +523,8 @@ class ConnectionManagerTests: XCTestCase {
 
         let peripheral = CBPeripheralMock()
 
-        let strippedSorcID = sorcID1.replacingOccurrences(of: "-", with: "").dataFromHexadecimalString()!
+        let strippedSorcID = sorcID1.lowercasedUUIDString.replacingOccurrences(of: "-", with: "")
+            .dataFromHexadecimalString()!
         let advertisementData: [String: Any] = [
             CBAdvertisementDataManufacturerDataKey: strippedSorcID,
         ]
@@ -579,7 +580,8 @@ class ConnectionManagerTests: XCTestCase {
                               centralManager: centralManager, rssi: 40)
 
         let peripheralB = CBPeripheralMock()
-        let strippedSorcID = sorcID1.replacingOccurrences(of: "-", with: "").dataFromHexadecimalString()!
+        let strippedSorcID = sorcID1.lowercasedUUIDString.replacingOccurrences(of: "-", with: "")
+            .dataFromHexadecimalString()!
         let advertisementData: [String: Any] = [
             CBAdvertisementDataManufacturerDataKey: strippedSorcID,
         ]
@@ -1037,7 +1039,8 @@ class ConnectionManagerTests: XCTestCase {
                                        rssi: Int = 0) {
 
         startDiscovery(connectionManager: connectionManager, centralManager: centralManager)
-        let strippedSorcID = sorcID.replacingOccurrences(of: "-", with: "").dataFromHexadecimalString()!
+        let strippedSorcID = sorcID.lowercasedUUIDString.replacingOccurrences(of: "-", with: "")
+            .dataFromHexadecimalString()!
         let advertisementData: [String: Any] = [
             CBAdvertisementDataManufacturerDataKey: strippedSorcID,
         ]

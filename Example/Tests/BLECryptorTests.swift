@@ -8,6 +8,8 @@
 import XCTest
 @testable import SecureAccessBLE
 
+private let sorcIDA = UUID(uuidString: "be2fecaf-734b-4252-8312-59d477200a20")!
+
 class BLECryptorTests: XCTestCase {
 
     /**
@@ -72,7 +74,7 @@ class BLECryptorTests: XCTestCase {
         /// Testing if received message will be correctly decrypted
         XCTAssertNotNil(receivedMessage, "Crypto manager returned NIL for decrpting message!")
 
-        let response = ServiceGrantResponse(sorcID: "1a", message: receivedMessage)!
+        let response = ServiceGrantResponse(sorcID: sorcIDA, message: receivedMessage)!
 
         /// Testing if service grant trigger has ID .Lockstatus
         XCTAssertEqual(response.serviceGrantID, serviceGrantIDA, "Crypto manager returned wrong service grant ID!")

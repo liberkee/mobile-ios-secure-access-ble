@@ -9,8 +9,8 @@ import XCTest
 @testable import SecureAccessBLE
 import CommonUtils
 
-private let sorcIDA = "be2fecaf-734b-4252-8312-59d477200a20"
-private let sorcIDB = "fd487104-c03b-4a94-8162-08826746b52d"
+private let sorcIDA = UUID(uuidString: "be2fecaf-734b-4252-8312-59d477200a20")!
+private let sorcIDB = UUID(uuidString: "fd487104-c03b-4a94-8162-08826746b52d")!
 
 private let serviceGrantIDA: UInt16 = 0x01
 
@@ -183,7 +183,7 @@ class SorcManagerTests: XCTestCase {
     func test_connectToSorc_itDelegatesTheCallToSessionManager() {
 
         // Given
-        let leaseToken = try! LeaseToken(id: "id", leaseID: "leaseID", sorcID: "sorcID", sorcAccessKey: "key")
+        let leaseToken = try! LeaseToken(id: "id", leaseID: "leaseID", sorcID: sorcIDA, sorcAccessKey: "key")
         let leaseTokenBlob = try! LeaseTokenBlob(messageCounter: 1, data: "1a")
 
         // When

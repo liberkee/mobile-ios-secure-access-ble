@@ -25,7 +25,7 @@ struct Handshake: SorcMessagePayload {
     init(deviceID: String, sorcID: SorcID, leaseID: String) {
         let frameData = NSMutableData()
         frameData.append(deviceID.data(using: String.Encoding.ascii)!)
-        frameData.append(sorcID.data(using: String.Encoding.ascii)!)
+        frameData.append(sorcID.lowercasedUUIDString.data(using: String.Encoding.ascii)!)
 
         frameData.append(leaseID.data(using: String.Encoding.ascii)!)
         let challenge = [UInt8](repeating: 0x0, count: 16)

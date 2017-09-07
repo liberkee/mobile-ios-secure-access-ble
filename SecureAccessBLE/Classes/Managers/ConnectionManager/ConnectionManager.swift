@@ -311,7 +311,7 @@ extension ConnectionManager {
                          advertisementData: [String: Any], rssi RSSI: NSNumber) {
         guard discoveryChange.state.discoveryIsEnabled,
             let manufacturerData = advertisementData[CBAdvertisementDataManufacturerDataKey] as? Data,
-            let sorcID = manufacturerData.uuidString else { return }
+            let sorcID = UUID(data: manufacturerData) else { return }
 
         let sorc = DiscoveredSorc(sorcID: sorcID, peripheral: peripheral, discoveryDate: systemClock.now(), rssi: RSSI.intValue)
         updateDiscoveredSorcsWithNewSorc(sorc)

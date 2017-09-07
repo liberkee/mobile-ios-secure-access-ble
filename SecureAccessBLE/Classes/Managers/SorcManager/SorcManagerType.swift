@@ -7,8 +7,7 @@
 
 import CommonUtils
 
-/// Only lowercased IDs with hyphens are supported
-public typealias SorcID = String
+public typealias SorcID = UUID
 
 /// Defines what a manager of SORCs provides
 public protocol SorcManagerType {
