@@ -13,7 +13,7 @@ class SessionManager: SessionManagerType {
 
     let connectionChange = ChangeSubject<ConnectionChange>(state: .disconnected)
 
-    let serviceGrantResultReceived = PublishSubject<ServiceGrantResult>()
+    let serviceGrantChange = ChangeSubject<ServiceGrantChange>(state: .init(requestingServiceGrantIDs: []))
 
     private let securityManager: SecurityManagerType
     private let configuration: Configuration
@@ -82,11 +82,14 @@ class SessionManager: SessionManagerType {
             id: SorcMessageID.serviceGrant,
             payload: ServiceGrantRequest(serviceGrantID: serviceGrantID)
         )
+        let accepted: Bool
         do {
             try enqueueMessage(message)
+            accepted = true
         } catch {
-            serviceGrantResultReceived.onNext(.failure(.queueIsFull))
+            accepted = false
         }
+        applyServiceGrantChangeAction(.requestServiceGrant(id: serviceGrantID, accepted: accepted))
     }
 
     // MARK: - Private methods -
@@ -221,7 +224,7 @@ class SessionManager: SessionManagerType {
         waitingForResponse = false
 
         if lastMessageSent?.id == .serviceGrant {
-            handleServiceGrantRequestFailed(error: .sendingFailed)
+            applyServiceGrantChangeAction(.requestFailed(.sendingFailed))
         }
         lastMessageSent = nil
     }
@@ -234,7 +237,7 @@ class SessionManager: SessionManagerType {
 
         guard case let .success(message) = result else {
             if lastMessageSent?.id == .serviceGrant {
-                handleServiceGrantRequestFailed(error: .receivedInvalidData)
+                applyServiceGrantChangeAction(.requestFailed(.receivedInvalidData))
             }
             lastMessageSent = nil
             return
@@ -247,11 +250,11 @@ class SessionManager: SessionManagerType {
             rescheduleHeartbeat()
         case .serviceGrantTrigger:
             guard let response = ServiceGrantResponse(sorcID: sorcID, message: message) else {
-                handleServiceGrantRequestFailed(error: .receivedInvalidData)
+                applyServiceGrantChangeAction(.requestFailed(.receivedInvalidData))
                 return
             }
             rescheduleHeartbeat()
-            serviceGrantResultReceived.onNext(.success(response))
+            applyServiceGrantChangeAction(.responseReceived(response))
         default:
             return
         }
@@ -259,10 +262,40 @@ class SessionManager: SessionManagerType {
         sendNextMessageIfPossible()
     }
 
-    private func handleServiceGrantRequestFailed(error: ServiceGrantResult.Error) {
-        messageQueue.clear()
-        startSendingHeartbeat()
-        serviceGrantResultReceived.onNext(.failure(error))
+    private func applyServiceGrantChangeAction(_ action: ServiceGrantChange.Action) {
+        switch action {
+        case .initial: return
+        case let .requestServiceGrant(serviceGrantID, accepted):
+            var ids = serviceGrantChange.state.requestingServiceGrantIDs
+            if accepted {
+                ids.append(serviceGrantID)
+            }
+            let state = ServiceGrantChange.State(requestingServiceGrantIDs: ids)
+            serviceGrantChange.onNext(.init(
+                state: state,
+                action: .requestServiceGrant(id: serviceGrantID, accepted: accepted)
+            ))
+        case let .responseReceived(response):
+            var ids = serviceGrantChange.state.requestingServiceGrantIDs
+            ids.remove(at: 0)
+            let state = ServiceGrantChange.State(requestingServiceGrantIDs: ids)
+            serviceGrantChange.onNext(.init(
+                state: state,
+                action: .responseReceived(response)
+            ))
+        case let .requestFailed(error):
+            applyServiceGrantRequestFailed(error: error)
+        }
+    }
+
+    private func applyServiceGrantRequestFailed(error: ServiceGrantChange.Error) {
+        switch error {
+        case .sendingFailed, .receivedInvalidData:
+            messageQueue.clear()
+            startSendingHeartbeat()
+            let state = ServiceGrantChange.State(requestingServiceGrantIDs: [])
+            serviceGrantChange.onNext(.init(state: state, action: .requestFailed(error)))
+        }
     }
 
     // MARK: - Heartbeat handling

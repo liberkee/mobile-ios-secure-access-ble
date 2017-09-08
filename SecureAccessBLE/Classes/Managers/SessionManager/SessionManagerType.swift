@@ -14,7 +14,7 @@ protocol SessionManagerType {
     func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob)
     func disconnect()
 
-    var serviceGrantResultReceived: PublishSubject<ServiceGrantResult> { get }
+    var serviceGrantChange: ChangeSubject<ServiceGrantChange> { get }
 
     func requestServiceGrant(_ serviceGrantID: ServiceGrantID)
 }

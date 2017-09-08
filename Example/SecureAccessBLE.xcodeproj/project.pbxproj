@@ -46,7 +46,7 @@
 		E504030B1F5553F50008DF02 /* ConnectionChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionChange.swift; sourceTree = "<group>"; };
 		E504030C1F5553F50008DF02 /* DiscoveryChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryChange.swift; sourceTree = "<group>"; };
 		E504030D1F5553F50008DF02 /* SorcInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SorcInfo.swift; sourceTree = "<group>"; };
-		E504030E1F55543E0008DF02 /* ServiceGrantResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceGrantResult.swift; sourceTree = "<group>"; };
+		E504030E1F55543E0008DF02 /* ServiceGrantResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceGrantResponse.swift; sourceTree = "<group>"; };
 		E50403101F5556830008DF02 /* SessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManager.swift; sourceTree = "<group>"; };
 		E50403161F55607F0008DF02 /* SessionManagerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManagerType.swift; sourceTree = "<group>"; };
 		E504031B1F55BFD50008DF02 /* SessionManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionManagerTests.swift; sourceTree = "<group>"; };
@@ -74,6 +74,7 @@
 		E573A7931EDC2BD50093ABA8 /* LeaseTokenBlob.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeaseTokenBlob.swift; sourceTree = "<group>"; };
 		E5C2BEAA1F61779D00A857BF /* UUIDExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UUIDExtension.swift; sourceTree = "<group>"; };
 		E5C2BEAB1F61786000A857BF /* DataExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataExtension.swift; sourceTree = "<group>"; };
+		E5C2BEB21F627B5000A857BF /* ServiceGrantChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceGrantChange.swift; sourceTree = "<group>"; };
 		E5CF3ADB1F56FD51009C95A0 /* BoundedQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundedQueue.swift; sourceTree = "<group>"; };
 		E5CF3ADD1F56FDBC009C95A0 /* BoundedQueueTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoundedQueueTests.swift; sourceTree = "<group>"; };
 		E5CF3ADF1F585024009C95A0 /* SecureConnectionChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureConnectionChange.swift; sourceTree = "<group>"; };
@@ -264,10 +265,11 @@
 				E504030A1F5553830008DF02 /* SorcManagerType.swift */,
 				E50403061F546FFF0008DF02 /* SorcManager.swift */,
 				E50C4E911F5F3F380081B619 /* SorcManagerConfiguration.swift */,
-				E504030B1F5553F50008DF02 /* ConnectionChange.swift */,
 				E504030C1F5553F50008DF02 /* DiscoveryChange.swift */,
 				E504030D1F5553F50008DF02 /* SorcInfo.swift */,
-				E504030E1F55543E0008DF02 /* ServiceGrantResult.swift */,
+				E504030B1F5553F50008DF02 /* ConnectionChange.swift */,
+				E5C2BEB21F627B5000A857BF /* ServiceGrantChange.swift */,
+				E504030E1F55543E0008DF02 /* ServiceGrantResponse.swift */,
 			);
 			path = SorcManager;
 			sourceTree = "<group>";

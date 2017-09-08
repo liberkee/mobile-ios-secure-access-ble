@@ -48,8 +48,8 @@ public protocol SorcManagerType {
 
     // MARK: - Service
 
-    /// A service grant result was received
-    var serviceGrantResultReceived: EventSignal<ServiceGrantResult> { get }
+    /// The state of service grant requesting with the action that led to this state
+    var serviceGrantChange: ChangeSignal<ServiceGrantChange> { get }
 
     /**
      Requests a service grant from the connected SORC

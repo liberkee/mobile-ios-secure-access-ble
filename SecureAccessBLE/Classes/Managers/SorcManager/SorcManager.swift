@@ -25,8 +25,8 @@ public class SorcManager: SorcManagerType {
         return sessionManager.connectionChange.asSignal()
     }
 
-    public var serviceGrantResultReceived: EventSignal<ServiceGrantResult> {
-        return sessionManager.serviceGrantResultReceived.asSignal()
+    public var serviceGrantChange: ChangeSignal<ServiceGrantChange> {
+        return sessionManager.serviceGrantChange.asSignal()
     }
 
     init(
