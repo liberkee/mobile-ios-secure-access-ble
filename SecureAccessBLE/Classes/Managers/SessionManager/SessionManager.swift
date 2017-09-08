@@ -100,6 +100,7 @@ class SessionManager: SessionManagerType {
         waitingForResponse = false
         actionLeadingToDisconnect = nil
         messageQueue.clear()
+        applyServiceGrantChangeAction(.reset)
     }
 
     // MARK: - Connection handling
@@ -280,6 +281,12 @@ class SessionManager: SessionManagerType {
             ))
         case let .requestFailed(error):
             applyServiceGrantRequestFailed(error: error)
+        case .reset:
+            let state = ServiceGrantChange.State(requestingServiceGrantIDs: [])
+            serviceGrantChange.onNext(.init(
+                state: state,
+                action: .reset
+            ))
         }
     }
 

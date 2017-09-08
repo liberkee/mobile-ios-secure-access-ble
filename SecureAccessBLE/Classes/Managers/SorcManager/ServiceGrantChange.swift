@@ -50,6 +50,7 @@ extension ServiceGrantChange {
         case requestServiceGrant(id: ServiceGrantID, accepted: Bool)
         case responseReceived(ServiceGrantResponse)
         case requestFailed(Error)
+        case reset
 
         public static func ==(lhs: Action, rhs: Action) -> Bool {
             switch (lhs, rhs) {
@@ -61,6 +62,8 @@ extension ServiceGrantChange {
                 return lServiceGrantResponse == rServiceGrantResponse
             case let (.requestFailed(lError), .requestFailed(rError)):
                 return lError == rError
+            case (.reset, .reset):
+                return true
             default:
                 return false
             }
