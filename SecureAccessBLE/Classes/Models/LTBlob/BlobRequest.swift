@@ -18,7 +18,6 @@ struct BlobRequest: SorcMessagePayload {
         let type: UInt32 = 0
         var receiveData = UInt8(type)
         (data as Data).copyBytes(to: &receiveData, count: MemoryLayout<UInt32>.size)
-        debugPrint(receiveData)
         return Int(receiveData)
     }
 

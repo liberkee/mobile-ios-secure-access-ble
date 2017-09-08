@@ -158,7 +158,6 @@ class Challenger {
      */
     func beginChallenge() throws {
         do {
-            // debugPrint("begin to challenge with nc: \(Data.withBytes(self.nc))")
             try b0 = crypto.encrypt(nc)
             let payload = PhoneToSorcChallenge(leaseID: leaseID, sorcID: sorcID, leaseTokenID: leaseTokenID, challenge: b0)
 
@@ -178,7 +177,6 @@ class Challenger {
      - throws:
      */
     func handleReceivedChallengerMessage(_ message: SorcMessage) throws {
-        debugPrint("Resonse message with id:\(message.id)")
         switch message.id {
         case .ltAck:
             try beginChallenge()

@@ -181,7 +181,6 @@ class SecurityManager: SecurityManagerType {
             let message = SorcMessage(id: .ltBlob, payload: payload)
             sendMessageInternal(message)
         } else {
-            debugPrint("BLA Blob data error")
             disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
         }
     }

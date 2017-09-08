@@ -109,7 +109,6 @@ class SessionManager: SessionManagerType {
         case .connecting, .connected: break
         default: return
         }
-        NSLog("BLA handleConnectionChange disconnect(withAction")
         actionLeadingToDisconnect = action
         securityManager.disconnect()
     }
@@ -177,7 +176,6 @@ class SessionManager: SessionManagerType {
             ))
             return
         }
-        NSLog("BLA handleConnectionChange disconnected")
         switch secureChangeAction {
         case let .connectingFailed(sorcID, secureConnectingFailedError):
             let error = ConnectingFailedError(secureConnectingFailedError: secureConnectingFailedError)
@@ -203,7 +201,6 @@ class SessionManager: SessionManagerType {
     // MARK: - Message handling
 
     private func enqueueMessage(_ message: SorcMessage) throws {
-        NSLog("BLA: enqueueMessage: \(message.id)")
         try messageQueue.enqueue(message)
         sendNextMessageIfPossible()
     }
@@ -242,8 +239,6 @@ class SessionManager: SessionManagerType {
             lastMessageSent = nil
             return
         }
-
-        NSLog("BLA handleMessageReceived: \(message.id)")
 
         switch message.id {
         case .heartBeatResponse:
@@ -301,7 +296,6 @@ class SessionManager: SessionManagerType {
     // MARK: - Heartbeat handling
 
     private func scheduleHeartbeatTimers() {
-        NSLog("BLA: scheduleHeartbeatTimers")
         sendHeartbeatsTimer = Timer.scheduledTimer(
             timeInterval: configuration.heartbeatInterval,
             target: self,
@@ -320,28 +314,23 @@ class SessionManager: SessionManagerType {
 
     @objc func startSendingHeartbeat() {
         guard !waitingForResponse else { return }
-        NSLog("BLA startSendingHeartbeat: \(Date())")
         let message = SorcMessage(id: SorcMessageID.heartBeatRequest, payload: MTUSize())
         try? enqueueMessage(message)
     }
 
     private func stopSendingHeartbeat() {
-        NSLog("BLA stopSendingHeartbeat")
         sendHeartbeatsTimer?.invalidate()
         checkHeartbeatsResponseTimer?.invalidate()
     }
 
     @objc func checkOutHeartbeatResponse() {
-        NSLog("BLA checkOutHeartbeatResponse")
         if (lastHeartbeatResponseDate.timeIntervalSinceNow + configuration.heartbeatTimeout) < 0 {
-            NSLog("checkOutHeartbeatResponse timedout")
             disconnect(withAction: .connectionLost(error: .heartbeatTimedOut))
         }
     }
 
     private func rescheduleHeartbeat() {
         lastHeartbeatResponseDate = Date()
-        NSLog("BLA: handleSorcResponded \(lastHeartbeatResponseDate)")
         checkHeartbeatsResponseTimer?.fireDate = lastHeartbeatResponseDate
             .addingTimeInterval(configuration.heartbeatTimeout)
     }

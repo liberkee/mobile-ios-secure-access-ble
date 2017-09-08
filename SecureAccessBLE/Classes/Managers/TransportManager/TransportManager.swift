@@ -149,13 +149,11 @@ class TransportManager: TransportManagerType {
     // MARK: - MTU handling
 
     private func sendMTURequest() {
-        debugPrint("BLA sendMTURequest")
         let message = SorcMessage(id: SorcMessageID.mtuRequest, payload: MTUSize())
         sendDataInternal(message.data)
     }
 
     private func handleMTUReceived(mtuSize: Int) {
-        debugPrint("BLA handleMTUReceived")
         guard case let .connecting(sorcID, .requestingMTU) = connectionChange.state else { return }
 
         self.mtuSize = mtuSize
@@ -168,10 +166,9 @@ class TransportManager: TransportManagerType {
     // MARK: - Data package and frame handling
 
     private func sendDataInternal(_ data: Data) {
-        debugPrint("BLA: try sending data: \(data.toHexString())")
 
         if sendingPackage != nil || receivingPackage != nil {
-            debugPrint("BLA Sending/Receiving in progress")
+            debugPrint("Sending/Receiving in progress")
         } else {
             sendingPackage = DataFramePackage(messageData: data, frameSize: messageFrameSize)
             if let currentFrame = self.sendingPackage?.currentFrame {
@@ -220,7 +217,6 @@ class TransportManager: TransportManagerType {
     }
 
     private func handleReceivedData(_ data: Data) {
-        debugPrint("BLA handleReceivedData: \(data.toHexString())")
 
         if receivingPackage == nil {
             receivingPackage = DataFramePackage()
@@ -234,12 +230,9 @@ class TransportManager: TransportManagerType {
         resetReceivingPackage()
         let messageData = package.message
 
-        debugPrint("BLA handleReceivedMessageData: \(messageData.toHexString())")
-
         if case let .connecting(sorcID, .requestingMTU) = connectionChange.state {
             let message = SorcMessage(rawData: messageData)
             if message.id == .mtuReceive, let mtuSize = MTUSize(rawData: message.message).mtuSize {
-                debugPrint("BLA mtuReceive: \(message.data.toHexString())")
                 handleMTUReceived(mtuSize: mtuSize)
             } else {
                 disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .invalidMTUResponse))
@@ -250,8 +243,6 @@ class TransportManager: TransportManagerType {
     }
 
     private func handleReceivedDataError(_ error: Error) {
-        debugPrint("BLA handleReceivedData error")
-
         if case let .connecting(sorcID, .requestingMTU) = connectionChange.state {
             disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .invalidMTUResponse))
         } else {
@@ -260,12 +251,10 @@ class TransportManager: TransportManagerType {
     }
 
     private func resetSendingPackage() {
-        debugPrint("BLA resetCurrentPackage")
         sendingPackage = nil
     }
 
     private func resetReceivingPackage() {
-        debugPrint("BLA resetReceivedPackage")
         receivingPackage = nil
     }
 }
