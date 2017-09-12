@@ -234,7 +234,7 @@ struct BLEChallengeService {
                 nr[0], nr[1], nr[2], nr[3],
                 nc[0], nc[1], nc[2], nc[3],
                 nr[12], nr[13], nr[14], nr[15],
-                nc[12], nc[13], nc[14], nc[15],
+                nc[12], nc[13], nc[14], nc[15]
             ]
             print("challenger finished with session key: \(Data(bytes: sessionKey))")
             delegate?.challengerFinishedWithSessionKey(sessionKey)
