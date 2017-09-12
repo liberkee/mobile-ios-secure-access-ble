@@ -439,7 +439,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/SwiftLint/swiftlint\" --config ../.swiftlint.yml || true";
+			shellScript = "# We ignore exit code of linter. This allows the build to complete successfully. Errors and warnings can be viewed in Xcode.\n\"${PODS_ROOT}/SwiftLint/swiftlint\" --config ../.swiftlint.yml || true";
 		};
 		E58008D51EC9A8020000F40D /* Run SwiftFormat */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -453,7 +453,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "Pods/SwiftFormat/CommandLineTool/swiftformat ../SecureAccessBLE\nPods/SwiftFormat/CommandLineTool/swiftformat Tests";
+			shellScript = "SWIFT_FORMAT_FOLDERS_TO_CHECK=\"../SecureAccessBLE Tests\"\nSWIFT_FORMAT_ARGS=\"--commas false\"\n\nPods/SwiftFormat/CommandLineTool/swiftformat $SWIFT_FORMAT_FOLDERS_TO_CHECK $SWIFT_FORMAT_ARGS";
 		};
 /* End PBXShellScriptBuildPhase section */
 
