@@ -119,14 +119,9 @@ class Challenger {
     weak var delegate: ChallengerDelegate?
 
     /**
-     init function for BLE Challenger object
+     Inits a challenger with a given lease token. Returns nil if lease token contains invalid data.
 
-     - parameter leaseID: device id as String
-     - parameter sorcID: The SORC ID
-     - parameter leaseTokenID: lease token id as String
-     - parameter sorcAccessKey: SORC access key as String
-
-     - returns: new object for BLE Challenger
+     - parameter leaseToken: The lease token conaining mandatory ids and key.
      */
     init?(leaseToken: LeaseToken) {
         leaseID = leaseToken.leaseID
