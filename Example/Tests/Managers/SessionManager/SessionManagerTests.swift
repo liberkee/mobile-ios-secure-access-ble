@@ -12,7 +12,7 @@ import CommonUtils
 private let sorcIDA = UUID(uuidString: "be2fecaf-734b-4252-8312-59d477200a20")!
 private let sorcAccessKey = "1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a"
 private let leaseTokenA = try! LeaseToken(id: "", leaseID: "", sorcID: sorcIDA, sorcAccessKey: sorcAccessKey)
-private let leaseTokenBlobA = try! LeaseTokenBlob(messageCounter: 1, data: "")
+private let leaseTokenBlobA = try! LeaseTokenBlob(messageCounter: 1, data: "1a")
 
 private class MockSecurityManager: SecurityManagerType {
 
@@ -52,134 +52,184 @@ class SessionManagerTests: XCTestCase {
         XCTAssertNotNil(sessionManager)
     }
 
-    //    func test_connectToSorc_ifDisconnected_connectsWithSorc() {
-    //
-    //        // Given
-    //        var receivedConnectionChange: ConnectionChange?
-    //        _ = sessionManager.connectionChange.subscribeNext { change in
-    //            receivedConnectionChange = change
-    //        }
-    //
-    //        // When
-    //        sessionManager.connectToSorc(leaseToken: leaseTokenA, leaseTokenBlob: leaseTokenBlobA)
-    //
-    //        // Then
-    //        XCTAssertEqual(securityManager.connectToSorcCalledWithArguments, sorcIDA)
-    //
-    //        let physicalConnectingChange = ConnectionChange(
-    //            state: .connecting(sorcID: sorcIDA, state: .physical),
-    //            action: .connect(sorcID: sorcIDA)
-    //        )
-    //        XCTAssertEqual(receivedConnectionChange, physicalConnectingChange)
-    //
-    //        // When
-    //        securityManager.connectionChange.onNext(.init(
-    //            state: .connecting(sorcID: sorcIDA, state: .requestingMTU),
-    //            action: .physicalConnectionEstablished(sorcID: sorcIDA)
-    //        ))
-    //
-    //        // Then
-    //        let transportConnectingChange = ConnectionChange(
-    //            state: .connecting(sorcID: sorcIDA, state: .transport),
-    //            action: .physicalConnectionEstablished(sorcID: sorcIDA)
-    //        )
-    //        XCTAssertEqual(receivedConnectionChange, transportConnectingChange)
-    //
-    //        // When
-    //        securityManager.connectionChange.onNext(.init(
-    //            state: .connected(sorcID: sorcIDA),
-    //            action: .connectionEstablished(sorcID: sorcIDA))
-    //        )
-    //
-    //        // Then
-    //        let challengeConnectingChange = ConnectionChange(
-    //            state: .connecting(sorcID: sorcIDA, state: .challenging),
-    //            action: .transportConnectionEstablished(sorcID: sorcIDA)
-    //        )
-    //        XCTAssertEqual(receivedConnectionChange, challengeConnectingChange)
-    //
-    //        // transport manager receives challenge result
-    //        // transport manager sends challenge result
-    //    }
+    func test_connectToSorc_ifDisconnected_connectsWithSorc() {
+
+        // Given
+        var receivedConnectionChange: ConnectionChange?
+        _ = sessionManager.connectionChange.subscribeNext { change in
+            receivedConnectionChange = change
+        }
+
+        // When
+        sessionManager.connectToSorc(leaseToken: leaseTokenA, leaseTokenBlob: leaseTokenBlobA)
+
+        // Then
+        let expectedArguments = (leaseToken: leaseTokenA, leaseTokenBlob: leaseTokenBlobA)
+        XCTAssert(securityManager.connectToSorcCalledWithArguments! == expectedArguments)
+
+        let physicalConnectingChange = ConnectionChange(
+            state: .connecting(sorcID: sorcIDA, state: .physical),
+            action: .connect(sorcID: sorcIDA)
+        )
+        XCTAssertEqual(receivedConnectionChange, physicalConnectingChange)
+
+        // When
+        securityManager.connectionChange.onNext(.init(
+            state: .connecting(sorcID: sorcIDA, state: .transport),
+            action: .physicalConnectionEstablished(sorcID: sorcIDA)
+        ))
+
+        // Then
+        let transportConnectingChange = ConnectionChange(
+            state: .connecting(sorcID: sorcIDA, state: .transport),
+            action: .physicalConnectionEstablished(sorcID: sorcIDA)
+        )
+        XCTAssertEqual(receivedConnectionChange, transportConnectingChange)
+
+        // When
+        securityManager.connectionChange.onNext(.init(
+            state: .connecting(sorcID: sorcIDA, state: .challenging),
+            action: .transportConnectionEstablished(sorcID: sorcIDA)
+        ))
+
+        // Then
+        let challengingConnectingChange = ConnectionChange(
+            state: .connecting(sorcID: sorcIDA, state: .challenging),
+            action: .transportConnectionEstablished(sorcID: sorcIDA)
+        )
+        XCTAssertEqual(receivedConnectionChange, challengingConnectingChange)
+
+        // When
+        securityManager.connectionChange.onNext(.init(
+            state: .connected(sorcID: sorcIDA),
+            action: .connectionEstablished(sorcID: sorcIDA))
+        )
+
+        // Then
+        let connectedChange = ConnectionChange(
+            state: .connected(sorcID: sorcIDA),
+            action: .connectionEstablished(sorcID: sorcIDA)
+        )
+        XCTAssertEqual(receivedConnectionChange, connectedChange)
+    }
 
     // To make it possible to retrigger a connect while connecting physically
-    //    func test_connectToSorc_ifPhysicalConnecting_connectsWithSorcIDOfLeaseTokenAndDoesNotNotifyPhysicalConnecting() {
-    //
-    //        // Given
-    //        preparePhysicalConnecting()
-    //
-    //        var receivedConnectionChange: ConnectionChange!
-    //        _ = sessionManager.connectionChange.subscribeNext { change in
-    //            receivedConnectionChange = change
-    //        }
-    //
-    //        // When
-    //        sessionManager.connectToSorc(leaseToken: leaseTokenA, leaseTokenBlob: leaseTokenBlobA)
-    //
-    //        // Then
-    //        XCTAssertEqual(securityManager.connectToSorcCalledWithArguments, sorcIDA)
-    //        XCTAssertEqual(receivedConnectionChange.action, .initial)
-    //    }
+    func test_connectToSorc_ifPhysicalConnecting_connectsToSecurityManagerAndDoesNotNotifyPhysicalConnecting() {
 
-    // func test_connectToSorc_ifTransportConnecting_doesNothing()
+        // Given
+        preparePhysicalConnecting()
 
-    //    func test_connectToSorc_ifConnected_doesNothing() {
-    //
-    //        // Given
-    //        prepareConnected()
-    //
-    //        var receivedConnectionChange: ConnectionChange!
-    //        _ = sessionManager.connectionChange.subscribeNext { change in
-    //            receivedConnectionChange = change
-    //        }
-    //
-    //        // When
-    //        sessionManager.connectToSorc(leaseToken: leaseTokenA, leaseTokenBlob: leaseTokenBlobA)
-    //
-    //        // Then
-    //            XCTAssertNil(transportManager.connectToSorcCalledWithSorcID)
-    //            XCTAssertEqual(receivedConnectionChange.action, .initial)
-    //    }
+        var receivedConnectionChange: ConnectionChange!
+        _ = sessionManager.connectionChange.subscribeNext { change in
+            receivedConnectionChange = change
+        }
 
-    //    func test_disconnect_ifConnecting_disconnectsAndNotifiesDisconnect() {
-    //
-    //        // Given
-    //        preparePhysicalConnecting()
-    //
-    //        var receivedConnectionChange: ConnectionChange!
-    //        _ = sessionManager.connectionChange.subscribeNext { change in
-    //            receivedConnectionChange = change
-    //        }
-    //
-    //        // When
-    //        sessionManager.disconnect()
-    //
-    //        // Then
-    //        XCTAssertTrue(securityManager.disconnectCalled)
-    //
-    //        let expectedChange = ConnectionChange(state: .disconnected, action: .disconnect)
-    //        XCTAssertEqual(receivedConnectionChange, expectedChange)
-    //    }
+        // When
+        sessionManager.connectToSorc(leaseToken: leaseTokenA, leaseTokenBlob: leaseTokenBlobA)
 
-    //    func test_disconnect_ifConnected_disconnectsAndNotifiesDisconnect() {
-    //
-    //        // Given
-    //        prepareConnected()
-    //
-    //        var receivedConnectionChange: ConnectionChange!
-    //        _ = sessionManager.connectionChange.subscribeNext { change in
-    //            receivedConnectionChange = change
-    //        }
-    //
-    //        // When
-    //        sessionManager.disconnect()
-    //
-    //        // Then
-    //        XCTAssertTrue(transportManager.disconnectCalled)
-    //
-    //        let expectedChange = ConnectionChange(state: .disconnected, action: .disconnect)
-    //        XCTAssertEqual(receivedConnectionChange, expectedChange)
-    //    }
+        // Then
+        let expectedArguments = (leaseToken: leaseTokenA, leaseTokenBlob: leaseTokenBlobA)
+        XCTAssert(securityManager.connectToSorcCalledWithArguments! == expectedArguments)
+        XCTAssertEqual(receivedConnectionChange.action, .initial)
+    }
+
+    func test_connectToSorc_ifTransportConnecting_doesNothing() {
+
+        // Given
+        prepareTransportConnecting()
+
+        var receivedConnectionChange: ConnectionChange!
+        _ = sessionManager.connectionChange.subscribeNext { change in
+            receivedConnectionChange = change
+        }
+
+        // When
+        sessionManager.connectToSorc(leaseToken: leaseTokenA, leaseTokenBlob: leaseTokenBlobA)
+
+        // Then
+        XCTAssertNil(securityManager.connectToSorcCalledWithArguments)
+        XCTAssertEqual(receivedConnectionChange.action, .initial)
+    }
+
+    func test_connectToSorc_ifChallengingConnecting_doesNothing() {
+
+        // Given
+        prepareChallengingConnecting()
+
+        var receivedConnectionChange: ConnectionChange!
+        _ = sessionManager.connectionChange.subscribeNext { change in
+            receivedConnectionChange = change
+        }
+
+        // When
+        sessionManager.connectToSorc(leaseToken: leaseTokenA, leaseTokenBlob: leaseTokenBlobA)
+
+        // Then
+        XCTAssertNil(securityManager.connectToSorcCalledWithArguments)
+        XCTAssertEqual(receivedConnectionChange.action, .initial)
+    }
+
+    func test_connectToSorc_ifConnected_doesNothing() {
+
+        // Given
+        prepareConnected()
+
+        var receivedConnectionChange: ConnectionChange!
+        _ = sessionManager.connectionChange.subscribeNext { change in
+            receivedConnectionChange = change
+        }
+
+        // When
+        sessionManager.connectToSorc(leaseToken: leaseTokenA, leaseTokenBlob: leaseTokenBlobA)
+
+        // Then
+        XCTAssertNil(securityManager.connectToSorcCalledWithArguments)
+        XCTAssertEqual(receivedConnectionChange.action, .initial)
+    }
+
+    func test_disconnect_ifConnecting_disconnectsSecurityManagerAndNotifiesDisconnect() {
+
+        // Given
+        preparePhysicalConnecting()
+
+        var receivedConnectionChange: ConnectionChange!
+        _ = sessionManager.connectionChange.subscribeNext { change in
+            receivedConnectionChange = change
+        }
+
+        // When
+        sessionManager.disconnect()
+
+        securityManager.connectionChange.onNext(.init(state: .disconnected, action: .disconnect))
+
+        // Then
+        XCTAssertTrue(securityManager.disconnectCalled)
+
+        let expectedChange = ConnectionChange(state: .disconnected, action: .disconnect)
+        XCTAssertEqual(receivedConnectionChange, expectedChange)
+    }
+
+    func test_disconnect_ifConnected_disconnectsAndNotifiesDisconnect() {
+
+        // Given
+        prepareConnected()
+
+        var receivedConnectionChange: ConnectionChange!
+        _ = sessionManager.connectionChange.subscribeNext { change in
+            receivedConnectionChange = change
+        }
+
+        // When
+        sessionManager.disconnect()
+
+        securityManager.connectionChange.onNext(.init(state: .disconnected, action: .disconnect))
+
+        // Then
+        XCTAssertTrue(securityManager.disconnectCalled)
+
+        let expectedChange = ConnectionChange(state: .disconnected, action: .disconnect)
+        XCTAssertEqual(receivedConnectionChange, expectedChange)
+    }
 
     func test_disconnect_ifNotConnectingOrConnected_doesNothing() {
 
@@ -202,6 +252,27 @@ class SessionManagerTests: XCTestCase {
         securityManager.connectToSorcCalledWithArguments = nil
     }
 
-    //    private func prepareConnected() {
-    //    }
+    private func prepareTransportConnecting() {
+        preparePhysicalConnecting()
+        securityManager.connectionChange.onNext(.init(
+            state: .connecting(sorcID: sorcIDA, state: .transport),
+            action: .physicalConnectionEstablished(sorcID: sorcIDA)
+        ))
+    }
+
+    private func prepareChallengingConnecting() {
+        prepareTransportConnecting()
+        securityManager.connectionChange.onNext(.init(
+            state: .connecting(sorcID: sorcIDA, state: .challenging),
+            action: .transportConnectionEstablished(sorcID: sorcIDA)
+        ))
+    }
+
+    private func prepareConnected() {
+        prepareChallengingConnecting()
+        securityManager.connectionChange.onNext(.init(
+            state: .connected(sorcID: sorcIDA),
+            action: .connectionEstablished(sorcID: sorcIDA))
+        )
+    }
 }

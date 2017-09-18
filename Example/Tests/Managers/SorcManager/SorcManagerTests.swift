@@ -99,6 +99,10 @@ class SorcManagerTests: XCTestCase {
         XCTAssertNotNil(sorcManager)
     }
 
+    func test_convenienceInit_succeeds() {
+        XCTAssertNotNil(SorcManager())
+    }
+
     func test_isBluetoothEnabled_ifTrueIsProvided_isTrue() {
 
         // Given
@@ -246,25 +250,37 @@ class SorcManagerTests: XCTestCase {
         XCTAssertEqual(sessionManager.requestServiceGrantCalledWithID!, serviceGrantIDA)
     }
 
-    //    func test_serviceGrantResultReceived_ifSessionManagerReceivesResult_itReceivesResult() {
-    //
-    //        // Given
-    //        var receivedResult: ServiceGrantResult?
-    //        _ = sorcManager.serviceGrantResultReceived.subscribe { result in
-    //            receivedResult = result
-    //        }
-    //
-    //        // When
-    //        let response = ServiceGrantResponse(
-    //            sorcID: sorcIDA,
-    //            serviceGrantID: serviceGrantIDA,
-    //            status: .success,
-    //            responseData: "responseData"
-    //        )
-    //        let result = ServiceGrantResult.success(response)
-    //        sessionManager.serviceGrantResultReceived.onNext(result)
-    //
-    //        // Then
-    //        XCTAssertEqual(receivedResult, result)
-    //    }
+    func test_serviceGrantChange_ifSessionManagerIsRequestingServiceGrants_itIsRequestingServiceGrants() {
+
+        // Given
+        sessionManager.serviceGrantChange.onNext(.init(
+            state: .init(requestingServiceGrantIDs: [1, 2, 3]),
+            action: .requestServiceGrant(id: 2, accepted: true)
+        ))
+
+        // When
+        let state = sorcManager.serviceGrantChange.state
+
+        // Then
+        XCTAssertEqual(state, .init(requestingServiceGrantIDs: [1, 2, 3]))
+    }
+
+    func test_serviceGrantChange_ifSessionManagerChangesServiceGrantState_itNotifiesServiceGrantChange() {
+
+        // Given
+        var receivedChange: ServiceGrantChange?
+        _ = sorcManager.serviceGrantChange.subscribe { change in
+            receivedChange = change
+        }
+
+        // When
+        let change = ServiceGrantChange(
+            state: .init(requestingServiceGrantIDs: [1]),
+            action: .requestServiceGrant(id: 1, accepted: true)
+        )
+        sessionManager.serviceGrantChange.onNext(change)
+
+        // Then
+        XCTAssertEqual(receivedChange, change)
+    }
 }

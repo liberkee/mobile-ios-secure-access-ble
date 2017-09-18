@@ -47,6 +47,8 @@ extension ServiceGrantChange {
     /// The action that led to the state
     public enum Action: Equatable {
         case initial
+
+        /// A service grant was requested, `accepted` == true, if request could be enqueued
         case requestServiceGrant(id: ServiceGrantID, accepted: Bool)
         case responseReceived(ServiceGrantResponse)
         case requestFailed(Error)
