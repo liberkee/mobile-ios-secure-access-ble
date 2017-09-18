@@ -336,14 +336,21 @@ extension ConnectionManager {
     }
 
     func centralManager_(_: CBCentralManagerType, didDisconnectPeripheral peripheral: CBPeripheralType,
-                         error _: Error?) {
+                         error: Error?) {
 
-        guard case let .connected(sorcID) = connectionState,
-            peripheralMatchingSorcID(sorcID)?.identifier == peripheral.identifier else { return }
+        consoleLog("Central didDisconnectPeripheral: \(error?.localizedDescription ?? "Unknown error")")
 
-        discoveredSorcs[sorcID] = nil
-        updateDiscoveryChange(action: .disconnected(sorcID: sorcID))
-        connectionChange.onNext(.init(state: .disconnected, action: .connectionLost(sorcID: sorcID)))
+        switch connectionState {
+        case let .connecting(sorcID), let .connected(sorcID):
+            guard peripheralMatchingSorcID(sorcID)?.identifier == peripheral.identifier else { return }
+
+            consoleLog("Central didDisconnectPeripheral2")
+
+            discoveredSorcs[sorcID] = nil
+            updateDiscoveryChange(action: .disconnected(sorcID: sorcID))
+            connectionChange.onNext(.init(state: .disconnected, action: .connectionLost(sorcID: sorcID)))
+        default: break
+        }
     }
 }
 

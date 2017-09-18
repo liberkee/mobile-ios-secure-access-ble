@@ -707,14 +707,14 @@ class ConnectionManagerTests: XCTestCase {
         XCTAssertEqual(receivedConnectionChange, expected)
     }
 
-    func test_centralManagerDidDisconnectPeripheral_ifItsNotConnected_doesNothing() {
+    func test_centralManagerDidDisconnectPeripheral_ifItsDisconnected_doesNothing() {
 
         // Given
         let connectionManager = ConnectionManager(centralManager: centralManager)
 
         let peripheral = CBPeripheralMock()
 
-        prepareConnectingSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
+        prepareDiscoveredSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
                               centralManager: centralManager)
 
         var receivedDiscoveryChange: DiscoveryChange!
@@ -729,7 +729,7 @@ class ConnectionManagerTests: XCTestCase {
         XCTAssert(receivedDiscoveryChange.state.discoveredSorcs.contains(sorcID1))
         XCTAssertEqual(receivedDiscoveryChange.action, .initial)
 
-        if case .connecting = connectionManager.connectionChange.state {} else {
+        if case .disconnected = connectionManager.connectionChange.state {} else {
             XCTFail()
         }
     }
