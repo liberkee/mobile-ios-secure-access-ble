@@ -183,9 +183,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
             }
             discoveredSorcs[sorcID] = nil
             updateDiscoveryChange(action: .disconnect(sorcID: sorcID))
-            writeCharacteristic = nil
-            notifyCharacteristic = nil
-            connectionChange.onNext(.init(state: .disconnected, action: action ?? .disconnect(sorcID: sorcID)))
+            updateConnectionChangeToDisconnected(action: action ?? .disconnect(sorcID: sorcID))
         case .disconnected: break
         }
     }
@@ -254,6 +252,13 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
         }
     }
 
+    fileprivate func updateConnectionChangeToDisconnected(action: PhysicalConnectionChange.Action) {
+        if case .disconnected = connectionChange.state { return }
+        writeCharacteristic = nil
+        notifyCharacteristic = nil
+        connectionChange.onNext(.init(state: .disconnected, action: action))
+    }
+
     fileprivate func peripheralMatchingSorcID(_ sorcID: SorcID) -> CBPeripheralType? {
         return discoveredSorcs[sorcID]?.peripheral
     }
@@ -295,15 +300,21 @@ extension ConnectionManager {
     func centralManagerDidUpdateState_(_ central: CBCentralManagerType) {
         consoleLog("ConnectionManager Central updated state: \(central.state)")
 
-        isBluetoothEnabled.onNext(central.state == .poweredOn)
-
         if central.state == .poweredOn {
             if discoveryChange.state.discoveryIsEnabled {
                 startDiscovery()
             }
         } else {
             resetDiscoveredSorcs()
+
+            switch connectionChange.state {
+            case let .connecting(sorcID), let .connected(sorcID):
+                updateConnectionChangeToDisconnected(action: .connectionLost(sorcID: sorcID))
+            default: break
+            }
         }
+
+        isBluetoothEnabled.onNext(central.state == .poweredOn)
     }
 
     func centralManager_(_: CBCentralManagerType, didDiscover peripheral: CBPeripheralType,
@@ -332,7 +343,7 @@ extension ConnectionManager {
         guard case let .connecting(sorcID) = connectionState,
             peripheralMatchingSorcID(sorcID)?.identifier == peripheral.identifier else { return }
 
-        connectionChange.onNext(.init(state: .disconnected, action: .connectingFailed(sorcID: sorcID)))
+        updateConnectionChangeToDisconnected(action: .connectingFailed(sorcID: sorcID))
     }
 
     func centralManager_(_: CBCentralManagerType, didDisconnectPeripheral peripheral: CBPeripheralType,
@@ -344,11 +355,9 @@ extension ConnectionManager {
         case let .connecting(sorcID), let .connected(sorcID):
             guard peripheralMatchingSorcID(sorcID)?.identifier == peripheral.identifier else { return }
 
-            consoleLog("Central didDisconnectPeripheral2")
-
             discoveredSorcs[sorcID] = nil
             updateDiscoveryChange(action: .disconnected(sorcID: sorcID))
-            connectionChange.onNext(.init(state: .disconnected, action: .connectionLost(sorcID: sorcID)))
+            updateConnectionChangeToDisconnected(action: .connectionLost(sorcID: sorcID))
         default: break
         }
     }

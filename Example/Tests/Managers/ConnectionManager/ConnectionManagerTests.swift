@@ -513,6 +513,30 @@ class ConnectionManagerTests: XCTestCase {
         XCTAssertEqual(receivedDiscoveryChange.action, .reset)
     }
 
+    func test_centralManagerDidUpdateState_ifCentralManagerIsNotPoweredOnAndIsNotDisconnected_itDisconnects() {
+
+        // Given
+        centralManager.state = .poweredOn
+        let connectionManager = ConnectionManager(centralManager: centralManager)
+
+        let peripheral = CBPeripheralMock()
+        prepareConnectedSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
+                             centralManager: centralManager)
+
+        var receivedConnectionChange: PhysicalConnectionChange!
+        _ = connectionManager.connectionChange.subscribeNext { change in
+            receivedConnectionChange = change
+        }
+
+        // When
+        centralManager.state = .poweredOff
+        connectionManager.centralManagerDidUpdateState_(centralManager)
+
+        // Then
+        XCTAssertEqual(receivedConnectionChange.state, .disconnected)
+        XCTAssertEqual(receivedConnectionChange.action, .connectionLost(sorcID: sorcID1))
+    }
+
     func test_centralManagerDidDiscoverPeripheral_ifManufacturerDataKeyIsSet_addsSorcToDiscoveredSorcs() {
 
         // Given
