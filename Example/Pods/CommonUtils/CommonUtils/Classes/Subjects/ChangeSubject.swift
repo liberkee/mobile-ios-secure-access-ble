@@ -22,7 +22,7 @@ public protocol ChangeType {
 }
 
 /// A subject that keeps the current state and sends it on subscribe with an initial action defined by
-/// `ChangeType.initalWithState(_:)`. Furthermore it sends the current change provided by every `onNext(_:) call.
+/// `ChangeType.initialWithState(_:)`. Furthermore it sends the current change provided by every `onNext(_:) call.
 /// Can be used to differentiate between the initial subscription and following updates.
 /// Can be used for direct 1:n communication between objects.
 public class ChangeSubject<Change: ChangeType> {

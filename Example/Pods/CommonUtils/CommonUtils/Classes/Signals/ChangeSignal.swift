@@ -8,7 +8,7 @@
 import Foundation
 
 /// A signal that sends out updates to its current change.
-/// On subscribe it sends out an initial action defined by `ChangeType.initalWithState(_:)`.
+/// On subscribe it sends out an initial action defined by `ChangeType.initialWithState(_:)`.
 /// Can be used to differentiate between the initial subscription and following updates.
 public class ChangeSignal<Change: ChangeType> {
 
