@@ -11,20 +11,20 @@ PODS:
   - SwiftFormat/CLI (0.29.5)
 
 DEPENDENCIES:
-  - CommonUtils (from `https://github.com/hufsm/mobile-ios-common-utils.git`, branch `PLAM-959_ble`)
+  - CommonUtils (from `https://github.com/hufsm/mobile-ios-common-utils.git`, branch `development`)
   - SecureAccessBLE (from `../`)
   - SwiftFormat/CLI
 
 EXTERNAL SOURCES:
   CommonUtils:
-    :branch: PLAM-959_ble
+    :branch: development
     :git: https://github.com/hufsm/mobile-ios-common-utils.git
   SecureAccessBLE:
     :path: ../
 
 CHECKOUT OPTIONS:
   CommonUtils:
-    :commit: b9c79da0b9cefb02ebf2cef75291d0ea918db1aa
+    :commit: f649de96a2149cff5e48c3ca1d5292267ba38050
     :git: https://github.com/hufsm/mobile-ios-common-utils.git
 
 SPEC CHECKSUMS:
@@ -35,6 +35,6 @@ SPEC CHECKSUMS:
   SecureAccessBLE: 9656a3ed872b453500d6bbc6680759e288a98bbc
   SwiftFormat: 9aadf994b01d08400d3d1b0112116d50e468ebd7
 
-PODFILE CHECKSUM: bb013764ddc4a685f7bb97d990828011f3fa84a4
+PODFILE CHECKSUM: b341c897e2496e91a717623b3292c6471d181c0a
 
 COCOAPODS: 1.2.1
