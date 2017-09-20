@@ -31,13 +31,13 @@ private class MockSecurityManager: SecurityManagerType {
         connectToSorcCalledWithArguments = (leaseToken: leaseToken, leaseTokenBlob: leaseTokenBlob)
     }
 
-    let messageSent = PublishSubject<Result<SorcMessage>>()
-    let messageReceived = PublishSubject<Result<SorcMessage>>()
-
     var disconnectCalled = false
     func disconnect() {
         disconnectCalled = true
     }
+
+    let messageSent = PublishSubject<Result<SorcMessage>>()
+    let messageReceived = PublishSubject<Result<SorcMessage>>()
 
     var sendMessageCalledWithMessage: SorcMessage?
     func sendMessage(_ message: SorcMessage) {
@@ -336,8 +336,6 @@ class SessionManagerTests: XCTestCase {
     func test_requestServiceGrant_ifNotConnected_itDoesNothing() {
 
         // Given
-        sessionManager.requestServiceGrant(serviceGrantIDA)
-
         var receivedServiceGrantChange: ServiceGrantChange!
         _ = sessionManager.serviceGrantChange.subscribeNext { change in
             receivedServiceGrantChange = change
