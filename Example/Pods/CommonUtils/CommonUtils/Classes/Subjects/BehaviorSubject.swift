@@ -13,10 +13,10 @@ import Foundation
 public class BehaviorSubject<Value> {
 
     /// The current value of the subject
-    private(set) public var value: Value
+    public private(set) var value: Value
     private var subscribers = [Subscriber<Value>]()
 
-    /// The initializer for this subject, a initial value is mandatory
+    /// The initializer for this subject, an initial value is mandatory
     public init(value: Value) {
         self.value = value
     }

@@ -1,52 +1,22 @@
 //
 //  ServiceGrant.swift
-//  HSM
+//  SecureAccessBLE
 //
-//  Created by Sebastian Stüssel on 19.09.15.
-//  Copyright © 2015 Sebastian Stüssel. All rights reserved.
+//  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
 import Foundation
 
 /**
- Descripts the service grant message that requests from Mobile device
+ *  SORC messagepayload with service grant id
  */
-enum ServiceGrantID: UInt16 {
-    /// To unlock vehicles door
-    case unlock = 0x01
-    /// To lock vehicles door
-    case lock = 0x02
-    /// To call up vehicles lock status
-    case lockStatus = 0x03
-    /// To enable Ignition
-    case enableIgnition = 0x04
-    /// To disable Ignition
-    case disableIgnition = 0x05
-    /// To call up Ignition status
-    case ignitionStatus = 0x06
-    /// Others
-    case notValid = 0xFF
-}
-
-/**
- *  SID messagepayload with service grant id
- */
-protocol ServiceGrant: SIDMessagePayload {
+protocol ServiceGrant: SorcMessagePayload {
     /**
      Initilization point
 
      - returns: Service grant object
      */
     init()
-
-    /**
-     optional init with grant id
-
-     - parameter grantID: ID that Service grant should have
-
-     - returns: new Service grant object
-     */
-    init(grantID: ServiceGrantID)
 
     /**
      optional init with data
@@ -60,16 +30,10 @@ protocol ServiceGrant: SIDMessagePayload {
 
 // MARK: - extension endpoint
 extension ServiceGrant {
-    /**
-     optional init with grant id
 
-     - parameter grantID: ID that Service grant should have
-
-     - returns: new Service grant object
-     */
-    init(grantID: ServiceGrantID) {
+    init(serviceGrantID: ServiceGrantID) {
         let frameData = NSMutableData()
-        var grantIDValue = grantID.rawValue
+        var grantIDValue = serviceGrantID
         frameData.append(&grantIDValue, length: 2)
         self.init()
         data = frameData as Data
@@ -87,21 +51,14 @@ extension ServiceGrant {
         data = rawData
     }
 
-    ///  service grant id, see definition for ServiceGrantID above
     var id: ServiceGrantID {
         var byteArray = [UInt8](repeating: 0x0, count: 2)
-        (data as Data).copyBytes(to: &byteArray, from: 0 ..< 2) // NSMakeRange(0, 2))
-        let rawValue = UInt16(byteArray[0])
-
-        if let validValue = ServiceGrantID(rawValue: rawValue) {
-            return validValue
-        } else {
-            return .notValid
-        }
+        data.copyBytes(to: &byteArray, from: 0 ..< 2)
+        return UInt16(byteArray[0])
     }
 }
 
-/// The service grant request is forwarded by SID to the secured object endpoint where the
+/// The service grant request is forwarded by SORC to the secured object endpoint where the
 /// corresponding action is executed
 struct ServiceGrantRequest: ServiceGrant {
     /// start value as NSData
