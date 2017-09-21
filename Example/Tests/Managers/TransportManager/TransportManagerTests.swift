@@ -10,9 +10,6 @@ import XCTest
 import CommonUtils
 
 private let sorcIDA = UUID(uuidString: "be2fecaf-734b-4252-8312-59d477200a20")!
-private let sorcAccessKey = "1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a"
-private let leaseTokenA = try! LeaseToken(id: "", leaseID: "", sorcID: sorcIDA, sorcAccessKey: sorcAccessKey)
-private let leaseTokenBlobA = try! LeaseTokenBlob(messageCounter: 1, data: "1a")
 private let mtuRequestData = Data(bytes: [0x30, 0x00, 0x01, 0x00, 0x06])
 private let mtuReceiveData = Data(bytes: [0x36, 0x00, 0x03, 0x00, 0x07, 0xB6, 0x00])
 private let messageDataA = Data(bytes: [0xAB, 0xCD, 0xEF])
