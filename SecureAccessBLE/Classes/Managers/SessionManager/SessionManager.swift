@@ -375,6 +375,7 @@ private extension ConnectionLostError {
 
 extension ServiceGrantResponse {
 
+    // TODO: PLAM-1568 Test this
     init?(sorcID: SorcID, message: SorcMessage) {
         self.sorcID = sorcID
 
