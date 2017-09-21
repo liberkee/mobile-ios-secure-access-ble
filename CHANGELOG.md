@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [2.0.0] - Unreleased
 
 ### Added
+- 2017-09-21 : (PLAM-1568)  : Added tests for `SecurityManager` and `TransportManager`
 - 2017-09-07 : (PLAM-1500)  : Added/Fixed jazzy code documentation config
 - 2017-09-06 : (PLAM-1071)  : Make constants customizable
 - 2017-09-05 : (PLAM-1455)  : Resume scanning after app did enter foreground
