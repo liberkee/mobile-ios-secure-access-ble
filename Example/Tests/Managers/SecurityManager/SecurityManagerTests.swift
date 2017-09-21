@@ -13,6 +13,7 @@ private let sorcIDA = UUID(uuidString: "be2fecaf-734b-4252-8312-59d477200a20")!
 private let sorcAccessKey = "1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a1a"
 private let leaseTokenA = try! LeaseToken(id: "", leaseID: "", sorcID: sorcIDA, sorcAccessKey: sorcAccessKey)
 private let leaseTokenBlobA = try! LeaseTokenBlob(messageCounter: 1, data: "1a")
+private let serviceGrantIDA = ServiceGrantID(2)
 
 private class MockTransportManager: TransportManagerType {
 
@@ -100,18 +101,18 @@ class SecurityManagerTests: XCTestCase {
         )
         XCTAssertEqual(receivedConnectionChange, challengingConnectingChange)
 
-        //        // When
-        //        transportManager.connectionChange.onNext(.init(
-        //            state: .connected(sorcID: sorcIDA),
-        //            action: .connectionEstablished(sorcID: sorcIDA))
-        //        )
+        // TODO: PLAM-1568 implement counter part for encryption or mock Challenger (recommended)
+        // reason: Challenger has random data generation
+        // example
         //
-        //        // Then
-        //        let connectedChange = SecureConnectionChange(
-        //            state: .connected(sorcID: sorcIDA),
-        //            action: .connectionEstablished(sorcID: sorcIDA)
-        //        )
-        //        XCTAssertEqual(receivedConnectionChange, connectedChange)
+        // send: challengePhone
+        // 30 00 7d00 01 37663634346130372d363662302d343438652d626136372d37366463656331646330636331623065613765342d653966352d346638302d393466332d39356630343262363936656234666138313331662d646262332d346137632d616365662d65656565646561376431326626964e68b5a0eaa2ed89277a78fe331f
+        //
+        // received: challengeSorcResponse
+        // 36 00 2100 02 52423676688b220def81b4a508bc4e963e7d80cf2a21bf045ac8002e7d518f0e
+        //
+        // send: challengePhoneResonse
+        // 30 00 1100 04 ebe47dec44b6926dd9e834ccdce524f7
     }
 
     // To make it possible to retrigger a connect while connecting physically
@@ -151,6 +152,7 @@ class SecurityManagerTests: XCTestCase {
         connectToSorcAndAssertDoesNothing()
     }
 
+    // TODO: PLAM-1568 implement
     //    func test_connectToSorc_ifConnected_doesNothing() {
     //
     //        // Given
@@ -169,6 +171,7 @@ class SecurityManagerTests: XCTestCase {
         disconnectAndAssertNotifiesDisconnect()
     }
 
+    // TODO: PLAM-1568 implement
     //    func test_disconnect_ifConnected_disconnectsAndNotifiesDisconnect() {
     //
     //        // Given
@@ -194,157 +197,47 @@ class SecurityManagerTests: XCTestCase {
         XCTAssertEqual(receivedConnectionChange.action, .initial)
     }
 
-    //    func test_requestServiceGrant_ifConnectedAndQueueIsNotFullAndNotWaitingForResponse_itSendsMessageToSecurityManager() {
+    // TODO: PLAM-1568 implement some tests for sending and receiving messages in connected state
+    //    func test_sendMessage_ifConnected_itSendsDataToSecurityManager() {
     //
     //        // Given
     //        prepareConnected()
     //
-    //        var receivedServiceGrantChange: ServiceGrantChange!
-    //        _ = securityManager.serviceGrantChange.subscribeNext { change in
-    //            receivedServiceGrantChange = change
+    //        var receivedMessageSent: Result<SorcMessage>?
+    //        _ = securityManager.messageSent.subscribeNext { result in
+    //            receivedMessageSent = result
     //        }
     //
     //        // When
-    //        securityManager.requestServiceGrant(serviceGrantIDA)
-    //
-    //        // Then
-    //        let expectedMessage = SorcMessage(
-    //            id: SorcMessageID.serviceGrant,
+    //        let message = SorcMessage(
+    //            id: .serviceGrant,
     //            payload: ServiceGrantRequest(serviceGrantID: serviceGrantIDA)
     //        )
-    //        XCTAssertEqual(transportManager.sendMessageCalledWithMessage!, expectedMessage)
-    //
-    //        let expectedServiceGrantChange = ServiceGrantChange(
-    //            state: .init(requestingServiceGrantIDs: [serviceGrantIDA]),
-    //            action: .requestServiceGrant(id: serviceGrantIDA, accepted: true)
-    //        )
-    //        XCTAssertEqual(receivedServiceGrantChange, expectedServiceGrantChange)
-    //    }
-    //
-    //    func test_requestServiceGrant_ifConnectedAndQueueIsNotFullAndWaitingForResponse_itEnqueuesMessage() {
-    //
-    //        // Given
-    //        prepareConnected()
-    //
-    //        securityManager.requestServiceGrant(serviceGrantIDA)
-    //
-    //        var receivedServiceGrantChange: ServiceGrantChange!
-    //        _ = securityManager.serviceGrantChange.subscribeNext { change in
-    //            receivedServiceGrantChange = change
-    //        }
-    //
-    //        // When
-    //        securityManager.requestServiceGrant(serviceGrantIDB)
+    //        securityManager.sendMessage(message)
     //
     //        // Then
-    //        let expectedMessage = SorcMessage(
-    //            id: SorcMessageID.serviceGrant,
-    //            payload: ServiceGrantRequest(serviceGrantID: serviceGrantIDA)
-    //        )
-    //        // did not receive serviceGrantIDB
-    //        XCTAssertEqual(transportManager.sendMessageCalledWithMessage!, expectedMessage)
+    //        let expectedData = …
+    //        XCTAssertEqual(transportManager.sendDataCalledWithData!, expectedData)
     //
-    //        let expectedServiceGrantChange = ServiceGrantChange(
-    //            state: .init(requestingServiceGrantIDs: [serviceGrantIDA, serviceGrantIDB]),
-    //            action: .requestServiceGrant(id: serviceGrantIDB, accepted: true)
-    //        )
-    //        XCTAssertEqual(receivedServiceGrantChange, expectedServiceGrantChange)
-    //    }
-    //
-    //    func test_requestServiceGrant_ifConnectedAndMessageIsEnqueuedAndReceivedServiceGrantResponse_itNotfifiesResponseAndItSendsEnqueuedMessage() {
-    //
-    //        // Given
-    //        prepareConnected()
-    //
-    //        securityManager.requestServiceGrant(serviceGrantIDA)
-    //        securityManager.requestServiceGrant(serviceGrantIDB)
-    //
-    //        var receivedServiceGrantChange: ServiceGrantChange!
-    //        _ = securityManager.serviceGrantChange.subscribeNext { change in
-    //            receivedServiceGrantChange = change
+    //        if case let .success(receivedMessage) = receivedMessageSent! {
+    //            XCTAssertEqual(receivedMessage, message)
+    //        } else {
+    //            XCTFail()
     //        }
-    //
-    //        // When
-    //        transportManager.messageReceived.onNext(.success(serviceGrantAResponseMessage))
-    //
-    //        // Then
-    //        let expectedServiceGrantChange = ServiceGrantChange(
-    //            state: .init(requestingServiceGrantIDs: [serviceGrantIDB]),
-    //            action: .responseReceived(.init(
-    //                sorcID: sorcIDA,
-    //                serviceGrantID: serviceGrantIDAResponse,
-    //                status: .pending,
-    //                responseData: ""
-    //            ))
-    //        )
-    //        XCTAssertEqual(receivedServiceGrantChange!, expectedServiceGrantChange)
-    //
-    //        let expectedMessage = SorcMessage(
-    //            id: SorcMessageID.serviceGrant,
-    //            payload: ServiceGrantRequest(serviceGrantID: serviceGrantIDB)
-    //        )
-    //        XCTAssertEqual(transportManager.sendMessageCalledWithMessage!, expectedMessage)
     //    }
-    //
-    //    func test_requestServiceGrant_ifConnectedAndQueueIsFull_itDoesNotSendMessageAndItNotifiesNotAccepted() {
-    //
-    //        // Given
-    //        let configuration = SessionManager.Configuration(maximumEnqueuedMessages: 2)
-    //        securityManager = SessionManager(transportManager: transportManager, configuration: configuration)
-    //        prepareConnected()
-    //
-    //        // added and instantly removed from queue
-    //        securityManager.requestServiceGrant(serviceGrantIDB)
-    //        // enqueued and staying in queue
-    //        securityManager.requestServiceGrant(serviceGrantIDB)
-    //        securityManager.requestServiceGrant(serviceGrantIDB)
-    //        // not accepted, queue is full
-    //        securityManager.requestServiceGrant(serviceGrantIDA)
-    //
-    //        var receivedServiceGrantChange: ServiceGrantChange!
-    //        _ = securityManager.serviceGrantChange.subscribeNext { change in
-    //            receivedServiceGrantChange = change
-    //        }
-    //
-    //        // When
-    //        securityManager.requestServiceGrant(serviceGrantIDA)
-    //
-    //        // Then
-    //        let unexpectedMessage = SorcMessage(
-    //            id: SorcMessageID.serviceGrant,
-    //            payload: ServiceGrantRequest(serviceGrantID: serviceGrantIDA)
-    //        )
-    //        XCTAssertNotEqual(transportManager.sendMessageCalledWithMessage!, unexpectedMessage)
-    //
-    //        let expectedServiceGrantChange = ServiceGrantChange(
-    //            state: .init(requestingServiceGrantIDs: [serviceGrantIDB, serviceGrantIDB, serviceGrantIDB]),
-    //            action: .requestServiceGrant(id: serviceGrantIDA, accepted: false)
-    //        )
-    //        XCTAssertEqual(receivedServiceGrantChange, expectedServiceGrantChange)
-    //    }
-    //
-    //    func test_requestServiceGrant_ifNotConnected_itDoesNothing() {
-    //
-    //        // Given
-    //        securityManager.requestServiceGrant(serviceGrantIDA)
-    //
-    //        var receivedServiceGrantChange: ServiceGrantChange!
-    //        _ = securityManager.serviceGrantChange.subscribeNext { change in
-    //            receivedServiceGrantChange = change
-    //        }
-    //
-    //        // When
-    //        securityManager.requestServiceGrant(serviceGrantIDA)
-    //
-    //        // Then
-    //        XCTAssertNil(transportManager.sendMessageCalledWithMessage)
-    //
-    //        let expectedServiceGrantChange = ServiceGrantChange(
-    //            state: .init(requestingServiceGrantIDs: []),
-    //            action: .initial
-    //        )
-    //        XCTAssertEqual(receivedServiceGrantChange!, expectedServiceGrantChange)
-    //    }
+
+    func test_requestServiceGrant_ifNotConnected_itDoesNothing() {
+
+        // When
+        let message = SorcMessage(
+            id: .serviceGrant,
+            payload: ServiceGrantRequest(serviceGrantID: serviceGrantIDA)
+        )
+        securityManager.sendMessage(message)
+
+        // Then
+        XCTAssertNil(transportManager.sendDataCalledWithData)
+    }
 
     // MARK: - State preparation
 
@@ -371,10 +264,7 @@ class SecurityManagerTests: XCTestCase {
 
     //    private func prepareConnected() {
     //        prepareChallengingConnecting()
-    //        transportManager.connectionChange.onNext(.init(
-    //            state: .connected(sorcID: sorcIDA),
-    //            action: .connectionEstablished(sorcID: sorcIDA))
-    //        )
+    //        ...
     //    }
 
     // MARK: - Helper
