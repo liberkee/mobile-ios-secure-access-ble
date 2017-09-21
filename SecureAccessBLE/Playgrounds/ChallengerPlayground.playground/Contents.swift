@@ -1,24 +1,23 @@
 //: Playground - noun: a place where people can play
 
-import UIKit
 import CryptoSwift
 
-protocol SIDMessagePayload {
+protocol SorcMessagePayload {
     var data: NSData { set get }
 }
 
-enum SIDMessageID: UInt8 {
-    case Handshake = 0x01
-    case PhoneTest = 0x10
-    case SidTest = 0x13
-    case ServiceGrant = 0x20
-    case ServiceGrantTrigger = 0x30
-    case MTURequest = 0x06
-    case MTUReceive = 0x07
-    case NotValid = 0xFF
+enum SorcMessageID: UInt8 {
+    case handshake = 0x01
+    case phoneTest = 0x10
+    case sorcTest = 0x13
+    case serviceGrant = 0x20
+    case serviceGrantTrigger = 0x30
+    case mtuRequest = 0x06
+    case mtuReceive = 0x07
+    case notValid = 0xFF
 }
 
-struct Payload: SIDMessagePayload {
+struct Payload: SorcMessagePayload {
     init(data: NSData) {
         self.data = data
     }
@@ -26,14 +25,14 @@ struct Payload: SIDMessagePayload {
     var data: NSData
 }
 
-struct SIDMessage {
-    var id: SIDMessageID {
+struct SorcMessage {
+    var id: SorcMessageID {
         var byteArray = [UInt8](repeating: 0x0, count: 1)
         data.getBytes(&byteArray, length: 1)
-        if let validValue = SIDMessageID(rawValue: byteArray[0]) {
+        if let validValue = SorcMessageID(rawValue: byteArray[0]) {
             return validValue
         } else {
-            return .NotValid
+            return .notValid
         }
     }
 
@@ -47,7 +46,7 @@ struct SIDMessage {
         data = rawData
     }
 
-    init(id: SIDMessageID, payload: SIDMessagePayload) {
+    init(id: SorcMessageID, payload: SorcMessagePayload) {
         let payloadData = payload.data
         let frameData = NSMutableData()
         var idByte = id.rawValue
@@ -58,17 +57,17 @@ struct SIDMessage {
 }
 
 protocol CryptoManager {
-    func encryptMessage(message: SIDMessage) -> NSData
-    func decryptData(data: NSData) -> SIDMessage
+    func encryptMessage(message: SorcMessage) -> NSData
+    func decryptData(data: NSData) -> SorcMessage
 }
 
 extension CryptoManager {
-    func encryptMessage(message: SIDMessage) -> NSData {
+    func encryptMessage(message: SorcMessage) -> NSData {
         return message.data
     }
 
-    func decryptData(data: NSData) -> SIDMessage {
-        return SIDMessage(rawData: data)
+    func decryptData(data: NSData) -> SorcMessage {
+        return SorcMessage(rawData: data)
     }
 }
 
@@ -112,14 +111,14 @@ struct AesCbcCryptoManager: CryptoManager {
     private var key = [0x55, 0x0E, 0x84, 0x00, 0xE2, 0x9B, 0x11, 0xD4, 0xA7, 0x16, 0x44, 0x66, 0x55, 0x44, 0x00, 0x02] as [UInt8]
     private var iv = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00] as [UInt8]
 
-    func encryptMessage(message: SIDMessage) -> NSData {
+    func encryptMessage(message: SorcMessage) -> NSData {
         do {
             let messageData: Data = message.data as Data
             let bytes: [UInt8] = try AES(key: key, iv: iv, blockMode: .CBC, padding: ZeroByte()).encrypt(messageData.bytes)
             let data = NSData(bytes: bytes, length: bytes.count)
             return data
         } catch {
-            fatalError("Can not encrypt SIDMessage")
+            fatalError("Can not encrypt SorcMessage")
         }
     }
 
@@ -129,18 +128,18 @@ struct AesCbcCryptoManager: CryptoManager {
             let data = NSData(bytes: bytes, length: bytes.count)
             return data
         } catch {
-            fatalError("Can not encrypt SIDMessage")
+            fatalError("Can not encrypt SorcMessage")
         }
     }
 
-    func decryptData(data: NSData) -> SIDMessage {
+    func decryptData(data: NSData) -> SorcMessage {
         do {
             let bytes: [UInt8] = try AES(key: key, iv: iv, blockMode: .CBC, padding: ZeroByte()).decrypt((data as Data).bytes)
             let data = NSData(bytes: bytes, length: bytes.count)
-            let message = SIDMessage(rawData: data)
+            let message = SorcMessage(rawData: data)
             return message
         } catch {
-            fatalError("Can not decrypt SIDMessage")
+            fatalError("Can not decrypt SorcMessage")
         }
     }
 
@@ -150,7 +149,7 @@ struct AesCbcCryptoManager: CryptoManager {
             let data = NSData(bytes: bytes, length: bytes.count)
             return data
         } catch {
-            fatalError("Can not decrypt SIDMessage")
+            fatalError("Can not decrypt SorcMessage")
         }
     }
 }
@@ -236,4 +235,4 @@ let sessionKey = [
     nc[12], nc[13], nc[14], nr[15],
 ]
 
-let sessionKeyData = NSData(bytes: sessionKey, length: sessionKey.count)
+// let sessionKeyData = NSData(bytes: sessionKey, lengt

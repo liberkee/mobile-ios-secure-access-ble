@@ -2,10 +2,21 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [2.0.0] - Unreleased
 
 ### Added
+- 2017-09-07 : (PLAM-1500)  : Added/Fixed jazzy code documentation config
+- 2017-09-06 : (PLAM-1071)  : Make constants customizable
+- 2017-09-05 : (PLAM-1455)  : Resume scanning after app did enter foreground
+- 2017-09-04 : (PLAM-1374)  : Added error handling for sending and receiving data
+
 ### Changed
+- 2017-08-14 : (PLAM-964)   : Rename `SID` to `SORC`
+- 2017-08-14 : (PLAM-962)   : Provide proper actions for disconnected state in `BLEManager`
+- 2017-08-11 : (PLAM-961)   : Provide correct rssi through DiscoveryChange
+- 2017-08-11 : (PLAM-960)   : Merged sorcDiscovered, sorcsLost and hasSorcId into one subject
+- 2017-08-08 : (PLAM-963)   : Improve `BLEScanner` (`SorcConnectionManager`)
+
 ### Removed
 ### Fixed
 
