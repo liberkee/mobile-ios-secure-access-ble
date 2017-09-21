@@ -6,6 +6,7 @@
 //
 
 import CryptoSwift
+import CommonUtils
 
 /**
  Defines errors for Challenge and (en)decryption
@@ -158,7 +159,7 @@ class Challenger {
             let message = SorcMessage(id: .challengePhone, payload: payload)
             delegate?.challengerWantsSendMessage(message)
         } catch {
-            debugPrint("AES Encryption failed!")
+            HSMLog(message: "AES Encryption failed!", level: .error)
             throw ChallengeError.aesEncryptionFailed
         }
     }
@@ -181,10 +182,10 @@ class Challenger {
                 blobMessageCounter += Int(0xFF & message.data[4]) << 8
                 blobMessageCounter += Int(0xFF & message.data[5])
 
-                debugPrint("Box is asking for a newer blob version than: \(blobMessageCounter)")
+                HSMLog(message: "Box is asking for a newer blob version than: \(blobMessageCounter)", level: .error)
                 delegate?.challengerNeedsSendBlob(latestBlobCounter: Int(blobMessageCounter))
             } else {
-                debugPrint("BLE Challenge needs send blob!")
+                HSMLog(message: "BLE Challenge needs send blob!", level: .error)
                 delegate?.challengerNeedsSendBlob(latestBlobCounter: nil)
             }
         case .challengeSorcResponse:
@@ -222,7 +223,7 @@ class Challenger {
                 nr[12], nr[13], nr[14], nr[15],
                 nc[12], nc[13], nc[14], nc[15],
             ]
-            debugPrint("challenger finished with session key: \(Data(bytes: sessionKey))")
+            HSMLog(message: "Challenger finished with session key: \(Data(bytes: sessionKey))", level: .debug)
             delegate?.challengerFinishedWithSessionKey(sessionKey)
         }
     }

@@ -8,6 +8,7 @@
 import Foundation
 import CryptoSwift
 import OpenSSL
+import CommonUtils
 
 /**
  *  A crypto manager, that handles messages and feedback from session layer and from transport layer.
@@ -68,7 +69,7 @@ struct AesCbcCryptoManager: CryptoManager {
     mutating func decryptData(_ data: Data) -> SorcMessage {
         do {
             guard checkMac(data) else {
-                debugPrint("MAC is invalid.")
+                HSMLog(message: "MAC is invalid.", level: .error)
                 return SorcMessage(id: SorcMessageID.notValid, payload: EmptyPayload())
             }
 
