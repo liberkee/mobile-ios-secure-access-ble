@@ -70,7 +70,7 @@ public struct LocalJSONStorage: LocalStorage {
         if let json = Mapper().toJSONString(object, prettyPrint: true) {
             return saveJSON(json)
         } else {
-            debugPrint("Local JSON Storage: Error while serializing object to JSON")
+            HSMLog(message: "Local JSON Storage: Error while serializing object to JSON", level: .error)
             return false
         }
     }
@@ -85,7 +85,7 @@ public struct LocalJSONStorage: LocalStorage {
         if let json = Mapper().toJSONString(array, prettyPrint: true) {
             return saveJSON(json)
         } else {
-            debugPrint("Local JSON Storage: Error while serializing array to JSON")
+            HSMLog(message: "Local JSON Storage: Error while serializing array to JSON", level: .error)
             return false
         }
     }
@@ -100,7 +100,7 @@ public struct LocalJSONStorage: LocalStorage {
             try stringStorage.remove()
             return true
         } catch {
-            debugPrint("Local JSON Storage: Error while deleting JSON file")
+            HSMLog(message: "Local JSON Storage: Error while deleting JSON file", level: .error)
             return false
         }
     }
@@ -118,7 +118,7 @@ public struct LocalJSONStorage: LocalStorage {
             try stringStorage.save(json)
             return true
         } catch {
-            debugPrint("Local JSON Storage: Error while saving to JSON file")
+            HSMLog(message: "Local JSON Storage: Error while saving to JSON file", level: .error)
             return false
         }
     }

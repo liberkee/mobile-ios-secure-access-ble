@@ -47,9 +47,7 @@ public extension ImmutableMappable {
         var valid = true
         for rule in rules {
             if !rule.validates(map: map, immutableMappable: self) {
-                #if DEBUG
-                    print("😡😡😡 ObjectMapper failed on \'\(type(of: self))\' because of the property \'\(rule.key)\'")
-                #endif
+                HSMLog(message: "😡😡😡 ObjectMapper failed on \'\(type(of: self))\' because of the property \'\(rule.key)\'", level: .error)
                 valid = false
             }
         }
