@@ -66,7 +66,7 @@ public class SecureLocalStorage: LocalStorage {
         if let json = Mapper().toJSONString(object, prettyPrint: true) {
             return saveJSON(json)
         } else {
-            debugPrint("Local JSON Storage (\(keychainKey)): Error while serializing object to JSON")
+            HSMLog(message: "Local JSON Storage (\(keychainKey)): Error while serializing object to JSON", level: .error)
             return false
         }
     }
@@ -81,7 +81,7 @@ public class SecureLocalStorage: LocalStorage {
         if let json = Mapper().toJSONString(array, prettyPrint: true) {
             return saveJSON(json)
         } else {
-            debugPrint("Local JSON Storage (\(keychainKey)): Error while serializing array to JSON")
+            HSMLog(message: "Local JSON Storage (\(keychainKey)): Error while serializing array to JSON", level: .error)
             return false
         }
     }
@@ -96,7 +96,7 @@ public class SecureLocalStorage: LocalStorage {
             try securePreferences.remove(keychainKey)
             return true
         } catch {
-            debugPrint("Local JSON Storage (\(keychainKey)): Error while deleting JSON file")
+            HSMLog(message: "Local JSON Storage (\(keychainKey)): Error while deleting JSON file", level: .error)
             return false
         }
     }

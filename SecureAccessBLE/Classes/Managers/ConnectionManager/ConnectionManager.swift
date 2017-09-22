@@ -139,7 +139,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     /// If a connection to an undiscovered SORC is tried it fails silently.
     func connectToSorc(_ sorcID: SorcID) {
         guard let peripheral = peripheralMatchingSorcID(sorcID) else {
-            debugPrint("ConnectionManager: Try to connect to SORC that is not discovered.")
+            HSMLog(message: "Try to connect to SORC that is not discovered.", level: .error)
             return
         }
         switch connectionState {
@@ -298,7 +298,7 @@ extension ConnectionManager {
 extension ConnectionManager {
 
     func centralManagerDidUpdateState_(_ central: CBCentralManagerType) {
-        consoleLog("ConnectionManager Central updated state: \(central.state)")
+        HSMLog(message: "ConnectionManager Central updated state: \(central.state)", level: .debug)
 
         if central.state == .poweredOn {
             if discoveryChange.state.discoveryIsEnabled {
@@ -328,7 +328,7 @@ extension ConnectionManager {
     }
 
     func centralManager_(_: CBCentralManagerType, didConnect peripheral: CBPeripheralType) {
-        consoleLog("Central connected to peripheral: \(peripheral.identifier.uuidString)")
+        HSMLog(message: "Central connected to peripheral: \(peripheral.identifier.uuidString)", level: .debug)
 
         guard case let .connecting(sorcID) = connectionState,
             peripheralMatchingSorcID(sorcID)?.identifier == peripheral.identifier else { return }
@@ -338,7 +338,7 @@ extension ConnectionManager {
     }
 
     func centralManager_(_: CBCentralManagerType, didFailToConnect peripheral: CBPeripheralType, error: Error?) {
-        consoleLog("Central failed connecting to peripheral: \(error?.localizedDescription ?? "Unknown error")")
+        HSMLog(message: "Central failed connecting to peripheral: \(error?.localizedDescription ?? "Unknown error")", level: .error)
 
         guard case let .connecting(sorcID) = connectionState,
             peripheralMatchingSorcID(sorcID)?.identifier == peripheral.identifier else { return }
@@ -348,8 +348,7 @@ extension ConnectionManager {
 
     func centralManager_(_: CBCentralManagerType, didDisconnectPeripheral peripheral: CBPeripheralType,
                          error: Error?) {
-
-        consoleLog("Central didDisconnectPeripheral: \(error?.localizedDescription ?? "Unknown error")")
+        HSMLog(message: "Central didDisconnectPeripheral: \(error?.localizedDescription ?? "Unknown error")", level: .error)
 
         switch connectionState {
         case let .connecting(sorcID), let .connected(sorcID):
@@ -414,7 +413,7 @@ extension ConnectionManager {
         } else if let data = characteristic.value {
             dataReceived.onNext(.success(data))
         } else {
-            debugPrint("ConnectionManager: No error but characteristic value was nil which is unexpected.")
+            HSMLog(message: "No error but characteristic value was nil which is unexpected.", level: .warning)
         }
     }
 
