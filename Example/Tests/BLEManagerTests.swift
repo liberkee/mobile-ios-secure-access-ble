@@ -11,6 +11,8 @@ import CoreBluetooth
 @testable import SecureAccessBLE
 import CommonUtils
 
+// TODO: PLAM-1568 remove this file after ticket is done
+/// This class is outdated, but maybe the comments give you some sample code how to test something
 class BLEManagerTests: XCTestCase {
 
     //    var bleManager: BLEManager!
