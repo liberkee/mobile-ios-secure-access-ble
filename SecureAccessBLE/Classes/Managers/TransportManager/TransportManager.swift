@@ -168,13 +168,13 @@ class TransportManager: TransportManagerType {
     private func sendDataInternal(_ data: Data) {
 
         if sendingPackage != nil || receivingPackage != nil {
-            debugPrint("Sending/Receiving in progress")
+            HSMLog(message: "Sending/Receiving in progress", level: .debug)
         } else {
             sendingPackage = DataFramePackage(messageData: data, frameSize: messageFrameSize)
             if let currentFrame = self.sendingPackage?.currentFrame {
                 sendFrame(currentFrame)
             } else {
-                debugPrint("DataFramePackage has no frames to send")
+                HSMLog(message: "DataFramePackage has no frames to send", level: .error)
             }
         }
     }
