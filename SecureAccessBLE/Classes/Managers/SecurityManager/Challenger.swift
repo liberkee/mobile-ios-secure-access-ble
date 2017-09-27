@@ -182,10 +182,10 @@ class Challenger {
                 blobMessageCounter += Int(0xFF & message.data[4]) << 8
                 blobMessageCounter += Int(0xFF & message.data[5])
 
-                HSMLog(message: "Box is asking for a newer blob version than: \(blobMessageCounter)", level: .debug)
+                HSMLog(message: "Box is asking for a newer blob version than: \(blobMessageCounter)", level: .warning)
                 delegate?.challengerNeedsSendBlob(latestBlobCounter: Int(blobMessageCounter))
             } else {
-                HSMLog(message: "BLE Challenge needs send blob!", level: .debug)
+                HSMLog(message: "BLE Challenge needs send blob!", level: .warning)
                 delegate?.challengerNeedsSendBlob(latestBlobCounter: nil)
             }
         case .challengeSorcResponse:
