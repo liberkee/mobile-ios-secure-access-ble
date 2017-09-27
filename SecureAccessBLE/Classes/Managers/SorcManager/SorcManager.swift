@@ -40,27 +40,27 @@ public class SorcManager: SorcManagerType {
     }
 
     public func startDiscovery() {
-        HSMLog(message: "scanner.startDiscovery", level: .verbose)
+        HSMLog(message: "BLE - Scanner started discovery.", level: .verbose)
         scanner.startDiscovery()
     }
 
     public func stopDiscovery() {
-        HSMLog(message: "scanner.stopDiscovery", level: .verbose)
+        HSMLog(message: "BLE - Scanner stopped discovery.", level: .verbose)
         scanner.stopDiscovery()
     }
 
     public func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob) {
-        HSMLog(message: "sessionManager.connectToSorc", level: .verbose)
+        HSMLog(message: "BLE - Connected to SORC.", level: .verbose)
         sessionManager.connectToSorc(leaseToken: leaseToken, leaseTokenBlob: leaseTokenBlob)
     }
 
     public func disconnect() {
-        HSMLog(message: "sessionManager.disconnect", level: .verbose)
+        HSMLog(message: "BLE - Disconnected.", level: .verbose)
         sessionManager.disconnect()
     }
 
     public func requestServiceGrant(_ serviceGrantID: ServiceGrantID) {
-        HSMLog(message: "sessionManager.requestServiceGrant", level: .verbose)
+        HSMLog(message: "BLE - Request service grant.", level: .verbose)
         sessionManager.requestServiceGrant(serviceGrantID)
     }
 }

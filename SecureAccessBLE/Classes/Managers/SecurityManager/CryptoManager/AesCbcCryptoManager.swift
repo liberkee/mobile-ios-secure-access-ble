@@ -55,7 +55,7 @@ struct AesCbcCryptoManager: CryptoManager {
             return encDataWithMac as Data
 
         } catch {
-            HSMLog(message: "Can not encrypt SorcMessage", level: .error)
+            HSMLog(message: "BLE - Can not encrypt SorcMessage.", level: .error)
             fatalError("Can not encrypt SorcMessage")
         }
     }
@@ -70,7 +70,7 @@ struct AesCbcCryptoManager: CryptoManager {
     mutating func decryptData(_ data: Data) -> SorcMessage {
         do {
             guard checkMac(data) else {
-                HSMLog(message: "MAC is invalid.", level: .error)
+                HSMLog(message: "BLE - MAC is invalid.", level: .error)
                 return SorcMessage(id: SorcMessageID.notValid, payload: EmptyPayload())
             }
 
