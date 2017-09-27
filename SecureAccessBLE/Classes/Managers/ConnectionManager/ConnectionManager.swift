@@ -139,7 +139,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     /// If a connection to an undiscovered SORC is tried it fails silently.
     func connectToSorc(_ sorcID: SorcID) {
         guard let peripheral = peripheralMatchingSorcID(sorcID) else {
-            HSMLog(message: "BLE - Try to connect to an undiscovered SORC.", level: .error)
+            HSMLog(message: "BLE - Try to connect to an undiscovered SORC", level: .error)
             return
         }
         switch connectionState {
@@ -328,7 +328,7 @@ extension ConnectionManager {
     }
 
     func centralManager_(_: CBCentralManagerType, didConnect peripheral: CBPeripheralType) {
-        HSMLog(message: "BLE - Central connected to peripheral with UUID \(peripheral.identifier.uuidString).", level: .debug)
+        HSMLog(message: "BLE - Central connected to peripheral with UUID: \(peripheral.identifier.uuidString)", level: .debug)
 
         guard case let .connecting(sorcID) = connectionState,
             peripheralMatchingSorcID(sorcID)?.identifier == peripheral.identifier else { return }
@@ -338,7 +338,7 @@ extension ConnectionManager {
     }
 
     func centralManager_(_: CBCentralManagerType, didFailToConnect peripheral: CBPeripheralType, error: Error?) {
-        HSMLog(message: "BLE - Central failed connecting to peripheral with UUID \(peripheral.identifier.uuidString). Error: \(error?.localizedDescription ?? "Unknown error").", level: .error)
+        HSMLog(message: "BLE - Central failed connecting to peripheral with UUID: \(peripheral.identifier.uuidString). Error: \(error?.localizedDescription ?? "Unknown error")", level: .error)
 
         guard case let .connecting(sorcID) = connectionState,
             peripheralMatchingSorcID(sorcID)?.identifier == peripheral.identifier else { return }
@@ -350,9 +350,9 @@ extension ConnectionManager {
                          error: Error?) {
 
         if error != nil {
-            HSMLog(message: "BLE - Central disconnected from peripheral with UUID \(peripheral.identifier.uuidString). Error: \(error?.localizedDescription ?? "Unknown error").", level: .error)
+            HSMLog(message: "BLE - Central disconnected from peripheral with UUID: \(peripheral.identifier.uuidString). Error: \(error?.localizedDescription ?? "Unknown error")", level: .error)
         } else {
-            HSMLog(message: "BLE - Central disconnected from peripheral with UUID \(peripheral.identifier.uuidString).", level: .debug)
+            HSMLog(message: "BLE - Central disconnected from peripheral with UUID: \(peripheral.identifier.uuidString)", level: .debug)
         }
 
         switch connectionState {
@@ -418,7 +418,7 @@ extension ConnectionManager {
         } else if let data = characteristic.value {
             dataReceived.onNext(.success(data))
         } else {
-            HSMLog(message: "BLE - Characteristic value is nil which is unexpected.", level: .warning)
+            HSMLog(message: "BLE - Characteristic value is nil which is unexpected", level: .warning)
         }
     }
 

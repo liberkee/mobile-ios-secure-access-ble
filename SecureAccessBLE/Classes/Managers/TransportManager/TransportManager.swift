@@ -168,13 +168,13 @@ class TransportManager: TransportManagerType {
     private func sendDataInternal(_ data: Data) {
 
         if sendingPackage != nil || receivingPackage != nil {
-            HSMLog(message: "BLE - Sending/Receiving in progress.", level: .debug)
+            HSMLog(message: "BLE - Sending/Receiving in progress", level: .debug)
         } else {
             sendingPackage = DataFramePackage(messageData: data, frameSize: messageFrameSize)
             if let currentFrame = self.sendingPackage?.currentFrame {
                 sendFrame(currentFrame)
             } else {
-                HSMLog(message: "BLE - Data frame package has no frames to send.", level: .error)
+                HSMLog(message: "BLE - Data frame package has no frames to send", level: .error)
             }
         }
     }
