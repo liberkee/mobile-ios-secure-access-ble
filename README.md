@@ -33,8 +33,7 @@ To publish a new version of the framework you need to:
 ## Jazzy Docs
 This project uses [Jazzy](https://github.com/realm/jazzy) to generate the documentation. To update the documentation you need to:
 - Run `bundle install` to install the jazzy gem
-- `cd` into the `ProjectRoot/Scripts` directory
-- Run `sh jazzy.sh` to regenerate the documentation
+- Run `jazzy` to generate the documentation
 
 ## OpenSSL
 This project uses a bundled version of OpenSSL which is linked as a framework. In order to create a new version of the OpenSSL framework download the [OpenSSL-for-iOS](https://github.com/x2on/OpenSSL-for-iPhone) project and execute the scripts `build-libssl.sh` and `create-openssl-framework.sh`.

@@ -1,31 +1,40 @@
 PODS:
-  - CommonUtils (0.0.7):
-    - KeychainAccess
+  - CommonUtils (0.1.0):
+    - KeychainAccess (= 3.0.2)
     - ObjectMapper (= 2.2.6)
   - CryptoSwift (0.6.7)
   - KeychainAccess (3.0.2)
   - ObjectMapper (2.2.6)
-  - SecureAccessBLE (1.1.0):
-    - CommonUtils (~> 0.0.5)
+  - SecureAccessBLE (2.0.0):
+    - CommonUtils (~> 0.1.0)
     - CryptoSwift (= 0.6.7)
-  - SwiftFormat/CLI (0.29.4)
+  - SwiftFormat/CLI (0.29.5)
 
 DEPENDENCIES:
+  - CommonUtils (from `https://github.com/hufsm/mobile-ios-common-utils.git`, branch `development`)
   - SecureAccessBLE (from `../`)
   - SwiftFormat/CLI
 
 EXTERNAL SOURCES:
+  CommonUtils:
+    :branch: development
+    :git: https://github.com/hufsm/mobile-ios-common-utils.git
   SecureAccessBLE:
-    :path: ../
+    :path: "../"
+
+CHECKOUT OPTIONS:
+  CommonUtils:
+    :commit: cc9619d53dc4a7e1f8a2060a372bd503b1be7807
+    :git: https://github.com/hufsm/mobile-ios-common-utils.git
 
 SPEC CHECKSUMS:
-  CommonUtils: e699cb0bf3fd6598ace78bc8ad558b4e715b814b
+  CommonUtils: ff883ee33d34a00bc91392e4f2e3e3b05a35eb3d
   CryptoSwift: 685ae257941e5447474348a2b545583e1a16b573
   KeychainAccess: a986406022dfc7c634c691ad3bec670cc6a32002
-  ObjectMapper: 042708195cc46c20871cbcbec0453826398273fd
-  SecureAccessBLE: b65a8f5750fe9b269e1b065e31e5b860ceab54ea
-  SwiftFormat: 9622786b0f3f23ddb57f151a114e81f32285e11b
+  ObjectMapper: '042708195cc46c20871cbcbec0453826398273fd'
+  SecureAccessBLE: a027bd3d4848b48729f88fe04cc789776461c61d
+  SwiftFormat: 9aadf994b01d08400d3d1b0112116d50e468ebd7
 
-PODFILE CHECKSUM: ee47eafbcee3134a8c497577d1904b09754c813c
+PODFILE CHECKSUM: b341c897e2496e91a717623b3292c6471d181c0a
 
 COCOAPODS: 1.2.1

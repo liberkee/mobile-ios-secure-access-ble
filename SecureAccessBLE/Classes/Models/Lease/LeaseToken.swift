@@ -2,24 +2,38 @@
 //  LeaseToken.swift
 //  SecureAccessBLE
 //
-//  Created by Torsten Lehmann on 29.05.17.
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
 import Foundation
 
 /// A lease token used in establishing a connection to a SORC
-public struct LeaseToken {
+public struct LeaseToken: Equatable {
 
-    let id: String
-    let leaseId: String
-    let sorcId: SorcID
-    let sorcAccessKey: String
+    enum Error: Swift.Error {
+        case sorcAccessKeyIsEmpty
+    }
 
-    public init(id: String, leaseId: String, sorcId: SorcID, sorcAccessKey: String) {
+    public let id: String
+    public let leaseID: String
+    public let sorcID: SorcID
+    public let sorcAccessKey: String
+
+    public init(id: String, leaseID: String, sorcID: SorcID, sorcAccessKey: String) throws {
         self.id = id
-        self.leaseId = leaseId
-        self.sorcId = sorcId
+        self.leaseID = leaseID
+        self.sorcID = sorcID
+
+        guard !sorcAccessKey.isEmpty else {
+            throw Error.sorcAccessKeyIsEmpty
+        }
         self.sorcAccessKey = sorcAccessKey
+    }
+
+    public static func ==(lhs: LeaseToken, rhs: LeaseToken) -> Bool {
+        return lhs.id == rhs.id
+            && lhs.leaseID == rhs.leaseID
+            && lhs.sorcID == rhs.sorcID
+            && lhs.sorcAccessKey == rhs.sorcAccessKey
     }
 }
