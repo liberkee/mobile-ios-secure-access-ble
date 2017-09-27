@@ -2,7 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [2.0.0] - Unreleased
+## [Unreleased]
+
+### Added
+### Changed
+### Removed
+### Fixed
+
+## [2.0.0] - 2017-09-27
 
 ### Added
 - 2017-09-27 : (PLAM-1517)  : Updated logging functionality
@@ -19,9 +26,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - 2017-08-11 : (PLAM-961)   : Provide correct rssi through DiscoveryChange
 - 2017-08-11 : (PLAM-960)   : Merged sorcDiscovered, sorcsLost and hasSorcId into one subject
 - 2017-08-08 : (PLAM-963)   : Improve `BLEScanner` (`SorcConnectionManager`)
-
-### Removed
-### Fixed
 
 ## [1.1.0] - 2017-08-22
 
