@@ -182,10 +182,10 @@ class Challenger {
                 blobMessageCounter += Int(0xFF & message.data[4]) << 8
                 blobMessageCounter += Int(0xFF & message.data[5])
 
-                HSMLog(message: "Box is asking for a newer blob version than: \(blobMessageCounter)", level: .error)
+                HSMLog(message: "Box is asking for a newer blob version than: \(blobMessageCounter)", level: .debug)
                 delegate?.challengerNeedsSendBlob(latestBlobCounter: Int(blobMessageCounter))
             } else {
-                HSMLog(message: "BLE Challenge needs send blob!", level: .error)
+                HSMLog(message: "BLE Challenge needs send blob!", level: .debug)
                 delegate?.challengerNeedsSendBlob(latestBlobCounter: nil)
             }
         case .challengeSorcResponse:
@@ -205,6 +205,7 @@ class Challenger {
     fileprivate func continueChallenge(_ response: SorcMessage) throws {
         let message = SorcToPhoneResponse(rawData: response.message)
         if message.b1.count == 0 || message.b2.count == 0 {
+            HSMLog(message: "Challenge response is corrupt: \(ChallengeError.challengeResponseIsCorrupt)", level: .error)
             throw ChallengeError.challengeResponseIsCorrupt
         }
         b1 = message.b1
@@ -286,11 +287,13 @@ class Challenger {
             //  check if P(invert)(r3) = nc, if not the protocol is aborted
             if nc != permutatedR3 {
                 delegate?.challengerWantsSendMessage(SorcMessage(id: SorcMessageID.badChallengePhoneResponse, payload: EmptyPayload()))
+                HSMLog(message: "Challenge response does not match: \(ChallengeError.challengeResponseDoNotMatch)", level: .error)
                 throw ChallengeError.challengeResponseDoNotMatch
             }
             return r3
 
         } catch {
+            HSMLog(message: "AES encryption failed: \(ChallengeError.aesEncryptionFailed)", level: .error)
             throw ChallengeError.aesEncryptionFailed
         }
     }
@@ -313,6 +316,7 @@ class Challenger {
             return (nr, n5)
 
         } catch {
+            HSMLog(message: "AES decryption failed: \(ChallengeError.aesDecryptionFailed)", level: .error)
             throw ChallengeError.aesDecryptionFailed
         }
     }
@@ -333,6 +337,7 @@ class Challenger {
             let b3 = try crypto.encrypt(b3Temp) /// , padding: ZeroByte())
             return b3
         } catch {
+            HSMLog(message: "AES encryption failed: \(ChallengeError.aesEncryptionFailed)", level: .error)
             throw ChallengeError.aesEncryptionFailed
         }
     }

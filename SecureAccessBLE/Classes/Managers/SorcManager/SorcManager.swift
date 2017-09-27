@@ -40,22 +40,27 @@ public class SorcManager: SorcManagerType {
     }
 
     public func startDiscovery() {
+        HSMLog(message: "scanner.startDiscovery", level: .verbose)
         scanner.startDiscovery()
     }
 
     public func stopDiscovery() {
+        HSMLog(message: "scanner.stopDiscovery", level: .verbose)
         scanner.stopDiscovery()
     }
 
     public func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob) {
+        HSMLog(message: "sessionManager.connectToSorc", level: .verbose)
         sessionManager.connectToSorc(leaseToken: leaseToken, leaseTokenBlob: leaseTokenBlob)
     }
 
     public func disconnect() {
+        HSMLog(message: "sessionManager.disconnect", level: .verbose)
         sessionManager.disconnect()
     }
 
     public func requestServiceGrant(_ serviceGrantID: ServiceGrantID) {
+        HSMLog(message: "sessionManager.requestServiceGrant", level: .verbose)
         sessionManager.requestServiceGrant(serviceGrantID)
     }
 }

@@ -55,6 +55,7 @@ struct AesCbcCryptoManager: CryptoManager {
             return encDataWithMac as Data
 
         } catch {
+            HSMLog(message: "Can not encrypt SorcMessage", level: .error)
             fatalError("Can not encrypt SorcMessage")
         }
     }

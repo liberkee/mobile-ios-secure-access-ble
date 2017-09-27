@@ -7,6 +7,7 @@
 
 import OpenSSL
 import CryptoSwift
+import CommonUtils
 
 /**
  *  A crypto manager for tests, that handles messages and feedback from session layer and from transport layer.
@@ -49,6 +50,7 @@ struct AesCbcTestCryptoManager: CryptoManager {
             let data = Data(bytes: bytes)
             return data
         } catch {
+            HSMLog(message: "Can not encrypt SorcMessage", level: .error)
             fatalError("Can not encrypt SorcMessage")
         }
     }
@@ -66,6 +68,7 @@ struct AesCbcTestCryptoManager: CryptoManager {
             let data = Data(bytes: bytes)
             return data
         } catch {
+            HSMLog(message: "Can not encrypt SorcMessage", level: .error)
             fatalError("Can not encrypt SorcMessage")
         }
     }
@@ -84,6 +87,7 @@ struct AesCbcTestCryptoManager: CryptoManager {
             let message = SorcMessage(rawData: data)
             return message
         } catch {
+            HSMLog(message: "Can not decrypt SorcMessage", level: .error)
             fatalError("Can not decrypt SorcMessage")
         }
     }
@@ -101,6 +105,7 @@ struct AesCbcTestCryptoManager: CryptoManager {
             let data = Data(bytes: bytes)
             return data
         } catch {
+            HSMLog(message: "Can not decrypt SorcMessage", level: .error)
             fatalError("Can not decrypt SorcMessage")
         }
     }
