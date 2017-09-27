@@ -348,11 +348,10 @@ extension ConnectionManager {
 
     func centralManager_(_: CBCentralManagerType, didDisconnectPeripheral peripheral: CBPeripheralType,
                          error: Error?) {
-        
+
         if error != nil {
             HSMLog(message: "BLE - Central disconnected from peripheral with UUID \(peripheral.identifier.uuidString). Error: \(error?.localizedDescription ?? "Unknown error").", level: .error)
-        }
-        else {
+        } else {
             HSMLog(message: "BLE - Central disconnected from peripheral with UUID \(peripheral.identifier.uuidString).", level: .debug)
         }
 
