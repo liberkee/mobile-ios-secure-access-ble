@@ -8,7 +8,8 @@ import Foundation
 
 extension String {
     /**
-     Extension String to ensure Creating NSData from hexadecimal string representation, This takes a hexadecimal representation and creates a NSData object.
+     Extension String to ensure Creating NSData from hexadecimal string representation, This takes a hexadecimal representation
+     and creates a NSData object.
      Note, if the string has any spaces, those are removed. Also if the string started with a '<' or ended with a '>', those are removed, too.
      This does no validation of the string to ensure it's a valid hexadecimal string
 
@@ -21,10 +22,16 @@ extension String {
             .replacingOccurrences(of: " ", with: "")
         // make sure the cleaned up string consists solely of hex digits, and that we have even number of them
 
-        let regex = try! NSRegularExpression(pattern: "^[0-9a-f]*$", options: .caseInsensitive)
+        var regex = NSRegularExpression()
 
-        let found = regex.firstMatch(in: trimmedString, options: [],
-                                     range: NSMakeRange(0, trimmedString.characters.count))
+        do {
+            regex = try NSRegularExpression(pattern: "^[0-9a-f]*$", options: .caseInsensitive)
+        } catch {
+            HSMLog(message: "\(error)", level: .error)
+        }
+
+        let range = NSRange(location: 0, length: trimmedString.characters.count)
+        let found = regex.firstMatch(in: trimmedString, options: [], range: range)
         if found == nil || found?.range.location == NSNotFound || trimmedString.characters.count % 2 != 0 {
             return nil
         }
