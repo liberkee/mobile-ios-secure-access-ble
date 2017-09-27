@@ -159,7 +159,7 @@ class Challenger {
             let message = SorcMessage(id: .challengePhone, payload: payload)
             delegate?.challengerWantsSendMessage(message)
         } catch {
-            HSMLog(message: "AES Encryption failed!", level: .error)
+            HSMLog(message: "BLE - AES Encryption failed", level: .error)
             throw ChallengeError.aesEncryptionFailed
         }
     }
@@ -182,10 +182,10 @@ class Challenger {
                 blobMessageCounter += Int(0xFF & message.data[4]) << 8
                 blobMessageCounter += Int(0xFF & message.data[5])
 
-                HSMLog(message: "Box is asking for a newer blob version than: \(blobMessageCounter)", level: .error)
+                HSMLog(message: "BLE - Box is asking for a newer blob version than \(blobMessageCounter)", level: .debug)
                 delegate?.challengerNeedsSendBlob(latestBlobCounter: Int(blobMessageCounter))
             } else {
-                HSMLog(message: "BLE Challenge needs send blob!", level: .error)
+                HSMLog(message: "BLE - Challenge needs send blob", level: .debug)
                 delegate?.challengerNeedsSendBlob(latestBlobCounter: nil)
             }
         case .challengeSorcResponse:
@@ -205,6 +205,7 @@ class Challenger {
     fileprivate func continueChallenge(_ response: SorcMessage) throws {
         let message = SorcToPhoneResponse(rawData: response.message)
         if message.b1.count == 0 || message.b2.count == 0 {
+            HSMLog(message: "BLE - Challenge response is corrupt", level: .error)
             throw ChallengeError.challengeResponseIsCorrupt
         }
         b1 = message.b1
@@ -223,7 +224,8 @@ class Challenger {
                 nr[12], nr[13], nr[14], nr[15],
                 nc[12], nc[13], nc[14], nc[15],
             ]
-            HSMLog(message: "Challenger finished with session key: \(Data(bytes: sessionKey))", level: .debug)
+            HSMLog(message: "BLE - Challenge finished with session key: \(sessionKey.map { String(format: "0x%02X ", $0) }.joined())",
+                   level: .debug)
             delegate?.challengerFinishedWithSessionKey(sessionKey)
         }
     }
@@ -286,11 +288,13 @@ class Challenger {
             //  check if P(invert)(r3) = nc, if not the protocol is aborted
             if nc != permutatedR3 {
                 delegate?.challengerWantsSendMessage(SorcMessage(id: SorcMessageID.badChallengePhoneResponse, payload: EmptyPayload()))
+                HSMLog(message: "BLE - Challenge response does not match", level: .error)
                 throw ChallengeError.challengeResponseDoNotMatch
             }
             return r3
 
         } catch {
+            HSMLog(message: "BLE - AES encryption failed", level: .error)
             throw ChallengeError.aesEncryptionFailed
         }
     }
@@ -313,6 +317,7 @@ class Challenger {
             return (nr, n5)
 
         } catch {
+            HSMLog(message: "BLE - AES decryption failed", level: .error)
             throw ChallengeError.aesDecryptionFailed
         }
     }
@@ -333,6 +338,7 @@ class Challenger {
             let b3 = try crypto.encrypt(b3Temp) /// , padding: ZeroByte())
             return b3
         } catch {
+            HSMLog(message: "BLE - AES encryption failed", level: .error)
             throw ChallengeError.aesEncryptionFailed
         }
     }
