@@ -34,5 +34,4 @@ To publish a new version of the framework you need to:
 ## Jazzy Docs
 This project uses [Jazzy](https://github.com/realm/jazzy) to generate the documentation. To update the documentation you need to:
 - Run `bundle install` to install the jazzy gem
-- `cd` into the `ProjectRoot/Scripts` directory
-- Run `sh jazzy.sh` to regenerate the documentation
+- Run `jazzy` to generate the documentation

@@ -2,13 +2,10 @@
 //  DataFramePackage.swift
 //  TransportTest
 //
-//  Created by Sebastian Stüssel on 20.08.15.
-//  Copyright (c) 2015 Rocket Apes. All rights reserved.
+//  Copyright (c) 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-import UIKit
-
-/// Creates and holds data Frames for a SIDMessage
+/// Creates and holds data Frames for a SorcMessage
 class DataFramePackage: NSObject {
     /// Date frame list
     var frames = [DataFrame]()
@@ -24,12 +21,12 @@ class DataFramePackage: NSObject {
         }
     }
 
-    /// The message data the SIDMessage contains
+    /// The message data the SorcMessage contains
     var message: Data {
         let data = NSMutableData()
 
         for frame in frames {
-            data.append(frame.message as Data)
+            data.append(frame.message)
         }
         return data as Data
     }
@@ -37,7 +34,7 @@ class DataFramePackage: NSObject {
     /**
      convenience initialization point
 
-     - parameter messageData: the message data SIDMessage contains
+     - parameter messageData: the message data SorcMessage contains
      - parameter frameSize:   the data frame size
 
      - returns: Data frame package objec

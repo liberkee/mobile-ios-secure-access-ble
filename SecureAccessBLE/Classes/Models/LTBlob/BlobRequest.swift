@@ -1,25 +1,23 @@
 //
 //  BlobRequest.swift
-//  HSM
+//  SecureAccessBLE
 //
-//  Created by Sebastian Stüssel on 05.02.16.
-//  Copyright © 2016 Sebastian Stüssel. All rights reserved.
+//  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
 import Foundation
 
 /**
- *  To build MessagePayload as Blob request sending to SID
+ *  To build MessagePayload as Blob request sending to SORC
  */
-struct BlobRequest: SIDMessagePayload {
+struct BlobRequest: SorcMessagePayload {
     /// Start message payload as NSData for blob request
     var data: Data
     /// The message id as Int
-    var blobMessageId: Int {
+    var blobMessageID: Int {
         let type: UInt32 = 0
         var receiveData = UInt8(type)
         (data as Data).copyBytes(to: &receiveData, count: MemoryLayout<UInt32>.size)
-        debugPrint(receiveData)
         return Int(receiveData)
     }
 
