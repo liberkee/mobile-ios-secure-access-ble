@@ -9,11 +9,13 @@ PODS:
     - CommonUtils (~> 0.1.0)
     - CryptoSwift (= 0.6.7)
   - SwiftFormat/CLI (0.29.5)
+  - SwiftLint (0.22.0)
 
 DEPENDENCIES:
   - CommonUtils (from `https://github.com/hufsm/mobile-ios-common-utils.git`, branch `development`)
   - SecureAccessBLE (from `../`)
   - SwiftFormat/CLI
+  - SwiftLint
 
 EXTERNAL SOURCES:
   CommonUtils:
@@ -34,7 +36,8 @@ SPEC CHECKSUMS:
   ObjectMapper: '042708195cc46c20871cbcbec0453826398273fd'
   SecureAccessBLE: a027bd3d4848b48729f88fe04cc789776461c61d
   SwiftFormat: 9aadf994b01d08400d3d1b0112116d50e468ebd7
+  SwiftLint: 1134786caedd2caab0560d2f36b76414a5a56808
 
-PODFILE CHECKSUM: b341c897e2496e91a717623b3292c6471d181c0a
+PODFILE CHECKSUM: fdc4e3739b49aeddd80c3a253ca61116657db5e2
 
 COCOAPODS: 1.2.1
