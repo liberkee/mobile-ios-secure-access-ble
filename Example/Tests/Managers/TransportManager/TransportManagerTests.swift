@@ -196,7 +196,7 @@ class TransportManagerTests: XCTestCase {
         if case let .success(data) = receivedSentData! {
             XCTAssertEqual(data, messageDataA)
         } else {
-            XCTFail()
+            XCTFail("receivedSentData is nil")
         }
     }
 

@@ -5,8 +5,8 @@ included: # paths to include during linting. `--path` is ignored if present.
 excluded: # paths to ignore during linting. Takes precedence over `included`.
 
 line_length:
-  warning: 130
-  error: 150
+  warning: 150
+  error: 180
 large_tuple:
   warning: 3
   error: 4
@@ -20,8 +20,12 @@ colon:
   severity: error
 identifier_name:
   min_length:
-    error: 3
+    warning: 2
+    error: 2
   max_length: 
     error: 50
 weak_delegate:
   severity: error
+nesting:
+  type_level:
+    warning: 2

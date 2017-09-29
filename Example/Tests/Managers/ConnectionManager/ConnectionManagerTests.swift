@@ -232,7 +232,7 @@ class ConnectionManagerTests: XCTestCase {
 
         // Then
         if case .connecting = connectionManager.connectionChange.state {
-            XCTFail()
+            XCTFail("connectionManager.connectionChange.state is not nil")
         }
         XCTAssertNil(centralManager.connectCalledWithPeripheral)
     }
@@ -550,7 +550,7 @@ class ConnectionManagerTests: XCTestCase {
         let strippedSorcID = sorcID1.lowercasedUUIDString.replacingOccurrences(of: "-", with: "")
             .dataFromHexadecimalString()!
         let advertisementData: [String: Any] = [
-            CBAdvertisementDataManufacturerDataKey: strippedSorcID,
+            CBAdvertisementDataManufacturerDataKey: strippedSorcID
         ]
 
         var receivedDiscoveryChange: DiscoveryChange!
@@ -607,7 +607,7 @@ class ConnectionManagerTests: XCTestCase {
         let strippedSorcID = sorcID1.lowercasedUUIDString.replacingOccurrences(of: "-", with: "")
             .dataFromHexadecimalString()!
         let advertisementData: [String: Any] = [
-            CBAdvertisementDataManufacturerDataKey: strippedSorcID,
+            CBAdvertisementDataManufacturerDataKey: strippedSorcID
         ]
 
         var receivedDiscoveryChange: DiscoveryChange!
@@ -696,7 +696,7 @@ class ConnectionManagerTests: XCTestCase {
 
         // Then
         if case .connected = connectionManager.connectionChange.state {} else {
-            XCTFail()
+            XCTFail("Connection failed")
         }
     }
 
@@ -754,7 +754,7 @@ class ConnectionManagerTests: XCTestCase {
         XCTAssertEqual(receivedDiscoveryChange.action, .initial)
 
         if case .disconnected = connectionManager.connectionChange.state {} else {
-            XCTFail()
+            XCTFail("connectionManager.connectionChange.state is nil")
         }
     }
 
@@ -777,7 +777,7 @@ class ConnectionManagerTests: XCTestCase {
             XCTAssert(arguments.characteristicUUIDs!.contains(CBUUID(string: writeCharacteristicID)))
             XCTAssert(arguments.characteristicUUIDs!.contains(CBUUID(string: notifyCharacteristicID)))
         } else {
-            XCTFail()
+            XCTFail("peripheral.discoverCharacteristicsCalledWithArguments is nil")
         }
     }
 
@@ -840,7 +840,7 @@ class ConnectionManagerTests: XCTestCase {
             XCTAssert(arguments.enabled)
             XCTAssertEqual(arguments.characteristic.uuid, notifyCharacteristic.uuid)
         } else {
-            XCTFail()
+            XCTFail("peripheral.setNotifyValueCalledWithArguments is nil")
         }
     }
 
@@ -1032,7 +1032,9 @@ class ConnectionManagerTests: XCTestCase {
         // Then
         let arguments = centralManager.scanForPeripheralsCalledWithArguments!
         XCTAssertNil(arguments.serviceUUIDs)
+        // swiftlint:disable force_cast
         XCTAssertTrue(arguments.options![CBCentralManagerScanOptionAllowDuplicatesKey] as! Int == 1)
+        // swiftlint:enable force_cast
     }
 
     func test_appDidBecomeActive_ifCentralManagerIsPoweredOnAndDiscoveryIsNotEnabled_itDoesNothing() {
@@ -1066,7 +1068,7 @@ class ConnectionManagerTests: XCTestCase {
         let strippedSorcID = sorcID.lowercasedUUIDString.replacingOccurrences(of: "-", with: "")
             .dataFromHexadecimalString()!
         let advertisementData: [String: Any] = [
-            CBAdvertisementDataManufacturerDataKey: strippedSorcID,
+            CBAdvertisementDataManufacturerDataKey: strippedSorcID
         ]
         connectionManager.centralManager_(centralManager, didDiscover: peripheral, advertisementData: advertisementData,
                                           rssi: NSNumber(value: rssi))
