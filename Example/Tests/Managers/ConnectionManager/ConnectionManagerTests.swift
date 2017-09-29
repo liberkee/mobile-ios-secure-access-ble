@@ -232,7 +232,7 @@ class ConnectionManagerTests: XCTestCase {
 
         // Then
         if case .connecting = connectionManager.connectionChange.state {
-            XCTFail("connectionManager.connectionChange.state is not nil")
+            XCTFail("State is connecting")
         }
         XCTAssertNil(centralManager.connectCalledWithPeripheral)
     }
@@ -696,7 +696,7 @@ class ConnectionManagerTests: XCTestCase {
 
         // Then
         if case .connected = connectionManager.connectionChange.state {} else {
-            XCTFail("Connection failed")
+            XCTFail("State is not connected")
         }
     }
 
@@ -754,7 +754,7 @@ class ConnectionManagerTests: XCTestCase {
         XCTAssertEqual(receivedDiscoveryChange.action, .initial)
 
         if case .disconnected = connectionManager.connectionChange.state {} else {
-            XCTFail("connectionManager.connectionChange.state is nil")
+            XCTFail("State is not disconnected")
         }
     }
 
@@ -1032,9 +1032,7 @@ class ConnectionManagerTests: XCTestCase {
         // Then
         let arguments = centralManager.scanForPeripheralsCalledWithArguments!
         XCTAssertNil(arguments.serviceUUIDs)
-        // swiftlint:disable force_cast
         XCTAssertTrue(arguments.options![CBCentralManagerScanOptionAllowDuplicatesKey] as! Int == 1)
-        // swiftlint:enable force_cast
     }
 
     func test_appDidBecomeActive_ifCentralManagerIsPoweredOnAndDiscoveryIsNotEnabled_itDoesNothing() {

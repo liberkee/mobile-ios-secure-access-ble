@@ -15,7 +15,6 @@ private let leaseTokenA = try! LeaseToken(id: "", leaseID: "", sorcID: sorcIDA, 
 private let leaseTokenBlobA = try! LeaseTokenBlob(messageCounter: 1, data: "1a")
 private let serviceGrantIDA = ServiceGrantID(2)
 
-// swiftlint:disable todo
 private class MockTransportManager: TransportManagerType {
 
     let connectionChange = ChangeSubject<TransportConnectionChange>(state: .disconnected)
