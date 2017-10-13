@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 ### Added
+- 2017-09-29 : (PLAM-1543)  : Fixed issues found by SwiftLint
+
 ### Changed
 ### Removed
 ### Fixed
@@ -12,7 +14,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [2.0.0] - 2017-09-27
 
 ### Added
-- 2017-09-29 : (PLAM-1543)  : Fixed issues found by SwiftLint
 - 2017-09-27 : (PLAM-1517)  : Updated logging functionality
 - 2017-09-22 : (PLAM-1517)  : Added debug logging functionality
 - 2017-09-21 : (PLAM-1568)  : Added tests for `SecurityManager` and `TransportManager`
