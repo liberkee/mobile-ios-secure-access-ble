@@ -9,6 +9,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Removed
 ### Fixed
 
+## [2.1.0] - 2017-10-16
+
+### Added
+- 2017-09-29 : (PLAM-1543)  : Fixed issues found by SwiftLint
+
 ## [2.0.0] - 2017-09-27
 
 ### Added
@@ -21,6 +26,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - 2017-09-04 : (PLAM-1374)  : Added error handling for sending and receiving data
 
 ### Changed
+- 2017-10-09 : (PLAM-1539)  : Updated SwiftLint to version 0.23.0
 - 2017-08-14 : (PLAM-964)   : Rename `SID` to `SORC`
 - 2017-08-14 : (PLAM-962)   : Provide proper actions for disconnected state in `BLEManager`
 - 2017-08-11 : (PLAM-961)   : Provide correct rssi through DiscoveryChange

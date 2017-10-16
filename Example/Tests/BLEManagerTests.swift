@@ -112,7 +112,8 @@ class BLEManagerTests: XCTestCase {
     //        bleCommunicator.delegate = bleManager
     //
     //        /// Mock data with service trigger status Locked
-    //        let mockBytes = [0xD3, 0x7D, 0x36, 0x92, 0xBE, 0xB0, 0xF2, 0xDE, 0x36, 0xD8, 0x75, 0xF9, 0xBB, 0x4C, 0xF3, 0x00, 0xF5, 0xF9, 0x54, 0x83, 0x62, 0x54, 0xBF, 0xAF] as [UInt8]
+    //        let mockBytes = [0xD3, 0x7D, 0x36, 0x92, 0xBE, 0xB0, 0xF2, 0xDE, 0x36, 0xD8, 0x75, 0xF9, 0xBB, 0x4C, 0xF3, 0x00, 0xF5, 0xF9, 0x54, 0x83,
+    //                         0x62, 0x54, 0xBF, 0xAF] as [UInt8]
     //        let mockReceivedData = Data(bytes: UnsafePointer<UInt8>(mockBytes), count: mockBytes.count)
     //
     //        /// ble manager will be reported for receiving data
@@ -130,7 +131,8 @@ class BLEManagerTests: XCTestCase {
     //        XCTAssertEqual(serviceGrantTrigger.id, FeatureServiceGrantID.lockStatus, "BLE manager received wrong service grant ID!")
     //
     //        /// Testing if service grant trigger has result .Locked
-    //        XCTAssertEqual(serviceGrantTrigger.result, ServiceGrantTrigger.ServiceGrantResult.locked, "BLE manager received wrong service grant result!")
+    //        XCTAssertEqual(serviceGrantTrigger.result, ServiceGrantTrigger.ServiceGrantResult.locked,
+    //                       "BLE manager received wrong service grant result!")
     //    }
     //
     //    /**
@@ -145,8 +147,9 @@ class BLEManagerTests: XCTestCase {
     //        bleManager.challengerFinishedWithSessionKey(mockSessionKey)
     //
     //        /// Mock blob data for sending message
+    // swiftlint:disable line_length
     //        let mockBlobData = "ASUL8kKdjE8oluIDDf5gG9gBAR0EAABk7qoX/DOQLkqSiekGa8Qif9oaLZFDT7hwQnTV4/in+63QEkOImLL0lu0hxrXy6U732cNU2m4eeEHtOaQuecEURgtD32S6Al2WDEuA891mJv/wbbexa2y1OprUef9WyO7xvvkeSGX0nnfaoPbpPePJJxqI/E/yaQyayQD8TLQqd9q4IYFoOxlchlKic/2nE7Hyvx+5oLIREipxIb92A8J8vGKLhDOglGFlI2QAIhe9vFRnCJ3r1TQ+ulsnLiyQ3OByChBp3rnQ0h9KnLWmiRYOHcZIRHGILPlBDaMYWp1lsvL86zqzyKMXjQ2u8I3kqrKanSOqQkoh4MvYbF+hXvO/nQf9yT6cdnr4sZKjLUOBqzBRnprK1D45f8tU6CMjqssc7o/iqwlWrouKHcr8vWatt9o82AyMSWm7O36UHUEdr29wbFgwTQNH0fOkuOOoy+Nf69MbD8oJeuwFFgXjrbW8coEHgUr7La2R5IW+HHGA+HaFrsWPMPJrqsUdcGIe8nPErmby2bhKu98AGcYYWdbFZHJ4fx4SBAW5sR5hgkx8Tj4IC/WVe0uUStbgVemxnviPSDAL8NkefytZbXEdWxxXyYagFnVb3Y+JXosh07LcuZswGc9uOlGm5b3yjQgB9gJyzs2kGIhLw6yiQhl8KYqsDr3cZitxv9c7eLOf1CzyLjMI0RU14qadxqQl/aOdIvY0r3MTmJmCTtFQyKXJ7xKWk2rBFA5dRTjq99Nw9w6weHN7mWBmuP7+SMMdeP6bcqnVq4BMc9Y/jpf6fjcPTdSsdMY4884m2zWOl1xU29uR9Zz5vi6SodJCXgdyYMXp3Uu7aYLsUVpQz0/FHGJbK9XZHJKMqgsooktSVf3ByCCK7OyFi3L4VU5BD/nCLUDiC1TzjfXRUSJCYFoVqIGaVm3ngtV9JjsZk3kjrXayv8fTzs+ytm/Q2/+NPl3v80CBSrgljdkKt2DORY38pkANSemnh6atWL2u318ORSqRS7qb5gqwZ6US9e4lkHz9dgmeMWbmMxrE9MM0XFfFFDK4Cx/hxkeelAQb7HT50GE1EWpUgF+CMBXm4d6t3XFHlpI4r7NjJp6gysLwl/O1859PurQV5F7kgrmATxF9+Xf76t6jzNbrjkwIC5RtV3K2FYR5H3ani2vJRKpkzPfpaChZUb8M"
-    //
+    // swiftlint:enable line_length
     //        /// To build sending blob message
     //        let payload = LTBlobPayload(blobData: mockBlobData)
     //        let blobMessage = SorcMessage(id: .ltBlob, payload: payload!)

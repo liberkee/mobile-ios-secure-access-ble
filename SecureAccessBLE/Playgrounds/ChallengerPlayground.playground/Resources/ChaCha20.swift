@@ -84,7 +84,7 @@ public final class ChaCha20 {
                 UInt8((x[i] & 0xFFFF_FFFF) >> 24),
                 UInt8((x[i] & 0xFFFFFF) >> 16),
                 UInt8((x[i] & 0xFFFF) >> 8),
-                UInt8((x[i] & 0xFF) >> 0),
+                UInt8((x[i] & 0xFF) >> 0)
             ])
         }
 

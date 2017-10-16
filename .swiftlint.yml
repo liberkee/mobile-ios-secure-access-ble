@@ -1,0 +1,34 @@
+reporter: xcode
+included: # paths to include during linting. `--path` is ignored if present.
+  - ../CommonUtils
+  - Tests
+excluded: # paths to ignore during linting. Takes precedence over `included`.
+
+disabled_rules:
+  - multiple_closures_with_trailing_closure
+
+line_length:
+  warning: 150
+  error: 180
+large_tuple:
+  warning: 3
+  error: 4
+vertical_whitespace: 
+  severity: error
+trailing_whitespace:
+  severity: error
+trailing_comma:
+  severity: error
+colon:
+  severity: error
+identifier_name:
+  min_length:
+    warning: 2
+    error: 2
+  max_length: 
+    error: 50
+weak_delegate:
+  severity: error
+nesting:
+  type_level:
+    warning: 2

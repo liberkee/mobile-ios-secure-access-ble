@@ -19,7 +19,7 @@ private let serviceGrantIDAResponse = ServiceGrantID(4)
 private let serviceGrantAResponseMessage = SorcMessage(rawData: Data(bytes: [
     SorcMessageID.serviceGrantTrigger.rawValue,
     UInt8(serviceGrantIDAResponse), 0x00,
-    ServiceGrantResponse.Status.pending.rawValue,
+    ServiceGrantResponse.Status.pending.rawValue
 ]))
 
 private class MockSecurityManager: SecurityManagerType {

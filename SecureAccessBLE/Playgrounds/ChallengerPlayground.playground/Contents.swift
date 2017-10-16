@@ -232,7 +232,7 @@ let sessionKey = [
     nr[0], nr[1], nr[2], nr[3],
     nc[0], nc[1], nc[2], nc[3],
     nr[12], nr[13], nr[14], nr[15],
-    nc[12], nc[13], nc[14], nr[15],
+    nc[12], nc[13], nc[14], nr[15]
 ]
 
 // let sessionKeyData = NSData(bytes: sessionKey, lengt
