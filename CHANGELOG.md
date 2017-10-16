@@ -5,11 +5,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 ### Added
-- 2017-09-29 : (PLAM-1543)  : Fixed issues found by SwiftLint
-
 ### Changed
 ### Removed
 ### Fixed
+
+## [2.1.0] - 2017-10-16
+
+### Added
+- 2017-09-29 : (PLAM-1543)  : Fixed issues found by SwiftLint
 
 ## [2.0.0] - 2017-09-27
 
