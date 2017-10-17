@@ -1,0 +1,10 @@
+# For more information about this configuration visit
+# https://github.com/fastlane/fastlane/tree/master/scan#scanfile
+
+# In general, you can use the options available
+# fastlane scan --help
+
+scheme "SecureAccessBLE-Example"
+clean true
+output_types "html"
+output_directory "../test_reports"
