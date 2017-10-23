@@ -1,0 +1,6 @@
+// http://stackoverflow.com/questions/25248598/importing-commoncrypto-in-a-swift-framework/37125785#37125785
+
+module OpenSSL [system] [extern_c] {
+    header "Headers/cmac.h"
+    export *
+}
