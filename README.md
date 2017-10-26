@@ -1,6 +1,6 @@
 # SecureAccessBLE
 ![Version](https://img.shields.io/badge/version-2.1.0-red.svg)
-[![Build Status](https://jenkins01.hufsm.com/buildStatus/icon?job=mobile/iOS development/SecureAccessBLE - Tests)](https://jenkins01.hufsm.com/job/mobile/job/iOS%20development/job/SecureAccessBLE%20-%20Tests/)
+[![Build Status](https://jenkins01.hufsm.com/buildStatus/icon?job=mobile/iOS%20development/SecureAccessBLE%20-%20Tests)](https://jenkins01.hufsm.com/job/mobile/job/iOS%20development/job/SecureAccessBLE%20-%20Tests/)
 
 ## Description
 Framework for communicating with the SecureAccess BLE hardware.
@@ -12,6 +12,7 @@ Framework for communicating with the SecureAccess BLE hardware.
 * [Jazzy](https://github.com/realm/jazzy)
 
 ## License
+Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 
 ## Dependencies
 ### Private frameworks
@@ -73,5 +74,3 @@ This project uses [Jazzy](https://github.com/realm/jazzy) to generate the docume
 
 - Run `bundle install` to install the jazzy gem
 - Run `jazzy` to generate the documentation
-
-<center>Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.</center>
