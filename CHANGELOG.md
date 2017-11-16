@@ -12,6 +12,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Removed
 ### Fixed
+- 2017-11-16 : (PLAM-1756)  : Added missing files to the binary framework
 
 ## [2.1.0] - 2017-10-16
 
