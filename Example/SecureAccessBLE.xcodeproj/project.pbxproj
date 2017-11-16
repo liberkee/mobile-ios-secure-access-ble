@@ -11,8 +11,58 @@
 		46B760911DA26C40003ADDB1 /* BLEManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760901DA26C40003ADDB1 /* BLEManagerTests.swift */; };
 		46B760971DA26C8C003ADDB1 /* BLECryptorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760961DA26C8C003ADDB1 /* BLECryptorTests.swift */; };
 		8A124FF51D48BACC201824A8 /* Pods_SecureAccessBLE_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D955D40F7C47731B2AA178ED /* Pods_SecureAccessBLE_Tests.framework */; };
+		9917E9D81FBAF7C8002D5CE3 /* SorcManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E504030A1F5553830008DF02 /* SorcManagerType.swift */; };
+		9917E9D91FBAF7C8002D5CE3 /* SorcManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50403061F546FFF0008DF02 /* SorcManager.swift */; };
+		9917E9DA1FBAF7C8002D5CE3 /* SorcManagerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50C4E911F5F3F380081B619 /* SorcManagerConfiguration.swift */; };
+		9917E9DB1FBAF7C8002D5CE3 /* DiscoveryChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = E504030C1F5553F50008DF02 /* DiscoveryChange.swift */; };
+		9917E9DC1FBAF7C8002D5CE3 /* SorcInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = E504030D1F5553F50008DF02 /* SorcInfo.swift */; };
+		9917E9DD1FBAF7C8002D5CE3 /* ConnectionChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = E504030B1F5553F50008DF02 /* ConnectionChange.swift */; };
+		9917E9DE1FBAF7C8002D5CE3 /* ServiceGrantChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C2BEB21F627B5000A857BF /* ServiceGrantChange.swift */; };
+		9917E9DF1FBAF7C8002D5CE3 /* ServiceGrantResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = E504030E1F55543E0008DF02 /* ServiceGrantResponse.swift */; };
+		9917E9E01FBAF7CE002D5CE3 /* SessionManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50403161F55607F0008DF02 /* SessionManagerType.swift */; };
+		9917E9E11FBAF7CE002D5CE3 /* SessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50403101F5556830008DF02 /* SessionManager.swift */; };
+		9917E9E21FBAF7CE002D5CE3 /* SessionManagerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50C4E921F5FDC8B0081B619 /* SessionManagerConfiguration.swift */; };
+		9917E9E31FBAF7D5002D5CE3 /* SecurityManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E504032F1F56CEFA0008DF02 /* SecurityManagerType.swift */; };
+		9917E9E41FBAF7D5002D5CE3 /* SecureConnectionChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CF3ADF1F585024009C95A0 /* SecureConnectionChange.swift */; };
+		9917E9E51FBAF7D5002D5CE3 /* SecurityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E504032E1F56CEFA0008DF02 /* SecurityManager.swift */; };
+		9917E9E61FBAF7D5002D5CE3 /* Challenger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CF3AEE1F58708D009C95A0 /* Challenger.swift */; };
+		9917E9E71FBAF7DB002D5CE3 /* AesCbcCryptoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CF3AEA1F58705C009C95A0 /* AesCbcCryptoManager.swift */; };
+		9917E9E81FBAF7DB002D5CE3 /* AesCbcTestCryptoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CF3AEB1F58705C009C95A0 /* AesCbcTestCryptoManager.swift */; };
+		9917E9E91FBAF7DB002D5CE3 /* CryptoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CF3AEC1F58705C009C95A0 /* CryptoManager.swift */; };
+		9917E9EA1FBAF7DB002D5CE3 /* ZeroSecurityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CF3AED1F58705C009C95A0 /* ZeroSecurityManager.swift */; };
+		9917E9EB1FBAF7E2002D5CE3 /* TransportManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50403231F55C0B50008DF02 /* TransportManagerType.swift */; };
+		9917E9EC1FBAF7E2002D5CE3 /* TransportConnectionChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = E504032C1F55C32F0008DF02 /* TransportConnectionChange.swift */; };
+		9917E9ED1FBAF7E2002D5CE3 /* TransportManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E504032B1F55C30D0008DF02 /* TransportManager.swift */; };
+		9917E9EE1FBAF7E7002D5CE3 /* BluetoothStatusProviderType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50403261F55C12D0008DF02 /* BluetoothStatusProviderType.swift */; };
+		9917E9EF1FBAF7E7002D5CE3 /* ScannerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50403281F55C12D0008DF02 /* ScannerType.swift */; };
+		9917E9F01FBAF7E7002D5CE3 /* ConnectionManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50403291F55C15E0008DF02 /* ConnectionManagerType.swift */; };
+		9917E9F11FBAF7E7002D5CE3 /* PhysicalConnectionChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50403271F55C12D0008DF02 /* PhysicalConnectionChange.swift */; };
+		9917E9F21FBAF7E7002D5CE3 /* ConnectionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CF3AE01F586E74009C95A0 /* ConnectionManager.swift */; };
+		9917E9F31FBAF7E7002D5CE3 /* ConnectionManagerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50C4E931F5FDDDF0081B619 /* ConnectionManagerConfiguration.swift */; };
+		9917E9F41FBAF7E7002D5CE3 /* ConnectionManagerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CF3AE11F586E74009C95A0 /* ConnectionManagerExtensions.swift */; };
+		9917E9F51FBAF7F1002D5CE3 /* CBWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E308D21F324E6800C1537F /* CBWrapper.swift */; };
+		9917E9F61FBAF7F8002D5CE3 /* LeaseToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = E573A7921EDC2BAA0093ABA8 /* LeaseToken.swift */; };
+		9917E9F71FBAF7F8002D5CE3 /* LeaseTokenBlob.swift in Sources */ = {isa = PBXBuildFile; fileRef = E573A7931EDC2BD50093ABA8 /* LeaseTokenBlob.swift */; };
+		9917E9F81FBAF7FE002D5CE3 /* PhoneToSorcChallenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B7607C1DA2637D003ADDB1 /* PhoneToSorcChallenge.swift */; };
+		9917E9F91FBAF7FE002D5CE3 /* PhoneToSorcResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B7607D1DA2637D003ADDB1 /* PhoneToSorcResponse.swift */; };
+		9917E9FA1FBAF7FE002D5CE3 /* SorcToPhoneResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B7607E1DA2637D003ADDB1 /* SorcToPhoneResponse.swift */; };
+		9917E9FB1FBAF804002D5CE3 /* Handshake.swift in Sources */ = {isa = PBXBuildFile; fileRef = E55E6CDB1F4200E900C5934B /* Handshake.swift */; };
+		9917E9FC1FBAF804002D5CE3 /* MTUSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = E55E6CDC1F4200E900C5934B /* MTUSize.swift */; };
+		9917E9FD1FBAF804002D5CE3 /* SorcMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E55E6CDD1F4200E900C5934B /* SorcMessage.swift */; };
+		9917E9FE1FBAF804002D5CE3 /* SorcMessagePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = E55E6CDE1F4200E900C5934B /* SorcMessagePayload.swift */; };
+		9917E9FF1FBAF804002D5CE3 /* TestMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E55E6CDF1F4200E900C5934B /* TestMessage.swift */; };
+		9917EA001FBAF80A002D5CE3 /* CustomPadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760801DA2637D003ADDB1 /* CustomPadding.swift */; };
+		9917EA011FBAF80F002D5CE3 /* DataFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760821DA2637D003ADDB1 /* DataFrame.swift */; };
+		9917EA021FBAF80F002D5CE3 /* DataFramePackage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760831DA2637D003ADDB1 /* DataFramePackage.swift */; };
+		9917EA031FBAF814002D5CE3 /* BlobRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760851DA2637D003ADDB1 /* BlobRequest.swift */; };
+		9917EA041FBAF814002D5CE3 /* LTBlobPayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760861DA2637D003ADDB1 /* LTBlobPayload.swift */; };
+		9917EA051FBAF819002D5CE3 /* ServiceGrantRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760881DA2637D003ADDB1 /* ServiceGrantRequest.swift */; };
+		9917EA061FBAF81F002D5CE3 /* SystemClock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E565092C1F3333C1002771F8 /* SystemClock.swift */; };
+		9917EA071FBAF81F002D5CE3 /* BoundedQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CF3ADB1F56FD51009C95A0 /* BoundedQueue.swift */; };
+		9917EA081FBAF81F002D5CE3 /* AppActivityStatusProviderType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8F8EE1F5EAE9700B629A5 /* AppActivityStatusProviderType.swift */; };
+		9917EA091FBAF81F002D5CE3 /* AppActivityStatusProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8F8EF1F5EAF2800B629A5 /* AppActivityStatusProvider.swift */; };
+		99AF3D8E1FBDE279002C2F40 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99AF3D8D1FBDE279002C2F40 /* openssl.framework */; };
 		99D1233D1F9A3B20006012DE /* SecureAccessBLE.h in Headers */ = {isa = PBXBuildFile; fileRef = 99D1233B1F9A3B20006012DE /* SecureAccessBLE.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		99D123441F9A4964006012DE /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99D123431F9A4964006012DE /* openssl.framework */; };
 		E504031F1F55BFD50008DF02 /* SessionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E504031B1F55BFD50008DF02 /* SessionManagerTests.swift */; };
 		E50403201F55BFD50008DF02 /* SorcManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E504031D1F55BFD50008DF02 /* SorcManagerTests.swift */; };
 		E50403221F55C0010008DF02 /* TransportManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50403211F55C0010008DF02 /* TransportManagerTests.swift */; };
@@ -42,10 +92,10 @@
 		607FACE51AFB9204008FA782 /* SecureAccessBLE_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SecureAccessBLE_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		73D51B88FB7332E88789517E /* Pods-SecureAccessBLE_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		99AF3D8D1FBDE279002C2F40 /* openssl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = openssl.framework; sourceTree = "<group>"; };
 		99D123391F9A3B20006012DE /* SecureAccessBLE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SecureAccessBLE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		99D1233B1F9A3B20006012DE /* SecureAccessBLE.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SecureAccessBLE.h; sourceTree = "<group>"; };
 		99D1233C1F9A3B20006012DE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		99D123431F9A4964006012DE /* openssl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = openssl.framework; sourceTree = "<group>"; };
 		BDD2935451DD295A50BFBCF1 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		C28A7D5203261E30CA436EC3 /* SecureAccessBLE.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = SecureAccessBLE.podspec; path = ../SecureAccessBLE.podspec; sourceTree = "<group>"; };
 		D955D40F7C47731B2AA178ED /* Pods_SecureAccessBLE_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SecureAccessBLE_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -114,7 +164,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				10C0DB79EE829A37319BA8D6 /* Pods_SecureAccessBLE.framework in Frameworks */,
-				99D123441F9A4964006012DE /* openssl.framework in Frameworks */,
+				99AF3D8E1FBDE279002C2F40 /* openssl.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -258,7 +308,7 @@
 		99D1233A1F9A3B20006012DE /* SecureAccessBLE */ = {
 			isa = PBXGroup;
 			children = (
-				99D123431F9A4964006012DE /* openssl.framework */,
+				99AF3D8D1FBDE279002C2F40 /* openssl.framework */,
 				99D1233B1F9A3B20006012DE /* SecureAccessBLE.h */,
 				99D1233C1F9A3B20006012DE /* Info.plist */,
 			);
@@ -700,6 +750,56 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9917E9EF1FBAF7E7002D5CE3 /* ScannerType.swift in Sources */,
+				9917E9EE1FBAF7E7002D5CE3 /* BluetoothStatusProviderType.swift in Sources */,
+				9917EA001FBAF80A002D5CE3 /* CustomPadding.swift in Sources */,
+				9917EA071FBAF81F002D5CE3 /* BoundedQueue.swift in Sources */,
+				9917E9F41FBAF7E7002D5CE3 /* ConnectionManagerExtensions.swift in Sources */,
+				9917E9FE1FBAF804002D5CE3 /* SorcMessagePayload.swift in Sources */,
+				9917E9F91FBAF7FE002D5CE3 /* PhoneToSorcResponse.swift in Sources */,
+				9917E9F11FBAF7E7002D5CE3 /* PhysicalConnectionChange.swift in Sources */,
+				9917E9DC1FBAF7C8002D5CE3 /* SorcInfo.swift in Sources */,
+				9917EA031FBAF814002D5CE3 /* BlobRequest.swift in Sources */,
+				9917E9F21FBAF7E7002D5CE3 /* ConnectionManager.swift in Sources */,
+				9917E9E71FBAF7DB002D5CE3 /* AesCbcCryptoManager.swift in Sources */,
+				9917E9FD1FBAF804002D5CE3 /* SorcMessage.swift in Sources */,
+				9917E9F81FBAF7FE002D5CE3 /* PhoneToSorcChallenge.swift in Sources */,
+				9917E9E31FBAF7D5002D5CE3 /* SecurityManagerType.swift in Sources */,
+				9917EA011FBAF80F002D5CE3 /* DataFrame.swift in Sources */,
+				9917E9F51FBAF7F1002D5CE3 /* CBWrapper.swift in Sources */,
+				9917E9E61FBAF7D5002D5CE3 /* Challenger.swift in Sources */,
+				9917E9DF1FBAF7C8002D5CE3 /* ServiceGrantResponse.swift in Sources */,
+				9917EA051FBAF819002D5CE3 /* ServiceGrantRequest.swift in Sources */,
+				9917E9FA1FBAF7FE002D5CE3 /* SorcToPhoneResponse.swift in Sources */,
+				9917E9FC1FBAF804002D5CE3 /* MTUSize.swift in Sources */,
+				9917E9E01FBAF7CE002D5CE3 /* SessionManagerType.swift in Sources */,
+				9917E9E91FBAF7DB002D5CE3 /* CryptoManager.swift in Sources */,
+				9917E9E41FBAF7D5002D5CE3 /* SecureConnectionChange.swift in Sources */,
+				9917E9FB1FBAF804002D5CE3 /* Handshake.swift in Sources */,
+				9917E9EA1FBAF7DB002D5CE3 /* ZeroSecurityManager.swift in Sources */,
+				9917E9DD1FBAF7C8002D5CE3 /* ConnectionChange.swift in Sources */,
+				9917E9F31FBAF7E7002D5CE3 /* ConnectionManagerConfiguration.swift in Sources */,
+				9917E9DE1FBAF7C8002D5CE3 /* ServiceGrantChange.swift in Sources */,
+				9917E9E21FBAF7CE002D5CE3 /* SessionManagerConfiguration.swift in Sources */,
+				9917E9EC1FBAF7E2002D5CE3 /* TransportConnectionChange.swift in Sources */,
+				9917E9D91FBAF7C8002D5CE3 /* SorcManager.swift in Sources */,
+				9917EA091FBAF81F002D5CE3 /* AppActivityStatusProvider.swift in Sources */,
+				9917E9F61FBAF7F8002D5CE3 /* LeaseToken.swift in Sources */,
+				9917E9DA1FBAF7C8002D5CE3 /* SorcManagerConfiguration.swift in Sources */,
+				9917E9F01FBAF7E7002D5CE3 /* ConnectionManagerType.swift in Sources */,
+				9917EA021FBAF80F002D5CE3 /* DataFramePackage.swift in Sources */,
+				9917E9DB1FBAF7C8002D5CE3 /* DiscoveryChange.swift in Sources */,
+				9917E9F71FBAF7F8002D5CE3 /* LeaseTokenBlob.swift in Sources */,
+				9917E9FF1FBAF804002D5CE3 /* TestMessage.swift in Sources */,
+				9917EA081FBAF81F002D5CE3 /* AppActivityStatusProviderType.swift in Sources */,
+				9917E9E11FBAF7CE002D5CE3 /* SessionManager.swift in Sources */,
+				9917E9ED1FBAF7E2002D5CE3 /* TransportManager.swift in Sources */,
+				9917E9E81FBAF7DB002D5CE3 /* AesCbcTestCryptoManager.swift in Sources */,
+				9917E9D81FBAF7C8002D5CE3 /* SorcManagerType.swift in Sources */,
+				9917EA061FBAF81F002D5CE3 /* SystemClock.swift in Sources */,
+				9917EA041FBAF814002D5CE3 /* LTBlobPayload.swift in Sources */,
+				9917E9E51FBAF7D5002D5CE3 /* SecurityManager.swift in Sources */,
+				9917E9EB1FBAF7E2002D5CE3 /* TransportManagerType.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
