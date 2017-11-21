@@ -2,7 +2,7 @@
 //  SecureAccessBLE.h
 //  SecureAccessBLE
 //
-//  Created by Oleg Langer on 20.10.17.
+//  Created on 20.10.17.
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 

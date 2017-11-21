@@ -2,6 +2,7 @@
 //  TransportConnectionChange.swift
 //  SecureAccessBLE
 //
+//  Created on 23.08.17.
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 

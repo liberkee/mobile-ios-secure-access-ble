@@ -2,7 +2,8 @@
 //  Challenger.swift
 //  SecureAccessBLE
 //
-//  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
+//  Created on 03.10.2016
+//  Copyright © 2016 Huf Secure Mobile GmbH. All rights reserved.
 //
 
 import CryptoSwift
