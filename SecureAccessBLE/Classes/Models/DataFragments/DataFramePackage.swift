@@ -1,8 +1,9 @@
 //
 //  DataFramePackage.swift
-//  TransportTest
+//  SecureAccessBLE
 //
-//  Copyright (c) 2017 Huf Secure Mobile GmbH. All rights reserved.
+//  Created on 03.10.16.
+//  Copyright © 2016 Huf Secure Mobile GmbH. All rights reserved.
 //
 
 /// Creates and holds data Frames for a SorcMessage

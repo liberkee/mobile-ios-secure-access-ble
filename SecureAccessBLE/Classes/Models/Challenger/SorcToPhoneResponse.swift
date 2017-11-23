@@ -2,6 +2,7 @@
 //  SorcToPhoneResponse.swift
 //  SecureAccessBLE
 //
+//  Created on 03.10.16.
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 

@@ -1,8 +1,9 @@
 //
-//  ZeroPadding.swift
+//  CustomPadding.swift
 //  SecureAccessBLE
 //
-//  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
+//  Created on 03.10.16.
+//  Copyright © 2016 Huf Secure Mobile GmbH. All rights reserved.
 //
 
 import Foundation

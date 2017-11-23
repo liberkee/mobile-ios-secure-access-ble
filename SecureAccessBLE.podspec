@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.description      = 'Framework for communicating with the SecureAccess BLE hardware.'
 
   s.homepage         = 'https://github.com/hufsm/mobile-ios-ble'
-  #s.license          = { :type => 'MIT', :file => 'LICENSE' }
+  s.license          = { :type => 'Copyright', :text => 'Copyright (c) 2017 Huf Secure Mobile GmbH. All rights reserved.' }
   s.author           = { 'Huf Secure Mobile GmbH' => 'info@hufsecuremobile.com' }
   s.source           = { :git => 'https://github.com/hufsm/mobile-ios-ble.git', :tag => s.version.to_s }
 

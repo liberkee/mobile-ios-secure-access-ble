@@ -2,6 +2,7 @@
 //  ConnectionManagerTests.swift
 //  SecureAccessBLE
 //
+//  Created on 14.07.17.
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
