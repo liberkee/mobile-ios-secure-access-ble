@@ -21,13 +21,13 @@ struct ZeroByte: Padding {
 
      - returns: new padding object
      */
-    func add(to: [UInt8], blockSize: Int) -> [UInt8] {
-        let padding = blockSize - to.count
-        var withPadding = to
-        for _ in 0 ..< padding {
-            withPadding.append(UInt8(0))
+    func add(to bytes: [UInt8], blockSize: Int) -> [UInt8] {
+        guard bytes.count > 0 else { return bytes }
+        let paddingCount = blockSize - (bytes.count % blockSize)
+        if paddingCount > 0 {
+            return bytes + [UInt8](repeating: 0, count: paddingCount)
         }
-        return withPadding
+        return bytes
     }
 
     /**
@@ -38,10 +38,10 @@ struct ZeroByte: Padding {
 
      - returns: new padding object after remove
      */
-    func remove(from: [UInt8], blockSize _: Int?) -> [UInt8] {
-        var cleanBytes = from
+    func remove(from bytes: [UInt8], blockSize _: Int?) -> [UInt8] {
+        var cleanBytes = bytes
 
-        for _ in from where cleanBytes.last == 0 {
+        for _ in bytes where cleanBytes.last == 0 {
             cleanBytes.removeLast()
         }
         return cleanBytes
@@ -73,8 +73,8 @@ struct ZeroByteWithLength: Padding {
 
      - returns: new padding object
      */
-    func add(to: [UInt8], blockSize _: Int) -> [UInt8] {
-        var withPadding = to
+    func add(to bytes: [UInt8], blockSize _: Int) -> [UInt8] {
+        var withPadding = bytes
         for _ in 0 ..< length {
             withPadding.append(UInt8(0))
         }
@@ -89,8 +89,8 @@ struct ZeroByteWithLength: Padding {
 
      - returns: new padding object after remove
      */
-    func remove(from: [UInt8], blockSize _: Int?) -> [UInt8] {
-        var cleanBytes = from
+    func remove(from bytes: [UInt8], blockSize _: Int?) -> [UInt8] {
+        var cleanBytes = bytes
         for _ in 0 ..< length {
             cleanBytes.removeLast()
         }
@@ -111,8 +111,8 @@ struct NoPadding: Padding {
 
      - returns: new padding object as ifself
      */
-    func add(to: [UInt8], blockSize _: Int) -> [UInt8] {
-        return to
+    func add(to bytes: [UInt8], blockSize _: Int) -> [UInt8] {
+        return bytes
     }
 
     /**
@@ -123,7 +123,7 @@ struct NoPadding: Padding {
 
      - returns: new padding object after remove as ifself
      */
-    func remove(from: [UInt8], blockSize _: Int?) -> [UInt8] {
-        return from
+    func remove(from bytes: [UInt8], blockSize _: Int?) -> [UInt8] {
+        return bytes
     }
 }
