@@ -6,8 +6,8 @@
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-import CoreBluetooth
 import CommonUtils
+import CoreBluetooth
 
 protocol ConnectionManagerType {
 

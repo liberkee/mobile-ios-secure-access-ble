@@ -6,8 +6,8 @@
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-import Foundation
 import CommonUtils
+import Foundation
 
 /// Sends and receives service messages. Manages heartbeats.
 class SessionManager: SessionManagerType {

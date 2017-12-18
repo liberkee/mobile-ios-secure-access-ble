@@ -1,5 +1,9 @@
 //
-// Created by Ruben Pelzer on 19-06-17.
+//  MappableExtension.swift
+//  CommonUtils
+//
+//  Created on 19.06.17.
+//  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
 import ObjectMapper

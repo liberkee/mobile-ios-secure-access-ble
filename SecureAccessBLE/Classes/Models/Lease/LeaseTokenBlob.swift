@@ -27,7 +27,7 @@ public struct LeaseTokenBlob: Equatable {
         self.data = data
     }
 
-    public static func ==(lhs: LeaseTokenBlob, rhs: LeaseTokenBlob) -> Bool {
+    public static func == (lhs: LeaseTokenBlob, rhs: LeaseTokenBlob) -> Bool {
         return lhs.messageCounter == rhs.messageCounter
             && lhs.data == rhs.data
     }

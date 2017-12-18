@@ -6,8 +6,8 @@
 //  Copyright © 2016 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-import Foundation
 import CryptoSwift
+import Foundation
 
 /**
  *  Extensions endpoints for Padding

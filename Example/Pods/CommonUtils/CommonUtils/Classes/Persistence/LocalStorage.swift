@@ -2,7 +2,7 @@
 //  LocalStorage.swift
 //  CommonUtils
 //
-//  Created by Lars Hosemann on 19.05.16.
+//  Created on 19.05.16.
 //  Copyright © 2016 Huf Secure Mobile. All rights reserved.
 //
 

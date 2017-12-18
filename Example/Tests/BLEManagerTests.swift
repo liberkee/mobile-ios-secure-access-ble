@@ -6,11 +6,11 @@
 //  Copyright © 2016 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-import XCTest
-import CryptoSwift
-import CoreBluetooth
-@testable import SecureAccessBLE
 import CommonUtils
+import CoreBluetooth
+import CryptoSwift
+@testable import SecureAccessBLE
+import XCTest
 
 // TODO: PLAM-1568 remove this file after ticket is done
 /// This class is outdated, but maybe the comments give you some sample code how to test something

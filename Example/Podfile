@@ -11,12 +11,11 @@ target 'SecureAccessBLE_Tests' do
 
   pod 'SecureAccessBLE', :path => '../'
 
-  pod 'CommonUtils', :git => 'https://github.com/hufsm/mobile-ios-common-utils.git', :branch => 'development'
-  #pod 'CommonUtils', :path => '../../mobile-ios-common-utils'
+  pod 'CommonUtils', '0.1.1'
   
 end
 
 target 'SecureAccessBLE' do
-    pod 'CommonUtils', :git => 'https://github.com/hufsm/mobile-ios-common-utils.git', :branch => 'development'
+    pod 'CommonUtils', '0.1.1'
     pod 'CryptoSwift', '0.7.0'
 end

@@ -26,7 +26,7 @@ public struct DiscoveryChange: ChangeType {
 
 extension DiscoveryChange: Equatable {
 
-    public static func ==(lhs: DiscoveryChange, rhs: DiscoveryChange) -> Bool {
+    public static func == (lhs: DiscoveryChange, rhs: DiscoveryChange) -> Bool {
         return lhs.state == rhs.state
             && lhs.action == rhs.action
     }
@@ -39,7 +39,7 @@ extension DiscoveryChange {
         public let discoveredSorcs: SorcInfos
         public let discoveryIsEnabled: Bool
 
-        public static func ==(lhs: State, rhs: State) -> Bool {
+        public static func == (lhs: State, rhs: State) -> Bool {
             return lhs.discoveredSorcs == rhs.discoveredSorcs
                 && lhs.discoveryIsEnabled == rhs.discoveryIsEnabled
         }
@@ -85,7 +85,7 @@ extension DiscoveryChange {
 
         case stopDiscovery
 
-        public static func ==(lhs: Action, rhs: Action) -> Bool {
+        public static func == (lhs: Action, rhs: Action) -> Bool {
             switch (lhs, rhs) {
             case (.initial, .initial): return true
             case let (.discovered(lSorcID), .discovered(rSorcID)) where lSorcID == rSorcID: return true
@@ -131,7 +131,7 @@ public struct SorcInfos: Equatable {
         return sorcInfoByID.keys.contains(sorcID)
     }
 
-    public static func ==(lhs: SorcInfos, rhs: SorcInfos) -> Bool {
+    public static func == (lhs: SorcInfos, rhs: SorcInfos) -> Bool {
         return lhs.sorcInfoByID == rhs.sorcInfoByID
     }
 }

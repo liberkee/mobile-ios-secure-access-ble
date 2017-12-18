@@ -22,7 +22,7 @@ public struct ServiceGrantResponse: Equatable {
     public let status: Status
     public let responseData: String
 
-    public static func ==(lhs: ServiceGrantResponse, rhs: ServiceGrantResponse) -> Bool {
+    public static func == (lhs: ServiceGrantResponse, rhs: ServiceGrantResponse) -> Bool {
         return lhs.sorcID == rhs.sorcID
             && lhs.serviceGrantID == rhs.serviceGrantID
             && lhs.status == rhs.status

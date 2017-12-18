@@ -26,7 +26,7 @@ public struct SecureConnectionChange: ChangeType, Equatable {
         self.action = action
     }
 
-    public static func ==(lhs: SecureConnectionChange, rhs: SecureConnectionChange) -> Bool {
+    public static func == (lhs: SecureConnectionChange, rhs: SecureConnectionChange) -> Bool {
         return lhs.state == rhs.state && lhs.action == rhs.action
     }
 }
@@ -39,7 +39,7 @@ extension SecureConnectionChange {
         case connecting(sorcID: SorcID, state: ConnectingState)
         case connected(sorcID: SorcID)
 
-        public static func ==(lhs: State, rhs: State) -> Bool {
+        public static func == (lhs: State, rhs: State) -> Bool {
             switch (lhs, rhs) {
             case (.disconnected, .disconnected): return true
             case let (.connecting(lSorcID, lState), .connecting(rSorcID, rState)):
@@ -72,7 +72,7 @@ extension SecureConnectionChange {
         case disconnect
         case connectionLost(error: ConnectionLostError)
 
-        public static func ==(lhs: Action, rhs: Action) -> Bool {
+        public static func == (lhs: Action, rhs: Action) -> Bool {
             switch (lhs, rhs) {
             case (.initial, .initial):
                 return true

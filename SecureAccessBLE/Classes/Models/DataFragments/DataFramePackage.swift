@@ -72,6 +72,7 @@ class DataFramePackage: NSObject {
     }
 
     // MARK: - Helper
+
     fileprivate class func configureType(_ sequence: Int, numberOfFrames: Int) -> DataFrameType {
         /// Start type as NotValid
         var type = DataFrameType.notValid

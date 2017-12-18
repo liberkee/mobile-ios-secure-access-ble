@@ -2,7 +2,7 @@
 //  LocalJSONStorage.swift
 //  CommonUtils
 //
-//  Created by Torsten Lehmann on 13.03.17.
+//  Created on 13.03.17.
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 

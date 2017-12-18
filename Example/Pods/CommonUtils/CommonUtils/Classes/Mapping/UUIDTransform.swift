@@ -2,6 +2,7 @@
 //  UUIDTransform.swift
 //  CommonUtils
 //
+//  Created on 16.09.17.
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 

@@ -2,7 +2,7 @@
 //  ISO8601DateFormatter.swift
 //  CommonUtils
 //
-//  Created by Torsten Lehmann on 27.03.17.
+//  Created on 27.03.17.
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 

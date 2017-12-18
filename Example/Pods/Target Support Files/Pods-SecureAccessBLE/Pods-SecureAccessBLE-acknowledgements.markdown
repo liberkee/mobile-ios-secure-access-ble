@@ -1,6 +1,10 @@
 # Acknowledgements
 This application makes use of the following third party libraries:
 
+## CommonUtils
+
+Copyright (c) 2017 Huf Secure Mobile GmbH. All rights reserved.
+
 ## CryptoSwift
 
 Copyright (C) 2014-2017 Marcin Krzyżanowski <marcin.krzyzanowski@gmail.com>

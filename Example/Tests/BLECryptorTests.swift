@@ -6,8 +6,8 @@
 //  Copyright © 2016 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-import XCTest
 @testable import SecureAccessBLE
+import XCTest
 
 private let sorcIDA = UUID(uuidString: "be2fecaf-734b-4252-8312-59d477200a20")!
 

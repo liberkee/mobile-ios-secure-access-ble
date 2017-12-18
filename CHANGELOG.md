@@ -5,6 +5,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 ### Added
+### Changed
+### Fixed
+
+## [2.2.0] - 2017-12-18
+
+### Added
 - 2017-12-01 : (PLAM-1863)  : Avoid running swift format in CI build
 - 2017-10-23 : (PLAM-1661)  : Added the new Cocoa Touch Framework target for binary distribution of the library   
 
@@ -12,7 +18,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - 2017-12-05 : (PLAM-1784)  : Updated CryptoSwift to version 0.7.0
 - 2017-10-25 : (PLAM-1650)  : Updated the README.md file
 
-### Removed
 ### Fixed
 - 2017-11-16 : (PLAM-1756)  : Added missing files to the binary framework
 

@@ -26,7 +26,7 @@ public struct ServiceGrantChange: ChangeType, Equatable {
         self.action = action
     }
 
-    public static func ==(lhs: ServiceGrantChange, rhs: ServiceGrantChange) -> Bool {
+    public static func == (lhs: ServiceGrantChange, rhs: ServiceGrantChange) -> Bool {
         return lhs.state == rhs.state && lhs.action == rhs.action
     }
 }
@@ -37,7 +37,7 @@ extension ServiceGrantChange {
     public struct State: Equatable {
         public let requestingServiceGrantIDs: [ServiceGrantID]
 
-        public static func ==(lhs: State, rhs: State) -> Bool {
+        public static func == (lhs: State, rhs: State) -> Bool {
             return lhs.requestingServiceGrantIDs == rhs.requestingServiceGrantIDs
         }
     }
@@ -55,7 +55,7 @@ extension ServiceGrantChange {
         case requestFailed(Error)
         case reset
 
-        public static func ==(lhs: Action, rhs: Action) -> Bool {
+        public static func == (lhs: Action, rhs: Action) -> Bool {
             switch (lhs, rhs) {
             case (.initial, .initial):
                 return true

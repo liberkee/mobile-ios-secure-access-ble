@@ -2,8 +2,8 @@
 //  DispatchQueueExtension.swift
 //  CommonUtils
 //
-//  Created by Oleg Langer on 11.07.17.
-//  Copyright © 2017 CocoaPods. All rights reserved.
+//  Created on 11.07.17.
+//  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
 import Foundation

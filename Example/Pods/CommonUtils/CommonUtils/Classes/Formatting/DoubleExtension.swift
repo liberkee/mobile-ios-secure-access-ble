@@ -1,9 +1,9 @@
 //
 //  DoubleExtension.swift
-//  Pods
+//  CommonUtils
 //
-//  Created by Hua Duong Nguyen on 11.04.17.
-//
+//  Created on 11.04.17.
+//  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
 import Foundation

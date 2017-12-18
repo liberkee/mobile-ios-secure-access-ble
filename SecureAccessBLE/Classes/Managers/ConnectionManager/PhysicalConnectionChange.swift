@@ -6,8 +6,8 @@
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-import Foundation
 import CommonUtils
+import Foundation
 
 struct PhysicalConnectionChange: ChangeType {
 
@@ -36,7 +36,7 @@ struct PhysicalConnectionChange: ChangeType {
 
 extension PhysicalConnectionChange: Equatable {
 
-    static func ==(lhs: PhysicalConnectionChange, rhs: PhysicalConnectionChange) -> Bool {
+    static func == (lhs: PhysicalConnectionChange, rhs: PhysicalConnectionChange) -> Bool {
         return lhs.state == rhs.state
             && lhs.action == rhs.action
     }
@@ -44,8 +44,8 @@ extension PhysicalConnectionChange: Equatable {
 
 extension PhysicalConnectionChange.State: Equatable {
 
-    static func ==(lhs: PhysicalConnectionChange.State,
-                   rhs: PhysicalConnectionChange.State) -> Bool {
+    static func == (lhs: PhysicalConnectionChange.State,
+                    rhs: PhysicalConnectionChange.State) -> Bool {
         switch (lhs, rhs) {
         case (.disconnected, .disconnected): return true
         case let (.connecting(lSorcID), .connecting(rSorcID)) where lSorcID == rSorcID: return true
@@ -57,8 +57,8 @@ extension PhysicalConnectionChange.State: Equatable {
 
 extension PhysicalConnectionChange.Action: Equatable {
 
-    static func ==(lhs: PhysicalConnectionChange.Action,
-                   rhs: PhysicalConnectionChange.Action) -> Bool {
+    static func == (lhs: PhysicalConnectionChange.Action,
+                    rhs: PhysicalConnectionChange.Action) -> Bool {
         switch (lhs, rhs) {
         case (.initial, .initial): return true
         case let (.connect(lSorcID), .connect(rSorcID)) where lSorcID == rSorcID: return true

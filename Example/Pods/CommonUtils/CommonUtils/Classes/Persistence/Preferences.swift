@@ -2,8 +2,8 @@
 //  Preferences.swift
 //  CommonUtils
 //
-//  Created by Torsten Lehmann on 01.05.17.
-//  Copyright © 2017 CocoaPods. All rights reserved.
+//  Created on 01.05.17.
+//  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
 import Foundation

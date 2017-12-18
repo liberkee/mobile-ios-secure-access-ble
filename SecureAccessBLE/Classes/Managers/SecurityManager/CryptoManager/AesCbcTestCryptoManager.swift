@@ -6,9 +6,9 @@
 //  Copyright © 2016 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-import OpenSSL
-import CryptoSwift
 import CommonUtils
+import CryptoSwift
+import OpenSSL
 
 /**
  *  A crypto manager for tests, that handles messages and feedback from session layer and from transport layer.

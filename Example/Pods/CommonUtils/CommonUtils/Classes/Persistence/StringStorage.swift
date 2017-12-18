@@ -2,8 +2,8 @@
 //  StringStorage.swift
 //  CommonUtils
 //
-//  Created by Torsten Lehmann on 16.05.17.
-//  Copyright © 2017 CocoaPods. All rights reserved.
+//  Created on 16.05.17.
+//  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
 import Foundation

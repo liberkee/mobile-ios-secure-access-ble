@@ -18,6 +18,7 @@ protocol SorcMessagePayload {
 }
 
 // MARK: - Extension end point
+
 extension SorcMessagePayload {
 }
 

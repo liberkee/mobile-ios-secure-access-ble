@@ -2,7 +2,7 @@
 //  HSMLogging.swift
 //  CommonUtils
 //
-//  Created by Stefan Lahme on 15.09.17.
+//  Created on 15.09.17.
 //  Copyright © 2017 CocoaPods. All rights reserved.
 //
 

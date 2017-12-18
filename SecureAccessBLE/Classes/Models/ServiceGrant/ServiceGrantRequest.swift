@@ -30,6 +30,7 @@ protocol ServiceGrant: SorcMessagePayload {
 }
 
 // MARK: - extension endpoint
+
 extension ServiceGrant {
 
     init(serviceGrantID: ServiceGrantID) {

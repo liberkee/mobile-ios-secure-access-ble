@@ -6,10 +6,9 @@
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-import Foundation
-
-import Foundation
 import CommonUtils
+import Foundation
+import Foundation
 
 /// Describes a change of connection state
 struct TransportConnectionChange: ChangeType, Equatable {
@@ -29,7 +28,7 @@ struct TransportConnectionChange: ChangeType, Equatable {
         self.action = action
     }
 
-    static func ==(lhs: TransportConnectionChange, rhs: TransportConnectionChange) -> Bool {
+    static func == (lhs: TransportConnectionChange, rhs: TransportConnectionChange) -> Bool {
         return lhs.state == rhs.state && lhs.action == rhs.action
     }
 }
@@ -42,7 +41,7 @@ extension TransportConnectionChange {
         case connecting(sorcID: SorcID, state: ConnectingState)
         case connected(sorcID: SorcID)
 
-        static func ==(lhs: State, rhs: State) -> Bool {
+        static func == (lhs: State, rhs: State) -> Bool {
             switch (lhs, rhs) {
             case (.disconnected, .disconnected): return true
             case let (.connecting(lSorcID, lState), .connecting(rSorcID, rState)):
@@ -72,7 +71,7 @@ extension TransportConnectionChange {
         case disconnect
         case connectionLost(error: ConnectionLostError)
 
-        static func ==(lhs: Action, rhs: Action) -> Bool {
+        static func == (lhs: Action, rhs: Action) -> Bool {
             switch (lhs, rhs) {
             case (.initial, .initial):
                 return true

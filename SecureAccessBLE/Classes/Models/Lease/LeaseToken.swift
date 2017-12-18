@@ -31,7 +31,7 @@ public struct LeaseToken: Equatable {
         self.sorcAccessKey = sorcAccessKey
     }
 
-    public static func ==(lhs: LeaseToken, rhs: LeaseToken) -> Bool {
+    public static func == (lhs: LeaseToken, rhs: LeaseToken) -> Bool {
         return lhs.id == rhs.id
             && lhs.leaseID == rhs.leaseID
             && lhs.sorcID == rhs.sorcID

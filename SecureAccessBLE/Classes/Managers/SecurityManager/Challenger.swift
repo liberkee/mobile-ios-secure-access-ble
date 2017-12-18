@@ -6,8 +6,8 @@
 //  Copyright © 2016 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-import CryptoSwift
 import CommonUtils
+import CryptoSwift
 
 /**
  Defines errors for Challenge and (en)decryption

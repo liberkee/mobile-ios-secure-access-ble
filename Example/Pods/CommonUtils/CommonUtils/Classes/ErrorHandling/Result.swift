@@ -1,6 +1,8 @@
 //
 //  Result.swift
+//  CommonUtils
 //
+//  Created on 06.09.17.
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 

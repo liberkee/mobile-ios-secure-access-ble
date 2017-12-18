@@ -6,8 +6,8 @@
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-import Foundation
 import CoreBluetooth
+import Foundation
 
 protocol CBCentralManagerType: class {
 

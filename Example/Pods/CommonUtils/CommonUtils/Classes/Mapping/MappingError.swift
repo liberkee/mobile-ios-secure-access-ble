@@ -1,9 +1,9 @@
 //
 //  MappingError.swift
-//  Pods
+//  CommonUtils
 //
-//  Created by Ruben Pelzer on 20-06-17.
-//
+//  Created on 20.06.17.
+//  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
 import Foundation

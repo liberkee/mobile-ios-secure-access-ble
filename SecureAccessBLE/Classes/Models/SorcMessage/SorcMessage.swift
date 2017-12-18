@@ -96,7 +96,7 @@ struct SorcMessage: Equatable {
         data = frameData as Data
     }
 
-    static func ==(lhs: SorcMessage, rhs: SorcMessage) -> Bool {
+    static func == (lhs: SorcMessage, rhs: SorcMessage) -> Bool {
         return lhs.id == rhs.id
             && lhs.message == rhs.message
     }
