@@ -15,6 +15,7 @@ Table of Contents
     - [Xcode Source Editor Extension](#xcode-source-editor-extension)
     - [Xcode Build Phase](#xcode-build-phase)
     - [Git Pre-Commit Hook](#git-pre-commit-hook)
+    - [On CI using Danger](#on-ci-using-danger)
 - [Usage](#so-what-does-swiftformat-actually-do)
     - [Options](#options)
     - [Rules](#rules)
@@ -176,6 +177,22 @@ The pre-commit hook will now run whenever you run `git commit`. Running `git com
 
 **NOTE (2):** Unlike the Xcode build phase approach, git pre-commit hook won't be checked in to source control, and there's no way to guarantee that all users of the project are using the same version of SwiftFormat. For a collaborative project, you might want to consider a *post*-commit hook instead, which would run on your continuous integration server.
 
+On CI using Danger
+-------------------
+
+To setup SwiftFormat to be used by your continuous integration system using [Danger](http://danger.systems/ruby/), do the following:
+
+1. Follow the [`instructions`](http://danger.systems/guides/getting_started.html) to setup Danger.
+1. Add the [`danger-swiftformat`](https://github.com/garriguv/danger-ruby-swiftformat) plugin to your `Gemfile`.
+1. Add the following to your `Dangerfile`:
+
+```ruby
+swiftformat.binary_path = "/path/to/swiftformat" # optional
+swiftformat.additional_args = "--indent tab --self insert" # optional
+swiftformat.check_format(fail_on_error: true)
+```
+
+**NOTE:** It is recommended to add the `swiftformat` binary to your project directory.
 
 So what does SwiftFormat actually do?
 --------------------------------------
@@ -219,6 +236,34 @@ To enable the rule(s) again, use:
 **Note:** The `swiftformat:enable` directive only serves to counter a previous `swiftformat:disable` directive in the same file. It is not possible to use `swiftformat:enable` to enable a rule that was not already enabled when formatting started.
 
 Here are all the rules that SwiftFormat currently applies, and the effects that they have:
+
+***blankLinesAtStartOfScope*** - removes leading blank lines from inside braces, brackets, parens or chevrons. This rule can be configured using the `--removelines` option:
+
+```diff
+  func foo() {
+-
+    // foo 
+  }
+
+  func foo() {
+    // foo
+  }
+```
+
+```diff
+  array = [
+-
+    foo,
+    bar,
+    baz, 
+  ]
+
+  array = [
+    foo,
+    bar,
+    baz,
+  ]
+```
 
 ***blankLinesAtEndOfScope*** - removes trailing blank lines from inside braces, brackets, parens or chevrons. This rule can be configured using the `--removelines` option:
 
@@ -1020,7 +1065,7 @@ The header template is a string that you provide using the `--header` command-li
 
 For a single-line template: `--header "Copyright (c) 2017 Foobar Industries"`
 
-For a multiline comment, mark linebreaks with `\n`: `--header "First line\nSecond line"
+For a multiline comment, mark linebreaks with `\n`: `--header "First line\nSecond line"`
 
 You can optionally include Swift comment markup in the template if you wish: `--header "/*--- Header comment ---*/"`
 
@@ -1028,7 +1073,7 @@ If you do not include comment markup, each line in the template will be prepende
 
 Finally, it is common practice to include the current year in a comment header copyright notice. To do that, use the following syntax:
 
-    `--header "Copyright (c) {year} Foobar Industries"`
+    --header "Copyright (c) {year} Foobar Industries"
     
 And the `{year}` token will be automatically replaced by the current year whenever SwiftFormat is applied (**Note:** the year is determined from the locale and timezone of the machine running the script).
 
@@ -1100,7 +1145,8 @@ Known issues
 Credits
 ------------
 
-* @tonyarnold - Xcode Source Editor Extension
+* @tonyarnold - Xcode source editor extension
+* @vinceburn - Xcode extension settings UI
 * @bourvill - Git pre-commit hook script
 * @palleas - Homebrew formula
 * @aliak00 - Several path-related CLI enhancements
