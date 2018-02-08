@@ -11,11 +11,11 @@ target 'SecureAccessBLE_Tests' do
 
   pod 'SecureAccessBLE', :path => '../'
 
-  pod 'CommonUtils', '0.1.1'
+  pod 'CommonUtils'#, '0.1.1'
   
 end
 
 target 'SecureAccessBLE' do
-    pod 'CommonUtils', '0.1.1'
+    pod 'CommonUtils'#, '0.1.1'
     pod 'CryptoSwift', '0.7.0'
 end
