@@ -9,5 +9,5 @@
 import CommonUtils
 
 protocol AppActivityStatusProviderType {
-    var appDidBecomeActive: EventSignal<()> { get }
+    var appDidBecomeActive: EventSignal<Bool> { get }
 }

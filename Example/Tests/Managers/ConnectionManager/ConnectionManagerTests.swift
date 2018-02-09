@@ -92,11 +92,11 @@ class CBCharacteristicMock: CBCharacteristicType {
 }
 
 class AppActivityStatusProviderMock: AppActivityStatusProviderType {
-    var appDidBecomeActive: EventSignal<()> {
+    var appDidBecomeActive: EventSignal<Bool> {
         return appDidBecomeActiveSubject.asSignal()
     }
 
-    let appDidBecomeActiveSubject = PublishSubject<()>()
+    let appDidBecomeActiveSubject = PublishSubject<Bool>()
 }
 
 extension ConnectionManager {
@@ -177,7 +177,7 @@ class ConnectionManagerTests: XCTestCase {
 
         // Then
         let arguments = centralManager.scanForPeripheralsCalledWithArguments!
-        XCTAssertNil(arguments.serviceUUIDs)
+        XCTAssertEqual(arguments.serviceUUIDs!, [CBUUID(string: "0x180A")])
         XCTAssertTrue(arguments.options![CBCentralManagerScanOptionAllowDuplicatesKey] as! Int == 1)
         XCTAssertTrue(connectionManager.discoveryChange.state.discoveryIsEnabled)
     }
@@ -459,7 +459,7 @@ class ConnectionManagerTests: XCTestCase {
 
         // Then
         let arguments = centralManager.scanForPeripheralsCalledWithArguments!
-        XCTAssertNil(arguments.serviceUUIDs)
+        XCTAssertEqual(arguments.serviceUUIDs!, [CBUUID(string: "0x180A")])
         XCTAssertTrue(arguments.options![CBCentralManagerScanOptionAllowDuplicatesKey] as! Int == 1)
     }
 
@@ -979,7 +979,7 @@ class ConnectionManagerTests: XCTestCase {
         startDiscovery(connectionManager: connectionManager, centralManager: centralManager)
 
         // When
-        appActivityStatusProvider.appDidBecomeActiveSubject.onNext()
+        appActivityStatusProvider.appDidBecomeActiveSubject.onNext(true)
 
         // Then
         let arguments = centralManager.scanForPeripheralsCalledWithArguments!
@@ -997,7 +997,7 @@ class ConnectionManagerTests: XCTestCase {
         )
 
         // When
-        appActivityStatusProvider.appDidBecomeActiveSubject.onNext()
+        appActivityStatusProvider.appDidBecomeActiveSubject.onNext(true)
 
         // Then
         XCTAssertNil(centralManager.scanForPeripheralsCalledWithArguments)

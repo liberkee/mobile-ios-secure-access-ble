@@ -10,11 +10,12 @@ import CommonUtils
 import UIKit
 
 class AppActivityStatusProvider: AppActivityStatusProviderType {
-    var appDidBecomeActive: EventSignal<()> {
+
+    var appDidBecomeActive: EventSignal<Bool> {
         return appDidBecomeActiveSubject.asSignal()
     }
 
-    private let appDidBecomeActiveSubject = PublishSubject<()>()
+    private let appDidBecomeActiveSubject = PublishSubject<Bool>()
 
     private let notificationCenter: NotificationCenter
 
@@ -26,6 +27,13 @@ class AppActivityStatusProvider: AppActivityStatusProviderType {
             name: Notification.Name.UIApplicationDidBecomeActive,
             object: nil
         )
+
+        notificationCenter.addObserver(
+            self,
+            selector: #selector(handleAppDidEnterBackground),
+            name: Notification.Name.UIApplicationDidEnterBackground,
+            object: nil
+        )
     }
 
     deinit {
@@ -33,6 +41,10 @@ class AppActivityStatusProvider: AppActivityStatusProviderType {
     }
 
     @objc private func handleAppDidBecomeActive() {
-        appDidBecomeActiveSubject.onNext()
+        appDidBecomeActiveSubject.onNext(true)
+    }
+
+    @objc private func handleAppDidEnterBackground() {
+        appDidBecomeActiveSubject.onNext(false)
     }
 }
