@@ -16,7 +16,6 @@ internal protocol HashProtocol {
 }
 
 extension HashProtocol {
-
     func prepare(len: Int) -> NSMutableData {
         let tmpMessage: NSMutableData = NSMutableData(data: message)
 

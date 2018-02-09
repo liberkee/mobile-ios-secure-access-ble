@@ -10,7 +10,6 @@
 import XCTest
 
 class BoundedQueueTests: XCTestCase {
-
     var queue = BoundedQueue<String>(maximumElements: 1)
 
     func test_init_succeeds() {
@@ -43,7 +42,6 @@ class BoundedQueueTests: XCTestCase {
     }
 
     func test_enqueueDequeue_itFollowsFirstInFirstOutPrinciple() throws {
-
         // Given
         var queue = BoundedQueue<String>(maximumElements: 2)
 
@@ -70,7 +68,6 @@ class BoundedQueueTests: XCTestCase {
     }
 
     func test_isEmpty_ifEveryElementWasDequeuedThatWasEnqueuedBefore_itIsEmpty() throws {
-
         // Given
         var queue = BoundedQueue<String>(maximumElements: 2)
 
@@ -85,7 +82,6 @@ class BoundedQueueTests: XCTestCase {
     }
 
     func test_clear_ifQueueIsNotEmpty_queueIsEmpty() throws {
-
         // Given
         var queue = BoundedQueue<String>(maximumElements: 2)
         try queue.enqueue("element1")

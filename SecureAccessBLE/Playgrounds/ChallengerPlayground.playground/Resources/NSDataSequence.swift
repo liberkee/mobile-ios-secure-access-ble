@@ -9,12 +9,10 @@
 import Foundation
 
 struct NSDataSequence: SequenceType {
-
     let chunkSize: Int
     let data: NSData
 
     func generate() -> AnyGenerator<NSData> {
-
         var offset: Int = 0
 
         return anyGenerator {

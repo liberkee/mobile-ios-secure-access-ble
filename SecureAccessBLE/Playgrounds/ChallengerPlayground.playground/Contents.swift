@@ -72,7 +72,6 @@ extension CryptoManager {
 }
 
 public struct ZeroByte: Padding {
-
     public init() {
     }
 
@@ -97,7 +96,6 @@ public struct ZeroByte: Padding {
 }
 
 struct AesCbcCryptoManager: CryptoManager {
-
     init(key: [UInt8]? = nil, iv: [UInt8]? = nil) {
         if let k = key {
             self.key = k
@@ -163,7 +161,6 @@ func xor(a: [UInt8], b: [UInt8]) -> [UInt8] {
 }
 
 func rotate(bytes: [UInt8], inverse: Bool) -> [UInt8] {
-
     var permutedBytes = bytes
     if inverse {
         let temp = permutedBytes.first
@@ -200,7 +197,6 @@ let r3Data = NSData(bytes: r3, length: r3.count)
 // --- Check Permuted r3 == nc ---
 let permutatedR3 = rotate(bytes: r3, inverse: true)
 if nc == permutatedR3 {
-
     // var length: UInt16 {
     let length: UInt16
     //    let data = Data()

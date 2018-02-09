@@ -12,7 +12,6 @@
 import Foundation
 
 public struct PKCS7: Padding {
-
     public init() {
     }
 

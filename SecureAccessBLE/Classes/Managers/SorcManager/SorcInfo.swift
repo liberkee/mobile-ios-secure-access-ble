@@ -7,7 +7,6 @@
 //
 
 public struct SorcInfo: Equatable {
-
     public let sorcID: SorcID
     public let discoveryDate: Date
     public let rssi: Int

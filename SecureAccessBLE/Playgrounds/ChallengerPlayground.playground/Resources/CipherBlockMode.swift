@@ -51,7 +51,6 @@ public enum CipherBlockMode {
      - returns: encrypted bytes
      */
     func encryptBlocks(blocks: [[UInt8]], iv: [UInt8]?, cipherOperation: CipherOperationOnBlock) throws -> [UInt8] {
-
         // if IV is not available, fallback to plain
         var finalBlockMode: CipherBlockMode = self
         if iv == nil {

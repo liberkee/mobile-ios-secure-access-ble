@@ -24,7 +24,6 @@ private let serviceGrantAResponseMessage = SorcMessage(rawData: Data(bytes: [
 ]))
 
 private class MockSecurityManager: SecurityManagerType {
-
     let connectionChange = ChangeSubject<SecureConnectionChange>(state: .disconnected)
 
     var connectToSorcCalledWithArguments: (leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob)?
@@ -47,7 +46,6 @@ private class MockSecurityManager: SecurityManagerType {
 }
 
 class SessionManagerTests: XCTestCase {
-
     fileprivate let securityManager = MockSecurityManager()
     var sessionManager: SessionManager!
 
@@ -64,7 +62,6 @@ class SessionManagerTests: XCTestCase {
     }
 
     func test_connectToSorc_ifDisconnected_connectsWithSorc() {
-
         // Given
         var receivedConnectionChange: ConnectionChange?
         _ = sessionManager.connectionChange.subscribeNext { change in
@@ -126,7 +123,6 @@ class SessionManagerTests: XCTestCase {
 
     // To make it possible to retrigger a connect while connecting physically
     func test_connectToSorc_ifPhysicalConnecting_connectsToSecurityManagerAndDoesNotNotifyPhysicalConnecting() {
-
         // Given
         preparePhysicalConnecting()
 
@@ -145,7 +141,6 @@ class SessionManagerTests: XCTestCase {
     }
 
     func test_connectToSorc_ifTransportConnecting_doesNothing() {
-
         // Given
         prepareTransportConnecting()
 
@@ -154,7 +149,6 @@ class SessionManagerTests: XCTestCase {
     }
 
     func test_connectToSorc_ifChallengingConnecting_doesNothing() {
-
         // Given
         prepareChallengingConnecting()
 
@@ -163,7 +157,6 @@ class SessionManagerTests: XCTestCase {
     }
 
     func test_connectToSorc_ifConnected_doesNothing() {
-
         // Given
         prepareConnected()
 
@@ -172,7 +165,6 @@ class SessionManagerTests: XCTestCase {
     }
 
     func test_disconnect_ifConnecting_disconnectsSecurityManagerAndNotifiesDisconnect() {
-
         // Given
         preparePhysicalConnecting()
 
@@ -181,7 +173,6 @@ class SessionManagerTests: XCTestCase {
     }
 
     func test_disconnect_ifConnected_disconnectsAndNotifiesDisconnect() {
-
         // Given
         prepareConnected()
 
@@ -190,7 +181,6 @@ class SessionManagerTests: XCTestCase {
     }
 
     func test_disconnect_ifNotConnectingOrConnected_doesNothing() {
-
         // Given
         var receivedConnectionChange: ConnectionChange!
         _ = sessionManager.connectionChange.subscribeNext { change in
@@ -206,7 +196,6 @@ class SessionManagerTests: XCTestCase {
     }
 
     func test_requestServiceGrant_ifConnectedAndQueueIsNotFullAndNotWaitingForResponse_itSendsMessageToSecurityManager() {
-
         // Given
         prepareConnected()
 
@@ -233,7 +222,6 @@ class SessionManagerTests: XCTestCase {
     }
 
     func test_requestServiceGrant_ifConnectedAndQueueIsNotFullAndWaitingForResponse_itEnqueuesMessage() {
-
         // Given
         prepareConnected()
 
@@ -263,7 +251,6 @@ class SessionManagerTests: XCTestCase {
     }
 
     func test_requestServiceGrant_ifConnectedAndMessageIsEnqueuedAndReceivedServiceGrantResponse_itNotfifiesResponseAndItSendsEnqueuedMessage() {
-
         // Given
         prepareConnected()
 
@@ -298,7 +285,6 @@ class SessionManagerTests: XCTestCase {
     }
 
     func test_requestServiceGrant_ifConnectedAndQueueIsFull_itDoesNotSendMessageAndItNotifiesNotAccepted() {
-
         // Given
         let configuration = SessionManager.Configuration(maximumEnqueuedMessages: 2)
         sessionManager = SessionManager(securityManager: securityManager, configuration: configuration)
@@ -335,7 +321,6 @@ class SessionManagerTests: XCTestCase {
     }
 
     func test_requestServiceGrant_ifNotConnected_itDoesNothing() {
-
         // Given
         var receivedServiceGrantChange: ServiceGrantChange!
         _ = sessionManager.serviceGrantChange.subscribeNext { change in
@@ -389,7 +374,6 @@ class SessionManagerTests: XCTestCase {
     // MARK: - Helper
 
     private func connectToSorcAndAssertDoesNothing(file: StaticString = #file, line: UInt = #line) {
-
         var receivedConnectionChange: ConnectionChange!
         _ = sessionManager.connectionChange.subscribeNext { change in
             receivedConnectionChange = change
@@ -415,7 +399,6 @@ class SessionManagerTests: XCTestCase {
     }
 
     private func disconnectAndAssertNotifiesDisconnect(file: StaticString = #file, line: UInt = #line) {
-
         var receivedConnectionChange: ConnectionChange!
         _ = sessionManager.connectionChange.subscribeNext { change in
             receivedConnectionChange = change

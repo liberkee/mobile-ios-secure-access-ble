@@ -9,7 +9,6 @@
 import CommonUtils
 
 protocol SessionManagerType {
-
     var connectionChange: ChangeSubject<ConnectionChange> { get }
 
     func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob)

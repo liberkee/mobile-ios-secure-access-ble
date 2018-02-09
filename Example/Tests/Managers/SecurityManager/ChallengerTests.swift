@@ -11,7 +11,6 @@ import CryptoSwift
 import XCTest
 
 class ChallengerTests: XCTestCase {
-
     /**
      Helper functio for xor calculation
 
@@ -37,7 +36,6 @@ class ChallengerTests: XCTestCase {
      - returns: results bytes after rotation
      */
     func rotate(_ bytes: [UInt8], inverse: Bool) -> [UInt8] {
-
         var permutedBytes = bytes
         if inverse {
             let temp = permutedBytes.first

@@ -32,7 +32,6 @@ protocol ServiceGrant: SorcMessagePayload {
 // MARK: - extension endpoint
 
 extension ServiceGrant {
-
     init(serviceGrantID: ServiceGrantID) {
         let frameData = NSMutableData()
         var grantIDValue = serviceGrantID

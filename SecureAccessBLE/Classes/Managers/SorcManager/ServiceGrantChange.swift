@@ -10,7 +10,6 @@ import CommonUtils
 
 /// Describes a change of service grant requesting
 public struct ServiceGrantChange: ChangeType, Equatable {
-
     public static func initialWithState(_ state: ServiceGrantChange.State) -> ServiceGrantChange {
         return ServiceGrantChange(state: state, action: .initial)
     }
@@ -32,7 +31,6 @@ public struct ServiceGrantChange: ChangeType, Equatable {
 }
 
 extension ServiceGrantChange {
-
     /// The state the service grant requesting can be in
     public struct State: Equatable {
         public let requestingServiceGrantIDs: [ServiceGrantID]
@@ -44,7 +42,6 @@ extension ServiceGrantChange {
 }
 
 extension ServiceGrantChange {
-
     /// The action that led to the state
     public enum Action: Equatable {
         case initial
@@ -74,7 +71,6 @@ extension ServiceGrantChange {
     }
 
     public enum Error: Swift.Error, CustomStringConvertible {
-
         case sendingFailed
         case receivedInvalidData
 

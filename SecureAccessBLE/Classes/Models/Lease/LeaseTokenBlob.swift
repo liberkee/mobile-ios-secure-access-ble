@@ -10,7 +10,6 @@ import Foundation
 
 /// A lease token blob used in establishing a connection to a SORC
 public struct LeaseTokenBlob: Equatable {
-
     enum Error: Swift.Error {
         case dataIsEmpty
     }

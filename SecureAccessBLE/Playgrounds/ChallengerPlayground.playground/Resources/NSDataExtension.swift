@@ -9,7 +9,6 @@
 import Foundation
 
 extension NSMutableData {
-
     /** Convenient way to append bytes */
     internal func appendBytes(arrayOfBytes: [UInt8]) {
         appendBytes(arrayOfBytes, length: arrayOfBytes.count)
@@ -17,7 +16,6 @@ extension NSMutableData {
 }
 
 extension NSData {
-
     public func checksum() -> UInt16 {
         var s: UInt32 = 0
 
@@ -78,7 +76,6 @@ extension NSData {
 }
 
 extension NSData {
-
     public func toHexString() -> String {
         let count = length / sizeof(UInt8)
         var bytesArray = [UInt8](count: count, repeatedValue: 0)

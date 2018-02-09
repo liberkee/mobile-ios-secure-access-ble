@@ -10,7 +10,6 @@
 import XCTest
 
 class PaddingTests: XCTestCase {
-
     func test_zeroPadding_ifChunkIsEmpty_doesNotAddPadding() {
         // GIVEN
         let bytes: [UInt8] = []

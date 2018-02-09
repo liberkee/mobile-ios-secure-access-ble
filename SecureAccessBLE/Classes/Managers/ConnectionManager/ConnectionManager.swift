@@ -10,7 +10,6 @@ import CommonUtils
 import CoreBluetooth
 
 private class DiscoveredSorc {
-
     let sorcID: SorcID
     var peripheral: CBPeripheralType
     let discoveryDate: Date
@@ -25,7 +24,6 @@ private class DiscoveredSorc {
 }
 
 private extension SorcInfo {
-
     init(discoveredSorc: DiscoveredSorc) {
         sorcID = discoveredSorc.sorcID
         discoveryDate = discoveredSorc.discoveryDate
@@ -34,7 +32,6 @@ private extension SorcInfo {
 }
 
 private extension CBManagerState {
-
     var description: String {
         switch self {
         case .unknown: return "Unknown"
@@ -49,7 +46,6 @@ private extension CBManagerState {
 
 /// Manages the discovery and connection of SORCs
 class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProviderType, ScannerType {
-
     let isBluetoothEnabled: BehaviorSubject<Bool>
     let discoveryChange = ChangeSubject<DiscoveryChange>(state: .init(
         discoveredSorcs: SorcInfos(),
@@ -104,7 +100,6 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
         appActivityStatusProvider: AppActivityStatusProviderType,
         configuration: Configuration = Configuration()
     ) {
-
         self.systemClock = systemClock
         isBluetoothEnabled = BehaviorSubject(value: centralManager.state == .poweredOn)
         self.appActivityStatusProvider = appActivityStatusProvider
@@ -266,9 +261,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
 }
 
 extension ConnectionManager {
-
     convenience init(configuration: ConnectionManager.Configuration = Configuration()) {
-
         let centralManager = CBCentralManager(delegate: nil, queue: nil,
                                               options: [CBPeripheralManagerOptionShowPowerAlertKey: 0])
 
@@ -297,7 +290,6 @@ extension ConnectionManager {
 // MARK: - CBCentralManagerDelegate_
 
 extension ConnectionManager {
-
     func centralManagerDidUpdateState_(_ central: CBCentralManagerType) {
         HSMLog(message: "BLE - Central updated state: \(central.state.description).", level: .debug)
 
@@ -349,7 +341,6 @@ extension ConnectionManager {
 
     func centralManager_(_: CBCentralManagerType, didDisconnectPeripheral peripheral: CBPeripheralType,
                          error: Error?) {
-
         if error != nil {
             HSMLog(message: "BLE - Central disconnected from peripheral with UUID: \(peripheral.identifier.uuidString). Error: \(error?.localizedDescription ?? "Unknown error")", level: .error)
         } else {
@@ -371,9 +362,7 @@ extension ConnectionManager {
 // MARK: - CBPeripheralDelegate_
 
 extension ConnectionManager {
-
     func peripheral_(_ peripheral: CBPeripheralType, didDiscoverServices error: Error?) {
-
         guard case let .connecting(sorcID) = connectionState,
             peripheralMatchingSorcID(sorcID)?.identifier == peripheral.identifier else { return }
 
@@ -389,7 +378,6 @@ extension ConnectionManager {
 
     func peripheral_(_ peripheral: CBPeripheralType, didDiscoverCharacteristicsFor service: CBServiceType,
                      error: Error?) {
-
         guard case let .connecting(sorcID) = connectionState,
             peripheralMatchingSorcID(sorcID)?.identifier == peripheral.identifier else { return }
 

@@ -10,7 +10,6 @@ import CommonUtils
 
 /// A change (state and last action) that describes the discovery transitions
 public struct DiscoveryChange: ChangeType {
-
     public let state: State
     public let action: Action
 
@@ -25,7 +24,6 @@ public struct DiscoveryChange: ChangeType {
 }
 
 extension DiscoveryChange: Equatable {
-
     public static func == (lhs: DiscoveryChange, rhs: DiscoveryChange) -> Bool {
         return lhs.state == rhs.state
             && lhs.action == rhs.action
@@ -33,9 +31,7 @@ extension DiscoveryChange: Equatable {
 }
 
 extension DiscoveryChange {
-
     public struct State: Equatable {
-
         public let discoveredSorcs: SorcInfos
         public let discoveryIsEnabled: Bool
 
@@ -56,7 +52,6 @@ extension DiscoveryChange {
 }
 
 extension DiscoveryChange {
-
     public enum Action: Equatable {
         case initial
 
@@ -103,7 +98,6 @@ extension DiscoveryChange {
 }
 
 public struct SorcInfos: Equatable {
-
     private var sorcInfoByID: [SorcID: SorcInfo]
 
     public init(_ sorcInfoByID: [SorcID: SorcInfo] = [:]) {

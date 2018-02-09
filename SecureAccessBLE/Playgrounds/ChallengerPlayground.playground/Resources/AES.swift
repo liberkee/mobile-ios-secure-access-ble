@@ -9,7 +9,6 @@
 import Foundation
 
 public final class AES {
-
     enum Error: ErrorType {
         case BlockSizeExceeded
     }
@@ -250,7 +249,6 @@ public final class AES {
     }
 
     private static func expandKey(key: [UInt8], variant: AESVariant) -> [UInt8] {
-
         /*
          * Function used in the Key Expansion routine that takes a four-byte
          * input word and applies an S-box to each of the four bytes to
@@ -296,7 +294,6 @@ public final class AES {
 }
 
 extension AES {
-
     // byte substitution with table (S-box)
     public func subBytes(inout state: [[UInt8]]) {
         for (i, row) in state.enumerate() {
