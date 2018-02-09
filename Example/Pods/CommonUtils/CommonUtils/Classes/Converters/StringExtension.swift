@@ -32,18 +32,18 @@ extension String {
             HSMLog(message: "\(error)", level: .error)
         }
 
-        let range = NSRange(location: 0, length: trimmedString.characters.count)
+        let range = NSRange(location: 0, length: trimmedString.count)
         let found = regex.firstMatch(in: trimmedString, options: [], range: range)
-        if found == nil || found?.range.location == NSNotFound || trimmedString.characters.count % 2 != 0 {
+        if found == nil || found?.range.location == NSNotFound || trimmedString.count % 2 != 0 {
             return nil
         }
         // everything ok, so now let's build NSData
-        let data = NSMutableData(capacity: trimmedString.characters.count / 2)
-        for index in stride(from: 0, to: trimmedString.characters
+        let data = NSMutableData(capacity: trimmedString.count / 2)
+        for index in stride(from: 0, to: trimmedString
             .distance(from: trimmedString.startIndex, to: trimmedString.endIndex), by: 2) {
 
-            let subStringRange = trimmedString.characters.index(trimmedString.startIndex, offsetBy: index)
-                ..< trimmedString.characters.index(trimmedString.startIndex, offsetBy: index + 2)
+            let subStringRange = trimmedString.index(trimmedString.startIndex, offsetBy: index)
+                ..< trimmedString.index(trimmedString.startIndex, offsetBy: index + 2)
             let byteString = trimmedString.substring(with: subStringRange)
             let num = UInt8(byteString.withCString { strtoul($0, nil, 16) })
             data?.append([num] as [UInt8], length: 1)
