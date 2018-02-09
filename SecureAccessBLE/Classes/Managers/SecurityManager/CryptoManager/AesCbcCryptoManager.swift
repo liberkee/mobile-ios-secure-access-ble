@@ -123,7 +123,6 @@ struct AesCbcCryptoManager: CryptoManager {
      - returns: short form from MAC
      */
     func createShortMac(_ data: Data) -> [UInt8] {
-
         var mac = [UInt8](repeating: 0x0, count: 16)
         var macLength = 0
         let ctx = CMAC_CTX_new()

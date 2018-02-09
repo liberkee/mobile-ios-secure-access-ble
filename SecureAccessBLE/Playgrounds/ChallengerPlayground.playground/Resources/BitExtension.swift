@@ -9,7 +9,6 @@
 import Foundation
 
 extension Bit {
-
     func inverted() -> Bit {
         if self == Bit.Zero {
             return Bit.One

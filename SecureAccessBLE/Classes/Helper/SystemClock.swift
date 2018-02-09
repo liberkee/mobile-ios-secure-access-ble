@@ -9,14 +9,12 @@
 import Foundation
 
 protocol SystemClockType {
-
     func now() -> Date
 
     func timeIntervalSinceNow(for date: Date) -> TimeInterval
 }
 
 class SystemClock: SystemClockType {
-
     func now() -> Date {
         return Date()
     }

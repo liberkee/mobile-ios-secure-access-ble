@@ -10,7 +10,6 @@ import CommonUtils
 
 /// Sends and receives data by sending separate frames based on the current MTU size.
 class TransportManager: TransportManagerType {
-
     let connectionChange = ChangeSubject<TransportConnectionChange>(state: .disconnected)
 
     let dataSent = PublishSubject<Result<Data>>()
@@ -101,7 +100,6 @@ class TransportManager: TransportManagerType {
 
     private func handlePhysicalConnectionChange(_ change: PhysicalConnectionChange) {
         switch change.state {
-
         case .connecting: break
         case let .connected(dataSorcID):
             guard case let .connecting(sorcID, .physical) = connectionChange.state,
@@ -167,7 +165,6 @@ class TransportManager: TransportManagerType {
     // MARK: - Data package and frame handling
 
     private func sendDataInternal(_ data: Data) {
-
         if sendingPackage != nil || receivingPackage != nil {
             HSMLog(message: "BLE - Sending/Receiving in progress", level: .debug)
         } else {
@@ -218,7 +215,6 @@ class TransportManager: TransportManagerType {
     }
 
     private func handleReceivedData(_ data: Data) {
-
         if receivingPackage == nil {
             receivingPackage = DataFramePackage()
         }

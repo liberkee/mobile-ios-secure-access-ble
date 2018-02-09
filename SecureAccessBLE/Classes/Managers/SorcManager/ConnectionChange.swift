@@ -10,7 +10,6 @@ import CommonUtils
 
 /// Describes a change of connection state
 public struct ConnectionChange: ChangeType, Equatable {
-
     public static func initialWithState(_ state: ConnectionChange.State) -> ConnectionChange {
         return ConnectionChange(state: state, action: .initial)
     }
@@ -32,7 +31,6 @@ public struct ConnectionChange: ChangeType, Equatable {
 }
 
 extension ConnectionChange {
-
     /// The state the connection can be in
     public enum State: Equatable {
         case disconnected
@@ -60,7 +58,6 @@ extension ConnectionChange {
 }
 
 extension ConnectionChange {
-
     /// The action that led to the state
     public enum Action: Equatable {
         case initial

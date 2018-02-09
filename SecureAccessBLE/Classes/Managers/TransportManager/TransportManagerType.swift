@@ -9,7 +9,6 @@
 import CommonUtils
 
 protocol TransportManagerType {
-
     var connectionChange: ChangeSubject<TransportConnectionChange> { get }
 
     func connectToSorc(_ sorcID: SorcID)

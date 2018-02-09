@@ -9,7 +9,6 @@
 public typealias ServiceGrantID = UInt16
 
 public struct ServiceGrantResponse: Equatable {
-
     public enum Status: UInt8 {
         case success = 0x00
         case pending = 0x01

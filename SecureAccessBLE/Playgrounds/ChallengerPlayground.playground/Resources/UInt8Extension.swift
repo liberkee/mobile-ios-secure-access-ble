@@ -10,7 +10,6 @@ import Foundation
 
 /** casting */
 extension UInt8 {
-
     /** cast because UInt8(<UInt32>) because std initializer crash if value is > byte */
     static func withValue(v: UInt64) -> UInt8 {
         let tmp = v & 0xFF
@@ -30,7 +29,6 @@ extension UInt8 {
 
 /** Bits */
 extension UInt8 {
-
     init(bits: [Bit]) {
         self.init(integerFromBitsArray(bits) as UInt8)
     }

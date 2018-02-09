@@ -17,7 +17,6 @@ private let messageDataA = Data(bytes: [0xAB, 0xCD, 0xEF])
 private let frameDataA = Data(bytes: [0x30, 0x00, 0x03, 0x00, 0xAB, 0xCD, 0xEF])
 
 private class MockConnectionManager: ConnectionManagerType {
-
     let connectionChange = ChangeSubject<PhysicalConnectionChange>(state: .disconnected)
 
     var connectToSorcCalledWithSorcID: SorcID?
@@ -40,7 +39,6 @@ private class MockConnectionManager: ConnectionManagerType {
 }
 
 class TransportManagerTests: XCTestCase {
-
     fileprivate let connectionManager = MockConnectionManager()
     var transportManager: TransportManager!
 
@@ -57,7 +55,6 @@ class TransportManagerTests: XCTestCase {
     }
 
     func test_connectToSorc_ifDisconnected_connectsWithSorc() {
-
         // Given
         var receivedConnectionChange: TransportConnectionChange?
         _ = transportManager.connectionChange.subscribeNext { change in
@@ -105,7 +102,6 @@ class TransportManagerTests: XCTestCase {
 
     // To make it possible to retrigger a connect while connecting physically
     func test_connectToSorc_ifPhysicalConnecting_connectsToConnectionManagerAndDoesNotNotifyPhysicalConnecting() {
-
         // Given
         preparePhysicalConnecting()
 
@@ -123,7 +119,6 @@ class TransportManagerTests: XCTestCase {
     }
 
     func test_connectToSorc_ifTransportConnecting_doesNothing() {
-
         // Given
         prepareTransportConnecting()
 
@@ -132,7 +127,6 @@ class TransportManagerTests: XCTestCase {
     }
 
     func test_connectToSorc_ifConnected_doesNothing() {
-
         // Given
         prepareConnected()
 
@@ -141,7 +135,6 @@ class TransportManagerTests: XCTestCase {
     }
 
     func test_disconnect_ifConnecting_disconnectsConnectionManagerAndNotifiesDisconnect() {
-
         // Given
         preparePhysicalConnecting()
 
@@ -150,7 +143,6 @@ class TransportManagerTests: XCTestCase {
     }
 
     func test_disconnect_ifConnected_disconnectsAndNotifiesDisconnect() {
-
         // Given
         prepareConnected()
 
@@ -159,7 +151,6 @@ class TransportManagerTests: XCTestCase {
     }
 
     func test_disconnect_ifNotConnectingOrConnected_doesNothing() {
-
         // Given
         var receivedConnectionChange: TransportConnectionChange!
         _ = transportManager.connectionChange.subscribeNext { change in
@@ -175,7 +166,6 @@ class TransportManagerTests: XCTestCase {
     }
 
     func test_sendData_ifConnectedAndNotSendingPackage_itSendsData() {
-
         // Given
         prepareConnected()
 
@@ -202,7 +192,6 @@ class TransportManagerTests: XCTestCase {
     }
 
     func test_sendData_ifConnectedAndSendingPackage_itDoesNothing() {
-
         // Given
         prepareConnected()
 
@@ -214,7 +203,6 @@ class TransportManagerTests: XCTestCase {
     }
 
     func test_sendData_ifNotConnected_itDoesNothing() {
-
         // When // Then
         sendDataAndAssertDoesNothing()
     }
@@ -243,7 +231,6 @@ class TransportManagerTests: XCTestCase {
     // MARK: - Helper
 
     private func connectToSorcAndAssertDoesNothing(file: StaticString = #file, line: UInt = #line) {
-
         var receivedConnectionChange: TransportConnectionChange!
         _ = transportManager.connectionChange.subscribeNext { change in
             receivedConnectionChange = change
@@ -269,7 +256,6 @@ class TransportManagerTests: XCTestCase {
     }
 
     private func disconnectAndAssertNotifiesDisconnect(file: StaticString = #file, line: UInt = #line) {
-
         var receivedConnectionChange: TransportConnectionChange!
         _ = transportManager.connectionChange.subscribeNext { change in
             receivedConnectionChange = change
@@ -294,7 +280,6 @@ class TransportManagerTests: XCTestCase {
     }
 
     private func sendDataAndAssertDoesNothing(file: StaticString = #file, line: UInt = #line) {
-
         // Given
         var receivedSentData: Result<Data>?
         _ = transportManager.dataSent.subscribeNext { data in

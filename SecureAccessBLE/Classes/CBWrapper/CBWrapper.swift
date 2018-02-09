@@ -10,7 +10,6 @@ import CoreBluetooth
 import Foundation
 
 protocol CBCentralManagerType: class {
-
     weak var delegate: CBCentralManagerDelegate? { get set }
 
     var state: CBManagerState { get }
@@ -25,7 +24,6 @@ protocol CBCentralManagerType: class {
 }
 
 extension CBCentralManager: CBCentralManagerType {
-
     func connect(_ peripheral: CBPeripheralType, options: [String: Any]?) {
         connect(peripheral as! CBPeripheral, options: options)
     }
@@ -36,7 +34,6 @@ extension CBCentralManager: CBCentralManagerType {
 }
 
 protocol CBPeripheralType: class {
-
     weak var delegate: CBPeripheralDelegate? { get set }
 
     var services_: [CBServiceType]? { get }
@@ -53,7 +50,6 @@ protocol CBPeripheralType: class {
 }
 
 extension CBPeripheral: CBPeripheralType {
-
     var services_: [CBServiceType]? {
         return services
     }
@@ -72,19 +68,16 @@ extension CBPeripheral: CBPeripheralType {
 }
 
 protocol CBServiceType: class {
-
     var characteristics_: [CBCharacteristicType]? { get }
 }
 
 extension CBService: CBServiceType {
-
     var characteristics_: [CBCharacteristicType]? {
         return characteristics
     }
 }
 
 protocol CBCharacteristicType: class {
-
     var uuid: CBUUID { get }
     var value: Data? { get }
 }

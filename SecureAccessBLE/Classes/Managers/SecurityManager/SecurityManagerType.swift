@@ -9,7 +9,6 @@
 import CommonUtils
 
 protocol SecurityManagerType {
-
     var connectionChange: ChangeSubject<SecureConnectionChange> { get }
 
     func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob)

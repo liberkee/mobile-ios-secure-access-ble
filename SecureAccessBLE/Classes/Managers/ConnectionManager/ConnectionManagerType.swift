@@ -10,7 +10,6 @@ import CommonUtils
 import CoreBluetooth
 
 protocol ConnectionManagerType {
-
     var connectionChange: ChangeSubject<PhysicalConnectionChange> { get }
 
     func connectToSorc(_ sorcID: SorcID)

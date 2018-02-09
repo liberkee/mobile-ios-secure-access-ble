@@ -9,7 +9,6 @@
 import Foundation
 
 struct BoundedQueue<T> {
-
     enum Error: Swift.Error {
         case maximumElementsReached
     }

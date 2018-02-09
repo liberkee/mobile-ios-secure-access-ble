@@ -7,7 +7,6 @@
 //
 
 extension ConnectionManager {
-
     public struct Configuration {
 
         public static let advertisedServiceID = "0x180A"

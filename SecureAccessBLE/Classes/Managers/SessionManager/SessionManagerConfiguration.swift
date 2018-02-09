@@ -7,9 +7,7 @@
 //
 
 extension SessionManager {
-
     struct Configuration {
-
         let heartbeatInterval: TimeInterval
         let heartbeatTimeout: TimeInterval
         let maximumEnqueuedMessages: Int

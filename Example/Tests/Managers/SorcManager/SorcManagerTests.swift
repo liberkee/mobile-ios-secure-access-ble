@@ -37,7 +37,6 @@ private class MockScanner: ScannerType {
 }
 
 private class MockSessionManager: SessionManagerType {
-
     let connectionChange = ChangeSubject<ConnectionChange>(state: .disconnected)
 
     var connectToSorcCalledWithArguments: (leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob)?
@@ -81,7 +80,6 @@ extension SorcInfo {
 }
 
 class SorcManagerTests: XCTestCase {
-
     fileprivate var bluetoothStatusProvider = MockBluetoothStatusProvider()
     fileprivate var scanner = MockScanner()
     fileprivate var sessionManager = MockSessionManager()
@@ -105,7 +103,6 @@ class SorcManagerTests: XCTestCase {
     }
 
     func test_isBluetoothEnabled_ifTrueIsProvided_isTrue() {
-
         // Given
         bluetoothStatusProvider.isBluetoothEnabled.onNext(true)
 
@@ -117,7 +114,6 @@ class SorcManagerTests: XCTestCase {
     }
 
     func test_isBluetoothEnabled_ifNewStatusIsProvided_itNotifiesNewStatus() {
-
         // Given
         var receivedStatus: Bool?
         _ = sorcManager.isBluetoothEnabled.subscribe { status in
@@ -132,7 +128,6 @@ class SorcManagerTests: XCTestCase {
     }
 
     func test_startDiscovery_delegatesCallToScanner() {
-
         // When
         sorcManager.startDiscovery()
 
@@ -141,7 +136,6 @@ class SorcManagerTests: XCTestCase {
     }
 
     func test_stopDiscovery_delegatesCallToScanner() {
-
         // When
         sorcManager.stopDiscovery()
 
@@ -150,7 +144,6 @@ class SorcManagerTests: XCTestCase {
     }
 
     func test_discoveryChange_ifScannerHasDiscoveredSorcs_itContainsDiscoveredSorcs() {
-
         // Given
         let sorcInfo = SorcInfo.stableTestInstance
         let scannerDiscoveredSorcs = SorcInfos([sorcInfo.sorcID: sorcInfo])
@@ -165,7 +158,6 @@ class SorcManagerTests: XCTestCase {
     }
 
     func test_discoveryChange_ifScannerDiscoversNewSorc_itNotifiesNewDiscoveredSorc() {
-
         // Given
         var receivedChange: DiscoveryChange?
         _ = sorcManager.discoveryChange.subscribe { change in
@@ -186,7 +178,6 @@ class SorcManagerTests: XCTestCase {
     }
 
     func test_connectToSorc_itDelegatesTheCallToSessionManager() {
-
         // Given
         let leaseToken = try! LeaseToken(id: "id", leaseID: "leaseID", sorcID: sorcIDA, sorcAccessKey: "key")
         let leaseTokenBlob = try! LeaseTokenBlob(messageCounter: 1, data: "1a")
@@ -200,7 +191,6 @@ class SorcManagerTests: XCTestCase {
     }
 
     func test_disconnect_itDelegatesTheCallToSessionManager() {
-
         // When
         sorcManager.disconnect()
 
@@ -209,7 +199,6 @@ class SorcManagerTests: XCTestCase {
     }
 
     func test_connectionChange_ifSessionManagerIsConnecting_itIsConnecting() {
-
         // Given
         sessionManager.connectionChange.onNext(.init(
             state: .connecting(sorcID: sorcIDA, state: .physical),
@@ -224,7 +213,6 @@ class SorcManagerTests: XCTestCase {
     }
 
     func test_connectionChange_ifSessionManagerChangesConnectionState_itNotifiesConnectionStateChange() {
-
         // Given
         var receivedChange: ConnectionChange?
         _ = sorcManager.connectionChange.subscribe { change in
@@ -243,7 +231,6 @@ class SorcManagerTests: XCTestCase {
     }
 
     func test_requestServiceGrant_itDelegatesTheCallToSessionManager() {
-
         // When
         sorcManager.requestServiceGrant(serviceGrantIDA)
 
@@ -252,7 +239,6 @@ class SorcManagerTests: XCTestCase {
     }
 
     func test_serviceGrantChange_ifSessionManagerIsRequestingServiceGrants_itIsRequestingServiceGrants() {
-
         // Given
         sessionManager.serviceGrantChange.onNext(.init(
             state: .init(requestingServiceGrantIDs: [1, 2, 3]),
@@ -267,7 +253,6 @@ class SorcManagerTests: XCTestCase {
     }
 
     func test_serviceGrantChange_ifSessionManagerChangesServiceGrantState_itNotifiesServiceGrantChange() {
-
         // Given
         var receivedChange: ServiceGrantChange?
         _ = sorcManager.serviceGrantChange.subscribe { change in

@@ -9,7 +9,6 @@
 import CommonUtils
 
 public class SorcManager: SorcManagerType {
-
     private let bluetoothStatusProvider: BluetoothStatusProviderType
     private let scanner: ScannerType
     private let sessionManager: SessionManagerType
@@ -67,12 +66,10 @@ public class SorcManager: SorcManagerType {
 }
 
 extension SorcManager {
-
     /// Initializes a `SorcManager`. After initialization keep a strong reference to this instance as long as you need it.
     ///
     /// Note: Only use one instance at a time.
     public convenience init(configuration: SorcManager.Configuration = SorcManager.Configuration()) {
-
         // ConnectionManager
 
         let connectionConfiguration = ConnectionManager.Configuration(

@@ -19,7 +19,7 @@ extension Data {
 
         for (index, byte) in enumerated() {
             let nextCharacter = String(byte, radix: 16)
-            if nextCharacter.characters.count == 2 {
+            if nextCharacter.count == 2 {
                 output += nextCharacter
             } else {
                 output += "0" + nextCharacter

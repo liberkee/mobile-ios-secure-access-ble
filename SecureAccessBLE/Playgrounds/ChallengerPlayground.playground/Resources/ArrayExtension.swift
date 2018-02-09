@@ -9,7 +9,6 @@
 import Foundation
 
 extension Array {
-
     /** split in chunks with given chunk size */
     func chunks(chunksize: Int) -> [Array<Element>] {
         var words = [[Element]]()

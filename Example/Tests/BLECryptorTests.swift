@@ -12,12 +12,10 @@ import XCTest
 private let sorcIDA = UUID(uuidString: "be2fecaf-734b-4252-8312-59d477200a20")!
 
 class BLECryptorTests: XCTestCase {
-
     /**
      Testing Encrpting (SORC-message) and Decrypting (Response data) with Zero security crypto manager
      */
     func testZeroSecurityCryption() {
-
         /// to initialize a zero Crypto manager for encrypting and decrypting
         let zeroCryptor = ZeroSecurityManager()
 
@@ -51,7 +49,6 @@ class BLECryptorTests: XCTestCase {
      Testing Encrpting (SORC-Message) and Decrypting (Response-Data) with AES-crypto manager
      */
     func testAesCbcCryption() {
-
         let serviceGrantIDA = UInt16(0x03)
 
         /// Established sessionKey for further AES CryptoManager
@@ -88,7 +85,6 @@ class BLECryptorTests: XCTestCase {
     }
 
     func test_AesCbcCryptoManager_decryptData_ifMacIsInvalid_messageIdIsNotValid() {
-
         // Given
         let sessionKey = [0x00, 0xBA, 0x14, 0xA1, 0x50, 0x20, 0x9F, 0xE2, 0x30, 0xE7, 0x1A, 0x2B, 0x78, 0x0F, 0x06, 0x45] as [UInt8]
         var aesCryptor = AesCbcCryptoManager(key: sessionKey)

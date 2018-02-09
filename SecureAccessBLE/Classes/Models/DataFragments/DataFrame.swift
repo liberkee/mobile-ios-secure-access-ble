@@ -33,7 +33,6 @@ enum DataFrameType: UInt8 {
  *  if that is per fragment or per frame.
  */
 struct DataFrame {
-
     /// Data frame type, see definition obove
     var type: DataFrameType {
         var byteArray = [UInt8](repeating: 0x0, count: 1)

@@ -11,7 +11,6 @@ import Foundation
 
 /// Sends/encrypts and receives/decrypts SORC messages.
 class SecurityManager: SecurityManagerType {
-
     enum Error: Swift.Error {
         case decryptionFailed
     }
@@ -103,7 +102,6 @@ class SecurityManager: SecurityManagerType {
     }
 
     private func handleTransportConnectionChange(_ transportChange: TransportConnectionChange) {
-
         switch transportChange.state {
         case let .connecting(transportSorcID, transportConnectingState):
             switch transportConnectingState {
@@ -273,7 +271,6 @@ class SecurityManager: SecurityManagerType {
 // MARK: - ChallengerDelegate
 
 extension SecurityManager: ChallengerDelegate {
-
     func challengerWantsSendMessage(_ message: SorcMessage) {
         sendMessageInternal(message)
     }
@@ -305,7 +302,6 @@ extension SecurityManager: ChallengerDelegate {
 // MARK: - Error extensions
 
 private extension SecureConnectionChange.ConnectingFailedError {
-
     init(transportConnectingFailedError: TransportConnectionChange.ConnectingFailedError) {
         switch transportConnectingFailedError {
         case .physicalConnectingFailed:
@@ -317,7 +313,6 @@ private extension SecureConnectionChange.ConnectingFailedError {
 }
 
 private extension SecureConnectionChange.ConnectionLostError {
-
     init(transportConnectionLostError: TransportConnectionChange.ConnectionLostError) {
         switch transportConnectionLostError {
         case .physicalConnectionLost:

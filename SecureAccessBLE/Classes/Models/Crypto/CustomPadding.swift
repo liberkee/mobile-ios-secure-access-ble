@@ -102,7 +102,6 @@ struct ZeroByteWithLength: Padding {
  *  Empty Padding with removed bytes
  */
 struct NoPadding: Padding {
-
     /**
      To add bytes to current padding
 

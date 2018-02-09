@@ -10,7 +10,6 @@ import CommonUtils
 import Foundation
 
 struct PhysicalConnectionChange: ChangeType {
-
     let state: State
     let action: Action
 
@@ -35,7 +34,6 @@ struct PhysicalConnectionChange: ChangeType {
 }
 
 extension PhysicalConnectionChange: Equatable {
-
     static func == (lhs: PhysicalConnectionChange, rhs: PhysicalConnectionChange) -> Bool {
         return lhs.state == rhs.state
             && lhs.action == rhs.action
@@ -43,7 +41,6 @@ extension PhysicalConnectionChange: Equatable {
 }
 
 extension PhysicalConnectionChange.State: Equatable {
-
     static func == (lhs: PhysicalConnectionChange.State,
                     rhs: PhysicalConnectionChange.State) -> Bool {
         switch (lhs, rhs) {
@@ -56,7 +53,6 @@ extension PhysicalConnectionChange.State: Equatable {
 }
 
 extension PhysicalConnectionChange.Action: Equatable {
-
     static func == (lhs: PhysicalConnectionChange.Action,
                     rhs: PhysicalConnectionChange.Action) -> Bool {
         switch (lhs, rhs) {

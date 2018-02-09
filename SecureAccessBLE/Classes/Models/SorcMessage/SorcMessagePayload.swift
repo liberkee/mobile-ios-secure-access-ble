@@ -12,7 +12,6 @@ import Foundation
  *  General defined SORC message payload, with Data object type
  */
 protocol SorcMessagePayload {
-
     /// message payload defined as Data
     var data: Data { set get }
 }

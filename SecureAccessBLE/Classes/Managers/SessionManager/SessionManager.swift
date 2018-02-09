@@ -11,7 +11,6 @@ import Foundation
 
 /// Sends and receives service messages. Manages heartbeats.
 class SessionManager: SessionManagerType {
-
     let connectionChange = ChangeSubject<ConnectionChange>(state: .disconnected)
 
     let serviceGrantChange = ChangeSubject<ServiceGrantChange>(state: .init(requestingServiceGrantIDs: []))
@@ -116,7 +115,6 @@ class SessionManager: SessionManagerType {
     }
 
     private func handleSecureConnectionChange(_ secureChange: SecureConnectionChange) {
-
         switch secureChange.state {
         case let .connecting(securitySorcID, secureConnectingState):
             handleSecureConnectionChangeConnecting(
@@ -134,7 +132,6 @@ class SessionManager: SessionManagerType {
         securitySorcID: SorcID,
         secureConnectingState: SecureConnectionChange.State.ConnectingState
     ) {
-
         switch secureConnectingState {
         case .physical: break
         case .transport:
@@ -157,7 +154,6 @@ class SessionManager: SessionManagerType {
     }
 
     private func handleSecureConnectionChangeConnected(sorcID: SorcID) {
-
         guard connectionChange.state == .connecting(sorcID: sorcID, state: .challenging) else { return }
         connectionChange.onNext(.init(
             state: .connected(sorcID: sorcID),
@@ -167,7 +163,6 @@ class SessionManager: SessionManagerType {
     }
 
     private func handleSecureConnectionChangeDisconnected(secureChangeAction: SecureConnectionChange.Action) {
-
         if connectionChange.state == .disconnected { return }
         let actionLeadingToDisconnect = self.actionLeadingToDisconnect
         reset()
@@ -347,7 +342,6 @@ class SessionManager: SessionManagerType {
 // MARK: - Error extensions
 
 private extension ConnectingFailedError {
-
     init(secureConnectingFailedError: SecureConnectionChange.ConnectingFailedError) {
         switch secureConnectingFailedError {
         case .physicalConnectingFailed:
@@ -363,7 +357,6 @@ private extension ConnectingFailedError {
 }
 
 private extension ConnectionLostError {
-
     init(secureConnectionLostError: SecureConnectionChange.ConnectionLostError) {
         switch secureConnectionLostError {
         case .physicalConnectionLost:
@@ -375,7 +368,6 @@ private extension ConnectionLostError {
 // MARK: - ServiceGrantResponse mapping
 
 extension ServiceGrantResponse {
-
     // TODO: PLAM-1568 Test this
     init?(sorcID: SorcID, message: SorcMessage) {
         self.sorcID = sorcID

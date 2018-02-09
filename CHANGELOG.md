@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 ### Fixed
+- 2018-02-09 : (PLAM-2282)  : Warnings in dependencies resolved
 
 ## [2.2.0] - 2017-12-18
 

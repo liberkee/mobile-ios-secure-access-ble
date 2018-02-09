@@ -10,7 +10,6 @@ import Foundation
 
 /** String extension */
 extension String {
-
     /** Calculate MD5 hash */
     public func md5() -> String? {
         return dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)?.md5()?.toHexString()

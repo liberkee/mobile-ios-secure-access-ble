@@ -7,10 +7,8 @@
 //
 
 extension SorcManager {
-
     /// The configuration for the `SorcManager`
     public struct Configuration {
-
         /// The time interval a heartbeat is sent to the SORC
         public let heartbeatInterval: TimeInterval?
 

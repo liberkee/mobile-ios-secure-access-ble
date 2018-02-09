@@ -26,7 +26,6 @@ extension UInt32 {
 
 /** Shift bits */
 extension UInt32 {
-
     /** Shift bits to the left. All bits are shifted (including sign bit) */
     private mutating func shiftLeft(count: UInt32) -> UInt32 {
         if self == 0 {

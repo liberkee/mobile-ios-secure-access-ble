@@ -9,7 +9,6 @@
 import Foundation
 
 public enum Cipher {
-
     public enum Error: ErrorType {
         case EncryptError
         case DecryptError

@@ -10,7 +10,6 @@ import Foundation
 
 /// A lease token used in establishing a connection to a SORC
 public struct LeaseToken: Equatable {
-
     enum Error: Swift.Error {
         case sorcAccessKeyIsEmpty
     }

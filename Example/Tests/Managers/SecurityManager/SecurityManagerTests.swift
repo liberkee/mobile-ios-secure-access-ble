@@ -17,7 +17,6 @@ private let leaseTokenBlobA = try! LeaseTokenBlob(messageCounter: 1, data: "1a")
 private let serviceGrantIDA = ServiceGrantID(2)
 
 private class MockTransportManager: TransportManagerType {
-
     let connectionChange = ChangeSubject<TransportConnectionChange>(state: .disconnected)
 
     var connectToSorcCalledWithSorcID: SorcID?
@@ -40,7 +39,6 @@ private class MockTransportManager: TransportManagerType {
 }
 
 class SecurityManagerTests: XCTestCase {
-
     fileprivate let transportManager = MockTransportManager()
     var securityManager: SecurityManager!
 
@@ -57,7 +55,6 @@ class SecurityManagerTests: XCTestCase {
     }
 
     func test_connectToSorc_ifDisconnected_connectsWithSorc() {
-
         // Given
         var receivedConnectionChange: SecureConnectionChange?
         _ = securityManager.connectionChange.subscribeNext { change in
@@ -121,7 +118,6 @@ class SecurityManagerTests: XCTestCase {
 
     // To make it possible to retrigger a connect while connecting physically
     func test_connectToSorc_ifPhysicalConnecting_connectsToTransportManagerAndDoesNotNotifyPhysicalConnecting() {
-
         // Given
         preparePhysicalConnecting()
 
@@ -139,7 +135,6 @@ class SecurityManagerTests: XCTestCase {
     }
 
     func test_connectToSorc_ifTransportConnecting_doesNothing() {
-
         // Given
         prepareTransportConnecting()
 
@@ -148,7 +143,6 @@ class SecurityManagerTests: XCTestCase {
     }
 
     func test_connectToSorc_ifChallengingConnecting_doesNothing() {
-
         // Given
         prepareChallengingConnecting()
 
@@ -167,7 +161,6 @@ class SecurityManagerTests: XCTestCase {
     //    }
 
     func test_disconnect_ifConnecting_disconnectsTransportManagerAndNotifiesDisconnect() {
-
         // Given
         preparePhysicalConnecting()
 
@@ -186,7 +179,6 @@ class SecurityManagerTests: XCTestCase {
     //    }
 
     func test_disconnect_ifNotConnectingOrConnected_doesNothing() {
-
         // Given
         var receivedConnectionChange: SecureConnectionChange!
         _ = securityManager.connectionChange.subscribeNext { change in
@@ -231,7 +223,6 @@ class SecurityManagerTests: XCTestCase {
     //    }
 
     func test_requestServiceGrant_ifNotConnected_itDoesNothing() {
-
         // When
         let message = SorcMessage(
             id: .serviceGrant,
@@ -274,7 +265,6 @@ class SecurityManagerTests: XCTestCase {
     // MARK: - Helper
 
     private func connectToSorcAndAssertDoesNothing(file: StaticString = #file, line: UInt = #line) {
-
         var receivedConnectionChange: SecureConnectionChange!
         _ = securityManager.connectionChange.subscribeNext { change in
             receivedConnectionChange = change
@@ -300,7 +290,6 @@ class SecurityManagerTests: XCTestCase {
     }
 
     private func disconnectAndAssertNotifiesDisconnect(file: StaticString = #file, line: UInt = #line) {
-
         var receivedConnectionChange: SecureConnectionChange!
         _ = securityManager.connectionChange.subscribeNext { change in
             receivedConnectionChange = change

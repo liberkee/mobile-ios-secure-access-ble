@@ -9,7 +9,6 @@
 import Foundation
 
 public final class HMAC {
-
     public enum Variant {
         case sha1, sha256, sha384, sha512, md5
 

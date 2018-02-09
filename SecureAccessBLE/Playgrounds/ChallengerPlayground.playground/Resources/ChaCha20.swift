@@ -9,7 +9,6 @@
 import Foundation
 
 public final class ChaCha20 {
-
     enum Error: ErrorType {
         case MissingContext
     }
@@ -141,7 +140,6 @@ public final class ChaCha20 {
     }
 
     private final func encryptBytes(message: [UInt8]) throws -> [UInt8] {
-
         guard let ctx = context else {
             throw Error.MissingContext
         }

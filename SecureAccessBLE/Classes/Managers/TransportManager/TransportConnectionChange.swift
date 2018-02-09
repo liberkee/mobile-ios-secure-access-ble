@@ -12,7 +12,6 @@ import Foundation
 
 /// Describes a change of connection state
 struct TransportConnectionChange: ChangeType, Equatable {
-
     static func initialWithState(_ state: TransportConnectionChange.State) -> TransportConnectionChange {
         return TransportConnectionChange(state: state, action: .initial)
     }
@@ -34,7 +33,6 @@ struct TransportConnectionChange: ChangeType, Equatable {
 }
 
 extension TransportConnectionChange {
-
     /// The state the connection can be in
     enum State: Equatable {
         case disconnected
@@ -60,7 +58,6 @@ extension TransportConnectionChange {
 }
 
 extension TransportConnectionChange {
-
     /// The action that led to the state
     enum Action: Equatable {
         case initial

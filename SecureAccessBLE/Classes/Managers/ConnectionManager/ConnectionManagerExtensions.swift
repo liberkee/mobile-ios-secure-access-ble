@@ -10,21 +10,18 @@ import CommonUtils
 import CoreBluetooth
 
 extension ConnectionManager {
-
     typealias CreateTimer = (@escaping () -> Void) -> Timer
 }
 
 // MARK: - CBCentralManagerDelegate
 
 extension ConnectionManager: CBCentralManagerDelegate {
-
     func centralManagerDidUpdateState(_ central: CBCentralManager) {
         centralManagerDidUpdateState_(central as CBCentralManagerType)
     }
 
     func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
                         advertisementData: [String: Any], rssi RSSI: NSNumber) {
-
         centralManager_(central as CBCentralManagerType, didDiscover: peripheral as CBPeripheralType, advertisementData: advertisementData, rssi: RSSI)
     }
 
@@ -45,7 +42,6 @@ extension ConnectionManager: CBCentralManagerDelegate {
 // MARK: - CBPeripheralDelegate
 
 extension ConnectionManager: CBPeripheralDelegate {
-
     func peripheral(_ peripheral: CBPeripheral, didDiscoverServices error: Error?) {
         peripheral_(peripheral as CBPeripheralType, didDiscoverServices: error)
     }
