@@ -86,6 +86,8 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
 
     private let disposeBag = DisposeBag()
 
+    fileprivate var applicationIsActive = false
+
     fileprivate var connectedSorc: DiscoveredSorc? {
         if case let .connected(sorcID) = connectionState {
             return discoveredSorcs[sorcID]
@@ -116,8 +118,11 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
 
         filterTimer = createTimer(removeOutdatedSorcs)
 
-        _ = appActivityStatusProvider.appDidBecomeActive.subscribe { [weak self] in
-            self?.handleAppDidBecomeActive()
+        _ = appActivityStatusProvider.appDidBecomeActive.subscribe { [weak self] applicationIsActive in
+            self?.applicationIsActive = applicationIsActive
+            if applicationIsActive {
+                self?.handleAppDidChangeActiveState()
+            }
         }
     }
 
@@ -129,7 +134,13 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     func startDiscovery() {
         updateDiscoveryChange(action: .startDiscovery)
         guard centralManager.state == .poweredOn else { return }
-        centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: 1])
+
+        if applicationIsActive {
+            centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: 1])
+        } else {
+            let cbuuid = CBUUID(string: ConnectionManager.Configuration.advertisedServiceID)
+            centralManager.scanForPeripherals(withServices: [cbuuid], options: [CBCentralManagerScanOptionAllowDuplicatesKey: 1])
+        }
     }
 
     func stopDiscovery() {
@@ -189,7 +200,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
         }
     }
 
-    private func handleAppDidBecomeActive() {
+    private func handleAppDidChangeActiveState() {
         if discoveryChange.state.discoveryIsEnabled {
             startDiscovery()
         }
