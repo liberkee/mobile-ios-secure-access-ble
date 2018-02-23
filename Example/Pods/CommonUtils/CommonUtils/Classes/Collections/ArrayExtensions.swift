@@ -9,7 +9,6 @@
 import Foundation
 
 public extension Array where Element: AnyObject {
-
     /**
      Removes an object from this array by comparing references
 

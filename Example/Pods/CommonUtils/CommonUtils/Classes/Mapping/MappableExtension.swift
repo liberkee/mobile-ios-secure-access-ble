@@ -10,7 +10,6 @@ import ObjectMapper
 
 /// General rule for the mapper
 public class MapperValidationRule {
-
     fileprivate let value: Any?
     fileprivate let key: String
 
@@ -26,7 +25,6 @@ public class MapperValidationRule {
 
 /// Rule to validate if value is the same before and after the mapping
 public class MapperOptionalRule: MapperValidationRule {
-
     override func validates(map: Map, immutableMappable _: ImmutableMappable) -> Bool {
         return map.JSON[key] == nil || (map.JSON[key] != nil && value != nil) || map.JSON[key]! is NSNull
     }
@@ -34,14 +32,12 @@ public class MapperOptionalRule: MapperValidationRule {
 
 /// Rule to validate if the property is not nil
 public class MapperRequiredRule: MapperValidationRule {
-
     override func validates(map _: Map, immutableMappable: ImmutableMappable) -> Bool {
         return value != nil
     }
 }
 
 public extension ImmutableMappable {
-
     /// Validate if the model is mapped regarding all rules
     ///
     /// - Parameters:

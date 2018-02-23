@@ -10,7 +10,6 @@ import Foundation
 
 /// A ISO8601 date formatter with minutes as the smallest time unit, always in GMT
 public class ISO8601DateFormatter {
-
     private let dateFormatter: DateFormatter
 
     /// Public initializer

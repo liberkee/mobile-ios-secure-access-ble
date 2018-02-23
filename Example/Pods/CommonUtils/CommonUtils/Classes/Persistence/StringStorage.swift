@@ -10,7 +10,6 @@ import Foundation
 
 /// Defines methods that a `StringStorageType` must conform to
 public protocol StringStorageType {
-
     /// Loads a string from the file system
     ///
     /// - Returns: The saved string or nil if does not exist
@@ -32,7 +31,6 @@ public protocol StringStorageType {
 
 /// A storage for a `String` on the local file system
 class StringStorage: StringStorageType {
-
     /// The url of the file
     private let fileURL: URL
 

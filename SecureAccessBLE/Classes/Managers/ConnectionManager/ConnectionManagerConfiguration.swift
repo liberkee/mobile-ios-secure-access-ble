@@ -8,7 +8,6 @@
 
 extension ConnectionManager {
     public struct Configuration {
-
         public static let advertisedServiceID = "0x180A"
         public static let defaultServiceID = "d1cf0603-b501-4569-a4b9-e47ad3f628a5"
         public static let defaultNotifyCharacteristicID = "d1d7a6b6-457e-458a-b237-a9df99b3d98b"

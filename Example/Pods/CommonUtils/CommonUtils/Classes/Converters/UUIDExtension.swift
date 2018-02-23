@@ -7,7 +7,6 @@
 //
 
 extension UUID {
-
     public init?(data: Data) {
         guard let uuidString = data.uuidString else { return nil }
         self.init(uuidString: uuidString)

@@ -11,7 +11,6 @@ import ObjectMapper
 
 /// A protocol defining functions for saving data locally
 public protocol LocalStorage {
-
     /**
      Loads the locally saved data as object
 

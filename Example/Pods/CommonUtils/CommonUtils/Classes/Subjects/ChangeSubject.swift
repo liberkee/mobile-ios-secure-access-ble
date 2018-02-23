@@ -26,7 +26,6 @@ public protocol ChangeType {
 /// Can be used to differentiate between the initial subscription and following updates.
 /// Can be used for direct 1:n communication between objects.
 public class ChangeSubject<Change: ChangeType> {
-
     /// The current state of the subject
     public private(set) var state: Change.State
     private var subscribers = [Subscriber<Change>]()

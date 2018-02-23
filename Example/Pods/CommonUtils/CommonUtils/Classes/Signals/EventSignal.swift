@@ -10,7 +10,6 @@ import Foundation
 
 /// A signal that sends events
 public class EventSignal<Event> {
-
     private let publishSubject: PublishSubject<Event>
 
     public init(publishSubject: PublishSubject<Event>) {
@@ -25,7 +24,6 @@ public class EventSignal<Event> {
 }
 
 public extension PublishSubject {
-
     /// Converts this `PublishSubject` to a `EventSignal`.
     func asSignal() -> EventSignal<Value> {
         return EventSignal(publishSubject: self)

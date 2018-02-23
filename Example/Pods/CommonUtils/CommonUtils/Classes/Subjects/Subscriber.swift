@@ -10,7 +10,6 @@ import Foundation
 
 /// Wraps the observer closure
 class Subscriber<Value> {
-
     let next: (Value) -> Void
 
     init(next: @escaping (Value) -> Void) {

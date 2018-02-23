@@ -10,7 +10,6 @@ import Foundation
 
 /// Describes a type that is used for storing key value pairs persistently
 public protocol PreferencesType {
-
     /**
      Gets a `Bool` value in the preferences under given key.
      If value for given key does not exist, it returns nil.
@@ -43,7 +42,6 @@ public protocol PreferencesType {
 
 /// Stores values in `UserDefaults.standard`
 public class Preferences: PreferencesType {
-
     private let userDefaults: UserDefaults
 
     /// Inits preferences that write to `UserDefaults.standard`

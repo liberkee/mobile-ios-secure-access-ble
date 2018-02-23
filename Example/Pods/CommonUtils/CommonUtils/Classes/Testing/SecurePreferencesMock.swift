@@ -10,7 +10,6 @@ import Foundation
 
 /// Mocks the communication with the keychain
 public class SecurePreferencesMock: SecurePreferencesType {
-
     struct PreferencesError: Error {}
 
     var items = [String: String]()

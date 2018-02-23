@@ -9,7 +9,6 @@
 import Foundation
 
 extension DispatchQueue {
-
     /// Dispatch on main queue peventing deadlock
     public class func mainSyncSafe<T>(execute work: () -> T) -> T {
         if Thread.current.isMainThread {

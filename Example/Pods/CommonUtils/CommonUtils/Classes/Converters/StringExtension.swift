@@ -41,7 +41,6 @@ extension String {
         let data = NSMutableData(capacity: trimmedString.count / 2)
         for index in stride(from: 0, to: trimmedString
             .distance(from: trimmedString.startIndex, to: trimmedString.endIndex), by: 2) {
-
             let subStringRange = trimmedString.index(trimmedString.startIndex, offsetBy: index)
                 ..< trimmedString.index(trimmedString.startIndex, offsetBy: index + 2)
             let byteString = trimmedString.substring(with: subStringRange)

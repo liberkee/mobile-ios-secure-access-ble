@@ -11,7 +11,6 @@ import ObjectMapper
 
 /// A JSON implementation of a local storage for saving data in JSON files
 public struct LocalJSONStorage: LocalStorage {
-
     /// The storage used for file access
     private let stringStorage: StringStorageType
 

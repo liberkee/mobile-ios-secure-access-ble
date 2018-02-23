@@ -10,7 +10,6 @@ import CommonUtils
 import UIKit
 
 class AppActivityStatusProvider: AppActivityStatusProviderType {
-
     var appDidBecomeActive: EventSignal<Bool> {
         return appDidBecomeActiveSubject.asSignal()
     }

@@ -11,7 +11,6 @@ import ObjectMapper
 
 /// A LocalStorage that stores data as JSON formatted string in the iOS keychain
 public class SecureLocalStorage: LocalStorage {
-
     // The key under which data is stored in the keychain
     private let keychainKey: String
 

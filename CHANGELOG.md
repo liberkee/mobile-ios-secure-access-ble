@@ -5,9 +5,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 ### Added
+### Changed
+### Fixed
+### Removed
+
+## [2.3.0] - 2018-02-23
+
+### Added
 - 2018-02-09 : (PLAM-2106)  : Added functionality to scan for peripherals in background
 
-### Changed
 ### Fixed
 - 2018-02-09 : (PLAM-2282)  : Warnings in dependencies resolved
 

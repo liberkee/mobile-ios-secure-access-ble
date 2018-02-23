@@ -10,7 +10,6 @@ import Foundation
 
 /// A signal that sends out updates to its current state
 public class StateSignal<State> {
-
     // The current state of the signal
     public var state: State {
         return behaviorSubject.value
@@ -31,7 +30,6 @@ public class StateSignal<State> {
 }
 
 public extension BehaviorSubject {
-
     /// Converts this `BehaviorSubject` to a `StateSignal`.
     func asSignal() -> StateSignal<Value> {
         return StateSignal(behaviorSubject: self)

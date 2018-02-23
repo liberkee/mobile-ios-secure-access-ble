@@ -12,7 +12,6 @@ import Foundation
 /// On subscribe it sends out an initial action defined by `ChangeType.initialWithState(_:)`.
 /// Can be used to differentiate between the initial subscription and following updates.
 public class ChangeSignal<Change: ChangeType> {
-
     /// The current state of the signal's change
     public var state: Change.State {
         return changeSubject.state
@@ -33,7 +32,6 @@ public class ChangeSignal<Change: ChangeType> {
 }
 
 public extension ChangeSubject {
-
     /// Converts this `ChangeSubject` to a `ChangeSignal`.
     func asSignal() -> ChangeSignal<Change> {
         return ChangeSignal(changeSubject: self)

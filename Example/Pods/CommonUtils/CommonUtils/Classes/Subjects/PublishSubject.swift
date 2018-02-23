@@ -11,7 +11,6 @@ import Foundation
 /// A subject that sends every value change that happens through `onNext()`.
 /// Can be used for direct 1:n communication between objects.
 public class PublishSubject<Value> {
-
     private var subscribers = [Subscriber<Value>]()
 
     public init() {}

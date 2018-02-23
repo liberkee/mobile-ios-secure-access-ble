@@ -10,7 +10,6 @@ import Foundation
 
 /// A mock for the `PreferencesType` protocol
 public class PreferencesMock: PreferencesType {
-
     var items = [String: Any]()
 
     public init() {}

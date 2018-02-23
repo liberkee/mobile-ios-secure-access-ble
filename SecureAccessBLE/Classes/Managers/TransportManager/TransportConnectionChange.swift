@@ -8,7 +8,6 @@
 
 import CommonUtils
 import Foundation
-import Foundation
 
 /// Describes a change of connection state
 struct TransportConnectionChange: ChangeType, Equatable {

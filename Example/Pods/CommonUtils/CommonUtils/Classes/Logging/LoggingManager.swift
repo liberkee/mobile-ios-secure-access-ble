@@ -10,7 +10,6 @@ import Foundation
 
 /// Set the used logger, log level and time stamp formatter here
 public class LoggingManager {
-
     /// Used logger, either custom or default
     public var logger: HSMLogging
 

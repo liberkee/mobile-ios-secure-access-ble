@@ -11,7 +11,6 @@ import Foundation
 /// A subject that keeps a current value and sends it on subscribe and on every value change.
 /// Can be used for direct 1:n communication between objects.
 public class BehaviorSubject<Value> {
-
     /// The current value of the subject
     public private(set) var value: Value
     private var subscribers = [Subscriber<Value>]()

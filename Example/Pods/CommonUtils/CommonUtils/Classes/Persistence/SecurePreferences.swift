@@ -11,7 +11,6 @@ import KeychainAccess
 
 /// Describes the contract to access the keychain
 protocol KeychainType {
-
     /**
      A subscript to get and set a string with a `key`
 
@@ -31,7 +30,6 @@ extension Keychain: KeychainType {}
 
 /// Describes the contract to save security related data to the keychain
 public protocol SecurePreferencesType {
-
     /**
      A subscript to get and set a string with a `key`
 
@@ -49,7 +47,6 @@ public protocol SecurePreferencesType {
 
 /// Saves security related data to the keychain
 public class SecurePreferences: SecurePreferencesType {
-
     private let clearedKeychainOnFirstRunKey = "clearedKeychainOnFirstRunKey"
 
     private var keychain: KeychainType
