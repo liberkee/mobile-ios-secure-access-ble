@@ -88,7 +88,7 @@
 		46B760901DA26C40003ADDB1 /* BLEManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BLEManagerTests.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		46B760961DA26C8C003ADDB1 /* BLECryptorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BLECryptorTests.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		46B760981DA271FC003ADDB1 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; lineEnding = 0; name = CHANGELOG.md; path = ../CHANGELOG.md; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.markdown; };
-		46B760991DA27634003ADDB1 /* ChallengerPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = ChallengerPlayground.playground; path = ../SecureAccessBLE/Playgrounds/ChallengerPlayground.playground; sourceTree = "<group>"; };
+		46B760991DA27634003ADDB1 /* ChallengerPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = ChallengerPlayground.playground; path = ../SecureAccessBLE/Playgrounds/ChallengerPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		583E5BDBE22FA86FCC4C2292 /* Pods_SecureAccessBLE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SecureAccessBLE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACE51AFB9204008FA782 /* SecureAccessBLE_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SecureAccessBLE_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -985,8 +985,6 @@
 					"-framework",
 					"\"ObjectMapper\"",
 					"-framework",
-					"\"SecureAccessBLE\"",
-					"-framework",
 					"\"openssl\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.huf.SecureAccessBLE;
@@ -1033,8 +1031,6 @@
 					"\"KeychainAccess\"",
 					"-framework",
 					"\"ObjectMapper\"",
-					"-framework",
-					"\"SecureAccessBLE\"",
 					"-framework",
 					"\"openssl\"",
 				);
