@@ -25,6 +25,6 @@ Pod::Spec.new do |s|
 
   s.dependency 'CommonUtils', '0.1.2'
 
-  s.dependency 'CryptoSwift', '0.7.0'
+  s.dependency 'CryptoSwift', '0.9.0'
   
 end
