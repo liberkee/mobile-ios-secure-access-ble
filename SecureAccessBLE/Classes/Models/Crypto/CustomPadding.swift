@@ -12,7 +12,7 @@ import Foundation
 /**
  *  Extensions endpoints for Padding
  */
-struct ZeroByte: Padding {
+struct ZeroByte: PaddingProtocol {
     /**
      To add bytes to current padding
 
@@ -51,7 +51,7 @@ struct ZeroByte: Padding {
 /**
  *  Zero Padding with target Length
  */
-struct ZeroByteWithLength: Padding {
+struct ZeroByteWithLength: PaddingProtocol {
     fileprivate var length: UInt8 = 0
 
     /**
@@ -101,7 +101,7 @@ struct ZeroByteWithLength: Padding {
 /**
  *  Empty Padding with removed bytes
  */
-struct NoPadding: Padding {
+struct NoPadding: PaddingProtocol {
     /**
      To add bytes to current padding
 

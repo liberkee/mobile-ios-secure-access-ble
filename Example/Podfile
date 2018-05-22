@@ -9,8 +9,8 @@ target 'SecureAccessBLE_Tests' do
   pod 'SwiftFormat/CLI'
   pod 'SwiftLint', '0.23.0'
 
-  #pod 'SecureAccessBLE', :path => '../'
-  pod 'SecureAccessBLE', :git => 'https://github.com/hufsm/mobile-ios-ble.git', :branch => 'migrate_to_swift_4'
+  pod 'SecureAccessBLE', :path => '../'
+  #pod 'SecureAccessBLE', :git => 'https://github.com/hufsm/mobile-ios-ble.git', :branch => 'migrate_to_swift_4'
 
   pod 'CommonUtils', '0.1.2'
   #pod 'CommonUtils', :git => 'https://github.com/hufsm/mobile-ios-common-utils.git', :branch => 'development'

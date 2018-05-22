@@ -8,7 +8,6 @@
 
 import CommonUtils
 import CryptoSwift
-import OpenSSL
 
 /**
  *  A crypto manager for tests, that handles messages and feedback from session layer and from transport layer.
@@ -46,8 +45,7 @@ struct AesCbcTestCryptoManager: CryptoManager {
      */
     func encryptMessage(_ message: SorcMessage) -> Data {
         do {
-            let bytes: [UInt8] = try AES(key: key, iv: iv, blockMode: .CBC, padding: ZeroByte()).encrypt((message.data as Data).bytes)
-
+            let bytes: [UInt8] = try AES(key: key, blockMode: .CBC(iv: iv), padding: Padding.zeroPadding).encrypt((message.data as Data).bytes)
             let data = Data(bytes: bytes)
             return data
         } catch {
@@ -65,7 +63,7 @@ struct AesCbcTestCryptoManager: CryptoManager {
      */
     func encryptRawMessage(_ message: Data) -> Data {
         do {
-            let bytes: [UInt8] = try AES(key: key, iv: iv, blockMode: .CBC, padding: ZeroByte()).encrypt((message as Data).bytes)
+            let bytes: [UInt8] = try AES(key: key, blockMode: .CBC(iv: iv), padding: Padding.zeroPadding).encrypt((message as Data).bytes)
             let data = Data(bytes: bytes)
             return data
         } catch {
@@ -83,7 +81,7 @@ struct AesCbcTestCryptoManager: CryptoManager {
      */
     func decryptData(_ data: Data) -> SorcMessage {
         do {
-            let bytes: [UInt8] = try AES(key: key, iv: iv, blockMode: .CBC, padding: ZeroByte()).decrypt((data as Data).bytes)
+            let bytes: [UInt8] = try AES(key: key, blockMode: .CBC(iv: iv), padding: Padding.zeroPadding).encrypt((data as Data).bytes)
             let data = Data(bytes: bytes)
             let message = SorcMessage(rawData: data)
             return message
@@ -102,7 +100,7 @@ struct AesCbcTestCryptoManager: CryptoManager {
      */
     func decryptRawData(_ data: Data) -> Data {
         do {
-            let bytes: [UInt8] = try AES(key: key, iv: iv, blockMode: .CBC, padding: ZeroByte()).decrypt((data as Data).bytes)
+            let bytes: [UInt8] = try AES(key: key, blockMode: .CBC(iv: iv), padding: Padding.zeroPadding).encrypt((data as Data).bytes)
             let data = Data(bytes: bytes)
             return data
         } catch {
