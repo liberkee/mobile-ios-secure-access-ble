@@ -9,6 +9,7 @@
 import CommonUtils
 import CryptoSwift
 import Foundation
+import OpenSSL
 
 /**
  *  A crypto manager, that handles messages and feedback from session layer and from transport layer.
@@ -118,19 +119,36 @@ struct AesCbcCryptoManager: CryptoManager {
      */
     func createShortMac(_ data: Data) -> [UInt8] {
         var mac = [UInt8](repeating: 0x0, count: 16)
-        let macLength = 0
-
+        
+        let prefixArray = [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00] as [UInt8]
+        let zeroPaddedArray = prefixArray + data.bytes
+        
         do {
             let cmac = try CMAC(key: key)
-            mac = try cmac.authenticate(data.bytes)
+            mac = try cmac.authenticate(zeroPaddedArray)
         } catch let error {
             HSMLog(message: error.localizedDescription, level: .error)
         }
 
-        let shortMac = mac[macLength - 8 ..< macLength]
-        return Array(shortMac)
+        let shortMacSlice = mac[mac.count - 8 ..< mac.count]
+        
+        return Array(shortMacSlice)
     }
 
+//    func createShortMacOpenSSL(_ data: Data) -> [UInt8] {
+//        var mac = [UInt8](repeating: 0x0, count: 16)
+//        var macLength = 0
+//        let ctx = CMAC_CTX_new()
+//        CMAC_Init(ctx, key, key.count, EVP_aes_128_cbc(), nil)
+//        CMAC_Update(ctx, encIV, encIV.count)
+//        CMAC_Update(ctx, data.bytes, data.count)
+//        CMAC_Final(ctx, &mac, &macLength)
+//        CMAC_CTX_free(ctx)
+//        let shortMac = mac[macLength - 8 ..< macLength]
+//        print("OpenSSL: \(shortMac)")
+//        return Array(shortMac)
+//    }
+    
     /**
      To check if MAC valid
 
@@ -139,31 +157,40 @@ struct AesCbcCryptoManager: CryptoManager {
      - returns: valid or not
      */
     func checkMac(_ data: Data) -> Bool {
-        if data.count > 8 {
-            let encodedData = data.subdata(in: 0 ..< data.count - 8) // NSMakeRange(0, data.count-8))
-            let sorcMac = data.subdata(in: data.count - 8 ..< data.count) // NSMakeRange(data.count-8, 8)).arrayOfBytes()
-
-            var mac = [UInt8](repeating: 0x0, count: 16)
-            let macLength = 0
-
-            do {
-                let cmac = try CMAC(key: key)
-                mac = try cmac.authenticate(encodedData.bytes)
-            } catch let error {
-                HSMLog(message: error.localizedDescription, level: .error)
-            }
-
-            let shortMacSlice = mac[macLength - 8 ..< macLength]
-            let shortMac = Array(shortMacSlice)
-            if sorcMac.bytes == shortMac {
-                return true
-            } else {
-                return false
-            }
-        } else {
-            return false
-        }
+        guard data.count > 8 else { return false }
+        
+        let encodedData = data.subdata(in: 0 ..< data.count - 8) // NSMakeRange(0, data.count-8))
+        let sorcMac = data.subdata(in: data.count - 8 ..< data.count) // NSMakeRange(data.count-8, 8)).arrayOfBytes()
+        let shortMac = createShortMac(encodedData)
+        
+        let result = sorcMac.bytes == shortMac ? true : false
+        return result
     }
+    
+//    func checkMacOpenSSL(_ data: Data) -> Bool {
+//        if data.count > 8 {
+//            let encodedData = data.subdata(in: 0 ..< data.count - 8) // NSMakeRange(0, data.count-8))
+//            let sorcMac = data.subdata(in: data.count - 8 ..< data.count) // NSMakeRange(data.count-8, 8)).arrayOfBytes()
+//
+//            var mac = [UInt8](repeating: 0x0, count: 16)
+//            var macLength = 0
+//            let ctx = CMAC_CTX_new()
+//            CMAC_Init(ctx, key, key.count, EVP_aes_128_cbc(), nil)
+//            CMAC_Update(ctx, decIV, decIV.count)
+//            CMAC_Update(ctx, encodedData.bytes, encodedData.count)
+//            CMAC_Final(ctx, &mac, &macLength)
+//            CMAC_CTX_free(ctx)
+//            let shortMacSlice = mac[macLength - 8 ..< macLength]
+//            let shortMac = Array(shortMacSlice)
+//            if sorcMac.bytes == shortMac {
+//                return true
+//            } else {
+//                return false
+//            }
+//        } else {
+//            return false
+//        }
+//    }
 }
 
 /**
