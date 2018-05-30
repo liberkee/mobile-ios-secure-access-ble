@@ -131,7 +131,7 @@ struct AesCbcCryptoManager: CryptoManager {
         let shortMacSlice = mac[mac.count - 8 ..< mac.count]
         return Array(shortMacSlice)
     }
-    
+
     /**
      To check if MAC valid
 
