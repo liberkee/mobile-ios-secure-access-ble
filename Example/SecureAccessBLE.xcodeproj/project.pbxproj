@@ -51,7 +51,6 @@
 		9917E9FD1FBAF804002D5CE3 /* SorcMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E55E6CDD1F4200E900C5934B /* SorcMessage.swift */; };
 		9917E9FE1FBAF804002D5CE3 /* SorcMessagePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = E55E6CDE1F4200E900C5934B /* SorcMessagePayload.swift */; };
 		9917E9FF1FBAF804002D5CE3 /* TestMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E55E6CDF1F4200E900C5934B /* TestMessage.swift */; };
-		9917EA001FBAF80A002D5CE3 /* CustomPadding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760801DA2637D003ADDB1 /* CustomPadding.swift */; };
 		9917EA011FBAF80F002D5CE3 /* DataFrame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760821DA2637D003ADDB1 /* DataFrame.swift */; };
 		9917EA021FBAF80F002D5CE3 /* DataFramePackage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760831DA2637D003ADDB1 /* DataFramePackage.swift */; };
 		9917EA031FBAF814002D5CE3 /* BlobRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760851DA2637D003ADDB1 /* BlobRequest.swift */; };
@@ -61,7 +60,6 @@
 		9917EA071FBAF81F002D5CE3 /* BoundedQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CF3ADB1F56FD51009C95A0 /* BoundedQueue.swift */; };
 		9917EA081FBAF81F002D5CE3 /* AppActivityStatusProviderType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8F8EE1F5EAE9700B629A5 /* AppActivityStatusProviderType.swift */; };
 		9917EA091FBAF81F002D5CE3 /* AppActivityStatusProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8F8EF1F5EAF2800B629A5 /* AppActivityStatusProvider.swift */; };
-		9939C02F1FD68AA800DDF77F /* PaddingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9939C02E1FD68AA800DDF77F /* PaddingTests.swift */; };
 		99AF3D8E1FBDE279002C2F40 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99AF3D8D1FBDE279002C2F40 /* openssl.framework */; };
 		99D1233D1F9A3B20006012DE /* SecureAccessBLE.h in Headers */ = {isa = PBXBuildFile; fileRef = 99D1233B1F9A3B20006012DE /* SecureAccessBLE.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E504031F1F55BFD50008DF02 /* SessionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E504031B1F55BFD50008DF02 /* SessionManagerTests.swift */; };
@@ -79,7 +77,6 @@
 		46B7607C1DA2637D003ADDB1 /* PhoneToSorcChallenge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = PhoneToSorcChallenge.swift; sourceTree = "<group>"; };
 		46B7607D1DA2637D003ADDB1 /* PhoneToSorcResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = PhoneToSorcResponse.swift; sourceTree = "<group>"; };
 		46B7607E1DA2637D003ADDB1 /* SorcToPhoneResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SorcToPhoneResponse.swift; sourceTree = "<group>"; };
-		46B760801DA2637D003ADDB1 /* CustomPadding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomPadding.swift; sourceTree = "<group>"; };
 		46B760821DA2637D003ADDB1 /* DataFrame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataFrame.swift; sourceTree = "<group>"; };
 		46B760831DA2637D003ADDB1 /* DataFramePackage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = DataFramePackage.swift; sourceTree = "<group>"; };
 		46B760851DA2637D003ADDB1 /* BlobRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BlobRequest.swift; sourceTree = "<group>"; };
@@ -93,7 +90,6 @@
 		607FACE51AFB9204008FA782 /* SecureAccessBLE_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SecureAccessBLE_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		73D51B88FB7332E88789517E /* Pods-SecureAccessBLE_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests.release.xcconfig"; sourceTree = "<group>"; };
-		9939C02E1FD68AA800DDF77F /* PaddingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddingTests.swift; sourceTree = "<group>"; };
 		99AF3D8D1FBDE279002C2F40 /* openssl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = openssl.framework; sourceTree = "<group>"; };
 		99D123391F9A3B20006012DE /* SecureAccessBLE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SecureAccessBLE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		99D1233B1F9A3B20006012DE /* SecureAccessBLE.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SecureAccessBLE.h; sourceTree = "<group>"; };
@@ -223,7 +219,6 @@
 		46B7607F1DA2637D003ADDB1 /* Crypto */ = {
 			isa = PBXGroup;
 			children = (
-				46B760801DA2637D003ADDB1 /* CustomPadding.swift */,
 			);
 			path = Crypto;
 			sourceTree = "<group>";
@@ -285,7 +280,6 @@
 				46B760901DA26C40003ADDB1 /* BLEManagerTests.swift */,
 				46B760961DA26C8C003ADDB1 /* BLECryptorTests.swift */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
-				9939C02E1FD68AA800DDF77F /* PaddingTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -757,7 +751,6 @@
 				E50403221F55C0010008DF02 /* TransportManagerTests.swift in Sources */,
 				E504031F1F55BFD50008DF02 /* SessionManagerTests.swift in Sources */,
 				E5CF3ADE1F56FDBC009C95A0 /* BoundedQueueTests.swift in Sources */,
-				9939C02F1FD68AA800DDF77F /* PaddingTests.swift in Sources */,
 				46B760971DA26C8C003ADDB1 /* BLECryptorTests.swift in Sources */,
 				E5CF3AE61F586EF4009C95A0 /* SecurityManagerTests.swift in Sources */,
 				E5CF3AE31F586EB7009C95A0 /* ConnectionManagerTests.swift in Sources */,
@@ -773,7 +766,6 @@
 			files = (
 				9917E9EF1FBAF7E7002D5CE3 /* ScannerType.swift in Sources */,
 				9917E9EE1FBAF7E7002D5CE3 /* BluetoothStatusProviderType.swift in Sources */,
-				9917EA001FBAF80A002D5CE3 /* CustomPadding.swift in Sources */,
 				9917EA071FBAF81F002D5CE3 /* BoundedQueue.swift in Sources */,
 				9917E9F41FBAF7E7002D5CE3 /* ConnectionManagerExtensions.swift in Sources */,
 				9917E9FE1FBAF804002D5CE3 /* SorcMessagePayload.swift in Sources */,
