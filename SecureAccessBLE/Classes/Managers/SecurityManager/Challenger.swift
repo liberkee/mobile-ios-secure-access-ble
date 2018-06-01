@@ -95,7 +95,7 @@ protocol ChallengerDelegate: class {
  */
 class Challenger {
     /// random generated
-    fileprivate var nc: [UInt8]
+    fileprivate let nc: [UInt8] = AES.randomIV(AES.blockSize)
     /// original data
     fileprivate var b0 = [UInt8]()
     /// encrypted from b0
@@ -131,8 +131,6 @@ class Challenger {
         leaseTokenID = leaseToken.id
         sorcAccessKey = leaseToken.sorcAccessKey
 
-        nc = AES.randomIV(16)
-
         guard let sharedKey = self.sorcAccessKey.dataFromHexadecimalString() else {
             return nil
         }
@@ -141,7 +139,7 @@ class Challenger {
 
         do {
             let iv = Array<UInt8>(repeating: 0, count: AES.blockSize)
-            let aesCrypto = try AES(key: key, blockMode: .CBC(iv: iv), padding: Padding.zeroPadding)
+            let aesCrypto = try AES(key: key, blockMode: .CBC(iv: iv), padding: Padding.noPadding)
             crypto = aesCrypto
         } catch {
             return nil
@@ -283,7 +281,7 @@ class Challenger {
      */
     fileprivate func calculateR3(_ b1: [UInt8], b2: [UInt8]) throws -> [UInt8] {
         do {
-            let r3Temp = try crypto.decrypt(b2) // , padding: ZeroByte())
+            let r3Temp = try crypto.decrypt(b2)
             let r3 = xor(r3Temp, b: b1)
 
             let permutatedR3 = rotate(r3, inverse: true)
@@ -314,7 +312,7 @@ class Challenger {
      */
     fileprivate func calculateN5(_ b0: [UInt8], b1: [UInt8]) throws -> (nr: [UInt8], n5: [UInt8]) {
         do {
-            let decryptedB1 = try crypto.decrypt(b1) // , padding: ZeroByte())
+            let decryptedB1 = try crypto.decrypt(b1)
             let nr = xor(decryptedB1, b: b0) //  r4
             let n5 = rotate(nr, inverse: false) //  r5
             return (nr, n5)
@@ -338,7 +336,7 @@ class Challenger {
     fileprivate func calculateB3(_ r5: [UInt8], b2: [UInt8]) throws -> [UInt8] {
         let b3Temp = xor(r5, b: b2)
         do {
-            let b3 = try crypto.encrypt(b3Temp) /// , padding: ZeroByte())
+            let b3 = try crypto.encrypt(b3Temp)
             return b3
         } catch {
             HSMLog(message: "BLE - AES encryption failed", level: .error)
