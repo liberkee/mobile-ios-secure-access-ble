@@ -2,12 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [3.0.0] - Unreleased
 
 ### Added
+- 2018-06-01 : (PLAM-2860)  : Migrated to swift 4
 ### Changed
 ### Fixed
 ### Removed
+- 2018-06-01 : (PLAM-2860)  : Removed openSSL
 
 ## [2.3.0] - 2018-02-23
 
