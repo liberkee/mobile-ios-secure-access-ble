@@ -8,6 +8,7 @@
 
 import CommonUtils
 import CryptoSwift
+@testable import SecureAccessBLE
 
 /**
  *  A crypto manager for tests, that handles messages and feedback from session layer and from transport layer.

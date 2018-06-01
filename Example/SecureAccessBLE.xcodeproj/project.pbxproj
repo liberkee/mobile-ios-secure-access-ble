@@ -10,6 +10,7 @@
 		10C0DB79EE829A37319BA8D6 /* Pods_SecureAccessBLE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 583E5BDBE22FA86FCC4C2292 /* Pods_SecureAccessBLE.framework */; };
 		46B760911DA26C40003ADDB1 /* BLEManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760901DA26C40003ADDB1 /* BLEManagerTests.swift */; };
 		46B760971DA26C8C003ADDB1 /* BLECryptorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760961DA26C8C003ADDB1 /* BLECryptorTests.swift */; };
+		7B054B1F895284FFC83B8030 /* AesCbcTestCryptoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B054736D9EB7B3AA766E37F /* AesCbcTestCryptoManager.swift */; };
 		8A124FF51D48BACC201824A8 /* Pods_SecureAccessBLE_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D955D40F7C47731B2AA178ED /* Pods_SecureAccessBLE_Tests.framework */; };
 		9917E9D81FBAF7C8002D5CE3 /* SorcManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E504030A1F5553830008DF02 /* SorcManagerType.swift */; };
 		9917E9D91FBAF7C8002D5CE3 /* SorcManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50403061F546FFF0008DF02 /* SorcManager.swift */; };
@@ -27,7 +28,6 @@
 		9917E9E51FBAF7D5002D5CE3 /* SecurityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E504032E1F56CEFA0008DF02 /* SecurityManager.swift */; };
 		9917E9E61FBAF7D5002D5CE3 /* Challenger.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CF3AEE1F58708D009C95A0 /* Challenger.swift */; };
 		9917E9E71FBAF7DB002D5CE3 /* AesCbcCryptoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CF3AEA1F58705C009C95A0 /* AesCbcCryptoManager.swift */; };
-		9917E9E81FBAF7DB002D5CE3 /* AesCbcTestCryptoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CF3AEB1F58705C009C95A0 /* AesCbcTestCryptoManager.swift */; };
 		9917E9E91FBAF7DB002D5CE3 /* CryptoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CF3AEC1F58705C009C95A0 /* CryptoManager.swift */; };
 		9917E9EA1FBAF7DB002D5CE3 /* ZeroSecurityManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CF3AED1F58705C009C95A0 /* ZeroSecurityManager.swift */; };
 		9917E9EB1FBAF7E2002D5CE3 /* TransportManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50403231F55C0B50008DF02 /* TransportManagerType.swift */; };
@@ -90,6 +90,7 @@
 		607FACE51AFB9204008FA782 /* SecureAccessBLE_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SecureAccessBLE_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		73D51B88FB7332E88789517E /* Pods-SecureAccessBLE_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		7B054736D9EB7B3AA766E37F /* AesCbcTestCryptoManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AesCbcTestCryptoManager.swift; sourceTree = "<group>"; };
 		99AF3D8D1FBDE279002C2F40 /* openssl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = openssl.framework; sourceTree = "<group>"; };
 		99D123391F9A3B20006012DE /* SecureAccessBLE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SecureAccessBLE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		99D1233B1F9A3B20006012DE /* SecureAccessBLE.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SecureAccessBLE.h; sourceTree = "<group>"; };
@@ -137,7 +138,6 @@
 		E5CF3AE21F586EB7009C95A0 /* ConnectionManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ConnectionManagerTests.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		E5CF3AE51F586EF4009C95A0 /* SecurityManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecurityManagerTests.swift; sourceTree = "<group>"; };
 		E5CF3AEA1F58705C009C95A0 /* AesCbcCryptoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AesCbcCryptoManager.swift; sourceTree = "<group>"; };
-		E5CF3AEB1F58705C009C95A0 /* AesCbcTestCryptoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AesCbcTestCryptoManager.swift; sourceTree = "<group>"; };
 		E5CF3AEC1F58705C009C95A0 /* CryptoManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoManager.swift; sourceTree = "<group>"; };
 		E5CF3AED1F58705C009C95A0 /* ZeroSecurityManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZeroSecurityManager.swift; sourceTree = "<group>"; };
 		E5CF3AEE1F58708D009C95A0 /* Challenger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Challenger.swift; sourceTree = "<group>"; };
@@ -483,6 +483,7 @@
 			children = (
 				E5CF3AE51F586EF4009C95A0 /* SecurityManagerTests.swift */,
 				E5CF3AEF1F587164009C95A0 /* ChallengerTests.swift */,
+				7B054736D9EB7B3AA766E37F /* AesCbcTestCryptoManager.swift */,
 			);
 			path = SecurityManager;
 			sourceTree = "<group>";
@@ -491,7 +492,6 @@
 			isa = PBXGroup;
 			children = (
 				E5CF3AEA1F58705C009C95A0 /* AesCbcCryptoManager.swift */,
-				E5CF3AEB1F58705C009C95A0 /* AesCbcTestCryptoManager.swift */,
 				E5CF3AEC1F58705C009C95A0 /* CryptoManager.swift */,
 				E5CF3AED1F58705C009C95A0 /* ZeroSecurityManager.swift */,
 			);
@@ -757,6 +757,7 @@
 				E50403201F55BFD50008DF02 /* SorcManagerTests.swift in Sources */,
 				E5CF3AF01F587164009C95A0 /* ChallengerTests.swift in Sources */,
 				46B760911DA26C40003ADDB1 /* BLEManagerTests.swift in Sources */,
+				7B054B1F895284FFC83B8030 /* AesCbcTestCryptoManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -807,7 +808,6 @@
 				9917EA081FBAF81F002D5CE3 /* AppActivityStatusProviderType.swift in Sources */,
 				9917E9E11FBAF7CE002D5CE3 /* SessionManager.swift in Sources */,
 				9917E9ED1FBAF7E2002D5CE3 /* TransportManager.swift in Sources */,
-				9917E9E81FBAF7DB002D5CE3 /* AesCbcTestCryptoManager.swift in Sources */,
 				9917E9D81FBAF7C8002D5CE3 /* SorcManagerType.swift in Sources */,
 				9917EA061FBAF81F002D5CE3 /* SystemClock.swift in Sources */,
 				9917EA041FBAF814002D5CE3 /* LTBlobPayload.swift in Sources */,
