@@ -60,7 +60,6 @@
 		9917EA071FBAF81F002D5CE3 /* BoundedQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CF3ADB1F56FD51009C95A0 /* BoundedQueue.swift */; };
 		9917EA081FBAF81F002D5CE3 /* AppActivityStatusProviderType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8F8EE1F5EAE9700B629A5 /* AppActivityStatusProviderType.swift */; };
 		9917EA091FBAF81F002D5CE3 /* AppActivityStatusProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8F8EF1F5EAF2800B629A5 /* AppActivityStatusProvider.swift */; };
-		99AF3D8E1FBDE279002C2F40 /* openssl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99AF3D8D1FBDE279002C2F40 /* openssl.framework */; };
 		99D1233D1F9A3B20006012DE /* SecureAccessBLE.h in Headers */ = {isa = PBXBuildFile; fileRef = 99D1233B1F9A3B20006012DE /* SecureAccessBLE.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E504031F1F55BFD50008DF02 /* SessionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E504031B1F55BFD50008DF02 /* SessionManagerTests.swift */; };
 		E50403201F55BFD50008DF02 /* SorcManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E504031D1F55BFD50008DF02 /* SorcManagerTests.swift */; };
@@ -91,7 +90,6 @@
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		73D51B88FB7332E88789517E /* Pods-SecureAccessBLE_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		7B054736D9EB7B3AA766E37F /* AesCbcTestCryptoManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AesCbcTestCryptoManager.swift; sourceTree = "<group>"; };
-		99AF3D8D1FBDE279002C2F40 /* openssl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = openssl.framework; sourceTree = "<group>"; };
 		99D123391F9A3B20006012DE /* SecureAccessBLE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SecureAccessBLE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		99D1233B1F9A3B20006012DE /* SecureAccessBLE.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SecureAccessBLE.h; sourceTree = "<group>"; };
 		99D1233C1F9A3B20006012DE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -162,7 +160,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				10C0DB79EE829A37319BA8D6 /* Pods_SecureAccessBLE.framework in Frameworks */,
-				99AF3D8E1FBDE279002C2F40 /* openssl.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -305,7 +302,6 @@
 		99D1233A1F9A3B20006012DE /* SecureAccessBLE */ = {
 			isa = PBXGroup;
 			children = (
-				99AF3D8D1FBDE279002C2F40 /* openssl.framework */,
 				99D1233B1F9A3B20006012DE /* SecureAccessBLE.h */,
 				99D1233C1F9A3B20006012DE /* Info.plist */,
 			);
@@ -992,8 +988,6 @@
 					"\"KeychainAccess\"",
 					"-framework",
 					"\"ObjectMapper\"",
-					"-framework",
-					"\"openssl\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.huf.SecureAccessBLE;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1039,8 +1033,6 @@
 					"\"KeychainAccess\"",
 					"-framework",
 					"\"ObjectMapper\"",
-					"-framework",
-					"\"openssl\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.huf.SecureAccessBLE;
 				PRODUCT_NAME = "$(TARGET_NAME)";
