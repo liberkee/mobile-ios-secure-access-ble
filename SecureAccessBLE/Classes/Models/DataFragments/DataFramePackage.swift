@@ -11,7 +11,7 @@ class DataFramePackage: NSObject {
     /// Date frame list
     var frames = [DataFrame]()
     /// start index
-    @objc var currentIndex = 0
+    var currentIndex = 0
     /// Dateframe current used
     var currentFrame: DataFrame? {
         if frames.isEmpty || currentIndex > frames.count - 1 {
@@ -23,7 +23,7 @@ class DataFramePackage: NSObject {
     }
 
     /// The message data the SorcMessage contains
-    @objc var message: Data {
+    var message: Data {
         let data = NSMutableData()
 
         for frame in frames {
@@ -40,7 +40,7 @@ class DataFramePackage: NSObject {
 
      - returns: Data frame package objec
      */
-    @objc convenience init(messageData: Data, frameSize: Int) {
+    convenience init(messageData: Data, frameSize: Int) {
         var frameStack = [DataFrame]()
         let messageSize = messageData.count
         var numberOfFrames = messageSize / frameSize
