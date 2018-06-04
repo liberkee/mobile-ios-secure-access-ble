@@ -5,7 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [3.0.0] - Unreleased
 
 ### Added
-- 2018-06-01 : (PLAM-2860)  : Migrated to swift 4
+- 2018-06-01 : (PLAM-2860)  : Migrated to swift 4.1
+- 2018-06-01 : (PLAM-2860)  : Upgraded to CryptoSwift 0.9.0
 ### Changed
 ### Fixed
 ### Removed
