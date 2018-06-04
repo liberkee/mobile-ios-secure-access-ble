@@ -9,7 +9,6 @@
 import CommonUtils
 import CryptoSwift
 import Foundation
-import OpenSSL
 
 /**
  *  A crypto manager, that handles messages and feedback from session layer and from transport layer.
@@ -46,7 +45,7 @@ struct AesCbcCryptoManager: CryptoManager {
             let mod = (data.count + CryptoHeader.length) % 16
             let paddingLength = 16 - mod
             let encData = try createEncData(data, paddingLength: paddingLength)
-            let mac = createShortMac(encData)
+            let mac = createShortMac(encData, iv: encIV)
             let encDataWithMac = NSMutableData()
             encDataWithMac.append(encData)
             encDataWithMac.append(Data(bytes: mac))
@@ -76,13 +75,9 @@ struct AesCbcCryptoManager: CryptoManager {
             }
 
             let dataWithoutMac = data.subdata(in: 0 ..< data.count - 8) // NSMakeRange(0, data.count-8))
-            let decryptedBytes = try AES(key: key, iv: decIV, blockMode: .CBC, padding: NoPadding()).decrypt(dataWithoutMac.bytes)
-
-            //            self.decIV = dataWithoutMac.subdata(with: NSMakeRange(dataWithoutMac.count-16, 16)).arrayOfBytes()
+            let decryptedBytes = try AES(key: key, blockMode: .CBC(iv: decIV), padding: Padding.noPadding).decrypt(dataWithoutMac.bytes)
             decIV = dataWithoutMac.subdata(in: dataWithoutMac.count - 16 ..< dataWithoutMac.count).bytes
-
             let messageDataBytes = Array(decryptedBytes[1 ..< decryptedBytes.count - 1])
-            //            let message = SorcMessage(rawData: Data.withBytes(messageDataBytes))
             let message = SorcMessage(rawData: Data(bytes: messageDataBytes))
             return message
         } catch {
@@ -102,7 +97,6 @@ struct AesCbcCryptoManager: CryptoManager {
      - returns: encrypted message data as NSData object
      */
     func createEncData(_ data: Data, paddingLength: Int) throws -> Data {
-        //        let paddingData = Data.withBytes([UInt8](repeating: 0x0, count: paddingLength))
         let paddingData = Data(bytes: [UInt8](repeating: 0x0, count: paddingLength))
         let header = CryptoHeader(direction: .toSorc, padding: UInt8(paddingLength))
         let dataWithPadding = NSMutableData()
@@ -110,7 +104,7 @@ struct AesCbcCryptoManager: CryptoManager {
         dataWithPadding.append(data)
         dataWithPadding.append(paddingData)
         let theData: Data = dataWithPadding as Data
-        let bytes = try AES(key: key, iv: encIV, blockMode: .CBC, padding: NoPadding()).encrypt(theData.bytes)
+        let bytes = try AES(key: key, blockMode: .CBC(iv: encIV), padding: Padding.noPadding).encrypt(theData.bytes)
         let encData = Data(bytes: bytes)
         return encData
     }
@@ -122,17 +116,20 @@ struct AesCbcCryptoManager: CryptoManager {
 
      - returns: short form from MAC
      */
-    func createShortMac(_ data: Data) -> [UInt8] {
+    func createShortMac(_ data: Data, iv: [UInt8]) -> [UInt8] {
         var mac = [UInt8](repeating: 0x0, count: 16)
-        var macLength = 0
-        let ctx = CMAC_CTX_new()
-        CMAC_Init(ctx, key, key.count, EVP_aes_128_cbc(), nil)
-        CMAC_Update(ctx, encIV, encIV.count)
-        CMAC_Update(ctx, data.bytes, data.count)
-        CMAC_Final(ctx, &mac, &macLength)
-        CMAC_CTX_free(ctx)
-        let shortMac = mac[macLength - 8 ..< macLength]
-        return Array(shortMac)
+
+        let prefixedArray = iv + data.bytes
+
+        do {
+            let cmac = try CMAC(key: key)
+            mac = try cmac.authenticate(prefixedArray)
+        } catch let error {
+            HSMLog(message: error.localizedDescription, level: .error)
+        }
+
+        let shortMacSlice = mac[mac.count - 8 ..< mac.count]
+        return Array(shortMacSlice)
     }
 
     /**
@@ -143,28 +140,14 @@ struct AesCbcCryptoManager: CryptoManager {
      - returns: valid or not
      */
     func checkMac(_ data: Data) -> Bool {
-        if data.count > 8 {
-            let encodedData = data.subdata(in: 0 ..< data.count - 8) // NSMakeRange(0, data.count-8))
-            let sorcMac = data.subdata(in: data.count - 8 ..< data.count) // NSMakeRange(data.count-8, 8)).arrayOfBytes()
+        guard data.count > 8 else { return false }
 
-            var mac = [UInt8](repeating: 0x0, count: 16)
-            var macLength = 0
-            let ctx = CMAC_CTX_new()
-            CMAC_Init(ctx, key, key.count, EVP_aes_128_cbc(), nil)
-            CMAC_Update(ctx, decIV, decIV.count)
-            CMAC_Update(ctx, encodedData.bytes, encodedData.count)
-            CMAC_Final(ctx, &mac, &macLength)
-            CMAC_CTX_free(ctx)
-            let shortMacSlice = mac[macLength - 8 ..< macLength]
-            let shortMac = Array(shortMacSlice)
-            if sorcMac.bytes == shortMac {
-                return true
-            } else {
-                return false
-            }
-        } else {
-            return false
-        }
+        let encodedData = data.subdata(in: 0 ..< data.count - 8) // NSMakeRange(0, data.count-8))
+        let sorcMac = data.subdata(in: data.count - 8 ..< data.count) // NSMakeRange(data.count-8, 8)).arrayOfBytes()
+        let shortMac = createShortMac(encodedData, iv: decIV)
+
+        let result = sorcMac.bytes == shortMac ? true : false
+        return result
     }
 }
 

@@ -21,10 +21,8 @@ Pod::Spec.new do |s|
 
   s.source_files = 'SecureAccessBLE/Classes/**/*'
 
-  s.vendored_frameworks = [ 'SecureAccessBLE/Frameworks/openssl.framework' ]
-
   s.dependency 'CommonUtils', '0.1.2'
 
-  s.dependency 'CryptoSwift', '0.7.0'
+  s.dependency 'CryptoSwift', '0.9.0'
   
 end

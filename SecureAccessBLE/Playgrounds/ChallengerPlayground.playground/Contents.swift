@@ -71,30 +71,6 @@ extension CryptoManager {
     }
 }
 
-public struct ZeroByte: Padding {
-    public init() {
-    }
-
-    public func add(to bytes: [UInt8], blockSize: Int) -> [UInt8] {
-        let padding = blockSize - bytes.count
-        var withPadding = bytes
-        for _ in 0 ..< padding {
-            withPadding.append(UInt8(0))
-        }
-        return withPadding
-    }
-
-    public func remove(from bytes: [UInt8], blockSize _: Int?) -> [UInt8] {
-        var cleanBytes = bytes
-
-        for _ in bytes where cleanBytes.last == 0 {
-            cleanBytes.removeLast()
-        }
-
-        return cleanBytes
-    }
-}
-
 struct AesCbcCryptoManager: CryptoManager {
     init(key: [UInt8]? = nil, iv: [UInt8]? = nil) {
         if let k = key {
@@ -112,7 +88,7 @@ struct AesCbcCryptoManager: CryptoManager {
     func encryptMessage(message: SorcMessage) -> NSData {
         do {
             let messageData: Data = message.data as Data
-            let bytes: [UInt8] = try AES(key: key, iv: iv, blockMode: .CBC, padding: ZeroByte()).encrypt(messageData.bytes)
+            let bytes = try AES(key: key, blockMode: .CBC(iv: iv), padding: Padding.noPadding).encrypt(messageData.bytes)
             let data = NSData(bytes: bytes, length: bytes.count)
             return data
         } catch {
@@ -122,7 +98,7 @@ struct AesCbcCryptoManager: CryptoManager {
 
     func encryptRawMessage(message: NSData) -> NSData {
         do {
-            let bytes: [UInt8] = try AES(key: key, iv: iv, blockMode: .CBC, padding: ZeroByte()).encrypt((message as Data).bytes)
+            let bytes = try AES(key: key, blockMode: .CBC(iv: iv), padding: Padding.noPadding).encrypt((message as Data).bytes)
             let data = NSData(bytes: bytes, length: bytes.count)
             return data
         } catch {
@@ -132,7 +108,7 @@ struct AesCbcCryptoManager: CryptoManager {
 
     func decryptData(data: NSData) -> SorcMessage {
         do {
-            let bytes: [UInt8] = try AES(key: key, iv: iv, blockMode: .CBC, padding: ZeroByte()).decrypt((data as Data).bytes)
+            let bytes = try AES(key: key, blockMode: .CBC(iv: iv), padding: Padding.noPadding).decrypt((data as Data).bytes)
             let data = NSData(bytes: bytes, length: bytes.count)
             let message = SorcMessage(rawData: data)
             return message
@@ -143,7 +119,7 @@ struct AesCbcCryptoManager: CryptoManager {
 
     func decryptRawData(data: NSData) -> NSData {
         do {
-            let bytes: [UInt8] = try AES(key: key, iv: iv, blockMode: .CBC, padding: ZeroByte()).decrypt((data as Data).bytes)
+            let bytes = try AES(key: key, blockMode: .CBC(iv: iv), padding: Padding.noPadding).decrypt((data as Data).bytes)
             let data = NSData(bytes: bytes, length: bytes.count)
             return data
         } catch {
