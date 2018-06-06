@@ -6,7 +6,7 @@
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-import CommonUtils
+
 
 /// Describes a change of connection state
 public struct ConnectionChange: ChangeType, Equatable {

@@ -8,17 +8,6 @@
 
 import Foundation
 
-/// Interface to abstract the system clock, can be used for testing
-protocol SystemClockType {
-    func now() -> Date
-}
-
-class SystemClock: SystemClockType {
-    func now() -> Date {
-        return Date()
-    }
-}
-
 /// The default logger that forwards all log statements to the debugPrint function
 class DefaultLogger: HSMLogging {
     let systemClock: SystemClockType

@@ -6,7 +6,7 @@
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-import CommonUtils
+
 
 protocol TransportManagerType {
     var connectionChange: ChangeSubject<TransportConnectionChange> { get }

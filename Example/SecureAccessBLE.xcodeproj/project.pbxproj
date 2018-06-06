@@ -12,6 +12,23 @@
 		46B760971DA26C8C003ADDB1 /* BLECryptorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760961DA26C8C003ADDB1 /* BLECryptorTests.swift */; };
 		7B054B1F895284FFC83B8030 /* AesCbcTestCryptoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B054736D9EB7B3AA766E37F /* AesCbcTestCryptoManager.swift */; };
 		8A124FF51D48BACC201824A8 /* Pods_SecureAccessBLE_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D955D40F7C47731B2AA178ED /* Pods_SecureAccessBLE_Tests.framework */; };
+		9914654020C6C70A00EB36A6 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9914652A20C6C70A00EB36A6 /* Result.swift */; };
+		9914654120C6C70A00EB36A6 /* UUIDExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9914652C20C6C70A00EB36A6 /* UUIDExtension.swift */; };
+		9914654220C6C70A00EB36A6 /* DataExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9914652D20C6C70A00EB36A6 /* DataExtension.swift */; };
+		9914654320C6C70A00EB36A6 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9914652E20C6C70A00EB36A6 /* StringExtension.swift */; };
+		9914654420C6C70A00EB36A6 /* ChangeSignal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9914653020C6C70A00EB36A6 /* ChangeSignal.swift */; };
+		9914654520C6C70A00EB36A6 /* StateSignal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9914653120C6C70A00EB36A6 /* StateSignal.swift */; };
+		9914654620C6C70A00EB36A6 /* EventSignal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9914653220C6C70A00EB36A6 /* EventSignal.swift */; };
+		9914654720C6C70A00EB36A6 /* BehaviorSubject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9914653420C6C70A00EB36A6 /* BehaviorSubject.swift */; };
+		9914654820C6C70A00EB36A6 /* Subscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9914653520C6C70A00EB36A6 /* Subscriber.swift */; };
+		9914654920C6C70A00EB36A6 /* PublishSubject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9914653620C6C70A00EB36A6 /* PublishSubject.swift */; };
+		9914654A20C6C70A00EB36A6 /* Disposing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9914653720C6C70A00EB36A6 /* Disposing.swift */; };
+		9914654B20C6C70A00EB36A6 /* ChangeSubject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9914653820C6C70A00EB36A6 /* ChangeSubject.swift */; };
+		9914654C20C6C70A00EB36A6 /* LoggingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9914653A20C6C70A00EB36A6 /* LoggingManager.swift */; };
+		9914654D20C6C70A00EB36A6 /* DefaultLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9914653B20C6C70A00EB36A6 /* DefaultLogger.swift */; };
+		9914654E20C6C70A00EB36A6 /* LogLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9914653C20C6C70A00EB36A6 /* LogLevel.swift */; };
+		9914654F20C6C70A00EB36A6 /* HSMLogging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9914653D20C6C70A00EB36A6 /* HSMLogging.swift */; };
+		9914655020C6C70A00EB36A6 /* ArrayExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9914653F20C6C70A00EB36A6 /* ArrayExtensions.swift */; };
 		9917E9D81FBAF7C8002D5CE3 /* SorcManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E504030A1F5553830008DF02 /* SorcManagerType.swift */; };
 		9917E9D91FBAF7C8002D5CE3 /* SorcManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50403061F546FFF0008DF02 /* SorcManager.swift */; };
 		9917E9DA1FBAF7C8002D5CE3 /* SorcManagerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50C4E911F5F3F380081B619 /* SorcManagerConfiguration.swift */; };
@@ -90,6 +107,23 @@
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		73D51B88FB7332E88789517E /* Pods-SecureAccessBLE_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		7B054736D9EB7B3AA766E37F /* AesCbcTestCryptoManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AesCbcTestCryptoManager.swift; sourceTree = "<group>"; };
+		9914652A20C6C70A00EB36A6 /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
+		9914652C20C6C70A00EB36A6 /* UUIDExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UUIDExtension.swift; sourceTree = "<group>"; };
+		9914652D20C6C70A00EB36A6 /* DataExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataExtension.swift; sourceTree = "<group>"; };
+		9914652E20C6C70A00EB36A6 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
+		9914653020C6C70A00EB36A6 /* ChangeSignal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangeSignal.swift; sourceTree = "<group>"; };
+		9914653120C6C70A00EB36A6 /* StateSignal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateSignal.swift; sourceTree = "<group>"; };
+		9914653220C6C70A00EB36A6 /* EventSignal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventSignal.swift; sourceTree = "<group>"; };
+		9914653420C6C70A00EB36A6 /* BehaviorSubject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BehaviorSubject.swift; sourceTree = "<group>"; };
+		9914653520C6C70A00EB36A6 /* Subscriber.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Subscriber.swift; sourceTree = "<group>"; };
+		9914653620C6C70A00EB36A6 /* PublishSubject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublishSubject.swift; sourceTree = "<group>"; };
+		9914653720C6C70A00EB36A6 /* Disposing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Disposing.swift; sourceTree = "<group>"; };
+		9914653820C6C70A00EB36A6 /* ChangeSubject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangeSubject.swift; sourceTree = "<group>"; };
+		9914653A20C6C70A00EB36A6 /* LoggingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggingManager.swift; sourceTree = "<group>"; };
+		9914653B20C6C70A00EB36A6 /* DefaultLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultLogger.swift; sourceTree = "<group>"; };
+		9914653C20C6C70A00EB36A6 /* LogLevel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogLevel.swift; sourceTree = "<group>"; };
+		9914653D20C6C70A00EB36A6 /* HSMLogging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HSMLogging.swift; sourceTree = "<group>"; };
+		9914653F20C6C70A00EB36A6 /* ArrayExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayExtensions.swift; sourceTree = "<group>"; };
 		99D123391F9A3B20006012DE /* SecureAccessBLE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SecureAccessBLE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		99D1233B1F9A3B20006012DE /* SecureAccessBLE.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SecureAccessBLE.h; sourceTree = "<group>"; };
 		99D1233C1F9A3B20006012DE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -169,6 +203,12 @@
 		46B760651DA2637D003ADDB1 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				9914653E20C6C70A00EB36A6 /* Collections */,
+				9914652B20C6C70A00EB36A6 /* Converters */,
+				9914652920C6C70A00EB36A6 /* ErrorHandling */,
+				9914653920C6C70A00EB36A6 /* Logging */,
+				9914652F20C6C70A00EB36A6 /* Signals */,
+				9914653320C6C70A00EB36A6 /* Subjects */,
 				E59E01631F387BE5006F114D /* Managers */,
 				E5E308D11F324E5900C1537F /* CBWrapper */,
 				46B7607A1DA2637D003ADDB1 /* Models */,
@@ -297,6 +337,65 @@
 				46B760981DA271FC003ADDB1 /* CHANGELOG.md */,
 			);
 			name = "Podspec Metadata";
+			sourceTree = "<group>";
+		};
+		9914652920C6C70A00EB36A6 /* ErrorHandling */ = {
+			isa = PBXGroup;
+			children = (
+				9914652A20C6C70A00EB36A6 /* Result.swift */,
+			);
+			path = ErrorHandling;
+			sourceTree = "<group>";
+		};
+		9914652B20C6C70A00EB36A6 /* Converters */ = {
+			isa = PBXGroup;
+			children = (
+				9914652C20C6C70A00EB36A6 /* UUIDExtension.swift */,
+				9914652D20C6C70A00EB36A6 /* DataExtension.swift */,
+				9914652E20C6C70A00EB36A6 /* StringExtension.swift */,
+			);
+			path = Converters;
+			sourceTree = "<group>";
+		};
+		9914652F20C6C70A00EB36A6 /* Signals */ = {
+			isa = PBXGroup;
+			children = (
+				9914653020C6C70A00EB36A6 /* ChangeSignal.swift */,
+				9914653120C6C70A00EB36A6 /* StateSignal.swift */,
+				9914653220C6C70A00EB36A6 /* EventSignal.swift */,
+			);
+			path = Signals;
+			sourceTree = "<group>";
+		};
+		9914653320C6C70A00EB36A6 /* Subjects */ = {
+			isa = PBXGroup;
+			children = (
+				9914653420C6C70A00EB36A6 /* BehaviorSubject.swift */,
+				9914653520C6C70A00EB36A6 /* Subscriber.swift */,
+				9914653620C6C70A00EB36A6 /* PublishSubject.swift */,
+				9914653720C6C70A00EB36A6 /* Disposing.swift */,
+				9914653820C6C70A00EB36A6 /* ChangeSubject.swift */,
+			);
+			path = Subjects;
+			sourceTree = "<group>";
+		};
+		9914653920C6C70A00EB36A6 /* Logging */ = {
+			isa = PBXGroup;
+			children = (
+				9914653A20C6C70A00EB36A6 /* LoggingManager.swift */,
+				9914653B20C6C70A00EB36A6 /* DefaultLogger.swift */,
+				9914653C20C6C70A00EB36A6 /* LogLevel.swift */,
+				9914653D20C6C70A00EB36A6 /* HSMLogging.swift */,
+			);
+			path = Logging;
+			sourceTree = "<group>";
+		};
+		9914653E20C6C70A00EB36A6 /* Collections */ = {
+			isa = PBXGroup;
+			children = (
+				9914653F20C6C70A00EB36A6 /* ArrayExtensions.swift */,
+			);
+			path = Collections;
 			sourceTree = "<group>";
 		};
 		99D1233A1F9A3B20006012DE /* SecureAccessBLE */ = {
@@ -762,6 +861,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9917E9EF1FBAF7E7002D5CE3 /* ScannerType.swift in Sources */,
+				9914654D20C6C70A00EB36A6 /* DefaultLogger.swift in Sources */,
 				9917E9EE1FBAF7E7002D5CE3 /* BluetoothStatusProviderType.swift in Sources */,
 				9917EA071FBAF81F002D5CE3 /* BoundedQueue.swift in Sources */,
 				9917E9F41FBAF7E7002D5CE3 /* ConnectionManagerExtensions.swift in Sources */,
@@ -771,7 +871,10 @@
 				9917E9DC1FBAF7C8002D5CE3 /* SorcInfo.swift in Sources */,
 				9917EA031FBAF814002D5CE3 /* BlobRequest.swift in Sources */,
 				9917E9F21FBAF7E7002D5CE3 /* ConnectionManager.swift in Sources */,
+				9914654220C6C70A00EB36A6 /* DataExtension.swift in Sources */,
 				9917E9E71FBAF7DB002D5CE3 /* AesCbcCryptoManager.swift in Sources */,
+				9914654C20C6C70A00EB36A6 /* LoggingManager.swift in Sources */,
+				9914654B20C6C70A00EB36A6 /* ChangeSubject.swift in Sources */,
 				9917E9FD1FBAF804002D5CE3 /* SorcMessage.swift in Sources */,
 				9917E9F81FBAF7FE002D5CE3 /* PhoneToSorcChallenge.swift in Sources */,
 				9917E9E31FBAF7D5002D5CE3 /* SecurityManagerType.swift in Sources */,
@@ -782,18 +885,29 @@
 				9917EA051FBAF819002D5CE3 /* ServiceGrantRequest.swift in Sources */,
 				9917E9FA1FBAF7FE002D5CE3 /* SorcToPhoneResponse.swift in Sources */,
 				9917E9FC1FBAF804002D5CE3 /* MTUSize.swift in Sources */,
+				9914654E20C6C70A00EB36A6 /* LogLevel.swift in Sources */,
+				9914655020C6C70A00EB36A6 /* ArrayExtensions.swift in Sources */,
+				9914654F20C6C70A00EB36A6 /* HSMLogging.swift in Sources */,
 				9917E9E01FBAF7CE002D5CE3 /* SessionManagerType.swift in Sources */,
 				9917E9E91FBAF7DB002D5CE3 /* CryptoManager.swift in Sources */,
+				9914654720C6C70A00EB36A6 /* BehaviorSubject.swift in Sources */,
+				9914654320C6C70A00EB36A6 /* StringExtension.swift in Sources */,
 				9917E9E41FBAF7D5002D5CE3 /* SecureConnectionChange.swift in Sources */,
+				9914654820C6C70A00EB36A6 /* Subscriber.swift in Sources */,
 				9917E9FB1FBAF804002D5CE3 /* Handshake.swift in Sources */,
+				9914654420C6C70A00EB36A6 /* ChangeSignal.swift in Sources */,
+				9914654A20C6C70A00EB36A6 /* Disposing.swift in Sources */,
 				9917E9EA1FBAF7DB002D5CE3 /* ZeroSecurityManager.swift in Sources */,
 				9917E9DD1FBAF7C8002D5CE3 /* ConnectionChange.swift in Sources */,
+				9914654620C6C70A00EB36A6 /* EventSignal.swift in Sources */,
 				9917E9F31FBAF7E7002D5CE3 /* ConnectionManagerConfiguration.swift in Sources */,
+				9914654120C6C70A00EB36A6 /* UUIDExtension.swift in Sources */,
 				9917E9DE1FBAF7C8002D5CE3 /* ServiceGrantChange.swift in Sources */,
 				9917E9E21FBAF7CE002D5CE3 /* SessionManagerConfiguration.swift in Sources */,
 				9917E9EC1FBAF7E2002D5CE3 /* TransportConnectionChange.swift in Sources */,
 				9917E9D91FBAF7C8002D5CE3 /* SorcManager.swift in Sources */,
 				9917EA091FBAF81F002D5CE3 /* AppActivityStatusProvider.swift in Sources */,
+				9914654520C6C70A00EB36A6 /* StateSignal.swift in Sources */,
 				9917E9F61FBAF7F8002D5CE3 /* LeaseToken.swift in Sources */,
 				9917E9DA1FBAF7C8002D5CE3 /* SorcManagerConfiguration.swift in Sources */,
 				9917E9F01FBAF7E7002D5CE3 /* ConnectionManagerType.swift in Sources */,
@@ -807,7 +921,9 @@
 				9917E9D81FBAF7C8002D5CE3 /* SorcManagerType.swift in Sources */,
 				9917EA061FBAF81F002D5CE3 /* SystemClock.swift in Sources */,
 				9917EA041FBAF814002D5CE3 /* LTBlobPayload.swift in Sources */,
+				9914654020C6C70A00EB36A6 /* Result.swift in Sources */,
 				9917E9E51FBAF7D5002D5CE3 /* SecurityManager.swift in Sources */,
+				9914654920C6C70A00EB36A6 /* PublishSubject.swift in Sources */,
 				9917E9EB1FBAF7E2002D5CE3 /* TransportManagerType.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -981,13 +1097,7 @@
 					"$(inherited)",
 					"-ObjC",
 					"-framework",
-					"\"CommonUtils\"",
-					"-framework",
 					"\"CryptoSwift\"",
-					"-framework",
-					"\"KeychainAccess\"",
-					"-framework",
-					"\"ObjectMapper\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.huf.SecureAccessBLE;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1026,13 +1136,7 @@
 					"$(inherited)",
 					"-ObjC",
 					"-framework",
-					"\"CommonUtils\"",
-					"-framework",
 					"\"CryptoSwift\"",
-					"-framework",
-					"\"KeychainAccess\"",
-					"-framework",
-					"\"ObjectMapper\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.huf.SecureAccessBLE;
 				PRODUCT_NAME = "$(TARGET_NAME)";

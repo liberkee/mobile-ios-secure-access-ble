@@ -6,7 +6,7 @@
 //  Copyright © 2016 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-import CommonUtils
+
 import CryptoSwift
 
 /**

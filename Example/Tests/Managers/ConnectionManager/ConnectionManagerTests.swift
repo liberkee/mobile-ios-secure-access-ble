@@ -6,7 +6,7 @@
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-import CommonUtils
+
 import CoreBluetooth
 @testable import SecureAccessBLE
 import XCTest
