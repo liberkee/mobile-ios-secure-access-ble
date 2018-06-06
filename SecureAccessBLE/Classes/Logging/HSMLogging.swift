@@ -24,8 +24,8 @@ public extension HSMLogging {
 /// The main function which should be used for logging
 public func HSMLog(message: @autoclosure () -> String, file: String = #file, function: StaticString = #function,
                    line: UInt = #line, level: LogLevel) {
-    #if DEBUG
+//    #if DEBUG
         guard level.rawValue <= LoggingManager.shared.logLevel.rawValue else { return }
         LoggingManager.shared.log(message: message, file: file, function: function, line: line, level: level)
-    #endif
+//    #endif
 }
