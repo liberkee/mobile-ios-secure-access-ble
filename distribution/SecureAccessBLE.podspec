@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
   s.homepage         = 'http://huf.com'
   s.license          = { :file => 'LICENSE.md' }
   s.author           = { 'Huf Secure Mobile GmbH' => 'info@hufsecuremobile.com' }
-
+  s.source           = { :path => './' }
   s.ios.deployment_target = '10.0'
 
   s.frameworks = 'CoreBluetooth'
