@@ -9,12 +9,12 @@
 import Foundation
 
 /// Implement this protocol to create your custom loggers
-public protocol HSMLogging {
+protocol HSMLogging {
     func log(message: @autoclosure () -> String, file: String, function: StaticString, line: UInt, level: LogLevel)
 }
 
 /// Interface extension, necessary for using default values in function declarations
-public extension HSMLogging {
+extension HSMLogging {
     func log(message: @autoclosure () -> String, file: String = #file, function: StaticString = #function, line: UInt = #line,
              level: LogLevel) {
         HSMLog(message: message, file: file, function: function, line: line, level: level)
@@ -22,10 +22,10 @@ public extension HSMLogging {
 }
 
 /// The main function which should be used for logging
-public func HSMLog(message: @autoclosure () -> String, file: String = #file, function: StaticString = #function,
+func HSMLog(message: @autoclosure () -> String, file: String = #file, function: StaticString = #function,
                    line: UInt = #line, level: LogLevel) {
-//    #if DEBUG
+    #if DEBUG
         guard level.rawValue <= LoggingManager.shared.logLevel.rawValue else { return }
         LoggingManager.shared.log(message: message, file: file, function: function, line: line, level: level)
-//    #endif
+    #endif
 }

@@ -9,11 +9,11 @@
 import Foundation
 
 /// Supported log levels
-public enum LogLevel: Int {
+enum LogLevel: Int {
     case error, warning, info, debug, verbose
 
     /// Get a description string for the current log level
-    public func toString() -> String {
+    func toString() -> String {
         switch self {
         case .error:
             return "Error"
