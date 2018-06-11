@@ -7,11 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		10C0DB79EE829A37319BA8D6 /* Pods_SecureAccessBLE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 583E5BDBE22FA86FCC4C2292 /* Pods_SecureAccessBLE.framework */; };
 		46B760911DA26C40003ADDB1 /* BLEManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760901DA26C40003ADDB1 /* BLEManagerTests.swift */; };
 		46B760971DA26C8C003ADDB1 /* BLECryptorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760961DA26C8C003ADDB1 /* BLECryptorTests.swift */; };
 		7B054B1F895284FFC83B8030 /* AesCbcTestCryptoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B054736D9EB7B3AA766E37F /* AesCbcTestCryptoManager.swift */; };
-		8A124FF51D48BACC201824A8 /* Pods_SecureAccessBLE_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D955D40F7C47731B2AA178ED /* Pods_SecureAccessBLE_Tests.framework */; };
 		9917E9D81FBAF7C8002D5CE3 /* SorcManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E504030A1F5553830008DF02 /* SorcManagerType.swift */; };
 		9917E9D91FBAF7C8002D5CE3 /* SorcManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50403061F546FFF0008DF02 /* SorcManager.swift */; };
 		9917E9DA1FBAF7C8002D5CE3 /* SorcManagerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50C4E911F5F3F380081B619 /* SorcManagerConfiguration.swift */; };
@@ -61,6 +59,8 @@
 		9917EA081FBAF81F002D5CE3 /* AppActivityStatusProviderType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8F8EE1F5EAE9700B629A5 /* AppActivityStatusProviderType.swift */; };
 		9917EA091FBAF81F002D5CE3 /* AppActivityStatusProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8F8EF1F5EAF2800B629A5 /* AppActivityStatusProvider.swift */; };
 		99D1233D1F9A3B20006012DE /* SecureAccessBLE.h in Headers */ = {isa = PBXBuildFile; fileRef = 99D1233B1F9A3B20006012DE /* SecureAccessBLE.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		9F97BCBB83BEA00F8033C882 /* Pods_SecureAccessBLE_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7010A8091FD3F155213110F7 /* Pods_SecureAccessBLE_Tests.framework */; };
+		D8C7ECE8556A5DE2C12453C9 /* Pods_SecureAccessBLE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B6E549E83AB9608B021727E /* Pods_SecureAccessBLE.framework */; };
 		E504031F1F55BFD50008DF02 /* SessionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E504031B1F55BFD50008DF02 /* SessionManagerTests.swift */; };
 		E50403201F55BFD50008DF02 /* SorcManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E504031D1F55BFD50008DF02 /* SorcManagerTests.swift */; };
 		E50403221F55C0010008DF02 /* TransportManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50403211F55C0010008DF02 /* TransportManagerTests.swift */; };
@@ -71,8 +71,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		062FF0A84A13350EE43B489E /* Pods-SecureAccessBLE.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE.release.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE/Pods-SecureAccessBLE.release.xcconfig"; sourceTree = "<group>"; };
-		20D1C4FC420911969FFEFDAE /* Pods-SecureAccessBLE.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE/Pods-SecureAccessBLE.debug.xcconfig"; sourceTree = "<group>"; };
+		132DA7ACD6E05F818A2BBA5F /* Pods-SecureAccessBLE_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		25BE5C07A964BDC1B17763EA /* Pods-SecureAccessBLE.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE.release.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE/Pods-SecureAccessBLE.release.xcconfig"; sourceTree = "<group>"; };
+		2B8587382C230C7B40498ED7 /* Pods-SecureAccessBLE.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE/Pods-SecureAccessBLE.debug.xcconfig"; sourceTree = "<group>"; };
 		46B7607C1DA2637D003ADDB1 /* PhoneToSorcChallenge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = PhoneToSorcChallenge.swift; sourceTree = "<group>"; };
 		46B7607D1DA2637D003ADDB1 /* PhoneToSorcResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = PhoneToSorcResponse.swift; sourceTree = "<group>"; };
 		46B7607E1DA2637D003ADDB1 /* SorcToPhoneResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SorcToPhoneResponse.swift; sourceTree = "<group>"; };
@@ -85,17 +86,16 @@
 		46B760961DA26C8C003ADDB1 /* BLECryptorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BLECryptorTests.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		46B760981DA271FC003ADDB1 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; lineEnding = 0; name = CHANGELOG.md; path = ../CHANGELOG.md; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.markdown; };
 		46B760991DA27634003ADDB1 /* ChallengerPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = ChallengerPlayground.playground; path = ../SecureAccessBLE/Playgrounds/ChallengerPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		583E5BDBE22FA86FCC4C2292 /* Pods_SecureAccessBLE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SecureAccessBLE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACE51AFB9204008FA782 /* SecureAccessBLE_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SecureAccessBLE_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		73D51B88FB7332E88789517E /* Pods-SecureAccessBLE_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		7010A8091FD3F155213110F7 /* Pods_SecureAccessBLE_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SecureAccessBLE_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B054736D9EB7B3AA766E37F /* AesCbcTestCryptoManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AesCbcTestCryptoManager.swift; sourceTree = "<group>"; };
+		7B6E549E83AB9608B021727E /* Pods_SecureAccessBLE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SecureAccessBLE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		99D123391F9A3B20006012DE /* SecureAccessBLE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SecureAccessBLE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		99D1233B1F9A3B20006012DE /* SecureAccessBLE.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SecureAccessBLE.h; sourceTree = "<group>"; };
 		99D1233C1F9A3B20006012DE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BDD2935451DD295A50BFBCF1 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		C28A7D5203261E30CA436EC3 /* SecureAccessBLE.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = SecureAccessBLE.podspec; path = ../SecureAccessBLE.podspec; sourceTree = "<group>"; };
-		D955D40F7C47731B2AA178ED /* Pods_SecureAccessBLE_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SecureAccessBLE_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E50403061F546FFF0008DF02 /* SorcManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SorcManager.swift; sourceTree = "<group>"; };
 		E504030A1F5553830008DF02 /* SorcManagerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SorcManagerType.swift; sourceTree = "<group>"; };
 		E504030B1F5553F50008DF02 /* ConnectionChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionChange.swift; sourceTree = "<group>"; };
@@ -143,7 +143,7 @@
 		E5E308D21F324E6800C1537F /* CBWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBWrapper.swift; sourceTree = "<group>"; };
 		E5E8F8EE1F5EAE9700B629A5 /* AppActivityStatusProviderType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppActivityStatusProviderType.swift; sourceTree = "<group>"; };
 		E5E8F8EF1F5EAF2800B629A5 /* AppActivityStatusProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppActivityStatusProvider.swift; sourceTree = "<group>"; };
-		EE99F13EBAEE0CDC40DBE8F5 /* Pods-SecureAccessBLE_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		F1B7EB15ADF6F519CB85932B /* Pods-SecureAccessBLE_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -151,7 +151,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8A124FF51D48BACC201824A8 /* Pods_SecureAccessBLE_Tests.framework in Frameworks */,
+				9F97BCBB83BEA00F8033C882 /* Pods_SecureAccessBLE_Tests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -159,7 +159,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				10C0DB79EE829A37319BA8D6 /* Pods_SecureAccessBLE.framework in Frameworks */,
+				D8C7ECE8556A5DE2C12453C9 /* Pods_SecureAccessBLE.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -255,8 +255,8 @@
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,
 				99D1233A1F9A3B20006012DE /* SecureAccessBLE */,
 				607FACD11AFB9204008FA782 /* Products */,
-				D4BC7B7F945CF95537614CD6 /* Pods */,
-				E53E8AF24AEDBBA0DE7F4138 /* Frameworks */,
+				60CABDADE13122C436A0C3CC /* Pods */,
+				666CCCC21868CBF7215E348A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -299,6 +299,26 @@
 			name = "Podspec Metadata";
 			sourceTree = "<group>";
 		};
+		60CABDADE13122C436A0C3CC /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				2B8587382C230C7B40498ED7 /* Pods-SecureAccessBLE.debug.xcconfig */,
+				25BE5C07A964BDC1B17763EA /* Pods-SecureAccessBLE.release.xcconfig */,
+				132DA7ACD6E05F818A2BBA5F /* Pods-SecureAccessBLE_Tests.debug.xcconfig */,
+				F1B7EB15ADF6F519CB85932B /* Pods-SecureAccessBLE_Tests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		666CCCC21868CBF7215E348A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7B6E549E83AB9608B021727E /* Pods_SecureAccessBLE.framework */,
+				7010A8091FD3F155213110F7 /* Pods_SecureAccessBLE_Tests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		99D1233A1F9A3B20006012DE /* SecureAccessBLE */ = {
 			isa = PBXGroup;
 			children = (
@@ -306,17 +326,6 @@
 				99D1233C1F9A3B20006012DE /* Info.plist */,
 			);
 			path = SecureAccessBLE;
-			sourceTree = "<group>";
-		};
-		D4BC7B7F945CF95537614CD6 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				EE99F13EBAEE0CDC40DBE8F5 /* Pods-SecureAccessBLE_Tests.debug.xcconfig */,
-				73D51B88FB7332E88789517E /* Pods-SecureAccessBLE_Tests.release.xcconfig */,
-				20D1C4FC420911969FFEFDAE /* Pods-SecureAccessBLE.debug.xcconfig */,
-				062FF0A84A13350EE43B489E /* Pods-SecureAccessBLE.release.xcconfig */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 		E50403051F546FE60008DF02 /* SorcManager */ = {
@@ -424,15 +433,6 @@
 			path = SecurityManager;
 			sourceTree = "<group>";
 		};
-		E53E8AF24AEDBBA0DE7F4138 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				D955D40F7C47731B2AA178ED /* Pods_SecureAccessBLE_Tests.framework */,
-				583E5BDBE22FA86FCC4C2292 /* Pods_SecureAccessBLE.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		E55E6CDA1F4200E900C5934B /* SorcMessage */ = {
 			isa = PBXGroup;
 			children = (
@@ -520,14 +520,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 607FACF21AFB9204008FA782 /* Build configuration list for PBXNativeTarget "SecureAccessBLE_Tests" */;
 			buildPhases = (
-				38C8987EFFF32CC3A7192573 /* [CP] Check Pods Manifest.lock */,
+				9F88FB0DBA79DC6016F4304F /* [CP] Check Pods Manifest.lock */,
 				E58008D51EC9A8020000F40D /* Run SwiftFormat */,
 				607FACE11AFB9204008FA782 /* Sources */,
 				607FACE21AFB9204008FA782 /* Frameworks */,
 				607FACE31AFB9204008FA782 /* Resources */,
-				2BA5EF7B8784A3EBF3432720 /* [CP] Embed Pods Frameworks */,
-				6633209C33D8BFA868007188 /* [CP] Copy Pods Resources */,
 				992167D31F5D93B0005D1C67 /* ShellScript */,
+				10A2866EB3B5AF6816E4E22E /* [CP] Embed Pods Frameworks */,
+				CE04E02ED2AA0AB2C88E0AAB /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -542,12 +542,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 99D123401F9A3B20006012DE /* Build configuration list for PBXNativeTarget "SecureAccessBLE" */;
 			buildPhases = (
-				AF426E666AAE3F938DA53B33 /* [CP] Check Pods Manifest.lock */,
+				C8F8A417F6B2A88A19042BD3 /* [CP] Check Pods Manifest.lock */,
 				99D123341F9A3B20006012DE /* Sources */,
 				99D123351F9A3B20006012DE /* Frameworks */,
 				99D123361F9A3B20006012DE /* Headers */,
 				99D123371F9A3B20006012DE /* Resources */,
-				F928BA9C58F9A69A149F9179 /* [CP] Copy Pods Resources */,
+				C8A28F2D9CE9A69D1DDD9A25 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -618,63 +618,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		2BA5EF7B8784A3EBF3432720 /* [CP] Embed Pods Frameworks */ = {
+		10A2866EB3B5AF6816E4E22E /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/CommonUtils/CommonUtils.framework",
-				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
-				"${BUILT_PRODUCTS_DIR}/KeychainAccess/KeychainAccess.framework",
-				"${BUILT_PRODUCTS_DIR}/ObjectMapper/ObjectMapper.framework",
-				"${BUILT_PRODUCTS_DIR}/SecureAccessBLE/SecureAccessBLE.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CommonUtils.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CryptoSwift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/KeychainAccess.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ObjectMapper.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SecureAccessBLE.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		38C8987EFFF32CC3A7192573 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-SecureAccessBLE_Tests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		6633209C33D8BFA868007188 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		992167D31F5D93B0005D1C67 /* ShellScript */ = {
@@ -690,22 +646,64 @@
 			shellPath = /bin/sh;
 			shellScript = "# We ignore exit code of linter. This allows the build to complete successfully. Errors and warnings can be viewed in Xcode.\n\"${PODS_ROOT}/SwiftLint/swiftlint\" --config ../.swiftlint.yml || true";
 		};
-		AF426E666AAE3F938DA53B33 /* [CP] Check Pods Manifest.lock */ = {
+		9F88FB0DBA79DC6016F4304F /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
 			);
 			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-SecureAccessBLE-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		C8A28F2D9CE9A69D1DDD9A25 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SecureAccessBLE/Pods-SecureAccessBLE-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C8F8A417F6B2A88A19042BD3 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		CE04E02ED2AA0AB2C88E0AAB /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E58008D51EC9A8020000F40D /* Run SwiftFormat */ = {
@@ -721,21 +719,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "if [ -z ${CI_BUILD+x} ]; then echo \"Starting swift format...\"; else echo \"Skipping swift format in ci build\"; exit 0;fi\n\nSWIFT_FORMAT_FOLDERS_TO_CHECK=\"../SecureAccessBLE Tests\"\nSWIFT_FORMAT_ARGS=\"--commas false\"\n\nPods/SwiftFormat/CommandLineTool/swiftformat $SWIFT_FORMAT_FOLDERS_TO_CHECK $SWIFT_FORMAT_ARGS";
-		};
-		F928BA9C58F9A69A149F9179 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SecureAccessBLE/Pods-SecureAccessBLE-resources.sh\"\n";
-			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -922,7 +905,7 @@
 		};
 		607FACF31AFB9204008FA782 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EE99F13EBAEE0CDC40DBE8F5 /* Pods-SecureAccessBLE_Tests.debug.xcconfig */;
+			baseConfigurationReference = 132DA7ACD6E05F818A2BBA5F /* Pods-SecureAccessBLE_Tests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				DEVELOPMENT_TEAM = MR9TB5Y4RJ;
@@ -941,7 +924,7 @@
 		};
 		607FACF41AFB9204008FA782 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 73D51B88FB7332E88789517E /* Pods-SecureAccessBLE_Tests.release.xcconfig */;
+			baseConfigurationReference = F1B7EB15ADF6F519CB85932B /* Pods-SecureAccessBLE_Tests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				DEVELOPMENT_TEAM = MR9TB5Y4RJ;
@@ -956,7 +939,7 @@
 		};
 		99D1233E1F9A3B20006012DE /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 20D1C4FC420911969FFEFDAE /* Pods-SecureAccessBLE.debug.xcconfig */;
+			baseConfigurationReference = 2B8587382C230C7B40498ED7 /* Pods-SecureAccessBLE.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1002,7 +985,7 @@
 		};
 		99D1233F1F9A3B20006012DE /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 062FF0A84A13350EE43B489E /* Pods-SecureAccessBLE.release.xcconfig */;
+			baseConfigurationReference = 25BE5C07A964BDC1B17763EA /* Pods-SecureAccessBLE.release.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
