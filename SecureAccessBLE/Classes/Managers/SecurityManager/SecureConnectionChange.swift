@@ -9,35 +9,35 @@
 import CommonUtils
 
 /// Describes a change of connection state
-public struct SecureConnectionChange: ChangeType, Equatable {
-    public static func initialWithState(_ state: SecureConnectionChange.State) -> SecureConnectionChange {
+struct SecureConnectionChange: ChangeType, Equatable {
+    static func initialWithState(_ state: SecureConnectionChange.State) -> SecureConnectionChange {
         return SecureConnectionChange(state: state, action: .initial)
     }
 
     /// The state the connection can be in
-    public let state: State
+    let state: State
 
     /// The action that led to the state
-    public let action: Action
+    let action: Action
 
-    public init(state: State, action: Action) {
+    init(state: State, action: Action) {
         self.state = state
         self.action = action
     }
 
-    public static func == (lhs: SecureConnectionChange, rhs: SecureConnectionChange) -> Bool {
+    static func == (lhs: SecureConnectionChange, rhs: SecureConnectionChange) -> Bool {
         return lhs.state == rhs.state && lhs.action == rhs.action
     }
 }
 
 extension SecureConnectionChange {
     /// The state the connection can be in
-    public enum State: Equatable {
+    enum State: Equatable {
         case disconnected
         case connecting(sorcID: SorcID, state: ConnectingState)
         case connected(sorcID: SorcID)
 
-        public static func == (lhs: State, rhs: State) -> Bool {
+        static func == (lhs: State, rhs: State) -> Bool {
             switch (lhs, rhs) {
             case (.disconnected, .disconnected): return true
             case let (.connecting(lSorcID, lState), .connecting(rSorcID, rState)):
@@ -49,7 +49,7 @@ extension SecureConnectionChange {
             }
         }
 
-        public enum ConnectingState {
+        enum ConnectingState {
             case physical
             case transport
             case challenging
@@ -59,7 +59,7 @@ extension SecureConnectionChange {
 
 extension SecureConnectionChange {
     /// The action that led to the state
-    public enum Action: Equatable {
+    enum Action: Equatable {
         case initial
         case connect(sorcID: SorcID)
         case physicalConnectionEstablished(sorcID: SorcID)
@@ -69,7 +69,7 @@ extension SecureConnectionChange {
         case disconnect
         case connectionLost(error: ConnectionLostError)
 
-        public static func == (lhs: Action, rhs: Action) -> Bool {
+        static func == (lhs: Action, rhs: Action) -> Bool {
             switch (lhs, rhs) {
             case (.initial, .initial):
                 return true
@@ -94,7 +94,7 @@ extension SecureConnectionChange {
     }
 
     /// The errors that can occur if the connection attempt fails
-    public enum ConnectingFailedError: Error {
+    enum ConnectingFailedError: Error {
         case physicalConnectingFailed
         case invalidMTUResponse
         case challengeFailed
@@ -102,7 +102,7 @@ extension SecureConnectionChange {
     }
 
     /// The errors that can occur if the connection is lost
-    public enum ConnectionLostError: Error {
+    enum ConnectionLostError: Error {
         case physicalConnectionLost
     }
 }

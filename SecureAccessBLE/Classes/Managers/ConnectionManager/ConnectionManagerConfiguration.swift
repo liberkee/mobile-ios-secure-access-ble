@@ -7,21 +7,21 @@
 //
 
 extension ConnectionManager {
-    public struct Configuration {
-        public static let advertisedServiceID = "0x180A"
-        public static let defaultServiceID = "d1cf0603-b501-4569-a4b9-e47ad3f628a5"
-        public static let defaultNotifyCharacteristicID = "d1d7a6b6-457e-458a-b237-a9df99b3d98b"
-        public static let defaultWriteCharacteristicID = "c8e58f23-9417-41c6-97a8-70f6b2c8cab9"
-        public static let defaultSorcOutdatedDuration = TimeInterval(5)
-        public static let defaultRemoveOutdatedSorcsInterval = TimeInterval(2)
+    struct Configuration {
+        static let advertisedServiceID = "0x180A"
+        static let defaultServiceID = "d1cf0603-b501-4569-a4b9-e47ad3f628a5"
+        static let defaultNotifyCharacteristicID = "d1d7a6b6-457e-458a-b237-a9df99b3d98b"
+        static let defaultWriteCharacteristicID = "c8e58f23-9417-41c6-97a8-70f6b2c8cab9"
+        static let defaultSorcOutdatedDuration = TimeInterval(5)
+        static let defaultRemoveOutdatedSorcsInterval = TimeInterval(2)
 
-        public let serviceID: String
-        public let notifyCharacteristicID: String
-        public let writeCharacteristicID: String
-        public let sorcOutdatedDuration: TimeInterval
-        public let removeOutdatedSorcsInterval: TimeInterval
+        let serviceID: String
+        let notifyCharacteristicID: String
+        let writeCharacteristicID: String
+        let sorcOutdatedDuration: TimeInterval
+        let removeOutdatedSorcsInterval: TimeInterval
 
-        public init(
+        init(
             serviceID: String? = nil,
             notifyCharacteristicID: String? = nil,
             writeCharacteristicID: String? = nil,
