@@ -6,8 +6,6 @@
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-
-
 protocol SessionManagerType {
     var connectionChange: ChangeSubject<ConnectionChange> { get }
 

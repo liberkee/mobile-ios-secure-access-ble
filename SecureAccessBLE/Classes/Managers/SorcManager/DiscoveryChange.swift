@@ -6,8 +6,6 @@
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-
-
 /// A change (state and last action) that describes the discovery transitions
 public struct DiscoveryChange: ChangeType {
     public let state: State

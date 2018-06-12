@@ -6,8 +6,6 @@
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-
-
 protocol AppActivityStatusProviderType {
     var appDidBecomeActive: EventSignal<Bool> { get }
 }

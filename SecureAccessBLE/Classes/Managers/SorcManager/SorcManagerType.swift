@@ -6,8 +6,6 @@
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-
-
 public typealias SorcID = UUID
 
 /// Defines what a manager of SORCs provides

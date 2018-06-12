@@ -6,8 +6,6 @@
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-
-
 /// Describes a change of service grant requesting
 public struct ServiceGrantChange: ChangeType, Equatable {
     public static func initialWithState(_ state: ServiceGrantChange.State) -> ServiceGrantChange {

@@ -6,7 +6,6 @@
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-
 import Foundation
 
 /// Sends/encrypts and receives/decrypts SORC messages.
