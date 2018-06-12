@@ -8,13 +8,13 @@
 
 import Foundation
 
-public extension Array where Element: AnyObject {
+extension Array where Element: AnyObject {
     /**
      Removes an object from this array by comparing references
 
      - parameter object: The object to remove
      */
-    public mutating func removeObject(_ object: Element) {
+    mutating func removeObject(_ object: Element) {
         if let index = index(where: { $0 === object }) {
             remove(at: index)
         }

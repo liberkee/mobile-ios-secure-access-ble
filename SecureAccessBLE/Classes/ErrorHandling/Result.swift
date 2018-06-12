@@ -9,7 +9,7 @@
 /// Represents a success or failure.
 /// This should be prefered to using a pair with two optionals
 /// as the type system enforces only one possible case at a time.
-public enum Result<T> {
+enum Result<T> {
     case success(T)
     case failure(Swift.Error)
 }
