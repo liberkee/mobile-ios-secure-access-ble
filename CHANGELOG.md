@@ -10,7 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 ### Fixed
-- 2018-06-11 : (PLAM-2860)  : Removed unused libraries which where accidentally added in the past
+- 2018-06-11 : (PLAM-2860)  : Removed unused libraries which were accidentally added in the past
 
 ### Removed
 - 2018-06-01 : (PLAM-2860)  : Removed openSSL
