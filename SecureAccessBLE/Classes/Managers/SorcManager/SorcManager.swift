@@ -6,6 +6,7 @@
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
+/// Refer to `SorcManagerType` documentation for more information
 public class SorcManager: SorcManagerType {
     private let bluetoothStatusProvider: BluetoothStatusProviderType
     private let scanner: ScannerType
