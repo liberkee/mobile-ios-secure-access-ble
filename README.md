@@ -19,7 +19,7 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMA
 ## Dependencies
 * [CryptoSwift](https://github.com/krzyzanowskim/CryptoSwift) - [zlib License](https://github.com/krzyzanowskim/CryptoSwift/blob/master/LICENSE)
 
-## Usage
+## Installation
 ### Manually
 Since `SecureAccessBLE` depend on `CryptoSwift`, you will first need to install the dependency.
 1. Install `CryptoSwift` by following the instruction [here](https://github.com/krzyzanowskim/CryptoSwift#installation)
@@ -33,3 +33,62 @@ SecureAccessBLE provides a `.podspec` file which allows to be added via CocoaPod
 pod 'SecureAccessBLE', :path => 'PATH_TO_FRAMEWORK'
 ```
 Since the framework is referenced locally, it will appear in `Development Pods` group in the Xcode Workspace.
+
+## Usage
+
+### General
+
+Use `SorcManager` as general entry point to the framework
+
+```swift
+let sorcManager = SorcManager()
+```
+
+### Discovery (Finding SORCs near by)
+
+* Subscribe to discovery changes
+
+```swift
+    sorcManager.discoveryChange.subscribe { discoveryChange in
+        // handle discovery state changes
+    }
+```
+* Start discovery
+
+```
+sorcManager.startDiscovery()
+```
+
+### Establish connection
+
+* Subcribe to connection change events
+
+```swift
+sorcManager.connectionChange.subscribe { connectionChange in
+    // handle connection changes
+}
+```
+
+* Ensure you have all lease data and create `LeaseToken` and `LeaseTokenBlob` instances with them
+
+* Start connection
+
+```swift
+sorcManager.connectToSorc(leaseToken: leaseToken, leaseTokenBlob: blob)
+```
+
+### Request service grants
+
+* Subscribe to service grant change events
+
+```swift
+sorcManager.serviceGrantChange.subscribe { serviceGrantChange in
+    // handle service grant changes
+}
+```
+
+* Request service grants
+
+```swift
+sorcManager.requestServiceGrant(GrantId.lock.rawValue)
+```
