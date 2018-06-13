@@ -6,11 +6,21 @@
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
+/// Container for information related to a sorc
 public struct SorcInfo: Equatable {
+    /// Sorc id
     public let sorcID: SorcID
+    /// Discovery date
     public let discoveryDate: Date
+    /// RSSI value
     public let rssi: Int
 
+    /// Initalizer for `SorcInfo`
+    ///
+    /// - Parameters:
+    ///   - sorcID: sorc id
+    ///   - discoveryDate: discovery date
+    ///   - rssi: rssi value
     public init(sorcID: SorcID, discoveryDate: Date, rssi: Int) {
         self.sorcID = sorcID
         self.discoveryDate = discoveryDate

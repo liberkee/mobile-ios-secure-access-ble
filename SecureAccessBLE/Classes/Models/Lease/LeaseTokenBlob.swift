@@ -14,9 +14,17 @@ public struct LeaseTokenBlob: Equatable {
         case dataIsEmpty
     }
 
+    /// Message counter
     public let messageCounter: Int
+    /// Lease token blob data
     public let data: String
 
+    /// Initializer for `LeaseTokenBlob`
+    ///
+    /// - Parameters:
+    ///   - messageCounter: message counter
+    ///   - data: lease token blob data
+    /// - Throws: throws error if `data` is empty
     public init(messageCounter: Int, data: String) throws {
         self.messageCounter = messageCounter
 

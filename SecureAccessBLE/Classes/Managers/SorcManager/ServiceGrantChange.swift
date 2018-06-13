@@ -31,6 +31,7 @@ public struct ServiceGrantChange: ChangeType, Equatable {
 extension ServiceGrantChange {
     /// The state the service grant requesting can be in
     public struct State: Equatable {
+        /// currently requested service grant ids
         public let requestingServiceGrantIDs: [ServiceGrantID]
 
         public static func == (lhs: State, rhs: State) -> Bool {
@@ -42,12 +43,16 @@ extension ServiceGrantChange {
 extension ServiceGrantChange {
     /// The action that led to the state
     public enum Action: Equatable {
+        /// initial
         case initial
 
-        /// A service grant was requested, `accepted` == true, if request could be enqueued
+        /// a service grant was requested, `accepted` == true, if request could be enqueued
         case requestServiceGrant(id: ServiceGrantID, accepted: Bool)
+        /// response received with `ServiceGrantResponse`
         case responseReceived(ServiceGrantResponse)
+        /// request failed with error
         case requestFailed(Error)
+        /// reset
         case reset
 
         public static func == (lhs: Action, rhs: Action) -> Bool {
@@ -68,10 +73,14 @@ extension ServiceGrantChange {
         }
     }
 
+    /// Error which can occur on `requestFailed` case
     public enum Error: Swift.Error, CustomStringConvertible {
+        /// sending service grant request failed
         case sendingFailed
+        /// received data is invalid
         case receivedInvalidData
 
+        /// Description of the error
         public var description: String {
             switch self {
             case .sendingFailed:
