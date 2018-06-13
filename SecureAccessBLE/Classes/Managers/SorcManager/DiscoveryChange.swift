@@ -35,9 +35,9 @@ extension DiscoveryChange: Equatable {
 extension DiscoveryChange {
     /// The state a `DiscoveryChange` can be in
     public struct State: Equatable {
-        /// list of currently discovered sorcs
+        /// List of currently discovered sorcs
         public let discoveredSorcs: SorcInfos
-        /// flag notifying if discovery is enabled or not
+        /// Flag notifying if discovery is enabled or not
         public let discoveryIsEnabled: Bool
 
         public static func == (lhs: State, rhs: State) -> Bool {
@@ -59,6 +59,7 @@ extension DiscoveryChange {
 extension DiscoveryChange {
     /// Action which led to a discovery change
     public enum Action: Equatable {
+        /// Initial action (sent automatically on `subscribe`)
         case initial
 
         /// The SORC was discovered
@@ -115,7 +116,7 @@ public struct SorcInfos: Equatable {
 
     /// Subscript operator to get `SorcInfo` for given `SorcID`
     ///
-    /// - Parameter sorcID: sorc id
+    /// - Parameter sorcID: Sorc id
     public subscript(sorcID: SorcID) -> SorcInfo? {
         get {
             return sorcInfoByID[sorcID]
@@ -125,7 +126,7 @@ public struct SorcInfos: Equatable {
         }
     }
 
-    /// all sorc ids in container
+    /// All sorc ids in the container
     public var sorcIDs: [SorcID] {
         return Array(sorcInfoByID.keys)
     }
@@ -135,7 +136,7 @@ public struct SorcInfos: Equatable {
         return sorcInfoByID.isEmpty
     }
 
-    /// Checks if container has provided sorc id
+    /// Checks if the container has the provided sorc id
     ///
     /// - Parameter sorcID: sorc id
     /// - Returns: `true` if provided `SorcID` is contained
