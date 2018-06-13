@@ -10,7 +10,9 @@ import CommonUtils
 
 /// A change (state and last action) that describes the discovery transitions
 public struct DiscoveryChange: ChangeType {
+    /// The state a `DiscoveryChange` can be in
     public let state: State
+    /// The action which led to the state change
     public let action: Action
 
     public static func initialWithState(_ state: State) -> DiscoveryChange {
@@ -31,8 +33,11 @@ extension DiscoveryChange: Equatable {
 }
 
 extension DiscoveryChange {
+    /// The state a `DiscoveryChange` can be in
     public struct State: Equatable {
+        /// List of currently discovered sorcs
         public let discoveredSorcs: SorcInfos
+        /// Flag notifying if discovery is enabled or not
         public let discoveryIsEnabled: Bool
 
         public static func == (lhs: State, rhs: State) -> Bool {
@@ -52,7 +57,9 @@ extension DiscoveryChange {
 }
 
 extension DiscoveryChange {
+    /// Action which led to a discovery change
     public enum Action: Equatable {
+        /// Initial action (sent automatically on `subscribe`)
         case initial
 
         /// The SORC was discovered
@@ -76,8 +83,10 @@ extension DiscoveryChange {
         /// Discovered SORCs were cleared
         case reset
 
+        /// Discovery started
         case startDiscovery
 
+        /// Discovery stopped
         case stopDiscovery
 
         public static func == (lhs: Action, rhs: Action) -> Bool {
@@ -97,6 +106,7 @@ extension DiscoveryChange {
     }
 }
 
+/// Container for sorc infos
 public struct SorcInfos: Equatable {
     private var sorcInfoByID: [SorcID: SorcInfo]
 
@@ -104,6 +114,9 @@ public struct SorcInfos: Equatable {
         self.sorcInfoByID = sorcInfoByID
     }
 
+    /// Subscript operator to get `SorcInfo` for given `SorcID`
+    ///
+    /// - Parameter sorcID: Sorc id
     public subscript(sorcID: SorcID) -> SorcInfo? {
         get {
             return sorcInfoByID[sorcID]
@@ -113,14 +126,20 @@ public struct SorcInfos: Equatable {
         }
     }
 
+    /// All sorc ids in the container
     public var sorcIDs: [SorcID] {
         return Array(sorcInfoByID.keys)
     }
 
+    /// Returns true if the container is empty
     public var isEmpty: Bool {
         return sorcInfoByID.isEmpty
     }
 
+    /// Checks if the container has the provided sorc id
+    ///
+    /// - Parameter sorcID: sorc id
+    /// - Returns: `true` if provided `SorcID` is contained
     public func contains(_ sorcID: SorcID) -> Bool {
         return sorcInfoByID.keys.contains(sorcID)
     }

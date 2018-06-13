@@ -14,11 +14,23 @@ public struct LeaseToken: Equatable {
         case sorcAccessKeyIsEmpty
     }
 
+    /// Lease token id
     public let id: String
+    /// Lease id
     public let leaseID: String
+    /// Sorc id
     public let sorcID: SorcID
+    /// Sorc access key
     public let sorcAccessKey: String
 
+    /// Initializer for LeaseToken
+    ///
+    /// - Parameters:
+    ///   - id: lease token id
+    ///   - leaseID: lease id
+    ///   - sorcID: sorc id
+    ///   - sorcAccessKey: sorc access key
+    /// - Throws: throws error if `sorcAccessKey` is empty
     public init(id: String, leaseID: String, sorcID: SorcID, sorcAccessKey: String) throws {
         self.id = id
         self.leaseID = leaseID
