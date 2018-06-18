@@ -6,31 +6,39 @@
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
+/// The ID that specifies the type of a service grant
 public typealias ServiceGrantID = UInt16
 
-/// Service grant response
+/// The response to a service grant request
 public struct ServiceGrantResponse: Equatable {
-    /// Status of the service grant response
+    /// The ID of the SORC that received the service grant request
+    public let sorcID: SorcID
+
+    /// The ID of the requested service grant
+    public let serviceGrantID: ServiceGrantID
+
+    /// The current status of the service grant request
+    public let status: Status
+
+    /// The response data
+    public let responseData: String
+
+    /// The status a service grant request can be in
     public enum Status: UInt8 {
-        /// success
+        /// The request finished with success
         case success = 0x00
-        /// pending
+
+        /// The request is still pending
         case pending = 0x01
-        /// failure
+
+        /// The request finished with failure
         case failure = 0x02
-        /// not allowed
+
+        /// The request is not allowed
         case notAllowed = 0x03
     }
 
-    /// Sorc id
-    public let sorcID: SorcID
-    /// Service grant id
-    public let serviceGrantID: ServiceGrantID
-    /// Status
-    public let status: Status
-    /// Response data
-    public let responseData: String
-
+    /// :nodoc:
     public static func == (lhs: ServiceGrantResponse, rhs: ServiceGrantResponse) -> Bool {
         return lhs.sorcID == rhs.sorcID
             && lhs.serviceGrantID == rhs.serviceGrantID

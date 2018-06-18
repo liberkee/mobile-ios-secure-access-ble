@@ -7,6 +7,9 @@
 //
 
 extension SorcManager {
+
+    // MARK: - Configuration
+
     /// The configuration for the `SorcManager`
     public struct Configuration {
         /// The time interval a heartbeat is sent to the SORC
@@ -18,13 +21,13 @@ extension SorcManager {
         /// The maximum number of messages that can be queued up until an error is notified
         public let maximumEnqueuedMessages: Int?
 
-        /// The service id the SORC uses
+        /// The service ID the SORC uses
         public let serviceID: String?
 
-        /// The id of the notify characteristic the SORC uses
+        /// The ID of the notify characteristic the SORC uses
         public let notifyCharacteristicID: String?
 
-        /// The id of the write characteristic the SORC uses
+        /// The ID of the write characteristic the SORC uses
         public let writeCharacteristicID: String?
 
         /// The duration a SORC is considered outdated if last discovery date is longer ago than this duration
@@ -33,6 +36,7 @@ extension SorcManager {
         /// The interval a timer is triggered to remove outdated discovered SORCs
         public let removeOutdatedSorcsInterval: TimeInterval?
 
+        /// :nodoc:
         public init(
             heartbeatInterval: TimeInterval? = nil,
             heartbeatTimeout: TimeInterval? = nil,

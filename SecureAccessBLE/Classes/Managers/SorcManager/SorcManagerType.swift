@@ -8,12 +8,13 @@
 
 import CommonUtils
 
+/// The ID to identify a specific SORC
 public typealias SorcID = UUID
 
 /// Defines what a manager of SORCs provides
 public protocol SorcManagerType {
 
-    // MARK: - Interface
+    // MARK: - BLE Interface
 
     /// The bluetooth enabled status
     var isBluetoothEnabled: StateSignal<Bool> { get }
@@ -34,12 +35,11 @@ public protocol SorcManagerType {
     /// The state of the connection with the action that led to this state
     var connectionChange: ChangeSignal<ConnectionChange> { get }
 
-    /**
-     Connects to a SORC
-
-     - parameter leaseToken: The lease token for the SORC
-     - parameter leaseTokenBlob: The blob for the SORC
-     */
+    /// Connects to a SORC
+    ///
+    /// - Parameters:
+    ///   - leaseToken: The lease token for the SORC
+    ///   - leaseTokenBlob: The blob for the SORC
     func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob)
 
     /**
@@ -55,7 +55,7 @@ public protocol SorcManagerType {
     /**
      Requests a service grant from the connected SORC
 
-     - parameter serviceGrantID: The ID the of the service grant
+     - Parameter serviceGrantID: The ID the of the service grant
      */
     func requestServiceGrant(_ serviceGrantID: ServiceGrantID)
 }

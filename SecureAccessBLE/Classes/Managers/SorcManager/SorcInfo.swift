@@ -6,27 +6,24 @@
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-/// Container for information related to a sorc
+/// Container for information related to a SORC
 public struct SorcInfo: Equatable {
-    /// Sorc id
+    /// The ID of the SORC
     public let sorcID: SorcID
-    /// Discovery date
+
+    /// The date on which the SORC was discovered
     public let discoveryDate: Date
-    /// RSSI value
+
+    /// The received signal strength indicator
     public let rssi: Int
 
-    /// Initalizer for `SorcInfo`
-    ///
-    /// - Parameters:
-    ///   - sorcID: sorc id
-    ///   - discoveryDate: discovery date
-    ///   - rssi: rssi value
-    public init(sorcID: SorcID, discoveryDate: Date, rssi: Int) {
+    init(sorcID: SorcID, discoveryDate: Date, rssi: Int) {
         self.sorcID = sorcID
         self.discoveryDate = discoveryDate
         self.rssi = rssi
     }
 
+    /// :nodoc:
     public static func == (lhs: SorcInfo, rhs: SorcInfo) -> Bool {
         return lhs.sorcID == rhs.sorcID
             && lhs.discoveryDate == rhs.discoveryDate

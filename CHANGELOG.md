@@ -5,16 +5,18 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [3.0.0] - Unreleased
 
 ### Added
-- 2018-06-01 : (PLAM-2860)  : Migrated to swift 4.1
+- 2018-06-01 : (PLAM-2860)  : Migrated to Swift 4.1
 - 2018-06-01 : (PLAM-2860)  : Upgraded to CryptoSwift 0.9.0
 
 ### Changed
--2018-06-12 : (PLAM-2860)  : Updated jazzy, updated ACL to internal level where necessary
+-2018-06-14 : (PLAM-2860)  : Updated code documentation
+-2018-06-12 : (PLAM-2860)  : Updated ACL to internal level where necessary
+
 ### Fixed
 - 2018-06-11 : (PLAM-2860)  : Removed unused libraries which were accidentally added in the past
 
 ### Removed
-- 2018-06-01 : (PLAM-2860)  : Removed openSSL
+- 2018-06-01 : (PLAM-2860)  : Removed OpenSSL
 
 ## [2.3.0] - 2018-02-23
 
