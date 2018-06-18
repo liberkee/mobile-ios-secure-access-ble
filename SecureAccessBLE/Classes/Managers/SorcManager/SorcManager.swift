@@ -8,25 +8,78 @@
 
 import CommonUtils
 
+/// The manager for discovery, connection and communication with SORCs
 public class SorcManager: SorcManagerType {
     private let bluetoothStatusProvider: BluetoothStatusProviderType
     private let scanner: ScannerType
     private let sessionManager: SessionManagerType
 
+    // MARK: - BLE Interface
+
+    /// The bluetooth enabled status
     public var isBluetoothEnabled: StateSignal<Bool> {
         return bluetoothStatusProvider.isBluetoothEnabled.asSignal()
     }
 
+    // MARK: - Discovery
+
+    /// Starts discovery of SORCs
+    public func startDiscovery() {
+        HSMLog(message: "BLE - Scanner started discovery", level: .verbose)
+        scanner.startDiscovery()
+    }
+
+    /// Stops discovery of SORCs
+    public func stopDiscovery() {
+        HSMLog(message: "BLE - Scanner stopped discovery", level: .verbose)
+        scanner.stopDiscovery()
+    }
+
+    /// The state of SORC discovery with the action that led to this state
     public var discoveryChange: ChangeSignal<DiscoveryChange> {
         return scanner.discoveryChange.asSignal()
     }
 
+    // MARK: - Connection
+
+    /// The state of the connection with the action that led to this state
     public var connectionChange: ChangeSignal<ConnectionChange> {
         return sessionManager.connectionChange.asSignal()
     }
 
+    /// Connects to a SORC
+    ///
+    /// - Parameters:
+    ///   - leaseToken: The lease token for the SORC
+    ///   - leaseTokenBlob: The blob for the SORC
+    public func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob) {
+        HSMLog(message: "BLE - Connected to SORC", level: .verbose)
+        sessionManager.connectToSorc(leaseToken: leaseToken, leaseTokenBlob: leaseTokenBlob)
+    }
+
+    /**
+     Disconnects from current SORC
+     */
+    public func disconnect() {
+        HSMLog(message: "BLE - Disconnected", level: .verbose)
+        sessionManager.disconnect()
+    }
+
+    // MARK: - Service
+
+    /// The state of service grant requesting with the action that led to this state
     public var serviceGrantChange: ChangeSignal<ServiceGrantChange> {
         return sessionManager.serviceGrantChange.asSignal()
+    }
+
+    /**
+     Requests a service grant from the connected SORC
+
+     - Parameter serviceGrantID: The ID the of the service grant
+     */
+    public func requestServiceGrant(_ serviceGrantID: ServiceGrantID) {
+        HSMLog(message: "BLE - Request service grant", level: .verbose)
+        sessionManager.requestServiceGrant(serviceGrantID)
     }
 
     init(
@@ -38,40 +91,16 @@ public class SorcManager: SorcManagerType {
         self.scanner = scanner
         self.sessionManager = sessionManager
     }
-
-    public func startDiscovery() {
-        HSMLog(message: "BLE - Scanner started discovery", level: .verbose)
-        scanner.startDiscovery()
-    }
-
-    public func stopDiscovery() {
-        HSMLog(message: "BLE - Scanner stopped discovery", level: .verbose)
-        scanner.stopDiscovery()
-    }
-
-    public func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob) {
-        HSMLog(message: "BLE - Connected to SORC", level: .verbose)
-        sessionManager.connectToSorc(leaseToken: leaseToken, leaseTokenBlob: leaseTokenBlob)
-    }
-
-    public func disconnect() {
-        HSMLog(message: "BLE - Disconnected", level: .verbose)
-        sessionManager.disconnect()
-    }
-
-    public func requestServiceGrant(_ serviceGrantID: ServiceGrantID) {
-        HSMLog(message: "BLE - Request service grant", level: .verbose)
-        sessionManager.requestServiceGrant(serviceGrantID)
-    }
 }
 
 extension SorcManager {
-    /// Initializes a `SorcManager`. After initialization keep a strong reference to this instance as long as you need it.
+    /// Initializer for `SorcManager`
     ///
+    /// After initialization keep a strong reference to this instance as long as you need it.
     /// Note: Only use one instance at a time.
+    ///
+    /// - Parameter configuration: The configuration for the `SorcManager`
     public convenience init(configuration: SorcManager.Configuration = SorcManager.Configuration()) {
-        // ConnectionManager
-
         let connectionConfiguration = ConnectionManager.Configuration(
             serviceID: configuration.serviceID,
             notifyCharacteristicID: configuration.notifyCharacteristicID,
@@ -79,26 +108,18 @@ extension SorcManager {
             sorcOutdatedDuration: configuration.sorcOutdatedDuration,
             removeOutdatedSorcsInterval: configuration.removeOutdatedSorcsInterval
         )
+
         let connectionManager = ConnectionManager(configuration: connectionConfiguration)
-
-        // TransportManager
-
         let transportManager = TransportManager(connectionManager: connectionManager)
-
-        // SecurityManager
-
         let securityManager = SecurityManager(transportManager: transportManager)
-
-        // SessionManager
 
         let sessionConfiguration = SessionManager.Configuration(
             heartbeatInterval: configuration.heartbeatInterval,
             heartbeatTimeout: configuration.heartbeatTimeout,
             maximumEnqueuedMessages: configuration.maximumEnqueuedMessages
         )
-        let sessionManager = SessionManager(securityManager: securityManager, configuration: sessionConfiguration)
 
-        // SorcManager
+        let sessionManager = SessionManager(securityManager: securityManager, configuration: sessionConfiguration)
 
         self.init(
             bluetoothStatusProvider: connectionManager,

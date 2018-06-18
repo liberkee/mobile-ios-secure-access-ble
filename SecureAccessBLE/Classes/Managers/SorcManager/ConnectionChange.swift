@@ -10,39 +10,53 @@ import CommonUtils
 
 /// Describes a change of connection state
 public struct ConnectionChange: ChangeType, Equatable {
-    public static func initialWithState(_ state: ConnectionChange.State) -> ConnectionChange {
-        return ConnectionChange(state: state, action: .initial)
-    }
-
     /// The state the connection can be in
     public let state: State
 
     /// The action that led to the state
     public let action: Action
 
-    public init(state: State, action: Action) {
-        self.state = state
-        self.action = action
+    /// :nodoc:
+    public static func initialWithState(_ state: ConnectionChange.State) -> ConnectionChange {
+        return ConnectionChange(state: state, action: .initial)
     }
 
+    /// :nodoc:
     public static func == (lhs: ConnectionChange, rhs: ConnectionChange) -> Bool {
         return lhs.state == rhs.state && lhs.action == rhs.action
+    }
+
+    init(state: State, action: Action) {
+        self.state = state
+        self.action = action
     }
 }
 
 extension ConnectionChange {
     /// The state the connection can be in
     public enum State: Equatable {
-        
-        /// disconnected
+        /// Disconnected
         case disconnected
-        
-        /// connecting with provided `SorcID` in current `ConnectingState`
+
+        /// Connecting to a specific `SorcID` in the current `ConnectingState`
         case connecting(sorcID: SorcID, state: ConnectingState)
-        
-        /// connected with provided `SorcID`
+
+        /// Connected to a specific `SorcID`
         case connected(sorcID: SorcID)
 
+        /// The state when connecting to a SORC
+        public enum ConnectingState {
+            /// Physical state
+            case physical
+
+            /// Transport state
+            case transport
+
+            /// Challenging state
+            case challenging
+        }
+
+        /// :nodoc:
         public static func == (lhs: State, rhs: State) -> Bool {
             switch (lhs, rhs) {
             case (.disconnected, .disconnected): return true
@@ -54,50 +68,37 @@ extension ConnectionChange {
                 return false
             }
         }
-
-        /// Connecting State
-        public enum ConnectingState {
-            
-            /// physical
-            case physical
-            
-            /// transport
-            case transport
-            
-            /// challenging
-            case challenging
-        }
     }
 }
 
 extension ConnectionChange {
     /// The action that led to the state
     public enum Action: Equatable {
-        
-        /// initial action which is sent on `subscribe`
+        /// The initial action which is sent on `subscribe`
         case initial
-        
-        /// connecting with provided `SorcID`
+
+        /// Connect to provided `SorcID`
         case connect(sorcID: SorcID)
-        
-        /// physical connection with provided `SorcID` established
+
+        /// Physical connection with provided `SorcID` established
         case physicalConnectionEstablished(sorcID: SorcID)
-        
-        /// transport connection with provided `SorcID` established
+
+        /// Transport connection with provided `SorcID` established
         case transportConnectionEstablished(sorcID: SorcID)
-        
-        /// connection with provided `SorcID` established
+
+        /// Connection with provided `SorcID` established
         case connectionEstablished(sorcID: SorcID)
-        
-        /// connecting to provided `SorcID` failed with `ConnectingFailedError`
+
+        /// Connecting to provided `SorcID` failed with `ConnectingFailedError`
         case connectingFailed(sorcID: SorcID, error: ConnectingFailedError)
-        
-        /// disconnected
+
+        /// Disconnect
         case disconnect
-        
-        /// connection lost with `ConnectionLostError`
+
+        /// Connection lost with `ConnectionLostError`
         case connectionLost(error: ConnectionLostError)
 
+        /// :nodoc:
         public static func == (lhs: Action, rhs: Action) -> Bool {
             switch (lhs, rhs) {
             case (.initial, .initial):
@@ -125,24 +126,24 @@ extension ConnectionChange {
 
 /// The errors that can occur if the connection attempt fails
 public enum ConnectingFailedError: Error {
-    /// physical connection failed
+    /// Physical connecting failed
     case physicalConnectingFailed
-    
-    /// invalid MTU response
+
+    /// Invalid MTU response
     case invalidMTUResponse
-    
-    /// challenge failed
+
+    /// Challenge failed
     case challengeFailed
-    
-    /// blob is outdated
+
+    /// BLOB is outdated
     case blobOutdated
 }
 
 /// The errors that can occur if the connection is lost
 public enum ConnectionLostError: Error {
-    /// physical connection is lost
+    /// Physical connection is lost
     case physicalConnectionLost
-    
-    /// heartbeat has timed out
+
+    /// Heartbeat has timed out
     case heartbeatTimedOut
 }

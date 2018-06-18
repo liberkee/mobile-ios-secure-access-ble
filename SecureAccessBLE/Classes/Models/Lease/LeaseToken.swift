@@ -14,24 +14,27 @@ public struct LeaseToken: Equatable {
         case sorcAccessKeyIsEmpty
     }
 
-    /// Lease token id
+    /// The ID of the lease token
     public let id: String
-    /// Lease id
+
+    /// The ID of the lease
     public let leaseID: String
-    /// Sorc id
+
+    /// The ID of the lease
     public let sorcID: SorcID
-    /// Sorc access key
+
+    /// The SORC access key
     public let sorcAccessKey: String
 
-    /// Initializer for LeaseToken
-    ///
-    /// - Parameters:
-    ///   - id: lease token id
-    ///   - leaseID: lease id
-    ///   - sorcID: sorc id
-    ///   - sorcAccessKey: sorc access key
-    /// - Throws: throws error if `sorcAccessKey` is empty
-    public init(id: String, leaseID: String, sorcID: SorcID, sorcAccessKey: String) throws {
+    /// :nodoc:
+    public static func == (lhs: LeaseToken, rhs: LeaseToken) -> Bool {
+        return lhs.id == rhs.id
+            && lhs.leaseID == rhs.leaseID
+            && lhs.sorcID == rhs.sorcID
+            && lhs.sorcAccessKey == rhs.sorcAccessKey
+    }
+
+    init(id: String, leaseID: String, sorcID: SorcID, sorcAccessKey: String) throws {
         self.id = id
         self.leaseID = leaseID
         self.sorcID = sorcID
@@ -40,12 +43,5 @@ public struct LeaseToken: Equatable {
             throw Error.sorcAccessKeyIsEmpty
         }
         self.sorcAccessKey = sorcAccessKey
-    }
-
-    public static func == (lhs: LeaseToken, rhs: LeaseToken) -> Bool {
-        return lhs.id == rhs.id
-            && lhs.leaseID == rhs.leaseID
-            && lhs.sorcID == rhs.sorcID
-            && lhs.sorcAccessKey == rhs.sorcAccessKey
     }
 }

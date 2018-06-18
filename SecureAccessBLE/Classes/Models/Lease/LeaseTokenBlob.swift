@@ -8,34 +8,30 @@
 
 import Foundation
 
-/// A lease token blob used in establishing a connection to a SORC
+/// A lease token BLOB used in establishing a connection to a SORC
 public struct LeaseTokenBlob: Equatable {
     enum Error: Swift.Error {
         case dataIsEmpty
     }
 
-    /// Message counter
+    /// The counter that indicates whether the lease token BLOB is outdated
     public let messageCounter: Int
-    /// Lease token blob data
+
+    /// The encrypted lease token BLOB data
     public let data: String
 
-    /// Initializer for `LeaseTokenBlob`
-    ///
-    /// - Parameters:
-    ///   - messageCounter: message counter
-    ///   - data: lease token blob data
-    /// - Throws: throws error if `data` is empty
-    public init(messageCounter: Int, data: String) throws {
+    /// :nodoc:
+    public static func == (lhs: LeaseTokenBlob, rhs: LeaseTokenBlob) -> Bool {
+        return lhs.messageCounter == rhs.messageCounter
+            && lhs.data == rhs.data
+    }
+
+    init(messageCounter: Int, data: String) throws {
         self.messageCounter = messageCounter
 
         guard !data.isEmpty else {
             throw Error.dataIsEmpty
         }
         self.data = data
-    }
-
-    public static func == (lhs: LeaseTokenBlob, rhs: LeaseTokenBlob) -> Bool {
-        return lhs.messageCounter == rhs.messageCounter
-            && lhs.data == rhs.data
     }
 }
