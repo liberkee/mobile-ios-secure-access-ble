@@ -26,7 +26,13 @@ public struct LeaseTokenBlob: Equatable {
             && lhs.data == rhs.data
     }
 
-    init(messageCounter: Int, data: String) throws {
+    /// LeaseTokenBlob Initializer
+    ///
+    /// - Parameters:
+    ///   - messageCounter: The counter that indicates whether the lease token BLOB is outdated
+    ///   - data: The encrypted lease token BLOB data
+    /// - Throws: error if the data is empty
+    public init(messageCounter: Int, data: String) throws {
         self.messageCounter = messageCounter
 
         guard !data.isEmpty else {

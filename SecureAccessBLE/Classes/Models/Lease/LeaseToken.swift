@@ -20,7 +20,7 @@ public struct LeaseToken: Equatable {
     /// The ID of the lease
     public let leaseID: String
 
-    /// The ID of the lease
+    /// The ID of the SORC
     public let sorcID: SorcID
 
     /// The SORC access key
@@ -34,7 +34,15 @@ public struct LeaseToken: Equatable {
             && lhs.sorcAccessKey == rhs.sorcAccessKey
     }
 
-    init(id: String, leaseID: String, sorcID: SorcID, sorcAccessKey: String) throws {
+    /// Lease Token Initializer
+    ///
+    /// - Parameters:
+    ///   - id: The ID of the lease token
+    ///   - leaseID: The ID of the lease
+    ///   - sorcID: The ID of the SORC
+    ///   - sorcAccessKey: The SORC access key
+    /// - Throws: error if the SORC access key is empty
+    public init(id: String, leaseID: String, sorcID: SorcID, sorcAccessKey: String) throws {
         self.id = id
         self.leaseID = leaseID
         self.sorcID = sorcID
