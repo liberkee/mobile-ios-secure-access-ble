@@ -21,7 +21,8 @@ public struct DiscoveryChange: ChangeType {
         return DiscoveryChange(state: state, action: .initial)
     }
 
-    init(state: State, action: Action) {
+    /// :nodoc:
+    public init(state: State, action: Action) {
         self.state = state
         self.action = action
     }
@@ -48,7 +49,7 @@ extension DiscoveryChange {
             return State(discoveredSorcs: discoveredSorcs, discoveryIsEnabled: enabled)
         }
 
-        init(discoveredSorcs: SorcInfos, discoveryIsEnabled: Bool) {
+        public init(discoveredSorcs: SorcInfos, discoveryIsEnabled: Bool) {
             self.discoveredSorcs = discoveredSorcs
             self.discoveryIsEnabled = discoveryIsEnabled
         }
@@ -137,7 +138,7 @@ public struct SorcInfos: Equatable {
     /// Subscript operator to get `SorcInfo` for given `SorcID`
     ///
     /// - Parameter sorcID: The SORC ID
-    subscript(sorcID: SorcID) -> SorcInfo? {
+    public subscript(sorcID: SorcID) -> SorcInfo? {
         get {
             return sorcInfoByID[sorcID]
         }
@@ -146,7 +147,7 @@ public struct SorcInfos: Equatable {
         }
     }
 
-    init(_ sorcInfoByID: [SorcID: SorcInfo] = [:]) {
+    public init(_ sorcInfoByID: [SorcID: SorcInfo] = [:]) {
         self.sorcInfoByID = sorcInfoByID
     }
 

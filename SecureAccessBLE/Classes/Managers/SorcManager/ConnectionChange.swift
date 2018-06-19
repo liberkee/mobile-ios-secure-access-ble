@@ -26,7 +26,8 @@ public struct ConnectionChange: ChangeType, Equatable {
         return lhs.state == rhs.state && lhs.action == rhs.action
     }
 
-    init(state: State, action: Action) {
+    /// :nodoc:
+    public init(state: State, action: Action) {
         self.state = state
         self.action = action
     }

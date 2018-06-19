@@ -17,7 +17,8 @@ public struct SorcInfo: Equatable {
     /// The received signal strength indicator
     public let rssi: Int
 
-    init(sorcID: SorcID, discoveryDate: Date, rssi: Int) {
+    /// :nodoc:
+    public init(sorcID: SorcID, discoveryDate: Date, rssi: Int) {
         self.sorcID = sorcID
         self.discoveryDate = discoveryDate
         self.rssi = rssi
