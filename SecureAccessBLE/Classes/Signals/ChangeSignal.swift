@@ -3,7 +3,7 @@
 //  CommonUtils
 //
 //  Created on 01.09.17.
-//  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
+//  Copyright © 2018 Huf Secure Mobile GmbH. All rights reserved.
 //
 
 import Foundation

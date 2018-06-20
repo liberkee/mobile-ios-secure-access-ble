@@ -3,7 +3,7 @@
 //  SecureAccessBLE
 //
 //  Created on 09.08.17.
-//  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
+//  Copyright © 2018 Huf Secure Mobile GmbH. All rights reserved.
 //
 
 /// A change (state and last action) that describes the discovery transitions

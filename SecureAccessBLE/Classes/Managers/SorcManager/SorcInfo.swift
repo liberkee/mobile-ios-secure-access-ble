@@ -3,7 +3,7 @@
 //  SecureAccessBLE
 //
 //  Created on 11.08.17.
-//  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
+//  Copyright © 2018 Huf Secure Mobile GmbH. All rights reserved.
 //
 
 /// Container for information related to a SORC

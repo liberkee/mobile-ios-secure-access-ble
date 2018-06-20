@@ -3,7 +3,7 @@
 //  SecureAccessBLE
 //
 //  Created on 08.09.17.
-//  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
+//  Copyright © 2018 Huf Secure Mobile GmbH. All rights reserved.
 //
 
 /// The ID that specifies the type of a service grant
