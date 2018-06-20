@@ -6,8 +6,6 @@
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-import CommonUtils
-
 /// The ID to identify a specific SORC
 public typealias SorcID = UUID
 

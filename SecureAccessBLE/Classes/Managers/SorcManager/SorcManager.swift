@@ -6,8 +6,6 @@
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-import CommonUtils
-
 /// The manager for discovery, connection and communication with SORCs
 public class SorcManager: SorcManagerType {
     private let bluetoothStatusProvider: BluetoothStatusProviderType

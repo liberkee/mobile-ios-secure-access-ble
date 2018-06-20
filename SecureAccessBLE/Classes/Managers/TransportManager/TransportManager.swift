@@ -6,8 +6,6 @@
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-import CommonUtils
-
 /// Sends and receives data by sending separate frames based on the current MTU size.
 class TransportManager: TransportManagerType {
     let connectionChange = ChangeSubject<TransportConnectionChange>(state: .disconnected)

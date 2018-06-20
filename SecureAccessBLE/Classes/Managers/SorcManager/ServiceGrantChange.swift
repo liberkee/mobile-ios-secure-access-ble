@@ -6,8 +6,6 @@
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-import CommonUtils
-
 /// Describes a change of service grant requesting
 public struct ServiceGrantChange: ChangeType, Equatable {
     /// The state the service grant requesting can be in

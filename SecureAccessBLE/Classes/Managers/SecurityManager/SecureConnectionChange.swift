@@ -6,8 +6,6 @@
 //  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-import CommonUtils
-
 /// Describes a change of connection state
 struct SecureConnectionChange: ChangeType, Equatable {
     static func initialWithState(_ state: SecureConnectionChange.State) -> SecureConnectionChange {
