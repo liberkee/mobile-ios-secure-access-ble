@@ -1,22 +1,20 @@
 # SecureAccessBLE
-![Version](https://img.shields.io/badge/version-2.1.0-red.svg)
+![Version](https://img.shields.io/badge/version-2.3.0-red.svg)
 [![Build Status](https://jenkins01.hufsm.com/buildStatus/icon?job=mobile/iOS%20development/SecureAccessBLE%20-%20Tests)](https://jenkins01.hufsm.com/job/mobile/job/iOS%20development/job/SecureAccessBLE%20-%20Tests/)
 
 ## Description
 Framework for communicating with the SecureAccess BLE hardware.
 
 ## Prerequisites
-* [Xcode 8.3.3](https://developer.apple.com/xcode/ide/)
+* [Xcode 9.4](https://developer.apple.com/xcode/ide/)
 * [Bundler](http://bundler.io)
 * [CocoaPods](https://cocoapods.org)
 * [Jazzy](https://github.com/realm/jazzy)
 
 ## License
-Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
+Copyright © 2018 Huf Secure Mobile GmbH. All rights reserved.
 
 ## Dependencies
-### Private frameworks
-* [CommonUtils](https://github.com/hufsm/mobile-ios-common-utils)
 
 ### 3rd party frameworks
 * [CryptoSwift](https://github.com/krzyzanowskim/CryptoSwift) - [zlib License](https://github.com/krzyzanowskim/CryptoSwift/blob/master/LICENSE)
@@ -56,18 +54,6 @@ To publish a new version of the framework you need to:
 - (Once only) Add the private podspec repo to your local machine by running `pod repo add hsm-specs https://github.com/hufsm/mobile-ios-podspecs.git`
 - Add a proper version git tag for the new release and update the version in the podspec file accordingly
 - Push the new version to the private podspec repository by running `pod repo push hsm-specs SecureAccessBLE.podspec` from the root of the repository
-
-### OpenSSL
-This project uses a bundled version of OpenSSL which is linked as a framework. In order to create a new version of the OpenSSL framework download the [OpenSSL-for-iOS](https://github.com/x2on/OpenSSL-for-iPhone) project and execute the scripts `build-libssl.sh` and `create-openssl-framework.sh`.
-
-As OpenSSL is written in `C`, we need to include it in our Swift framework using a `module.map` (Bridging-Headers are currently not supported in Swift frameworks). Add the following `module.map` to the OpenSSL framework bundle:
-
-```ruby
-module OpenSSL [system] [extern_c] {
-header "Headers/cmac.h"
-export *
-}
-```
 
 ### Documentation
 This project uses [Jazzy](https://github.com/realm/jazzy) to generate the documentation. To update the documentation you need to:
