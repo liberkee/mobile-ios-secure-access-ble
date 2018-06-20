@@ -21,8 +21,6 @@ Pod::Spec.new do |s|
 
   s.source_files = 'SecureAccessBLE/Classes/**/*'
 
-  s.dependency 'CommonUtils', '0.1.2'
-
   s.dependency 'CryptoSwift', '0.9.0'
   
 end

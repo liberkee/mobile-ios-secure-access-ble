@@ -10,6 +10,23 @@
 		46B760911DA26C40003ADDB1 /* BLEManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760901DA26C40003ADDB1 /* BLEManagerTests.swift */; };
 		46B760971DA26C8C003ADDB1 /* BLECryptorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760961DA26C8C003ADDB1 /* BLECryptorTests.swift */; };
 		7B054B1F895284FFC83B8030 /* AesCbcTestCryptoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B054736D9EB7B3AA766E37F /* AesCbcTestCryptoManager.swift */; };
+		9913240420D94C81001D83FC /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9913240320D94C81001D83FC /* Result.swift */; };
+		9913240520D94C8F001D83FC /* ArrayExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991323F120D94C29001D83FC /* ArrayExtensions.swift */; };
+		9913240620D94C9A001D83FC /* UUIDExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991323E220D94C29001D83FC /* UUIDExtension.swift */; };
+		9913240720D94C9A001D83FC /* DataExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991323E320D94C29001D83FC /* DataExtension.swift */; };
+		9913240820D94C9A001D83FC /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991323E420D94C29001D83FC /* StringExtension.swift */; };
+		9913240920D94CA1001D83FC /* LoggingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991323EC20D94C29001D83FC /* LoggingManager.swift */; };
+		9913240A20D94CA1001D83FC /* DefaultLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991323ED20D94C29001D83FC /* DefaultLogger.swift */; };
+		9913240B20D94CA1001D83FC /* LogLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991323EE20D94C29001D83FC /* LogLevel.swift */; };
+		9913240C20D94CA1001D83FC /* HSMLogging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991323EF20D94C29001D83FC /* HSMLogging.swift */; };
+		9913240D20D94CAC001D83FC /* ChangeSignal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991323DE20D94C28001D83FC /* ChangeSignal.swift */; };
+		9913240E20D94CAC001D83FC /* StateSignal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991323DF20D94C28001D83FC /* StateSignal.swift */; };
+		9913240F20D94CAC001D83FC /* EventSignal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991323E020D94C28001D83FC /* EventSignal.swift */; };
+		9913241020D94CB3001D83FC /* BehaviorSubject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991323E620D94C29001D83FC /* BehaviorSubject.swift */; };
+		9913241120D94CB3001D83FC /* Subscriber.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991323E720D94C29001D83FC /* Subscriber.swift */; };
+		9913241220D94CB3001D83FC /* PublishSubject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991323E820D94C29001D83FC /* PublishSubject.swift */; };
+		9913241320D94CB3001D83FC /* Disposing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991323E920D94C29001D83FC /* Disposing.swift */; };
+		9913241420D94CB3001D83FC /* ChangeSubject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991323EA20D94C29001D83FC /* ChangeSubject.swift */; };
 		9917E9D81FBAF7C8002D5CE3 /* SorcManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E504030A1F5553830008DF02 /* SorcManagerType.swift */; };
 		9917E9D91FBAF7C8002D5CE3 /* SorcManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50403061F546FFF0008DF02 /* SorcManager.swift */; };
 		9917E9DA1FBAF7C8002D5CE3 /* SorcManagerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50C4E911F5F3F380081B619 /* SorcManagerConfiguration.swift */; };
@@ -91,6 +108,23 @@
 		7010A8091FD3F155213110F7 /* Pods_SecureAccessBLE_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SecureAccessBLE_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B054736D9EB7B3AA766E37F /* AesCbcTestCryptoManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AesCbcTestCryptoManager.swift; sourceTree = "<group>"; };
 		7B6E549E83AB9608B021727E /* Pods_SecureAccessBLE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SecureAccessBLE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		991323DE20D94C28001D83FC /* ChangeSignal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangeSignal.swift; sourceTree = "<group>"; };
+		991323DF20D94C28001D83FC /* StateSignal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateSignal.swift; sourceTree = "<group>"; };
+		991323E020D94C28001D83FC /* EventSignal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventSignal.swift; sourceTree = "<group>"; };
+		991323E220D94C29001D83FC /* UUIDExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UUIDExtension.swift; sourceTree = "<group>"; };
+		991323E320D94C29001D83FC /* DataExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataExtension.swift; sourceTree = "<group>"; };
+		991323E420D94C29001D83FC /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
+		991323E620D94C29001D83FC /* BehaviorSubject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BehaviorSubject.swift; sourceTree = "<group>"; };
+		991323E720D94C29001D83FC /* Subscriber.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Subscriber.swift; sourceTree = "<group>"; };
+		991323E820D94C29001D83FC /* PublishSubject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublishSubject.swift; sourceTree = "<group>"; };
+		991323E920D94C29001D83FC /* Disposing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Disposing.swift; sourceTree = "<group>"; };
+		991323EA20D94C29001D83FC /* ChangeSubject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangeSubject.swift; sourceTree = "<group>"; };
+		991323EC20D94C29001D83FC /* LoggingManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoggingManager.swift; sourceTree = "<group>"; };
+		991323ED20D94C29001D83FC /* DefaultLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultLogger.swift; sourceTree = "<group>"; };
+		991323EE20D94C29001D83FC /* LogLevel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogLevel.swift; sourceTree = "<group>"; };
+		991323EF20D94C29001D83FC /* HSMLogging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HSMLogging.swift; sourceTree = "<group>"; };
+		991323F120D94C29001D83FC /* ArrayExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayExtensions.swift; sourceTree = "<group>"; };
+		9913240320D94C81001D83FC /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		99D123391F9A3B20006012DE /* SecureAccessBLE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SecureAccessBLE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		99D1233B1F9A3B20006012DE /* SecureAccessBLE.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SecureAccessBLE.h; sourceTree = "<group>"; };
 		99D1233C1F9A3B20006012DE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -169,6 +203,12 @@
 		46B760651DA2637D003ADDB1 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				9913240220D94C81001D83FC /* ErrorHandling */,
+				991323F020D94C29001D83FC /* Collections */,
+				991323E120D94C29001D83FC /* Converters */,
+				991323EB20D94C29001D83FC /* Logging */,
+				991323DD20D94C28001D83FC /* Signals */,
+				991323E520D94C29001D83FC /* Subjects */,
 				E59E01631F387BE5006F114D /* Managers */,
 				E5E308D11F324E5900C1537F /* CBWrapper */,
 				46B7607A1DA2637D003ADDB1 /* Models */,
@@ -195,7 +235,6 @@
 				E573A7911EDC2B860093ABA8 /* Lease */,
 				46B7607B1DA2637D003ADDB1 /* Challenger */,
 				E55E6CDA1F4200E900C5934B /* SorcMessage */,
-				46B7607F1DA2637D003ADDB1 /* Crypto */,
 				46B760811DA2637D003ADDB1 /* DataFragments */,
 				46B760841DA2637D003ADDB1 /* LTBlob */,
 				46B760871DA2637D003ADDB1 /* ServiceGrant */,
@@ -211,13 +250,6 @@
 				46B7607E1DA2637D003ADDB1 /* SorcToPhoneResponse.swift */,
 			);
 			path = Challenger;
-			sourceTree = "<group>";
-		};
-		46B7607F1DA2637D003ADDB1 /* Crypto */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Crypto;
 			sourceTree = "<group>";
 		};
 		46B760811DA2637D003ADDB1 /* DataFragments */ = {
@@ -317,6 +349,65 @@
 				7010A8091FD3F155213110F7 /* Pods_SecureAccessBLE_Tests.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		991323DD20D94C28001D83FC /* Signals */ = {
+			isa = PBXGroup;
+			children = (
+				991323DE20D94C28001D83FC /* ChangeSignal.swift */,
+				991323DF20D94C28001D83FC /* StateSignal.swift */,
+				991323E020D94C28001D83FC /* EventSignal.swift */,
+			);
+			path = Signals;
+			sourceTree = "<group>";
+		};
+		991323E120D94C29001D83FC /* Converters */ = {
+			isa = PBXGroup;
+			children = (
+				991323E220D94C29001D83FC /* UUIDExtension.swift */,
+				991323E320D94C29001D83FC /* DataExtension.swift */,
+				991323E420D94C29001D83FC /* StringExtension.swift */,
+			);
+			path = Converters;
+			sourceTree = "<group>";
+		};
+		991323E520D94C29001D83FC /* Subjects */ = {
+			isa = PBXGroup;
+			children = (
+				991323E620D94C29001D83FC /* BehaviorSubject.swift */,
+				991323E720D94C29001D83FC /* Subscriber.swift */,
+				991323E820D94C29001D83FC /* PublishSubject.swift */,
+				991323E920D94C29001D83FC /* Disposing.swift */,
+				991323EA20D94C29001D83FC /* ChangeSubject.swift */,
+			);
+			path = Subjects;
+			sourceTree = "<group>";
+		};
+		991323EB20D94C29001D83FC /* Logging */ = {
+			isa = PBXGroup;
+			children = (
+				991323EC20D94C29001D83FC /* LoggingManager.swift */,
+				991323ED20D94C29001D83FC /* DefaultLogger.swift */,
+				991323EE20D94C29001D83FC /* LogLevel.swift */,
+				991323EF20D94C29001D83FC /* HSMLogging.swift */,
+			);
+			path = Logging;
+			sourceTree = "<group>";
+		};
+		991323F020D94C29001D83FC /* Collections */ = {
+			isa = PBXGroup;
+			children = (
+				991323F120D94C29001D83FC /* ArrayExtensions.swift */,
+			);
+			path = Collections;
+			sourceTree = "<group>";
+		};
+		9913240220D94C81001D83FC /* ErrorHandling */ = {
+			isa = PBXGroup;
+			children = (
+				9913240320D94C81001D83FC /* Result.swift */,
+			);
+			path = ErrorHandling;
 			sourceTree = "<group>";
 		};
 		99D1233A1F9A3B20006012DE /* SecureAccessBLE */ = {
@@ -745,23 +836,32 @@
 			buildActionMask = 2147483647;
 			files = (
 				9917E9EF1FBAF7E7002D5CE3 /* ScannerType.swift in Sources */,
+				9913240920D94CA1001D83FC /* LoggingManager.swift in Sources */,
 				9917E9EE1FBAF7E7002D5CE3 /* BluetoothStatusProviderType.swift in Sources */,
 				9917EA071FBAF81F002D5CE3 /* BoundedQueue.swift in Sources */,
 				9917E9F41FBAF7E7002D5CE3 /* ConnectionManagerExtensions.swift in Sources */,
 				9917E9FE1FBAF804002D5CE3 /* SorcMessagePayload.swift in Sources */,
+				9913240E20D94CAC001D83FC /* StateSignal.swift in Sources */,
 				9917E9F91FBAF7FE002D5CE3 /* PhoneToSorcResponse.swift in Sources */,
+				9913241220D94CB3001D83FC /* PublishSubject.swift in Sources */,
+				9913240D20D94CAC001D83FC /* ChangeSignal.swift in Sources */,
 				9917E9F11FBAF7E7002D5CE3 /* PhysicalConnectionChange.swift in Sources */,
 				9917E9DC1FBAF7C8002D5CE3 /* SorcInfo.swift in Sources */,
+				9913240620D94C9A001D83FC /* UUIDExtension.swift in Sources */,
 				9917EA031FBAF814002D5CE3 /* BlobRequest.swift in Sources */,
+				9913240B20D94CA1001D83FC /* LogLevel.swift in Sources */,
 				9917E9F21FBAF7E7002D5CE3 /* ConnectionManager.swift in Sources */,
 				9917E9E71FBAF7DB002D5CE3 /* AesCbcCryptoManager.swift in Sources */,
 				9917E9FD1FBAF804002D5CE3 /* SorcMessage.swift in Sources */,
 				9917E9F81FBAF7FE002D5CE3 /* PhoneToSorcChallenge.swift in Sources */,
 				9917E9E31FBAF7D5002D5CE3 /* SecurityManagerType.swift in Sources */,
 				9917EA011FBAF80F002D5CE3 /* DataFrame.swift in Sources */,
+				9913240F20D94CAC001D83FC /* EventSignal.swift in Sources */,
+				9913241020D94CB3001D83FC /* BehaviorSubject.swift in Sources */,
 				9917E9F51FBAF7F1002D5CE3 /* CBWrapper.swift in Sources */,
 				9917E9E61FBAF7D5002D5CE3 /* Challenger.swift in Sources */,
 				9917E9DF1FBAF7C8002D5CE3 /* ServiceGrantResponse.swift in Sources */,
+				9913241320D94CB3001D83FC /* Disposing.swift in Sources */,
 				9917EA051FBAF819002D5CE3 /* ServiceGrantRequest.swift in Sources */,
 				9917E9FA1FBAF7FE002D5CE3 /* SorcToPhoneResponse.swift in Sources */,
 				9917E9FC1FBAF804002D5CE3 /* MTUSize.swift in Sources */,
@@ -773,9 +873,12 @@
 				9917E9DD1FBAF7C8002D5CE3 /* ConnectionChange.swift in Sources */,
 				9917E9F31FBAF7E7002D5CE3 /* ConnectionManagerConfiguration.swift in Sources */,
 				9917E9DE1FBAF7C8002D5CE3 /* ServiceGrantChange.swift in Sources */,
+				9913240C20D94CA1001D83FC /* HSMLogging.swift in Sources */,
 				9917E9E21FBAF7CE002D5CE3 /* SessionManagerConfiguration.swift in Sources */,
 				9917E9EC1FBAF7E2002D5CE3 /* TransportConnectionChange.swift in Sources */,
+				9913240520D94C8F001D83FC /* ArrayExtensions.swift in Sources */,
 				9917E9D91FBAF7C8002D5CE3 /* SorcManager.swift in Sources */,
+				9913240A20D94CA1001D83FC /* DefaultLogger.swift in Sources */,
 				9917EA091FBAF81F002D5CE3 /* AppActivityStatusProvider.swift in Sources */,
 				9917E9F61FBAF7F8002D5CE3 /* LeaseToken.swift in Sources */,
 				9917E9DA1FBAF7C8002D5CE3 /* SorcManagerConfiguration.swift in Sources */,
@@ -787,9 +890,14 @@
 				9917EA081FBAF81F002D5CE3 /* AppActivityStatusProviderType.swift in Sources */,
 				9917E9E11FBAF7CE002D5CE3 /* SessionManager.swift in Sources */,
 				9917E9ED1FBAF7E2002D5CE3 /* TransportManager.swift in Sources */,
+				9913241120D94CB3001D83FC /* Subscriber.swift in Sources */,
+				9913240720D94C9A001D83FC /* DataExtension.swift in Sources */,
+				9913241420D94CB3001D83FC /* ChangeSubject.swift in Sources */,
 				9917E9D81FBAF7C8002D5CE3 /* SorcManagerType.swift in Sources */,
 				9917EA061FBAF81F002D5CE3 /* SystemClock.swift in Sources */,
+				9913240820D94C9A001D83FC /* StringExtension.swift in Sources */,
 				9917EA041FBAF814002D5CE3 /* LTBlobPayload.swift in Sources */,
+				9913240420D94C81001D83FC /* Result.swift in Sources */,
 				9917E9E51FBAF7D5002D5CE3 /* SecurityManager.swift in Sources */,
 				9917E9EB1FBAF7E2002D5CE3 /* TransportManagerType.swift in Sources */,
 			);
