@@ -1,5 +1,5 @@
 # SecureAccessBLE
-![Version](https://img.shields.io/badge/version-2.3.0-red.svg)
+![Version](https://img.shields.io/badge/version-3.0.0-red.svg)
 [![Build Status](https://jenkins01.hufsm.com/buildStatus/icon?job=mobile/iOS%20development/SecureAccessBLE%20-%20Tests)](https://jenkins01.hufsm.com/job/mobile/job/iOS%20development/job/SecureAccessBLE%20-%20Tests/)
 
 ## Description

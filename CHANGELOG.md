@@ -2,7 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [3.0.0] - Unreleased
+## [Unreleased]
+
+### Added
+### Changed
+### Fixed
+### Removed
+
+## [3.0.0] - 2018-06-20
 
 ### Added
 - 2018-06-01 : (PLAM-2860)  : Migrated to Swift 4.1

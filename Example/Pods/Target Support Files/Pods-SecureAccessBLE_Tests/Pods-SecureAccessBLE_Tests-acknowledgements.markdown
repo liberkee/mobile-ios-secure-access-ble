@@ -17,7 +17,7 @@ Permission is granted to anyone to use this software for any purpose,including c
 
 ## SecureAccessBLE
 
-Copyright (c) 2017 Huf Secure Mobile GmbH. All rights reserved.
+Copyright (c) 2018 Huf Secure Mobile GmbH. All rights reserved.
 
 ## SwiftFormat
 
