@@ -9,9 +9,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - 2018-06-01 : (PLAM-2860)  : Upgraded to CryptoSwift 0.9.0
 
 ### Changed
--2018-06-19 : (PLAM-2860)  : Update ACL to public level where necessary
+-2018-06-19 : (PLAM-2860)  : Update ACL levels where necessary
 -2018-06-14 : (PLAM-2860)  : Updated code documentation
--2018-06-12 : (PLAM-2860)  : Updated ACL to internal level where necessary
 
 ### Fixed
 - 2018-06-11 : (PLAM-2860)  : Removed unused libraries which were accidentally added in the past
