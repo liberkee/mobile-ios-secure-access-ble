@@ -9,7 +9,7 @@
 import Foundation
 
 /// Implement this protocol to create your custom loggers
-protocol HSMLogging {
+public protocol HSMLogging {
     func log(message: @autoclosure () -> String, file: String, function: StaticString, line: UInt, level: LogLevel)
 }
 

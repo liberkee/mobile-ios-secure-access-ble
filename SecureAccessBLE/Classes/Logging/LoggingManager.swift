@@ -9,12 +9,12 @@
 import Foundation
 
 /// Set the used logger, log level and time stamp formatter here
-class LoggingManager {
+public class LoggingManager {
     /// Used logger, either custom or default
-    var logger: HSMLogging
+    public var logger: HSMLogging
 
     /// Used log level for filtering log statements
-    var logLevel: LogLevel
+    public var logLevel: LogLevel
 
     /// Log time stamp formatter
     lazy var dateFormatter: DateFormatter = {
@@ -27,7 +27,7 @@ class LoggingManager {
     }()
 
     /// Shared singleton property
-    static let shared = LoggingManager()
+    public static let shared = LoggingManager()
 
     private init(logger: HSMLogging = DefaultLogger(), logLevel: LogLevel = .verbose) {
         self.logger = logger
