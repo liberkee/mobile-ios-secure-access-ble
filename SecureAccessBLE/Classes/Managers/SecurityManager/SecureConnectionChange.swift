@@ -3,7 +3,7 @@
 //  SecureAccessBLE
 //
 //  Created on 07.06.17.
-//  Copyright © 2017 Huf Secure Mobile GmbH. All rights reserved.
+//  Copyright © 2018 Huf Secure Mobile GmbH. All rights reserved.
 //
 
 /// Describes a change of connection state
