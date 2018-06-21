@@ -12,9 +12,9 @@ Pod::Spec.new do |s|
   s.summary          = 'SecureAccess BLE framework'
   s.description      = 'Framework for communicating with the SecureAccess BLE hardware.'
 
-  s.homepage         = 'http://huf.com'
+  s.homepage         = 'https://www.huf-sixsense.com'
   s.license          = { :file => 'LICENSE.md' }
-  s.author           = { 'Huf Secure Mobile GmbH' => 'info@hufsecuremobile.com' }
+  s.author           = 'Huf Secure Mobile GmbH'
   s.source           = { :path => './' }
   s.ios.deployment_target = '10.0'
 
