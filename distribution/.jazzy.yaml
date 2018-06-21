@@ -1,0 +1,12 @@
+author: 'Huf Secure Mobile GmbH' 
+github_url: "https://github.com/hufsm/mobile-ios-ble" 
+xcodebuild_arguments: [build,-workspace,Example/SecureAccessBLE.xcworkspace,-scheme,SecureAccessBLE] 
+module: 'SecureAccessBLE'
+output: 'Docs'
+min_acl: 'public'
+hide_documentation_coverage: true
+exclude: 
+  - "SecureAccessBLE/Classes/Signals/*"
+  - "SecureAccessBLE/Classes/Subjects/*"
+  - "SecureAccessBLE/Classes/Converters/*"
+
