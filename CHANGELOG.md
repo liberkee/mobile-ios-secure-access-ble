@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 ### Added
+- 2018-06-01 : (PLAM-2860)  : Added configuration to create docs for distribution 
+
 ### Changed
 ### Fixed
 ### Removed
