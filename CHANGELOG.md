@@ -8,6 +8,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - 2018-06-01 : (PLAM-2860)  : Added configuration to create docs for distribution 
 
 ### Changed
+- 2018-06-28 : (PLAM-2860)  : Updated README.md and LICENSE.md for distribution 
+
 ### Fixed
 ### Removed
 

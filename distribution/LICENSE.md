@@ -1,4 +1,4 @@
-Copyright 2018 Huf Secure Mobile GmbH
+Copyright (c) 2018-present, Huf Secure Mobile GmbH
 
 The software contained within this package, including all enclosed library releases, documentation and source files ("the software") is provided solely for the purpose of evaluation of Huf Secure Mobile GmbH ("HSM") software, hardware and services by organizations or individuals directly and explicitly authorized by HSM to receive and evaluate this software. Any commercial application or redistribution is prohibited. The software remains the sole intellectual property of HSM.
 
