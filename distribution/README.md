@@ -76,7 +76,7 @@ sorcManager.connectionChange.subscribe { connectionChange in
 }
 ```
 
-Ensure you have all lease data and create `LeaseToken` and `LeaseTokenBlob` instances with them
+* Ensure you have all lease data and create `LeaseToken` and `LeaseTokenBlob` instances with them
 
 * Start connection
 
