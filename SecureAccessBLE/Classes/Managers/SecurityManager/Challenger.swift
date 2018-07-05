@@ -221,7 +221,7 @@ class Challenger {
 
     /// Handles message sent events. Finishes challenge if needed.
     ///
-    /// - Parameter message: message which wa sent
+    /// - Parameter message: message which was sent
     func handleSentChallengerMessage(_ message: SorcMessage) {
         guard message.id == .challengePhoneResponse else { return }
         if nr.count > 15 && nc.count > 15 {
