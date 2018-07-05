@@ -272,6 +272,8 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
 
 extension ConnectionManager {
     convenience init(configuration: ConnectionManager.Configuration = Configuration()) {
+        // Notice: since the queue is not specified here, the central manager will use current queue and
+        // call us on this queue accordingly, e.g. if we are on main thread here all the work will be done on main.
         let centralManager = CBCentralManager(delegate: nil, queue: nil,
                                               options: [CBPeripheralManagerOptionShowPowerAlertKey: 0])
 
