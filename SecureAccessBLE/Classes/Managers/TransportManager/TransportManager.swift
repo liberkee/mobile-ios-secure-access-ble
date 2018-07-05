@@ -191,8 +191,8 @@ class TransportManager: TransportManagerType {
         if let currentFrame = sendingPackage.currentFrame {
             sendFrame(currentFrame)
         } else {
-            dataSent.onNext(.success(sendingPackage.message))
             resetSendingPackage()
+            dataSent.onNext(.success(sendingPackage.message))
         }
     }
 
