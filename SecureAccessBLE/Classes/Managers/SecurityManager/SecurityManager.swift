@@ -207,8 +207,11 @@ class SecurityManager: SecurityManagerType {
 
     private func handleDataSentWhileChallenging(result: Result<Data>) {
         guard let sorcID = self.sorcID else { return }
-        if case .failure = result {
+        switch result {
+        case .failure:
             disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
+        case let .success(data):
+            challenger?.handleSentChallengerMessage(SorcMessage(rawData: data))
         }
     }
 

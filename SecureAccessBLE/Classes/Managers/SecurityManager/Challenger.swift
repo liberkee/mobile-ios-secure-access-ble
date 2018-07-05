@@ -215,8 +215,15 @@ class Challenger {
         try b3 = calculateB3(r5, b2: b2)
 
         let payload = PhoneToSorcResponse(response: b3)
-        let responseMessage = SorcMessage(id: SorcMessageID.challengePhoneResonse, payload: payload)
+        let responseMessage = SorcMessage(id: SorcMessageID.challengePhoneResponse, payload: payload)
         delegate?.challengerWantsSendMessage(responseMessage)
+    }
+
+    /// Handles message sent events. Finishes challenge if needed.
+    ///
+    /// - Parameter message: message which wa sent
+    func handleSentChallengerMessage(_ message: SorcMessage) {
+        guard message.id == .challengePhoneResponse else { return }
         if nr.count > 15 && nc.count > 15 {
             let sessionKey = [
                 nr[0], nr[1], nr[2], nr[3],
