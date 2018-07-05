@@ -11,6 +11,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - 2018-06-28 : (PLAM-2860)  : Updated README.md and LICENSE.md for distribution 
 
 ### Fixed
+- 2018-07-05 : (PLCR-429)  : Fix issue where cram stage was finished before "data sent" event was received
+
 ### Removed
 
 ## [3.0.0] - 2018-06-20
