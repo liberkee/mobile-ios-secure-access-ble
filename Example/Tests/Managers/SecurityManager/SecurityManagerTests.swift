@@ -111,7 +111,7 @@ class SecurityManagerTests: XCTestCase {
         // received: challengeSorcResponse
         // 36 00 2100 02 52423676688b220def81b4a508bc4e963e7d80cf2a21bf045ac8002e7d518f0e
         //
-        // send: challengePhoneResonse
+        // send: challengePhoneResponse
         // 30 00 1100 04 ebe47dec44b6926dd9e834ccdce524f7
     }
 
