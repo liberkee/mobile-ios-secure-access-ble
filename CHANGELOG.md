@@ -5,6 +5,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 ### Added
+### Changed
+### Fixed
+### Removed
+
+## [3.1.0] - 2018-07-11
+
+### Added
 - 2018-06-01 : (PLAM-2860)  : Added configuration to create docs for distribution 
 
 ### Changed
@@ -12,8 +19,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 - 2018-07-05 : (PLCR-429)  : Fix issue where cram stage was finished before "data sent" event was received
-
-### Removed
 
 ## [3.0.0] - 2018-06-20
 
