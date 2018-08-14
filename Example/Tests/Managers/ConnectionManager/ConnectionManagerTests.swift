@@ -169,7 +169,12 @@ class ConnectionManagerTests: XCTestCase {
     func test_startDiscovery_ifCentralManagerIsPoweredOn_scanForPeripheralsIsCalledAndDiscoveryIsEnabled() {
         // Given
         centralManager.state = .poweredOn
-        let connectionManager = ConnectionManager(centralManager: centralManager)
+        let appActivityStatusProvider = AppActivityStatusProviderMock()
+        let connectionManager = ConnectionManager(
+            centralManager: centralManager,
+            appActivityStatusProvider: appActivityStatusProvider
+        )
+        appActivityStatusProvider.appDidBecomeActiveSubject.onNext(false)
 
         // When
         connectionManager.startDiscovery()
@@ -192,6 +197,40 @@ class ConnectionManagerTests: XCTestCase {
         // Then
         XCTAssertNil(centralManager.scanForPeripheralsCalledWithArguments)
         XCTAssertTrue(connectionManager.discoveryChange.state.discoveryIsEnabled)
+    }
+
+    func test_startDiscovery_ifApplicationIsActive_doesNotSpecifyServiceIds() {
+        // Given
+        centralManager.state = .poweredOn
+        let appActivityStatusProvider = AppActivityStatusProviderMock()
+        let connectionManager = ConnectionManager(
+            centralManager: centralManager,
+            appActivityStatusProvider: appActivityStatusProvider
+        )
+        appActivityStatusProvider.appDidBecomeActiveSubject.onNext(true)
+
+        // When
+        connectionManager.startDiscovery()
+
+        // Then
+        XCTAssertNil(centralManager.scanForPeripheralsCalledWithArguments!.serviceUUIDs)
+    }
+
+    func test_startDiscovery_ifApplicationIsActive_specifiesServiceIds() {
+        // Given
+        centralManager.state = .poweredOn
+        let appActivityStatusProvider = AppActivityStatusProviderMock()
+        let connectionManager = ConnectionManager(
+            centralManager: centralManager,
+            appActivityStatusProvider: appActivityStatusProvider
+        )
+        appActivityStatusProvider.appDidBecomeActiveSubject.onNext(false)
+
+        // When
+        connectionManager.startDiscovery()
+
+        // Then
+        XCTAssertEqual(centralManager.scanForPeripheralsCalledWithArguments!.serviceUUIDs!, [CBUUID(string: "0x180A")])
     }
 
     func test_stopDiscovery_stopsScanOnCentralAndDiscoveryIsNotEnabled() {
@@ -450,7 +489,12 @@ class ConnectionManagerTests: XCTestCase {
 
     func test_centralManagerDidUpdateState_ifCentralManagerIsPoweredOnAndDiscoveryIsEnabled_itScansForPeripheralsAllowingDuplicates() {
         // Given
-        let connectionManager = ConnectionManager(centralManager: centralManager)
+        let appActivityStatusProvider = AppActivityStatusProviderMock()
+        let connectionManager = ConnectionManager(
+            centralManager: centralManager,
+            appActivityStatusProvider: appActivityStatusProvider
+        )
+        appActivityStatusProvider.appDidBecomeActiveSubject.onNext(false)
         startDiscovery(connectionManager: connectionManager, centralManager: centralManager)
 
         // When

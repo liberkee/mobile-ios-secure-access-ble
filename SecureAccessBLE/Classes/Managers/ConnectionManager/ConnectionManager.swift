@@ -81,7 +81,11 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
 
     private let disposeBag = DisposeBag()
 
-    fileprivate var applicationIsActive = false
+    /// Flag identifying if the `UIApplication` state is active. On initialization this value is nil.
+    /// The value is set
+    /// 1. if the `AppActivityStatusProvider` notifies about app status changes
+    /// 2. automatically on `startDiscovery` call if it was not determined before
+    fileprivate var applicationIsActive: Bool?
 
     fileprivate var connectedSorc: DiscoveredSorc? {
         if case let .connected(sorcID) = connectionState {
@@ -125,15 +129,20 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
         filterTimer?.invalidate()
     }
 
+    /// Starts discovery if the central manager state is `poweredOn`.
+    /// The method will determine the `UIApplicationState` asynchronously if it is not known and start discovery after that.
     func startDiscovery() {
         updateDiscoveryChange(action: .startDiscovery)
         guard centralManager.state == .poweredOn else { return }
 
-        if applicationIsActive {
-            centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: 1])
+        if let state = applicationIsActive {
+            startDiscovery(applicationIsActive: state)
         } else {
-            let cbuuid = CBUUID(string: ConnectionManager.Configuration.advertisedServiceID)
-            centralManager.scanForPeripherals(withServices: [cbuuid], options: [CBCentralManagerScanOptionAllowDuplicatesKey: 1])
+            DispatchQueue.main.async {
+                let state = UIApplication.shared.applicationState == .active
+                self.applicationIsActive = state
+                self.startDiscovery(applicationIsActive: state)
+            }
         }
     }
 
@@ -267,6 +276,15 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
 
     fileprivate func peripheralMatchingSorcID(_ sorcID: SorcID) -> CBPeripheralType? {
         return discoveredSorcs[sorcID]?.peripheral
+    }
+
+    private func startDiscovery(applicationIsActive: Bool) {
+        if applicationIsActive {
+            centralManager.scanForPeripherals(withServices: nil, options: [CBCentralManagerScanOptionAllowDuplicatesKey: 1])
+        } else {
+            let cbuuid = CBUUID(string: ConnectionManager.Configuration.advertisedServiceID)
+            centralManager.scanForPeripherals(withServices: [cbuuid], options: [CBCentralManagerScanOptionAllowDuplicatesKey: 1])
+        }
     }
 }
 
