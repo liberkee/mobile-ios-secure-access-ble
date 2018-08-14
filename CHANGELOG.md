@@ -7,6 +7,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 ### Changed
 ### Fixed
+- 2018-08-14 : (PLAM-3188)  : Determine the application state if it is not set on discovery start 
+
 ### Removed
 
 ## [3.1.0] - 2018-07-11
