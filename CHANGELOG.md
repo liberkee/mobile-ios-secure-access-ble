@@ -9,6 +9,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 ### Removed
 
+## [3.1.2] - 2018-08-20
+
+### Fixed
+- 2018-08-14 : (PLAM-3206)  : Fixed the version number for distribution 
+
 ## [3.1.1] - 2018-08-14
 
 ### Fixed
