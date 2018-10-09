@@ -138,7 +138,7 @@ class Challenger {
 
         do {
             let iv = Array<UInt8>(repeating: 0, count: AES.blockSize)
-            let aesCrypto = try AES(key: key, blockMode: .CBC(iv: iv), padding: Padding.noPadding)
+            let aesCrypto = try AES(key: key, blockMode: CBC(iv: iv), padding: Padding.noPadding)
             crypto = aesCrypto
         } catch {
             return nil
