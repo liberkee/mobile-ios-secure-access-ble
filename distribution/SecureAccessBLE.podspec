@@ -20,8 +20,8 @@ Pod::Spec.new do |s|
 
   s.frameworks = 'CoreBluetooth'
 
-  s.dependency 'CryptoSwift', '0.9.0'
+  s.dependency 'CryptoSwift', '0.12.0'
   s.ios.vendored_frameworks = 'SecureAccessBLE.framework'
-  s.swift_version = '4.1'
+  s.swift_version = '4.2'
   
 end
