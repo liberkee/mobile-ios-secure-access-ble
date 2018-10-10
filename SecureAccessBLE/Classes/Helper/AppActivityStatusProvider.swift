@@ -22,14 +22,14 @@ class AppActivityStatusProvider: AppActivityStatusProviderType {
         notificationCenter.addObserver(
             self,
             selector: #selector(handleAppDidBecomeActive),
-            name: Notification.Name.UIApplicationDidBecomeActive,
+            name: UIApplication.didBecomeActiveNotification,
             object: nil
         )
 
         notificationCenter.addObserver(
             self,
             selector: #selector(handleAppDidEnterBackground),
-            name: Notification.Name.UIApplicationDidEnterBackground,
+            name: UIApplication.didEnterBackgroundNotification,
             object: nil
         )
     }
