@@ -5,12 +5,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 ### Added
-- 2018-10-10 : (PLAM-3393)  : Migrated to Swift 4.2
-- 2018-10-10 : (PLAM-3393)  : Upgraded to CryptoSwift 0.12.0
-
 ### Changed
 ### Fixed
 ### Removed
+
+## [3.2.0] - 2018-10-10
+
+### Added
+- 2018-10-10 : (PLAM-3393)  : Migrated to Swift 4.2
+- 2018-10-10 : (PLAM-3393)  : Upgraded to CryptoSwift 0.12.0
 
 ## [3.1.2] - 2018-08-20
 
