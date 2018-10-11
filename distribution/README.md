@@ -4,7 +4,7 @@
 Framework for communicating with the Secure Access BLE hardware.
 
 ## Prerequisites
-* [Xcode 9.4](https://developer.apple.com/xcode/ide/)
+* [Xcode 10.0](https://developer.apple.com/xcode/ide/)
 * [CocoaPods 1.4.0](https://cocoapods.org)
 
 ## License

@@ -1,3 +1,7 @@
+# [3.2.0] - 2018-10-11
+
+- Updated for Xcode 10 and Swift 4.2
+
 # [3.1.2] - 2018-08-20
 
 - Fixed the version number for distribution 
