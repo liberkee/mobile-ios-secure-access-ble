@@ -23,4 +23,5 @@ Pod::Spec.new do |s|
 
   s.dependency 'CryptoSwift', '0.12.0'
   
+  s.swift_version = '4.2'
 end
