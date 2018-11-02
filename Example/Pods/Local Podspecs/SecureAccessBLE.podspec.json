@@ -1,6 +1,6 @@
 {
   "name": "SecureAccessBLE",
-  "version": "3.2.0",
+  "version": "3.2.1",
   "summary": "SecureAccess BLE framework",
   "description": "Framework for communicating with the SecureAccess BLE hardware.",
   "homepage": "https://github.com/hufsm/mobile-ios-ble",
@@ -13,7 +13,7 @@
   },
   "source": {
     "git": "https://github.com/hufsm/mobile-ios-ble.git",
-    "tag": "3.2.0"
+    "tag": "3.2.1"
   },
   "platforms": {
     "ios": "10.0"
@@ -23,5 +23,6 @@
     "CryptoSwift": [
       "0.12.0"
     ]
-  }
+  },
+  "swift_version": "4.2"
 }

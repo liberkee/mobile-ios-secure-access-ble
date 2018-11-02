@@ -1,3 +1,7 @@
+# [3.2.1] - 2018-11-02
+
+- Added debug symbols
+
 # [3.2.0] - 2018-10-11
 
 - Updated for Xcode 10 and Swift 4.2
