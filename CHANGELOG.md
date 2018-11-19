@@ -5,8 +5,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 ### Added
+- 2018-11-19 : (PLCR-574)  : Added possibility to scan for peripherals with manufacturer data longer then 16 bytes
+
 ### Changed
 ### Fixed
+- 2018-11-19 : (PLCR-574)  : Fix identification of lost peripherals
+
 ### Removed
 
 ## [3.2.0] - 2018-10-10
