@@ -209,7 +209,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
         }
     }
 
-    @objc private func removeOutdatedSorcs() {
+    private func removeOutdatedSorcs() {
         let outdatedSorcs = Array(discoveredSorcs.values).filter { (sorc) -> Bool in
             let discoveredAgoInterval = systemClock.timeIntervalSinceNow(for: sorc.discoveryDate)
             let outdated = discoveredAgoInterval < -configuration.sorcOutdatedDuration
@@ -300,7 +300,7 @@ extension ConnectionManager {
 
         let createTimer: ConnectionManager.CreateTimer = { block in
             Timer.scheduledTimer(
-                withTimeInterval: 2.0,
+                withTimeInterval: configuration.removeOutdatedSorcsInterval,
                 repeats: true,
                 block: { _ in
                     block()
