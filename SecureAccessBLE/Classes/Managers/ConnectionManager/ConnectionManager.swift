@@ -299,11 +299,12 @@ extension ConnectionManager {
         let systemClock = SystemClock()
 
         let createTimer: ConnectionManager.CreateTimer = { block in
-            Timer(
-                timeInterval: configuration.removeOutdatedSorcsInterval,
+            Timer.scheduledTimer(
+                withTimeInterval: configuration.removeOutdatedSorcsInterval,
                 repeats: true,
-                block: { _ in block() }
-            )
+                block: { _ in
+                    block()
+            })
         }
 
         let appActivityStatusProvider = AppActivityStatusProvider(notificationCenter: NotificationCenter.default)
@@ -345,8 +346,8 @@ extension ConnectionManager {
                          advertisementData: [String: Any], rssi RSSI: NSNumber) {
         guard discoveryChange.state.discoveryIsEnabled,
             let manufacturerData = advertisementData[CBAdvertisementDataManufacturerDataKey] as? Data,
-            let sorcID = UUID(data: manufacturerData) else { return }
-
+            manufacturerData.count >= 16,
+            let sorcID = UUID(data: manufacturerData.subdata(in: 0 ..< 16)) else { return }
         let sorc = DiscoveredSorc(sorcID: sorcID, peripheral: peripheral, discoveryDate: systemClock.now(), rssi: RSSI.intValue)
         updateDiscoveredSorcsWithNewSorc(sorc)
     }

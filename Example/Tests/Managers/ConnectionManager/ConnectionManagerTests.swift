@@ -582,6 +582,37 @@ class ConnectionManagerTests: XCTestCase {
         XCTAssertEqual(receivedDiscoveryChange.action, .discovered(sorcID: sorcID1))
     }
 
+    func test_centralManagerDidDiscoverPeripheral_ifManufacturerDataKeyIsSet_valueIsLongerThen16Bytes_addsSorcToDiscoveredSorcs() {
+        // Given
+        let now = Date(timeIntervalSince1970: 0)
+        let systemClock = SystemClockMock(currentNow: now)
+        let connectionManager = ConnectionManager(centralManager: centralManager, systemClock: systemClock)
+        startDiscovery(connectionManager: connectionManager, centralManager: centralManager)
+
+        let peripheral = CBPeripheralMock()
+
+        let strippedSorcID = sorcID1.lowercasedUUIDString.replacingOccurrences(of: "-", with: "")
+        let extendedManufacturerDataMessage = (strippedSorcID + "FFAACC")
+
+        let advertisementData: [String: Any] = [
+            CBAdvertisementDataManufacturerDataKey: extendedManufacturerDataMessage.dataFromHexadecimalString()!
+        ]
+
+        var receivedDiscoveryChange: DiscoveryChange!
+        _ = connectionManager.discoveryChange.subscribeNext { change in
+            receivedDiscoveryChange = change
+        }
+
+        // When
+        connectionManager.centralManager_(centralManager, didDiscover: peripheral, advertisementData: advertisementData,
+                                          rssi: 60)
+
+        // Then
+        XCTAssert(receivedDiscoveryChange.state.discoveredSorcs.contains(sorcID1))
+        XCTAssertEqual(receivedDiscoveryChange.state.discoveredSorcs[sorcID1]!, SorcInfo(sorcID: sorcID1, discoveryDate: now, rssi: 60))
+        XCTAssertEqual(receivedDiscoveryChange.action, .discovered(sorcID: sorcID1))
+    }
+
     func test_centralManagerDidDiscoverPeripheral_ifManufacturerDataKeyIsNotSet_doesNotUpdateDiscoveredSorcs() {
         // Given
         centralManager.state = .poweredOn
