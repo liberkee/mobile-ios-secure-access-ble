@@ -1,3 +1,7 @@
+# [3.2.2] - 2018-12-03
+
+- Added a fix for identification of lost peripherals
+
 # [3.2.1] - 2018-11-02
 
 - Added debug symbols
