@@ -221,6 +221,83 @@ class SecurityManagerTests: XCTestCase {
     //        }
     //    }
 
+    func test_dataReceived_ltBlobRequest_messageCounterBigger_sendsBlob() {
+        // Given
+        let blob = try! LeaseTokenBlob(messageCounter: 5, data: "MQ==")
+        prepareChallengingConnecting(blob: blob)
+
+        let ltBlobRequestMessage = SorcMessage(rawData: Data(bytes: [
+            SorcMessageID.ltBlobRequest.rawValue,
+            0x01, // blob type
+            0x00, 0x00, 0x00, 0x04 // blob message counter
+        ]))
+
+        // When
+        transportManager.dataReceived.onNext(.success(ltBlobRequestMessage.data))
+
+        // Then
+        let receivedSendBlobMessage = transportManager.sendDataCalledWithData
+        let message = SorcMessage(rawData: receivedSendBlobMessage!)
+        XCTAssertEqual(message.message.base64EncodedString(), blob.data)
+        XCTAssertEqual(message.id, .ltBlob)
+    }
+
+    func test_dataReceived_ltBlobRequest_messageCounterEquals_disconnects() {
+        // Given
+        let blob = try! LeaseTokenBlob(messageCounter: 5, data: "MQ==")
+        prepareChallengingConnecting(blob: blob)
+        let ltBlobRequestMessage = SorcMessage(rawData: Data(bytes: [
+            SorcMessageID.ltBlobRequest.rawValue,
+            0x01, // blob type
+            0x00, 0x00, 0x00, 0x05 // blob message counter
+        ]))
+
+        // When
+        transportManager.dataReceived.onNext(.success(ltBlobRequestMessage.data))
+
+        // Then
+        XCTAssertTrue(transportManager.disconnectCalled)
+    }
+
+    func test_dataReceived_badChallengeResponse_messageCounterBigger_sendsBlob() {
+        // Given
+        let blob = try! LeaseTokenBlob(messageCounter: 5, data: "MQ==")
+        prepareChallengingConnecting(blob: blob)
+
+        let badChallengeResponseMessage = SorcMessage(rawData: Data(bytes: [
+            SorcMessageID.badChallengeSorcResponse.rawValue,
+            0x01, // blob type
+            0x00, 0x00, 0x00, 0x04 // blob message counter
+        ]))
+
+        // When
+        transportManager.dataReceived.onNext(.success(badChallengeResponseMessage.data))
+
+        // Then
+        let receivedSendBlobMessage = transportManager.sendDataCalledWithData
+        let message = SorcMessage(rawData: receivedSendBlobMessage!)
+        XCTAssertEqual(message.message.base64EncodedString(), blob.data)
+        XCTAssertEqual(message.id, .ltBlob)
+    }
+
+    func test_dataReceived_badChallengeResponse_messageCounterEquals_disconnects() {
+        // Given
+        let blob = try! LeaseTokenBlob(messageCounter: 5, data: "MQ==")
+        prepareChallengingConnecting(blob: blob)
+
+        let badChallengeResponseMessage = SorcMessage(rawData: Data(bytes: [
+            SorcMessageID.badChallengeSorcResponse.rawValue,
+            0x01, // blob type
+            0x00, 0x00, 0x00, 0x05 // blob message counter
+        ]))
+
+        // When
+        transportManager.dataReceived.onNext(.success(badChallengeResponseMessage.data))
+
+        // Then
+        XCTAssertTrue(transportManager.disconnectCalled)
+    }
+
     func test_requestServiceGrant_ifNotConnected_itDoesNothing() {
         // When
         let message = SorcMessage(
@@ -235,21 +312,21 @@ class SecurityManagerTests: XCTestCase {
 
     // MARK: - State preparation
 
-    private func preparePhysicalConnecting() {
-        securityManager.connectToSorc(leaseToken: leaseTokenA, leaseTokenBlob: leaseTokenBlobA)
+    private func preparePhysicalConnecting(blob: LeaseTokenBlob? = nil) {
+        securityManager.connectToSorc(leaseToken: leaseTokenA, leaseTokenBlob: blob ?? leaseTokenBlobA)
         transportManager.connectToSorcCalledWithSorcID = nil
     }
 
-    private func prepareTransportConnecting() {
-        preparePhysicalConnecting()
+    private func prepareTransportConnecting(blob: LeaseTokenBlob? = nil) {
+        preparePhysicalConnecting(blob: blob)
         transportManager.connectionChange.onNext(.init(
             state: .connecting(sorcID: sorcIDA, state: .requestingMTU),
             action: .physicalConnectionEstablished(sorcID: sorcIDA)
         ))
     }
 
-    private func prepareChallengingConnecting() {
-        prepareTransportConnecting()
+    private func prepareChallengingConnecting(blob: LeaseTokenBlob? = nil) {
+        prepareTransportConnecting(blob: blob)
         transportManager.connectionChange.onNext(.init(
             state: .connected(sorcID: sorcIDA),
             action: .connectionEstablished(sorcID: sorcIDA)

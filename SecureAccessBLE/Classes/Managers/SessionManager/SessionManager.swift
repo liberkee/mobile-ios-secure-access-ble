@@ -351,6 +351,8 @@ private extension ConnectingFailedError {
             self = .challengeFailed
         case .blobOutdated:
             self = .blobOutdated
+        case .invalidTimeFrame:
+            self = .invalidTimeFrame
         }
     }
 }

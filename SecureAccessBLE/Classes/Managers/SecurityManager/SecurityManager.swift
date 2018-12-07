@@ -248,10 +248,15 @@ class SecurityManager: SecurityManagerType {
                 disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
             }
         case .ltBlobRequest:
-            guard let messageCounter = leaseTokenBlob?.messageCounter else { return }
-            let payload = BlobRequest(rawData: message.message)
-            if messageCounter > payload.blobMessageID {
+            guard let messageCounter = leaseTokenBlob?.messageCounter,
+                let blobRequestPayload = try? BlobRequest(rawData: message.message) else { return }
+            let blobRequestCounter = blobRequestPayload.blobMessageCounter
+            if messageCounter > blobRequestCounter {
                 sendBlob()
+            } else if messageCounter == blobRequestCounter {
+                disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .invalidTimeFrame))
+            } else {
+                disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .blobOutdated))
             }
         default: break
         }
@@ -293,11 +298,17 @@ extension SecurityManager: ChallengerDelegate {
 
     func challengerNeedsSendBlob(latestBlobCounter: Int?) {
         guard let sorcID = self.sorcID, let messageCounter = leaseTokenBlob?.messageCounter else { return }
-        guard latestBlobCounter == nil || messageCounter >= latestBlobCounter! else {
-            disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .blobOutdated))
-            return
+        if let counter = latestBlobCounter {
+            if messageCounter > counter {
+                sendBlob()
+            } else if messageCounter == counter {
+                disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .invalidTimeFrame))
+            } else {
+                disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .blobOutdated))
+            }
+        } else {
+            sendBlob()
         }
-        sendBlob()
     }
 }
 

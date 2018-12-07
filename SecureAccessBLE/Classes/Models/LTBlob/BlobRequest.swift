@@ -12,14 +12,26 @@ import Foundation
  *  To build MessagePayload as Blob request sending to SORC
  */
 struct BlobRequest: SorcMessagePayload {
-    /// Start message payload as NSData for blob request
-    var data: Data
-    /// The message id as Int
-    var blobMessageID: Int {
-        let type: UInt32 = 0
-        var receiveData = UInt8(type)
-        (data as Data).copyBytes(to: &receiveData, count: MemoryLayout<UInt32>.size)
-        return Int(receiveData)
+    enum Error: Swift.Error {
+        case invalidSize
+    }
+
+    var data: Data {
+        get {
+            return backingData
+        }
+        set {}
+    }
+
+    // private property holding data since we don't want it to be mutated after creation
+    private let backingData: Data
+
+    /// blob message counter
+    var blobMessageCounter: Int {
+        let result: UInt32 = data.subdata(in: 1 ..< data.count).withUnsafeBytes { (ptr: UnsafePointer<UInt32>) -> UInt32 in
+            return UInt32(bigEndian: ptr.pointee)
+        }
+        return Int(result)
     }
 
     /**
@@ -29,7 +41,10 @@ struct BlobRequest: SorcMessagePayload {
 
      - returns: Messag payload object
      */
-    init(rawData: Data) {
-        data = rawData
+    init(rawData: Data) throws {
+        guard rawData.count == 5 else {
+            throw Error.invalidSize
+        }
+        backingData = rawData
     }
 }

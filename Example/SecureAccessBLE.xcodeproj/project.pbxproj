@@ -27,6 +27,7 @@
 		9913241220D94CB3001D83FC /* PublishSubject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991323E820D94C29001D83FC /* PublishSubject.swift */; };
 		9913241320D94CB3001D83FC /* Disposing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991323E920D94C29001D83FC /* Disposing.swift */; };
 		9913241420D94CB3001D83FC /* ChangeSubject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991323EA20D94C29001D83FC /* ChangeSubject.swift */; };
+		9916AC0121BA75F700BEC5F0 /* SorcMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9916AC0021BA75F700BEC5F0 /* SorcMessageTests.swift */; };
 		9917E9D81FBAF7C8002D5CE3 /* SorcManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E504030A1F5553830008DF02 /* SorcManagerType.swift */; };
 		9917E9D91FBAF7C8002D5CE3 /* SorcManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50403061F546FFF0008DF02 /* SorcManager.swift */; };
 		9917E9DA1FBAF7C8002D5CE3 /* SorcManagerConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50C4E911F5F3F380081B619 /* SorcManagerConfiguration.swift */; };
@@ -125,6 +126,7 @@
 		991323EF20D94C29001D83FC /* HSMLogging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HSMLogging.swift; sourceTree = "<group>"; };
 		991323F120D94C29001D83FC /* ArrayExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayExtensions.swift; sourceTree = "<group>"; };
 		9913240320D94C81001D83FC /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
+		9916AC0021BA75F700BEC5F0 /* SorcMessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SorcMessageTests.swift; sourceTree = "<group>"; };
 		99D123391F9A3B20006012DE /* SecureAccessBLE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SecureAccessBLE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		99D1233B1F9A3B20006012DE /* SecureAccessBLE.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SecureAccessBLE.h; sourceTree = "<group>"; };
 		99D1233C1F9A3B20006012DE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -304,6 +306,7 @@
 		607FACE81AFB9204008FA782 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				9916ABFF21BA75DB00BEC5F0 /* Model */,
 				E50403191F55BFD50008DF02 /* Managers */,
 				E5CF3ADC1F56FDAC009C95A0 /* Helper */,
 				46B760901DA26C40003ADDB1 /* BLEManagerTests.swift */,
@@ -408,6 +411,14 @@
 				9913240320D94C81001D83FC /* Result.swift */,
 			);
 			path = ErrorHandling;
+			sourceTree = "<group>";
+		};
+		9916ABFF21BA75DB00BEC5F0 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				9916AC0021BA75F700BEC5F0 /* SorcMessageTests.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 		99D1233A1F9A3B20006012DE /* SecureAccessBLE */ = {
@@ -804,6 +815,7 @@
 				E5CF3AE61F586EF4009C95A0 /* SecurityManagerTests.swift in Sources */,
 				E5CF3AE31F586EB7009C95A0 /* ConnectionManagerTests.swift in Sources */,
 				E50403201F55BFD50008DF02 /* SorcManagerTests.swift in Sources */,
+				9916AC0121BA75F700BEC5F0 /* SorcMessageTests.swift in Sources */,
 				E5CF3AF01F587164009C95A0 /* ChallengerTests.swift in Sources */,
 				46B760911DA26C40003ADDB1 /* BLEManagerTests.swift in Sources */,
 				7B054B1F895284FFC83B8030 /* AesCbcTestCryptoManager.swift in Sources */,
