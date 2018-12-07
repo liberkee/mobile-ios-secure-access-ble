@@ -10,7 +10,7 @@ import CoreBluetooth
 import Foundation
 
 protocol CBCentralManagerType: class {
-    weak var delegate: CBCentralManagerDelegate? { get set }
+    var delegate: CBCentralManagerDelegate? { get set }
 
     var state: CBManagerState { get }
 
@@ -34,7 +34,7 @@ extension CBCentralManager: CBCentralManagerType {
 }
 
 protocol CBPeripheralType: class {
-    weak var delegate: CBPeripheralDelegate? { get set }
+    var delegate: CBPeripheralDelegate? { get set }
 
     var services_: [CBServiceType]? { get }
 
