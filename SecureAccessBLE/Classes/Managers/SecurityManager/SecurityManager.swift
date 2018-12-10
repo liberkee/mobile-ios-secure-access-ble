@@ -251,13 +251,7 @@ class SecurityManager: SecurityManagerType {
             guard let messageCounter = leaseTokenBlob?.messageCounter,
                 let blobRequestPayload = try? BlobRequest(rawData: message.message) else { return }
             let blobRequestCounter = blobRequestPayload.blobMessageCounter
-            if messageCounter > blobRequestCounter {
-                sendBlob()
-            } else if messageCounter == blobRequestCounter {
-                disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .invalidTimeFrame))
-            } else {
-                disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .blobOutdated))
-            }
+            handleBlobRequestDependingOnCounter(counterFromSorc: blobRequestCounter, localCounter: messageCounter, sorcId: sorcID)
         default: break
         }
     }
@@ -271,6 +265,16 @@ class SecurityManager: SecurityManagerType {
             messageReceived.onNext(messageResult)
         case let .failure(error):
             messageReceived.onNext(.failure(error))
+        }
+    }
+
+    private func handleBlobRequestDependingOnCounter(counterFromSorc: Int, localCounter: Int, sorcId: SorcID) {
+        if localCounter > counterFromSorc {
+            sendBlob()
+        } else if localCounter == counterFromSorc {
+            disconnect(withAction: .connectingFailed(sorcID: sorcId, error: .invalidTimeFrame))
+        } else {
+            disconnect(withAction: .connectingFailed(sorcID: sorcId, error: .blobOutdated))
         }
     }
 }
@@ -299,13 +303,7 @@ extension SecurityManager: ChallengerDelegate {
     func challengerNeedsSendBlob(latestBlobCounter: Int?) {
         guard let sorcID = self.sorcID, let messageCounter = leaseTokenBlob?.messageCounter else { return }
         if let counter = latestBlobCounter {
-            if messageCounter > counter {
-                sendBlob()
-            } else if messageCounter == counter {
-                disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .invalidTimeFrame))
-            } else {
-                disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .blobOutdated))
-            }
+            handleBlobRequestDependingOnCounter(counterFromSorc: counter, localCounter: messageCounter, sorcId: sorcID)
         } else {
             sendBlob()
         }

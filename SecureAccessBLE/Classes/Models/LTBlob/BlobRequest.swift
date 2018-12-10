@@ -35,11 +35,11 @@ struct BlobRequest: SorcMessagePayload {
     }
 
     /**
-     Initialization point for Blob request pasyload
+     Initialization point for Blob request payload
 
      - parameter rawData: the message data
 
-     - returns: Messag payload object
+     - returns: Message payload object
      */
     init(rawData: Data) throws {
         guard rawData.count == 5 else {
