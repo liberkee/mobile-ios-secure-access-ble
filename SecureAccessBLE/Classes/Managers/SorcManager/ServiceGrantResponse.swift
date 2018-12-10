@@ -34,8 +34,11 @@ public struct ServiceGrantResponse: Equatable {
         /// The request finished with failure
         case failure = 0x02
 
+        /// The request failed due to invalid time frame
+        case invalidTimeFrame = 0x03
+
         /// The request is not allowed
-        case notAllowed = 0x03
+        case notAllowed = 0x04
     }
 
     /// :nodoc:

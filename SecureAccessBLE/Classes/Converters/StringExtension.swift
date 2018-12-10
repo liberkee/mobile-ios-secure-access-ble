@@ -43,7 +43,7 @@ extension String {
             .distance(from: trimmedString.startIndex, to: trimmedString.endIndex), by: 2) {
             let subStringRange = trimmedString.index(trimmedString.startIndex, offsetBy: index)
                 ..< trimmedString.index(trimmedString.startIndex, offsetBy: index + 2)
-            let byteString = trimmedString.substring(with: subStringRange)
+            let byteString = trimmedString[subStringRange]
             let num = UInt8(byteString.withCString { strtoul($0, nil, 16) })
             data?.append([num] as [UInt8], length: 1)
         }

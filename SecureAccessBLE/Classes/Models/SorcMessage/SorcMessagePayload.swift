@@ -13,7 +13,7 @@ import Foundation
  */
 protocol SorcMessagePayload {
     /// message payload defined as Data
-    var data: Data { set get }
+    var data: Data { get set }
 }
 
 // MARK: - Extension end point

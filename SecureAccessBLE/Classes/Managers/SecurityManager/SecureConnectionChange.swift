@@ -97,6 +97,7 @@ extension SecureConnectionChange {
         case invalidMTUResponse
         case challengeFailed
         case blobOutdated
+        case invalidTimeFrame
     }
 
     /// The errors that can occur if the connection is lost

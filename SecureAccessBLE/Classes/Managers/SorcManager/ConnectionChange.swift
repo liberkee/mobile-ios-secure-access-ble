@@ -136,6 +136,9 @@ public enum ConnectingFailedError: Error {
 
     /// BLOB is outdated
     case blobOutdated
+
+    /// BLOB time check failed
+    case invalidTimeFrame
 }
 
 /// The errors that can occur if the connection is lost

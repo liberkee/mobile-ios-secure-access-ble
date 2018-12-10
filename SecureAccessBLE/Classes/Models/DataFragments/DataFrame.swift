@@ -27,9 +27,9 @@ enum DataFrameType: UInt8 {
 }
 
 /**
- *  The transport layer frame will be builed here.
+ *  The transport layer frame will be built here.
  *  Depending on the type of fragment the transport layer frame has different layout.
- *  It can be signalled in MSG_PROP if an ACK is expected from the peer and
+ *  It can be signaled in MSG_PROP if an ACK is expected from the peer and
  *  if that is per fragment or per frame.
  */
 struct DataFrame {
@@ -44,7 +44,7 @@ struct DataFrame {
         }
     }
 
-    /// If ACKnowledgement need or not as Bool
+    /// If ACKnowledgement needed or not as Bool
     var ackNeeded: Bool {
         let ackFlag: UInt8 = 0x01 << 1
         var byteArray = [UInt8](repeating: 0x0, count: 1)
