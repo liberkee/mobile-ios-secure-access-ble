@@ -176,13 +176,9 @@ class Challenger {
         case .ltAck:
             try beginChallenge()
         case .badChallengeSorcResponse:
-            if let blobRequest = try? BlobRequest(rawData: message.message) {
-                HSMLog(message: "BLE - Box is asking for a newer blob version than \(blobRequest.blobMessageCounter)", level: .debug)
-                delegate?.challengerNeedsSendBlob(latestBlobCounter: Int(blobRequest.blobMessageCounter))
-            } else {
-                HSMLog(message: "BLE - Challenge needs send blob", level: .debug)
-                delegate?.challengerNeedsSendBlob(latestBlobCounter: nil)
-            }
+            let blobMessageCounter: Int? = (try? BlobRequest(rawData: message.message))?.blobMessageCounter
+            HSMLog(message: "BLE - badChallengeSorcResponse with blob message counter: \(String(describing: blobMessageCounter))", level: .debug)
+            delegate?.challengerNeedsSendBlob(latestBlobCounter: blobMessageCounter)
         case .challengeSorcResponse:
             try continueChallenge(message)
         default:

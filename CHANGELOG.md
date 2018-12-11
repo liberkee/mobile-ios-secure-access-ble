@@ -5,7 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 ### Added
-- 2018-12-07 : (PLCR-712)  : Added SORC time check handling
+- 2018-12-11 : (PLCR-712)  : Added SORC time check handling
 
 ### Changed
 ### Fixed
