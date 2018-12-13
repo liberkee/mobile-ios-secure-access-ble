@@ -1,3 +1,7 @@
+# [3.3.0] - 2018-12-13
+
+- The library now explicitly communicates expired leases instead of reporting them as generic security errors / service grant denied.
+
 # [3.2.2] - 2018-12-03
 
 - Added a fix for identification of lost peripherals
