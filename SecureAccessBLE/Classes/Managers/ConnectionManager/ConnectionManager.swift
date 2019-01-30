@@ -286,6 +286,16 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
             centralManager.scanForPeripherals(withServices: [cbuuid], options: [CBCentralManagerScanOptionAllowDuplicatesKey: 1])
         }
     }
+
+    private func extractSorcID(from manufacturerData: Data) -> UUID? {
+        if manufacturerData.count >= 18, manufacturerData.subdata(in: 0 ..< 2) == Data(bytes: Configuration.advertisedCompanyID) {
+            return UUID(data: manufacturerData.subdata(in: 2 ..< 18))
+        } else if manufacturerData.count >= 16 {
+            return UUID(data: manufacturerData.subdata(in: 0 ..< 16))
+        } else {
+            return nil
+        }
+    }
 }
 
 extension ConnectionManager {
@@ -345,9 +355,10 @@ extension ConnectionManager {
     func centralManager_(_: CBCentralManagerType, didDiscover peripheral: CBPeripheralType,
                          advertisementData: [String: Any], rssi RSSI: NSNumber) {
         guard discoveryChange.state.discoveryIsEnabled,
-            let manufacturerData = advertisementData[CBAdvertisementDataManufacturerDataKey] as? Data,
-            manufacturerData.count >= 16,
-            let sorcID = UUID(data: manufacturerData.subdata(in: 0 ..< 16)) else { return }
+            let manufacturerData = advertisementData[CBAdvertisementDataManufacturerDataKey] as? Data else { return }
+
+        guard let sorcID = extractSorcID(from: manufacturerData) else { return }
+
         let sorc = DiscoveredSorc(sorcID: sorcID, peripheral: peripheral, discoveryDate: systemClock.now(), rssi: RSSI.intValue)
         updateDiscoveredSorcsWithNewSorc(sorc)
     }

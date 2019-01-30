@@ -5,11 +5,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 ### Added
+- 2018-12-11 : (PLCR-790)  : Added possibility to scan for peripherals with manufacturer data containing the company ID
+
 ### Changed
 ### Fixed
 ### Removed
 
-## [3.3.0]
+## [3.3.0] - 2018-12-13
 
 ### Added
 - 2018-12-11 : (PLCR-712)  : Added SORC time check handling
