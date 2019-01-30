@@ -561,8 +561,7 @@ class ConnectionManagerTests: XCTestCase {
 
         let peripheral = CBPeripheralMock()
 
-        let strippedSorcID = sorcID1.lowercasedUUIDString.replacingOccurrences(of: "-", with: "")
-            .dataFromHexadecimalString()!
+        let strippedSorcID = strippedUUIDString(sorcID1).dataFromHexadecimalString()!
         let advertisementData: [String: Any] = [
             CBAdvertisementDataManufacturerDataKey: strippedSorcID
         ]
@@ -573,8 +572,7 @@ class ConnectionManagerTests: XCTestCase {
         }
 
         // When
-        connectionManager.centralManager_(centralManager, didDiscover: peripheral, advertisementData: advertisementData,
-                                          rssi: 60)
+        connectionManager.centralManager_(centralManager, didDiscover: peripheral, advertisementData: advertisementData, rssi: 60)
 
         // Then
         XCTAssert(receivedDiscoveryChange.state.discoveredSorcs.contains(sorcID1))
@@ -582,7 +580,7 @@ class ConnectionManagerTests: XCTestCase {
         XCTAssertEqual(receivedDiscoveryChange.action, .discovered(sorcID: sorcID1))
     }
 
-    func test_centralManagerDidDiscoverPeripheral_ifManufacturerDataKeyIsSet_valueIsLongerThen16Bytes_addsSorcToDiscoveredSorcs() {
+    func test_centralManagerDidDiscoverPeripheral_ifManufacturerDataKeyIsSet_valueIsShorterThan16Bytes_doesNotUpdateDiscoveredSorcs() {
         // Given
         let now = Date(timeIntervalSince1970: 0)
         let systemClock = SystemClockMock(currentNow: now)
@@ -591,7 +589,35 @@ class ConnectionManagerTests: XCTestCase {
 
         let peripheral = CBPeripheralMock()
 
-        let strippedSorcID = sorcID1.lowercasedUUIDString.replacingOccurrences(of: "-", with: "")
+        let manufacturerData = "82f6ed49b70d4c9eafa1"
+        let extendedManufacturerDataMessage = (manufacturerData + "FFAACC")
+
+        let advertisementData: [String: Any] = [
+            CBAdvertisementDataManufacturerDataKey: extendedManufacturerDataMessage.dataFromHexadecimalString()!
+        ]
+
+        var receivedDiscoveryChange: DiscoveryChange!
+        _ = connectionManager.discoveryChange.subscribeNext { change in
+            receivedDiscoveryChange = change
+        }
+
+        // When
+        connectionManager.centralManager_(centralManager, didDiscover: peripheral, advertisementData: advertisementData, rssi: 60)
+
+        // Then
+        XCTAssertEqual(receivedDiscoveryChange.action, .initial)
+    }
+
+    func test_centralManagerDidDiscoverPeripheral_ifManufacturerDataKeyIsSet_valueIsLongerThan16Bytes_addsSorcToDiscoveredSorcs() {
+        // Given
+        let now = Date(timeIntervalSince1970: 0)
+        let systemClock = SystemClockMock(currentNow: now)
+        let connectionManager = ConnectionManager(centralManager: centralManager, systemClock: systemClock)
+        startDiscovery(connectionManager: connectionManager, centralManager: centralManager)
+
+        let peripheral = CBPeripheralMock()
+
+        let strippedSorcID = strippedUUIDString(sorcID1)
         let extendedManufacturerDataMessage = (strippedSorcID + "FFAACC")
 
         let advertisementData: [String: Any] = [
@@ -604,8 +630,38 @@ class ConnectionManagerTests: XCTestCase {
         }
 
         // When
-        connectionManager.centralManager_(centralManager, didDiscover: peripheral, advertisementData: advertisementData,
-                                          rssi: 60)
+        connectionManager.centralManager_(centralManager, didDiscover: peripheral, advertisementData: advertisementData, rssi: 60)
+
+        // Then
+        XCTAssert(receivedDiscoveryChange.state.discoveredSorcs.contains(sorcID1))
+        XCTAssertEqual(receivedDiscoveryChange.state.discoveredSorcs[sorcID1]!, SorcInfo(sorcID: sorcID1, discoveryDate: now, rssi: 60))
+        XCTAssertEqual(receivedDiscoveryChange.action, .discovered(sorcID: sorcID1))
+    }
+
+    func test_centralManagerDidDiscoverPeripheral_ifManufacturerDataKeyIsSet_valueBeginsWithCompanyId_addsSorcToDiscoveredSorcs() {
+        // Given
+        let now = Date(timeIntervalSince1970: 0)
+        let systemClock = SystemClockMock(currentNow: now)
+        let sut = ConnectionManager(centralManager: centralManager, systemClock: systemClock)
+
+        startDiscovery(connectionManager: sut, centralManager: centralManager)
+
+        let peripheral = CBPeripheralMock()
+        let companyIdString = "0A07"
+        let sorcIdString = strippedUUIDString(sorcID1)
+        let appendingString = "FFAACC"
+        let manufacturerData = companyIdString + sorcIdString + appendingString
+        let advertisementData: [String: Any] = [
+            CBAdvertisementDataManufacturerDataKey: manufacturerData.dataFromHexadecimalString()!
+        ]
+
+        var receivedDiscoveryChange: DiscoveryChange!
+        _ = sut.discoveryChange.subscribeNext { change in
+            receivedDiscoveryChange = change
+        }
+
+        // When
+        sut.centralManager_(centralManager, didDiscover: peripheral, advertisementData: advertisementData, rssi: 60)
 
         // Then
         XCTAssert(receivedDiscoveryChange.state.discoveredSorcs.contains(sorcID1))
@@ -628,8 +684,7 @@ class ConnectionManagerTests: XCTestCase {
         }
 
         // When
-        connectionManager.centralManager_(centralManager, didDiscover: peripheral, advertisementData: advertisementData,
-                                          rssi: 0)
+        connectionManager.centralManager_(centralManager, didDiscover: peripheral, advertisementData: advertisementData, rssi: 0)
 
         // Then
         XCTAssertEqual(receivedDiscoveryChange.action, .initial)
@@ -647,8 +702,7 @@ class ConnectionManagerTests: XCTestCase {
                               centralManager: centralManager, rssi: 40)
 
         let peripheralB = CBPeripheralMock()
-        let strippedSorcID = sorcID1.lowercasedUUIDString.replacingOccurrences(of: "-", with: "")
-            .dataFromHexadecimalString()!
+        let strippedSorcID = strippedUUIDString(sorcID1).dataFromHexadecimalString()!
         let advertisementData: [String: Any] = [
             CBAdvertisementDataManufacturerDataKey: strippedSorcID
         ]
@@ -661,8 +715,7 @@ class ConnectionManagerTests: XCTestCase {
         systemClock.currentNow = moment2
 
         // When
-        connectionManager.centralManager_(centralManager, didDiscover: peripheralB,
-                                          advertisementData: advertisementData, rssi: 60)
+        connectionManager.centralManager_(centralManager, didDiscover: peripheralB, advertisementData: advertisementData, rssi: 60)
 
         // Then
         XCTAssert(receivedDiscoveryChange.state.discoveredSorcs.contains(sorcID1))
@@ -1087,13 +1140,11 @@ class ConnectionManagerTests: XCTestCase {
                                        connectionManager: ConnectionManager, centralManager: CBCentralManagerMock,
                                        rssi: Int = 0) {
         startDiscovery(connectionManager: connectionManager, centralManager: centralManager)
-        let strippedSorcID = sorcID.lowercasedUUIDString.replacingOccurrences(of: "-", with: "")
-            .dataFromHexadecimalString()!
+        let strippedSorcID = strippedUUIDString(sorcID).dataFromHexadecimalString()!
         let advertisementData: [String: Any] = [
             CBAdvertisementDataManufacturerDataKey: strippedSorcID
         ]
-        connectionManager.centralManager_(centralManager, didDiscover: peripheral, advertisementData: advertisementData,
-                                          rssi: NSNumber(value: rssi))
+        connectionManager.centralManager_(centralManager, didDiscover: peripheral, advertisementData: advertisementData, rssi: NSNumber(value: rssi))
     }
 
     private func prepareConnectingSorc(_ sorcID: SorcID, peripheral: CBPeripheralType,
@@ -1125,5 +1176,9 @@ class ConnectionManagerTests: XCTestCase {
         connectionManager.peripheral_(peripheral, didDiscoverCharacteristicsFor: service, error: nil)
 
         centralManager.connectCalledWithPeripheral = nil
+    }
+
+    private func strippedUUIDString(_ uuid: UUID) -> String {
+        return uuid.lowercasedUUIDString.replacingOccurrences(of: "-", with: "")
     }
 }
