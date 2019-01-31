@@ -11,7 +11,6 @@ public typealias SorcID = UUID
 
 /// Defines what a manager of SORCs provides
 public protocol SorcManagerType {
-
     // MARK: - BLE Interface
 
     /// The bluetooth enabled status

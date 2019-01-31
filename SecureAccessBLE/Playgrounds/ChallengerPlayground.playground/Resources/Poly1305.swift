@@ -191,7 +191,7 @@ public final class Poly1305 {
     // MARK: - Utils
 
     private func add(context: Context, c: [UInt8]) -> Bool {
-        if context.h.count != 17 && c.count != 17 {
+        if context.h.count != 17, c.count != 17 {
             return false
         }
 
@@ -205,7 +205,7 @@ public final class Poly1305 {
     }
 
     private func squeeze(context: Context, hr: [UInt32]) -> Bool {
-        if context.h.count != 17 && hr.count != 17 {
+        if context.h.count != 17, hr.count != 17 {
             return false
         }
 

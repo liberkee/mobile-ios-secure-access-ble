@@ -120,7 +120,7 @@ public final class AES {
         self.iv = iv
         self.blockMode = blockMode
 
-        if blockMode.needIV && iv.count != AES.blockSize {
+        if blockMode.needIV, iv.count != AES.blockSize {
             assert(false, "Block size and Initialization Vector must be the same length!")
             return nil
         }
@@ -280,7 +280,7 @@ public final class AES {
                 let rotWord = rotateLeft(UInt32.withBytes(tmp), n: 8).bytes(sizeof(UInt32)) // RotWord
                 tmp = subWord(rotWord)
                 tmp[0] = tmp[0] ^ Rcon[i / variant.Nk]
-            } else if variant.Nk > 6 && (i % variant.Nk) == 4 {
+            } else if variant.Nk > 6, (i % variant.Nk) == 4 {
                 tmp = subWord(tmp)
             }
 
@@ -407,7 +407,7 @@ extension AES {
         var state = state
         let invColBox: [[UInt8]] = [[14, 11, 13, 9], [9, 14, 11, 13], [13, 9, 14, 11], [11, 13, 9, 14]]
 
-        var colOrderState = state.map({ val -> [UInt8] in val.map { _ in return 0 } }) // zeroing
+        var colOrderState = state.map({ val -> [UInt8] in val.map { _ in 0 } }) // zeroing
 
         for i in 0 ..< state.count {
             for j in 0 ..< state[0].count {
@@ -415,7 +415,7 @@ extension AES {
             }
         }
 
-        var newState = state.map({ val -> [UInt8] in val.map { _ in return 0 } })
+        var newState = state.map({ val -> [UInt8] in val.map { _ in 0 } })
 
         for (i, row) in colOrderState.enumerate() {
             newState[i] = matrixMultiplyPolys(invColBox, row)

@@ -82,19 +82,15 @@ final class MD5: HashProtocol {
                 case 0 ... 15:
                     F = (B & C) | ((~B) & D)
                     g = j
-                    break
                 case 16 ... 31:
                     F = (D & B) | (~D & C)
                     g = (5 * j + 1) % 16
-                    break
                 case 32 ... 47:
                     F = B ^ C ^ D
                     g = (3 * j + 5) % 16
-                    break
                 case 48 ... 63:
                     F = C ^ (B | (~D))
                     g = (7 * j) % 16
-                    break
                 default:
                     break
                 }

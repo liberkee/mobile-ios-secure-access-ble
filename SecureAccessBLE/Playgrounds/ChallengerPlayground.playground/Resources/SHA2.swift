@@ -40,16 +40,12 @@ final class SHA2: HashProtocol {
             switch rawValue {
             case 224:
                 self = .sha224
-                break
             case 256:
                 self = .sha256
-                break
             case 384:
                 self = .sha384
-                break
             case 512:
                 self = .sha512
-                break
             default:
                 return nil
             }
@@ -110,10 +106,8 @@ final class SHA2: HashProtocol {
             switch self {
             case .sha224:
                 finalHH = Array(hh[0 ..< 7])
-                break
             case .sha384:
                 finalHH = Array(hh[0 ..< 6])
-                break
             default:
                 break
             }
@@ -146,12 +140,10 @@ final class SHA2: HashProtocol {
                     var le: UInt32 = 0
                     chunk.getBytes(&le, range: NSRange(location: x * sizeofValue(le), length: sizeofValue(le)))
                     M[x] = le.bigEndian
-                    break
                 default:
                     let s0 = rotateRight(M[x - 15], n: 7) ^ rotateRight(M[x - 15], n: 18) ^ (M[x - 15] >> 3) // FIXME: n
                     let s1 = rotateRight(M[x - 2], n: 17) ^ rotateRight(M[x - 2], n: 19) ^ (M[x - 2] >> 10)
                     M[x] = M[x - 16] &+ s0 &+ M[x - 7] &+ s1
-                    break
                 }
             }
 
@@ -229,12 +221,10 @@ final class SHA2: HashProtocol {
                     var le: UInt64 = 0
                     chunk.getBytes(&le, range: NSRange(location: x * sizeofValue(le), length: sizeofValue(le)))
                     M[x] = le.bigEndian
-                    break
                 default:
                     let s0 = rotateRight(M[x - 15], n: 1) ^ rotateRight(M[x - 15], n: 8) ^ (M[x - 15] >> 7)
                     let s1 = rotateRight(M[x - 2], n: 19) ^ rotateRight(M[x - 2], n: 61) ^ (M[x - 2] >> 6)
                     M[x] = M[x - 16] &+ s0 &+ M[x - 7] &+ s1
-                    break
                 }
             }
 

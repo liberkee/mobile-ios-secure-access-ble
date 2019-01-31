@@ -29,7 +29,7 @@ struct BlobRequest: SorcMessagePayload {
     /// blob message counter
     var blobMessageCounter: Int {
         let result: UInt32 = data.subdata(in: 1 ..< data.count).withUnsafeBytes { (ptr: UnsafePointer<UInt32>) -> UInt32 in
-            return UInt32(bigEndian: ptr.pointee)
+            UInt32(bigEndian: ptr.pointee)
         }
         return Int(result)
     }

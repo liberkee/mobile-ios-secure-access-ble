@@ -18,8 +18,7 @@ protocol SorcMessagePayload {
 
 // MARK: - Extension end point
 
-extension SorcMessagePayload {
-}
+extension SorcMessagePayload {}
 
 /**
  *  Message payload with empty bytes

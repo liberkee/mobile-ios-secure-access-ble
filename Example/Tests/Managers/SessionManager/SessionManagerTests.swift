@@ -109,8 +109,8 @@ class SessionManagerTests: XCTestCase {
         // When
         securityManager.connectionChange.onNext(.init(
             state: .connected(sorcID: sorcIDA),
-            action: .connectionEstablished(sorcID: sorcIDA))
-        )
+            action: .connectionEstablished(sorcID: sorcIDA)
+        ))
 
         // Then
         let connectedChange = ConnectionChange(
@@ -366,8 +366,8 @@ class SessionManagerTests: XCTestCase {
         prepareChallengingConnecting()
         securityManager.connectionChange.onNext(.init(
             state: .connected(sorcID: sorcIDA),
-            action: .connectionEstablished(sorcID: sorcIDA))
-        )
+            action: .connectionEstablished(sorcID: sorcIDA)
+        ))
     }
 
     // MARK: - Helper

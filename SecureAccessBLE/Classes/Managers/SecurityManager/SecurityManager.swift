@@ -291,8 +291,8 @@ extension SecurityManager: ChallengerDelegate {
         enableEncryption(withSessionKey: key)
         connectionChange.onNext(.init(
             state: .connected(sorcID: sorcID),
-            action: .connectionEstablished(sorcID: sorcID))
-        )
+            action: .connectionEstablished(sorcID: sorcID)
+        ))
     }
 
     func challengerAbort(_: ChallengeError) {

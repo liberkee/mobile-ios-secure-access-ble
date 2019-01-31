@@ -201,8 +201,8 @@ class SorcManagerTests: XCTestCase {
         // Given
         sessionManager.connectionChange.onNext(.init(
             state: .connecting(sorcID: sorcIDA, state: .physical),
-            action: .connect(sorcID: sorcIDA))
-        )
+            action: .connect(sorcID: sorcIDA)
+        ))
 
         // When
         let state = sorcManager.connectionChange.state

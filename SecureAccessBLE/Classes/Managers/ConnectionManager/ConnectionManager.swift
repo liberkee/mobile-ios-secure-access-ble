@@ -314,7 +314,8 @@ extension ConnectionManager {
                 repeats: true,
                 block: { _ in
                     block()
-            })
+                }
+            )
         }
 
         let appActivityStatusProvider = AppActivityStatusProvider(notificationCenter: NotificationCenter.default)
@@ -437,7 +438,7 @@ extension ConnectionManager {
             }
         }
 
-        if writeCharacteristic != nil && notifyCharacteristic != nil {
+        if writeCharacteristic != nil, notifyCharacteristic != nil {
             connectionChange.onNext(.init(state: .connected(sorcID: sorcID),
                                           action: .connectionEstablished(sorcID: sorcID)))
         }

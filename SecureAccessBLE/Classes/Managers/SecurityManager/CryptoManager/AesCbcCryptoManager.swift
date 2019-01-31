@@ -123,7 +123,7 @@ struct AesCbcCryptoManager: CryptoManager {
         do {
             let cmac = try CMAC(key: key)
             mac = try cmac.authenticate(prefixedArray)
-        } catch let error {
+        } catch {
             HSMLog(message: error.localizedDescription, level: .error)
         }
 

@@ -29,8 +29,7 @@ struct MTUSize: SorcMessagePayload {
 
      - returns: MTUSize instance as SORC messag payload
      */
-    init() {
-    }
+    init() {}
 
     /**
      optional initialization point

@@ -44,7 +44,7 @@ extension UInt32 {
             }
         }
 
-        if shiftedValue != 0 && count >= bitsCount {
+        if shiftedValue != 0, count >= bitsCount {
             // clear last bit that couldn't be shifted out of range
             shiftedValue = shiftedValue & (~(1 << (bitsCount - 1)))
         }

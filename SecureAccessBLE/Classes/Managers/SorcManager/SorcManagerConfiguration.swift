@@ -7,7 +7,6 @@
 //
 
 extension SorcManager {
-
     // MARK: - Configuration
 
     /// The configuration for the `SorcManager`

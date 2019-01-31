@@ -215,7 +215,7 @@ class Challenger {
     /// - Parameter message: message which was sent
     func handleSentChallengerMessage(_ message: SorcMessage) {
         guard message.id == .challengePhoneResponse else { return }
-        if nr.count > 15 && nc.count > 15 {
+        if nr.count > 15, nc.count > 15 {
             let sessionKey = [
                 nr[0], nr[1], nr[2], nr[3],
                 nc[0], nc[1], nc[2], nc[3],

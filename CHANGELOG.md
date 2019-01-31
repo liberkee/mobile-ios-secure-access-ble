@@ -5,11 +5,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 ### Added
-- 2018-12-11 : (PLCR-790)  : Added possibility to scan for peripherals with manufacturer data containing the company ID
-
 ### Changed
 ### Fixed
 ### Removed
+
+## [3.3.1] - 2019-01-31
+
+### Added
+- 2019-01-30 : (PLCR-790)  : Added possibility to scan for peripherals with manufacturer data containing the company ID
 
 ## [3.3.0] - 2018-12-13
 

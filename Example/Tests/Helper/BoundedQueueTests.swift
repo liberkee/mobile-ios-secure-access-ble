@@ -30,8 +30,7 @@ class BoundedQueueTests: XCTestCase {
             try queue.enqueue("element1")
             try queue.enqueue("element2")
             XCTFail("It did not throw.")
-        } catch BoundedQueue<String>.Error.maximumElementsReached {
-        } catch {
+        } catch BoundedQueue<String>.Error.maximumElementsReached {} catch {
             XCTFail("Did not throw the correct error.")
         }
     }

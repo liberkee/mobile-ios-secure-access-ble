@@ -108,7 +108,7 @@ func shiftLeft<T: SignedIntegerType where T: Initiable>(value: T, count: Int) ->
         }
     }
 
-    if shiftedValue != 0 && count >= bitsCount {
+    if shiftedValue != 0, count >= bitsCount {
         // clear last bit that couldn't be shifted out of range
         shiftedValue = shiftedValue & T(~(1 << (bitsCount - 1)))
     }

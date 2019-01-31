@@ -39,10 +39,8 @@ final class SHA1: HashProtocol {
                     var le: UInt32 = 0
                     chunk.getBytes(&le, range: NSRange(location: x * sizeofValue(M[x]), length: sizeofValue(M[x])))
                     M[x] = le.bigEndian
-                    break
                 default:
                     M[x] = rotateLeft(M[x - 3] ^ M[x - 8] ^ M[x - 14] ^ M[x - 16], n: 1) // FIXME: n:
-                    break
                 }
             }
 
@@ -61,19 +59,15 @@ final class SHA1: HashProtocol {
                 case 0 ... 19:
                     f = (B & C) | ((~B) & D)
                     k = 0x5A82_7999
-                    break
                 case 20 ... 39:
                     f = B ^ C ^ D
                     k = 0x6ED9_EBA1
-                    break
                 case 40 ... 59:
                     f = (B & C) | (B & D) | (C & D)
                     k = 0x8F1B_BCDC
-                    break
                 case 60 ... 79:
                     f = B ^ C ^ D
                     k = 0xCA62_C1D6
-                    break
                 default:
                     break
                 }

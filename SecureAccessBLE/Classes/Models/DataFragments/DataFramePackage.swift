@@ -76,7 +76,7 @@ class DataFramePackage: NSObject {
     fileprivate class func configureType(_ sequence: Int, numberOfFrames: Int) -> DataFrameType {
         /// Start type as NotValid
         var type = DataFrameType.notValid
-        if sequence == 0 && numberOfFrames == 1 {
+        if sequence == 0, numberOfFrames == 1 {
             type = .single
         } else if sequence == 0 {
             type = .sop

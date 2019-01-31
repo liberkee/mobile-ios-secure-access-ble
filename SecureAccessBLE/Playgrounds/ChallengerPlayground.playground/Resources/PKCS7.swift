@@ -12,8 +12,7 @@
 import Foundation
 
 public struct PKCS7: Padding {
-    public init() {
-    }
+    public init() {}
 
     public func add(bytes: [UInt8], blockSize: Int) -> [UInt8] {
         let padding = UInt8(blockSize - (bytes.count % blockSize))

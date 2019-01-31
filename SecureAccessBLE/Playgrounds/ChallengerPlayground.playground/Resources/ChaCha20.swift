@@ -94,7 +94,7 @@ public final class ChaCha20 {
         let ctx = Context()
         let kbits = key.count * 8
 
-        if kbits != 128 && kbits != 256 {
+        if kbits != 128, kbits != 256 {
             return nil
         }
 
@@ -119,7 +119,6 @@ public final class ChaCha20 {
             ctx.input[1] = 0x3620_646E // 6 dn
             ctx.input[2] = 0x7962_2D31 // yb-1
             ctx.input[3] = 0x6B20_6574 // k et
-            break
         }
 
         // 8 - 11
