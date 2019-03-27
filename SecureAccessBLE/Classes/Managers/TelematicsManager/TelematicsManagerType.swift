@@ -39,5 +39,6 @@ public protocol TelematicsManagerType {
 }
 
 protocol TelematicsManagerInternalType {
+    var delegate: TelematicsManagerDelegate? { get set }
     func consume(change: ServiceGrantChange) -> ServiceGrantChange?
 }

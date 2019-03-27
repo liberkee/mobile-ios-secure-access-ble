@@ -11,20 +11,31 @@ import XCTest
 class TelematicsManagerTests: QuickSpec {
     private let sorcID = UUID(uuidString: "be2fecaf-734b-4252-8312-59d477200a20")!
 
+    class TelematicsManagerDelegateMock: TelematicsManagerDelegate {
+        var receivedRequestTelematicsData = 0
+        var requestTelematicsDataResult: SorcManager.TelematicsRequestResult = .success
+        func requestTelematicsData() -> SorcManager.TelematicsRequestResult {
+            receivedRequestTelematicsData += 1
+            return requestTelematicsDataResult
+        }
+    }
+
     // swiftlint:disable function_body_length
     override func spec() {
-        describe("consume") {
-            var sut: TelematicsManager!
-            var consumeResult: ServiceGrantChange?
-            var telematicsDataChange: TelematicsDataChange?
+        var sut: TelematicsManager!
+        var consumeResult: ServiceGrantChange?
+        var telematicsDataChange: TelematicsDataChange?
+        var delegateMock: TelematicsManagerDelegateMock!
 
-            beforeEach {
-                sut = TelematicsManager()
-                _ = sut.telematicsDataChange.subscribe { change in
-                    telematicsDataChange = change
-                }
+        beforeEach {
+            sut = TelematicsManager()
+            delegateMock = TelematicsManagerDelegateMock()
+            sut.delegate = delegateMock
+            _ = sut.telematicsDataChange.subscribe { change in
+                telematicsDataChange = change
             }
-
+        }
+        describe("consume") {
             context("action is initial") {
                 it("does not consume change") {
                     let state = ServiceGrantChange.State(requestingServiceGrantIDs: [])
@@ -63,63 +74,98 @@ class TelematicsManagerTests: QuickSpec {
             }
 
             context("action is responseReceived") {
-                context("service grant id is telematics") {
-                    var change: ServiceGrantChange!
-                    beforeEach {
-                        let state = ServiceGrantChange.State(requestingServiceGrantIDs: [])
-                        let response = ServiceGrantResponse(sorcID: self.sorcID,
-                                                            serviceGrantID: TelematicsManager.telematicsServiceGrantID,
-                                                            status: ServiceGrantResponse.Status.success,
-                                                            responseData: self.tripMetaDataresponseString())
-                        let action = ServiceGrantChange.Action.responseReceived(response)
-                        change = ServiceGrantChange(state: state, action: action)
-                    }
+                var change: ServiceGrantChange!
+                var responseStatus: ServiceGrantResponse.Status!
+                var serviceGrantID: UInt16!
 
-                    it("consumes change") {
-                        expect(consumeResult).to(beNil())
+                context("service grant id is telematics") {
+                    beforeEach {
+                        serviceGrantID = TelematicsManager.telematicsServiceGrantID
                     }
-                    context("all data was requested") {
+                    context("status success") {
+                        responseStatus = ServiceGrantResponse.Status.success
                         beforeEach {
-                            sut.requestTelematicsData([.odometer, .fuelLevelAbsolute, .fuelLevelPercentage])
+                            let state = ServiceGrantChange.State(requestingServiceGrantIDs: [])
+
+                            let response = ServiceGrantResponse(sorcID: self.sorcID,
+                                                                serviceGrantID: serviceGrantID,
+                                                                status: responseStatus,
+                                                                responseData: self.tripMetaDataresponseString())
+                            let action = ServiceGrantChange.Action.responseReceived(response)
+                            change = ServiceGrantChange(state: state, action: action)
                         }
-                        context("response is success containing requested data") {
-                            var expectedResponses: [TelematicsDataResponse]?
+
+                        it("consumes change") {
+                            expect(consumeResult).to(beNil())
+                        }
+                        context("all data was requested") {
                             beforeEach {
-                                consumeResult = sut.consume(change: change)
-                                if case let TelematicsDataChange.Action.responseReceived(responses) = telematicsDataChange!.action {
-                                    expectedResponses = responses
+                                sut.requestTelematicsData([.odometer, .fuelLevelAbsolute, .fuelLevelPercentage])
+                            }
+                            context("response is success containing requested data") {
+                                var expectedResponses: [TelematicsDataResponse]?
+                                beforeEach {
+                                    consumeResult = sut.consume(change: change)
+                                    if case let TelematicsDataChange.Action.responseReceived(responses) = telematicsDataChange!.action {
+                                        expectedResponses = responses
+                                    }
+                                }
+                                it("notifies telematics change") {
+                                    expect(expectedResponses).to(haveCount(3))
+                                }
+                                it("notified change contains odometer data") {
+                                    let expectedOdometerData = TelematicsData.odometer(timestamp: "1970-01-01T00:00:00Z",
+                                                                                       value: 333_000.3,
+                                                                                       unit: TelematicsData.odometerUnit)
+                                    expect(expectedResponses).to(contain(TelematicsDataResponse.success(expectedOdometerData)))
+                                }
+                                it("notified change contains fuel absolute data") {
+                                    let expectedFuelLevelAbsoluteData = TelematicsData.fuelLevelAbsolute(timestamp: "1970-01-01T00:00:00Z",
+                                                                                                         value: 41.56,
+                                                                                                         unit: TelematicsData.fuelLevelAbsoluteUnit)
+                                    expect(expectedResponses).to(contain(TelematicsDataResponse.success(expectedFuelLevelAbsoluteData)))
+                                }
+                                it("notified change contains fuel percentage data") {
+                                    let expectedFuelLevelRelativeData = TelematicsData.fuelLevelPercentage(timestamp: "1970-01-01T00:00:00Z",
+                                                                                                           value: 80.88,
+                                                                                                           unit: TelematicsData.fuelLevelPercentageUnit)
+                                    expect(expectedResponses).to(contain(TelematicsDataResponse.success(expectedFuelLevelRelativeData)))
                                 }
                             }
-                            it("notifies telematics change") {
-                                expect(expectedResponses).to(haveCount(3))
+                        }
+                    }
+                    context("status is invalidTimeFrame") {
+                        beforeEach {
+                            responseStatus = .invalidTimeFrame
+                            let state = ServiceGrantChange.State(requestingServiceGrantIDs: [])
+                            let response = ServiceGrantResponse(sorcID: self.sorcID,
+                                                                serviceGrantID: serviceGrantID,
+                                                                status: responseStatus,
+                                                                responseData: "")
+                            let action = ServiceGrantChange.Action.responseReceived(response)
+                            change = ServiceGrantChange(state: state, action: action)
+                        }
+                        it("notifies denied state") {
+                            sut.requestTelematicsData([.odometer, .fuelLevelAbsolute, .fuelLevelPercentage])
+                            _ = sut.consume(change: change)
+                            var expectedResponses: [TelematicsDataResponse]?
+                            if case let TelematicsDataChange.Action.responseReceived(responses) = telematicsDataChange!.action {
+                                expectedResponses = responses
                             }
-                            it("notified change contains odometer data") {
-                                let expectedOdometerData = TelematicsData.odometer(timestamp: "1970-01-01T00:00:00Z",
-                                                                                   value: 333_000.3,
-                                                                                   unit: TelematicsData.odometerUnit)
-                                expect(expectedResponses).to(contain(TelematicsDataResponse.success(expectedOdometerData)))
-                            }
-                            it("notified change contains fuel absolute data") {
-                                let expectedFuelLevelAbsoluteData = TelematicsData.fuelLevelAbsolute(timestamp: "1970-01-01T00:00:00Z",
-                                                                                                     value: 41.56,
-                                                                                                     unit: TelematicsData.fuelLevelAbsoluteUnit)
-                                expect(expectedResponses).to(contain(TelematicsDataResponse.success(expectedFuelLevelAbsoluteData)))
-                            }
-                            it("notified change contains fuel percentage data") {
-                                let expectedFuelLevelRelativeData = TelematicsData.fuelLevelPercentage(timestamp: "1970-01-01T00:00:00Z",
-                                                                                                       value: 80.88,
-                                                                                                       unit: TelematicsData.fuelLevelPercentageUnit)
-                                expect(expectedResponses).to(contain(TelematicsDataResponse.success(expectedFuelLevelRelativeData)))
-                            }
+                            expect(expectedResponses).to(haveCount(3))
+                            expect(expectedResponses).to(contain(TelematicsDataResponse.error(.odometer, .denied)))
+                            expect(expectedResponses).to(contain(TelematicsDataResponse.error(.fuelLevelAbsolute, .denied)))
+                            expect(expectedResponses).to(contain(TelematicsDataResponse.error(.fuelLevelPercentage, .denied)))
                         }
                     }
                 }
 
                 context("service grant id is not telematics") {
                     it("does not consume change") {
+                        serviceGrantID = 4
                         let state = ServiceGrantChange.State(requestingServiceGrantIDs: [])
                         let response = ServiceGrantResponse(sorcID: self.sorcID,
-                                                            serviceGrantID: 4,
+                                                            serviceGrantID: serviceGrantID,
                                                             status: ServiceGrantResponse.Status.success,
                                                             responseData: "FOO")
                         let action = ServiceGrantChange.Action.responseReceived(response)
@@ -157,6 +203,57 @@ class TelematicsManagerTests: QuickSpec {
                     let result = sut.consume(change: change)
                     let expectedChange = ServiceGrantChange(state: .init(requestingServiceGrantIDs: []), action: .initial)
                     expect(result) == expectedChange
+                }
+            }
+        }
+
+        describe("requestTelematicsData") {
+            context("connected and not already requesting") {
+                let requestedTypes: [TelematicsDataType] = [.odometer, .fuelLevelAbsolute]
+                beforeEach {
+                    sut.requestTelematicsData(requestedTypes)
+                }
+                it("triggers request") {
+                    expect(delegateMock.receivedRequestTelematicsData) == 1
+                }
+                it("notifies requesting change") {
+                    let expectedChange = TelematicsDataChange(state: requestedTypes,
+                                                              action: .requestingData(types: requestedTypes))
+                    expect(telematicsDataChange) == expectedChange
+                }
+            }
+            context("connected and already requesting") {
+                beforeEach {
+                    sut.requestTelematicsData([.odometer])
+                    sut.requestTelematicsData([.fuelLevelPercentage])
+                }
+                it("notifies updated requesting change") {
+                    let state = telematicsDataChange!.state
+                    var requestingTypes: [TelematicsDataType]?
+                    if case let .requestingData(types)? = telematicsDataChange?.action {
+                        requestingTypes = types
+                    }
+                    expect(state).to(haveCount(2))
+                    expect(state).to(contain([.odometer, .fuelLevelPercentage]))
+                    expect(requestingTypes).to(haveCount(2))
+                    expect(requestingTypes).to(contain([.odometer, .fuelLevelPercentage]))
+                }
+                it("does not trigger request second time") {
+                    expect(delegateMock.receivedRequestTelematicsData) == 1
+                }
+            }
+
+            context("not connected") {
+                it("notifies updated requesting change") {
+                    delegateMock.requestTelematicsDataResult = .notConnected
+                    let types: [TelematicsDataType] = [.odometer, .fuelLevelAbsolute]
+                    sut.requestTelematicsData(types)
+
+                    let expectedresponses = types.map { TelematicsDataResponse.error($0, .notConnected) }
+                    let expectedAction = TelematicsDataChange.Action.responseReceived(responses: expectedresponses)
+                    let expectedChange = TelematicsDataChange(state: [],
+                                                              action: expectedAction)
+                    expect(telematicsDataChange) == expectedChange
                 }
             }
         }

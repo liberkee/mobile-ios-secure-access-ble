@@ -6,6 +6,10 @@
 
 import Foundation
 
+protocol TelematicsManagerDelegate: class {
+    func requestTelematicsData() -> SorcManager.TelematicsRequestResult
+}
+
 public class TelematicsManager: TelematicsManagerType {
     private let telematicsDataChangeSubject: ChangeSubject<TelematicsDataChange> = ChangeSubject<TelematicsDataChange>(state: [])
     public var telematicsDataChange: ChangeSignal<TelematicsDataChange> {
@@ -14,10 +18,28 @@ public class TelematicsManager: TelematicsManagerType {
 
     internal static let telematicsServiceGrantID: UInt16 = 9
     public func requestTelematicsData(_ types: [TelematicsDataType]) {
-        // this should not happen unrespectedly of the fact if a request can be processed at all
-        let change = TelematicsDataChange(state: types, action: .requestingData(types: types))
-        telematicsDataChangeSubject.onNext(change)
+        guard let delegate = self.delegate else { fatalError("delegate not set") }
+        if telematicsDataChangeSubject.state.count != 0 {
+            // In this state, request is already running, so we only notify requesting state with added types
+            let combinedTypes = Array(Set(types + telematicsDataChangeSubject.state))
+            let change = TelematicsDataChange(state: combinedTypes, action: .requestingData(types: combinedTypes))
+            telematicsDataChangeSubject.onNext(change)
+            return
+        }
+        let requestStatus = delegate.requestTelematicsData()
+        switch requestStatus {
+        case .success:
+            let change = TelematicsDataChange(state: types, action: .requestingData(types: types))
+            telematicsDataChangeSubject.onNext(change)
+        case .notConnected:
+            let responses = types.map { TelematicsDataResponse.error($0, .notConnected) }
+            let action = TelematicsDataChange.Action.responseReceived(responses: responses)
+            let change = TelematicsDataChange(state: [], action: action)
+            telematicsDataChangeSubject.onNext(change)
+        }
     }
+
+    weak var delegate: TelematicsManagerDelegate?
 
     init() {}
 
@@ -25,19 +47,40 @@ public class TelematicsManager: TelematicsManagerType {
         switch response.status {
         case .success:
             guard let tripMetaData = try? TripMetaData(responseData: response.responseData) else {
-                // report error
+                notifyRemoteFailedChange()
                 return
             }
-            var telematicsResponses = [TelematicsDataResponse]()
-            for requestedType in telematicsDataChangeSubject.state {
-                let telematicsDataResponse = TelematicsDataResponse(tripMetaData: tripMetaData, requestedType: requestedType)
-                telematicsResponses.append(telematicsDataResponse)
-            }
-            let change = TelematicsDataChange(state: [], action: .responseReceived(responses: telematicsResponses))
-            telematicsDataChangeSubject.onNext(change)
-        default:
-            break
+            notifyResponseReceived(with: tripMetaData)
+        case .invalidTimeFrame, .notAllowed:
+            notifyRequestDeniedChange()
+        case .pending: break
+        case .failure:
+            notifyRemoteFailedChange()
         }
+    }
+
+    private func notifyRemoteFailedChange() {
+        let telematicsResponses = telematicsDataChangeSubject.state.map {
+            TelematicsDataResponse.error($0, .remoteFailed)
+        }
+        let change = TelematicsDataChange(state: [], action: .responseReceived(responses: telematicsResponses))
+        telematicsDataChangeSubject.onNext(change)
+    }
+
+    private func notifyResponseReceived(with tripMetaData: TripMetaData) {
+        let telematicsResponses = telematicsDataChangeSubject.state.map {
+            TelematicsDataResponse(tripMetaData: tripMetaData, requestedType: $0)
+        }
+        let change = TelematicsDataChange(state: [], action: .responseReceived(responses: telematicsResponses))
+        telematicsDataChangeSubject.onNext(change)
+    }
+
+    private func notifyRequestDeniedChange() {
+        let telematicsResponses = telematicsDataChangeSubject.state.map {
+            TelematicsDataResponse.error($0, .denied)
+        }
+        let change = TelematicsDataChange(state: [], action: .responseReceived(responses: telematicsResponses))
+        telematicsDataChangeSubject.onNext(change)
     }
 }
 
@@ -48,8 +91,12 @@ extension TelematicsManager: TelematicsManagerInternalType {
         case let .requestServiceGrant(id: serviceGrantId, accepted: _):
             return serviceGrantId == TelematicsManager.telematicsServiceGrantID ? nil : change.changeWithoutTelematicsID()
         case let .responseReceived(response):
-            onResponseReceived(response)
-            return response.serviceGrantID == TelematicsManager.telematicsServiceGrantID ? nil : change.changeWithoutTelematicsID()
+            if response.serviceGrantID == TelematicsManager.telematicsServiceGrantID {
+                onResponseReceived(response)
+                return nil
+            } else {
+                return change.changeWithoutTelematicsID()
+            }
         case .requestFailed, .reset:
             return change.changeWithoutTelematicsID()
         }

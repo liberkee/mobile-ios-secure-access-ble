@@ -59,6 +59,7 @@ private class MockSessionManager: SessionManagerType {
 private class MockTelematicsManager: TelematicsManagerType, TelematicsManagerInternalType {
     var telematicsDataChangeSubject = ChangeSubject<TelematicsDataChange>(state: [])
     var telematicsDataChange: ChangeSignal<TelematicsDataChange> { return telematicsDataChangeSubject.asSignal() }
+    weak var delegate: TelematicsManagerDelegate?
 
     var consumeResponse: ServiceGrantChange?
     func consume(change _: ServiceGrantChange) -> ServiceGrantChange? {
@@ -303,6 +304,7 @@ class SorcManagerTests: XCTestCase {
             sessionManager: sessionManager,
             telematicsManager: telematicsManager
         )
+        telematicsManager.delegate = sut
         _ = sut.serviceGrantChange.subscribe { change in
             receivedChange = change
         }
@@ -318,5 +320,30 @@ class SorcManagerTests: XCTestCase {
         // Then
         let initialChange = ServiceGrantChange.initialWithState(.init(requestingServiceGrantIDs: []))
         XCTAssertEqual(receivedChange, initialChange)
+    }
+
+    func test_requestTelematicsData_connected_succeeds() {
+        // Given
+        let change = ConnectionChange(
+            state: .connected(sorcID: sorcIDA),
+            action: .connectionEstablished(sorcID: sorcIDA)
+        )
+        sessionManager.connectionChange.onNext(change)
+
+        // When
+        let requestTelematicsResult = sorcManager.requestTelematicsData()
+
+        // Then
+        XCTAssertEqual(requestTelematicsResult, .success)
+    }
+
+    func test_requestTelematicsData_notConnected_returnsNotConnected() {
+        // Given
+
+        // When
+        let requestTelematicsResult = sorcManager.requestTelematicsData()
+
+        // Then
+        XCTAssertEqual(requestTelematicsResult, .notConnected)
     }
 }

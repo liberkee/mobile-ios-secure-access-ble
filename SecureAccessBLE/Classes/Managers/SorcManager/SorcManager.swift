@@ -14,6 +14,10 @@ public class SorcManager: SorcManagerType {
     private let telematicsManagerInternal: (TelematicsManagerType & TelematicsManagerInternalType)?
     let telematicsManager: TelematicsManagerType?
 
+    enum TelematicsRequestResult {
+        case success, notConnected
+    }
+
     // MARK: - BLE Interface
 
     /// The bluetooth enabled status
@@ -137,11 +141,23 @@ extension SorcManager {
 
         let sessionManager = SessionManager(securityManager: securityManager, configuration: sessionConfiguration)
 
+        let telematicsManager: TelematicsManager? = configuration.enableTelematicsInterface ? TelematicsManager() : nil
         self.init(
             bluetoothStatusProvider: connectionManager,
             scanner: connectionManager,
             sessionManager: sessionManager,
-            telematicsManager: configuration.enableTelematicsInterface ? TelematicsManager() : nil
+            telematicsManager: telematicsManager
         )
+        telematicsManager?.delegate = self
+    }
+}
+
+extension SorcManager: TelematicsManagerDelegate {
+    func requestTelematicsData() -> SorcManager.TelematicsRequestResult {
+        if case ConnectionChange.State.connected = connectionChange.state {
+            return .success
+        } else {
+            return .notConnected
+        }
     }
 }
