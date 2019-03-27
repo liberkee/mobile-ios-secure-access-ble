@@ -11,7 +11,8 @@ public class SorcManager: SorcManagerType {
     private let bluetoothStatusProvider: BluetoothStatusProviderType
     private let scanner: ScannerType
     private let sessionManager: SessionManagerType
-    private let telematicsManager: TelematicsManagerType & TelematicsManagerInternalType
+    private let telematicsManagerInternal: (TelematicsManagerType & TelematicsManagerInternalType)?
+    let telematicsManager: TelematicsManagerType?
 
     // MARK: - BLE Interface
 
@@ -88,16 +89,21 @@ public class SorcManager: SorcManagerType {
         bluetoothStatusProvider: BluetoothStatusProviderType,
         scanner: ScannerType,
         sessionManager: SessionManagerType,
-        telematicsManager: TelematicsManagerType & TelematicsManagerInternalType = TelematicsManager()
+        telematicsManager: (TelematicsManagerType & TelematicsManagerInternalType)? = nil
     ) {
         self.bluetoothStatusProvider = bluetoothStatusProvider
         self.scanner = scanner
         self.sessionManager = sessionManager
+        telematicsManagerInternal = telematicsManager
         self.telematicsManager = telematicsManager
         sessionManager.serviceGrantChange.subscribeNext { [weak self] change in
             guard let strongSelf = self else { return }
-            if let changeAfterTelematicsCheck = strongSelf.telematicsManager.consume(change: change) {
-                strongSelf.serviceGrantChangeSubject.onNext(changeAfterTelematicsCheck)
+            if let telematicsManager = strongSelf.telematicsManagerInternal {
+                if let changeAfterTelematicsCheck = telematicsManager.consume(change: change) {
+                    strongSelf.serviceGrantChangeSubject.onNext(changeAfterTelematicsCheck)
+                }
+            } else {
+                strongSelf.serviceGrantChangeSubject.onNext(change)
             }
         }.disposed(by: disposeBag)
     }
@@ -134,7 +140,8 @@ extension SorcManager {
         self.init(
             bluetoothStatusProvider: connectionManager,
             scanner: connectionManager,
-            sessionManager: sessionManager
+            sessionManager: sessionManager,
+            telematicsManager: configuration.enableTelematicsInterface ? TelematicsManager() : nil
         )
     }
 }

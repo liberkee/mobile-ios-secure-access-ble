@@ -94,6 +94,7 @@ class SorcManagerTests: XCTestCase {
     fileprivate var scanner = MockScanner()
     fileprivate var sessionManager = MockSessionManager()
     var sorcManager: SorcManager!
+    fileprivate var telematicsManager = MockTelematicsManager()
 
     override func setUp() {
         super.setUp()
@@ -280,25 +281,36 @@ class SorcManagerTests: XCTestCase {
         XCTAssertEqual(receivedChange, change)
     }
 
+    func test_telematicsManager_telematicsEnabled_isNotNull() {
+        let config = SorcManager.Configuration(enableTelematicsInterface: true)
+        let sut = SorcManager(configuration: config)
+        XCTAssertNotNil(sut.telematicsManager)
+    }
+
+    func test_telematicsManager_telematicsDisabled_isNull() {
+        let config = SorcManager.Configuration(enableTelematicsInterface: false)
+        let sut = SorcManager(configuration: config)
+        XCTAssertNil(sut.telematicsManager)
+    }
+
     func test_serviceGrantChange_telematicsManagerConsumesChange_itDoesNotNotifyChange() {
         // Given
         var receivedChange: ServiceGrantChange?
-        let telematicsManager = MockTelematicsManager()
         telematicsManager.consumeResponse = nil
-        let sorcManager = SorcManager(
+        let sut = SorcManager(
             bluetoothStatusProvider: bluetoothStatusProvider,
             scanner: scanner,
             sessionManager: sessionManager,
             telematicsManager: telematicsManager
         )
-        _ = sorcManager.serviceGrantChange.subscribe { change in
+        _ = sut.serviceGrantChange.subscribe { change in
             receivedChange = change
         }
 
         // When
         let change = ServiceGrantChange(
-            state: .init(requestingServiceGrantIDs: [1]),
-            action: .requestServiceGrant(id: 1, accepted: true)
+            state: .init(requestingServiceGrantIDs: [9]),
+            action: .requestServiceGrant(id: 9, accepted: true)
         )
 
         sessionManager.serviceGrantChange.onNext(change)
