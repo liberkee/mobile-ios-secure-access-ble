@@ -20,7 +20,7 @@ class TelematicsManagerTests: QuickSpec {
         }
     }
 
-    // swiftlint:disable function_body_length
+    // swiftlint:disable function_body_length line_length
     override func spec() {
         var sut: TelematicsManager!
         var consumeResult: ServiceGrantChange?
