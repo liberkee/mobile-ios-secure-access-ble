@@ -56,6 +56,17 @@ private class MockSessionManager: SessionManagerType {
     }
 }
 
+private class MockTelematicsManager: TelematicsManagerType, TelematicsManagerInternalType {
+    var telematicsDataChangeSubject = ChangeSubject<TelematicsDataChange>(state: [])
+    var telematicsDataChange: ChangeSignal<TelematicsDataChange> { return telematicsDataChangeSubject.asSignal() }
+
+    var consumeResponse: ServiceGrantChange?
+    func consume(change _: ServiceGrantChange) -> ServiceGrantChange? {
+        return consumeResponse
+    }
+    func requestTelematicsData(_: [TelematicsDataType]) {}
+}
+
 extension SorcInfo {
     static var stableTestInstance: SorcInfo {
         return .init(
@@ -267,5 +278,33 @@ class SorcManagerTests: XCTestCase {
 
         // Then
         XCTAssertEqual(receivedChange, change)
+    }
+
+    func test_serviceGrantChange_telematicsManagerConsumesChange_itDoesNotNotifyChange() {
+        // Given
+        var receivedChange: ServiceGrantChange?
+        let telematicsManager = MockTelematicsManager()
+        telematicsManager.consumeResponse = nil
+        let sorcManager = SorcManager(
+            bluetoothStatusProvider: bluetoothStatusProvider,
+            scanner: scanner,
+            sessionManager: sessionManager,
+            telematicsManager: telematicsManager
+        )
+        _ = sorcManager.serviceGrantChange.subscribe { change in
+            receivedChange = change
+        }
+
+        // When
+        let change = ServiceGrantChange(
+            state: .init(requestingServiceGrantIDs: [1]),
+            action: .requestServiceGrant(id: 1, accepted: true)
+        )
+
+        sessionManager.serviceGrantChange.onNext(change)
+
+        // Then
+        let initialChange = ServiceGrantChange.initialWithState(.init(requestingServiceGrantIDs: []))
+        XCTAssertEqual(receivedChange, initialChange)
     }
 }

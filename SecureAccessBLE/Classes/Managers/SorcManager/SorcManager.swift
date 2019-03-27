@@ -11,6 +11,7 @@ public class SorcManager: SorcManagerType {
     private let bluetoothStatusProvider: BluetoothStatusProviderType
     private let scanner: ScannerType
     private let sessionManager: SessionManagerType
+    private let telematicsManager: TelematicsManagerType & TelematicsManagerInternalType
 
     // MARK: - BLE Interface
 
@@ -67,8 +68,11 @@ public class SorcManager: SorcManagerType {
 
     /// The state of service grant requesting with the action that led to this state
     public var serviceGrantChange: ChangeSignal<ServiceGrantChange> {
-        return sessionManager.serviceGrantChange.asSignal()
+        return serviceGrantChangeSubject.asSignal()
     }
+
+    private var serviceGrantChangeSubject = ChangeSubject<ServiceGrantChange>(state: .init(requestingServiceGrantIDs: []))
+    private let disposeBag = DisposeBag()
 
     /**
      Requests a service grant from the connected SORC
@@ -83,11 +87,19 @@ public class SorcManager: SorcManagerType {
     init(
         bluetoothStatusProvider: BluetoothStatusProviderType,
         scanner: ScannerType,
-        sessionManager: SessionManagerType
+        sessionManager: SessionManagerType,
+        telematicsManager: TelematicsManagerType & TelematicsManagerInternalType = TelematicsManager()
     ) {
         self.bluetoothStatusProvider = bluetoothStatusProvider
         self.scanner = scanner
         self.sessionManager = sessionManager
+        self.telematicsManager = telematicsManager
+        sessionManager.serviceGrantChange.subscribeNext { [weak self] change in
+            guard let strongSelf = self else { return }
+            if let changeAfterTelematicsCheck = strongSelf.telematicsManager.consume(change: change) {
+                strongSelf.serviceGrantChangeSubject.onNext(changeAfterTelematicsCheck)
+            }
+        }.disposed(by: disposeBag)
     }
 }
 
