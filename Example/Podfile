@@ -12,6 +12,9 @@ target 'SecureAccessBLE_Tests' do
   pod 'SecureAccessBLE', :path => '../'
   #pod 'SecureAccessBLE', :git => 'https://github.com/hufsm/mobile-ios-ble.git', :branch => 'migrate_to_swift_4'
   
+  pod 'Quick'
+  pod 'Nimble'
+  
 end
 
 target 'SecureAccessBLE' do
