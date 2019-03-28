@@ -337,6 +337,21 @@ class SorcManagerTests: XCTestCase {
         XCTAssertEqual(requestTelematicsResult, .success)
     }
 
+    func test_requestTelematicsData_connected_requestsServiceGrant() {
+        // Given
+        let change = ConnectionChange(
+            state: .connected(sorcID: sorcIDA),
+            action: .connectionEstablished(sorcID: sorcIDA)
+        )
+        sessionManager.connectionChange.onNext(change)
+
+        // When
+        _ = sorcManager.requestTelematicsData()
+
+        // Then
+        XCTAssertEqual(sessionManager.requestServiceGrantCalledWithID, TelematicsManager.telematicsServiceGrantID)
+    }
+
     func test_requestTelematicsData_notConnected_returnsNotConnected() {
         // Given
 
