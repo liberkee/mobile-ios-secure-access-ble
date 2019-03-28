@@ -263,7 +263,7 @@ class TelematicsManagerTests: QuickSpec {
         let string = """
         {
             \"timestamp\": \"1970-01-01T00:00:00Z\",
-            \"flag_fuel_level\": 1,
+            \"flag_fuel_level\": 3,
             \"fuel_level_percentage\": 80.88,
             \"fuel_level_absolute\": 41.56,
             \"vehicle_can_odometer\": 333000.3

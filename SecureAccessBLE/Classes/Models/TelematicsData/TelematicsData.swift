@@ -6,7 +6,7 @@
 
 import Foundation
 
-public enum TelematicsDataError {
+public enum TelematicsDataError: String {
     case notConnected // Query failed, because the vehicle is not connected
     case notSupported // Query failed, because the vehicle does not provide this information
     case denied // Query failed, because the lease does not permit access to telematics data
@@ -29,7 +29,7 @@ public enum TelematicsDataResponse: Equatable {
                 telematicsData = nil
             }
         case .fuelLevelAbsolute:
-            if let value = tripMetaData.fuelLevelAbsolute {
+            if let value = tripMetaData.fuelLevelAbsolute, [.both, .absoluteOnly].contains(tripMetaData.fuelLevelFlag) {
                 telematicsData = TelematicsData.fuelLevelAbsolute(timestamp: tripMetaData.timeStamp,
                                                                   value: value,
                                                                   unit: TelematicsData.fuelLevelAbsoluteUnit)
@@ -37,7 +37,7 @@ public enum TelematicsDataResponse: Equatable {
                 telematicsData = nil
             }
         case .fuelLevelPercentage:
-            if let value = tripMetaData.fuelLevelPercentage {
+            if let value = tripMetaData.fuelLevelPercentage, [.both, .percentageOnly].contains(tripMetaData.fuelLevelFlag) {
                 telematicsData = TelematicsData.fuelLevelPercentage(timestamp: tripMetaData.timeStamp,
                                                                     value: value,
                                                                     unit: TelematicsData.fuelLevelPercentageUnit)

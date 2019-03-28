@@ -45,19 +45,39 @@ class TelematicsDataResponseTests: QuickSpec {
             }
             context("requested type fuelLevelAbsolute") {
                 context("response contains data") {
-                    it("success with data") {
-                        let tripMetaData = TripMetaData(timeStamp: "1970-01-01T00:00:00Z",
-                                                        fuelLevelFlag: .absoluteOnly,
-                                                        fuelLevelPercentage: nil,
-                                                        fuelLevelAbsolute: 80.00,
-                                                        odometer: nil)
+                    context("flag is absoluteOnly or both") {
+                        it("success with data") {
+                            for flag: TripMetaData.FuelLevelFlag in [.both, .absoluteOnly] {
+                                let tripMetaData = TripMetaData(timeStamp: "1970-01-01T00:00:00Z",
+                                                                fuelLevelFlag: flag,
+                                                                fuelLevelPercentage: nil,
+                                                                fuelLevelAbsolute: 80.00,
+                                                                odometer: nil)
 
-                        let sut = TelematicsDataResponse(tripMetaData: tripMetaData, requestedType: .fuelLevelAbsolute)
-                        let expectedData = TelematicsData.fuelLevelAbsolute(timestamp: "1970-01-01T00:00:00Z",
-                                                                            value: 80.0,
-                                                                            unit: TelematicsData.fuelLevelAbsoluteUnit)
-                        let expectedResponse = TelematicsDataResponse.success(expectedData)
-                        expect(sut) == expectedResponse
+                                let sut = TelematicsDataResponse(tripMetaData: tripMetaData, requestedType: .fuelLevelAbsolute)
+                                let expectedData = TelematicsData.fuelLevelAbsolute(timestamp: "1970-01-01T00:00:00Z",
+                                                                                    value: 80.0,
+                                                                                    unit: TelematicsData.fuelLevelAbsoluteUnit)
+                                let expectedResponse = TelematicsDataResponse.success(expectedData)
+                                expect(sut) == expectedResponse
+                            }
+                        }
+                    }
+                    context("flag is unavailable or percentageOnly") {
+                        it("not supported") {
+                            for flag: TripMetaData.FuelLevelFlag in [.unavailable, .percentageOnly] {
+                                let tripMetaData = TripMetaData(timeStamp: "1970-01-01T00:00:00Z",
+                                                                fuelLevelFlag: flag,
+                                                                fuelLevelPercentage: nil,
+                                                                fuelLevelAbsolute: 80.00,
+                                                                odometer: nil)
+
+                                let sut = TelematicsDataResponse(tripMetaData: tripMetaData, requestedType: .fuelLevelAbsolute)
+
+                                let expectedResponse = TelematicsDataResponse.error(.fuelLevelAbsolute, .notSupported)
+                                expect(sut) == expectedResponse
+                            }
+                        }
                     }
                 }
 
@@ -77,19 +97,38 @@ class TelematicsDataResponseTests: QuickSpec {
             }
             context("requested type fuelLevelPercentage") {
                 context("response contains data") {
-                    it("success with data") {
-                        let tripMetaData = TripMetaData(timeStamp: "1970-01-01T00:00:00Z",
-                                                        fuelLevelFlag: .absoluteOnly,
-                                                        fuelLevelPercentage: 90.0,
-                                                        fuelLevelAbsolute: nil,
-                                                        odometer: nil)
+                    context("flag is percentageOnly or both") {
+                        it("success with data") {
+                            for flag: TripMetaData.FuelLevelFlag in [.both, .percentageOnly] {
+                                let tripMetaData = TripMetaData(timeStamp: "1970-01-01T00:00:00Z",
+                                                                fuelLevelFlag: flag,
+                                                                fuelLevelPercentage: 90.0,
+                                                                fuelLevelAbsolute: nil,
+                                                                odometer: nil)
 
-                        let sut = TelematicsDataResponse(tripMetaData: tripMetaData, requestedType: .fuelLevelPercentage)
-                        let expectedData = TelematicsData.fuelLevelPercentage(timestamp: "1970-01-01T00:00:00Z",
-                                                                              value: 90.0,
-                                                                              unit: TelematicsData.fuelLevelPercentageUnit)
-                        let expectedResponse = TelematicsDataResponse.success(expectedData)
-                        expect(sut) == expectedResponse
+                                let sut = TelematicsDataResponse(tripMetaData: tripMetaData, requestedType: .fuelLevelPercentage)
+                                let expectedData = TelematicsData.fuelLevelPercentage(timestamp: "1970-01-01T00:00:00Z",
+                                                                                      value: 90.0,
+                                                                                      unit: TelematicsData.fuelLevelPercentageUnit)
+                                let expectedResponse = TelematicsDataResponse.success(expectedData)
+                                expect(sut) == expectedResponse
+                            }
+                        }
+                    }
+                    context("flag is percentageOnly or both") {
+                        it("not supported") {
+                            for flag: TripMetaData.FuelLevelFlag in [.unavailable, .absoluteOnly] {
+                                let tripMetaData = TripMetaData(timeStamp: "1970-01-01T00:00:00Z",
+                                                                fuelLevelFlag: flag,
+                                                                fuelLevelPercentage: 90.0,
+                                                                fuelLevelAbsolute: nil,
+                                                                odometer: nil)
+
+                                let sut = TelematicsDataResponse(tripMetaData: tripMetaData, requestedType: .fuelLevelPercentage)
+                                let expectedResponse = TelematicsDataResponse.error(.fuelLevelPercentage, .notSupported)
+                                expect(sut) == expectedResponse
+                            }
+                        }
                     }
                 }
 
