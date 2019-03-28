@@ -10,9 +10,9 @@
 public class SorcManager: SorcManagerType {
     private let bluetoothStatusProvider: BluetoothStatusProviderType
     private let scanner: ScannerType
-    private let sessionManager: SessionManagerType
+    fileprivate let sessionManager: SessionManagerType
     private let telematicsManagerInternal: (TelematicsManagerType & TelematicsManagerInternalType)?
-    let telematicsManager: TelematicsManagerType?
+    public let telematicsManager: TelematicsManagerType?
 
     enum TelematicsRequestResult {
         case success, notConnected
@@ -155,6 +155,7 @@ extension SorcManager {
 extension SorcManager: TelematicsManagerDelegate {
     func requestTelematicsData() -> SorcManager.TelematicsRequestResult {
         if case ConnectionChange.State.connected = connectionChange.state {
+            sessionManager.requestServiceGrant(TelematicsManager.telematicsServiceGrantID)
             return .success
         } else {
             return .notConnected

@@ -20,7 +20,6 @@ public struct TelematicsDataChange: ChangeType {
     }
 
     public typealias State = Array<TelematicsDataType>
-//    public typealias Action = Array<TelematicsDataResponse>
 }
 
 extension TelematicsDataChange {
