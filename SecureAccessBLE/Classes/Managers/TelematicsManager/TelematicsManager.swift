@@ -6,36 +6,38 @@
 
 import Foundation
 
+// Delegate type for internal communication
 protocol TelematicsManagerDelegate: class {
     func requestTelematicsData() -> SorcManager.TelematicsRequestResult
 }
 
+/// Telematics manager which can be used to retrieve telematics data from the vehicle
 public class TelematicsManager: TelematicsManagerType {
     private let telematicsDataChangeSubject: ChangeSubject<TelematicsDataChange> = ChangeSubject<TelematicsDataChange>(state: [])
+    internal static let telematicsServiceGrantID: UInt16 = 9
+
+    /// Telematics data change signal which can be used to retrieve data changes
     public var telematicsDataChange: ChangeSignal<TelematicsDataChange> {
         return telematicsDataChangeSubject.asSignal()
     }
 
-    internal static let telematicsServiceGrantID: UInt16 = 9
+    /// Requests telematics data from the vehicle
+    ///
+    /// - Parameter types: Data types which need to be retrieved
     public func requestTelematicsData(_ types: [TelematicsDataType]) {
         guard let delegate = self.delegate else { fatalError("delegate not set") }
         if telematicsDataChangeSubject.state.count != 0 {
             // In this state, request is already running, so we only notify requesting state with added types
             let combinedTypes = Array(Set(types + telematicsDataChangeSubject.state))
-            let change = TelematicsDataChange(state: combinedTypes, action: .requestingData(types: combinedTypes))
-            telematicsDataChangeSubject.onNext(change)
+            notifyRequestingChange(with: combinedTypes)
             return
         }
         let requestStatus = delegate.requestTelematicsData()
         switch requestStatus {
         case .success:
-            let change = TelematicsDataChange(state: types, action: .requestingData(types: types))
-            telematicsDataChangeSubject.onNext(change)
+            notifyRequestingChange(with: types)
         case .notConnected:
-            let responses = types.map { TelematicsDataResponse.error($0, .notConnected) }
-            let action = TelematicsDataChange.Action.responseReceived(responses: responses)
-            let change = TelematicsDataChange(state: [], action: action)
-            telematicsDataChangeSubject.onNext(change)
+            notifyNotConnectedChange(with: types)
         }
     }
 
@@ -57,6 +59,18 @@ public class TelematicsManager: TelematicsManagerType {
         case .failure:
             notifyRemoteFailedChange()
         }
+    }
+
+    private func notifyRequestingChange(with types: [TelematicsDataType]) {
+        let change = TelematicsDataChange(state: types, action: .requestingData(types: types))
+        telematicsDataChangeSubject.onNext(change)
+    }
+
+    private func notifyNotConnectedChange(with types: [TelematicsDataType]) {
+        let responses = types.map { TelematicsDataResponse.error($0, .notConnected) }
+        let action = TelematicsDataChange.Action.responseReceived(responses: responses)
+        let change = TelematicsDataChange(state: [], action: action)
+        telematicsDataChangeSubject.onNext(change)
     }
 
     private func notifyRemoteFailedChange() {

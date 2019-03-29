@@ -6,38 +6,13 @@
 
 import Foundation
 
-public enum TelematicsDataType {
-    case odometer, fuelLevelAbsolute, fuelLevelPercentage
-}
-
-public struct TelematicsDataChange: ChangeType {
-    public let state: State
-
-    public let action: Action
-
-    public static func initialWithState(_ state: State) -> TelematicsDataChange {
-        return TelematicsDataChange(state: state, action: .initial)
-    }
-
-    public typealias State = Array<TelematicsDataType>
-}
-
-extension TelematicsDataChange {
-    public enum Action: Equatable {
-        case initial
-        case requestingData(types: [TelematicsDataType])
-        case responseReceived(responses: [TelematicsDataResponse])
-    }
-}
-
-extension TelematicsDataChange: Equatable {}
-
+/// Defines interface for telematics manager
 public protocol TelematicsManagerType {
+    /// Telematics data change signal which can be used to retrieve data changes
     var telematicsDataChange: ChangeSignal<TelematicsDataChange> { get }
+    
+    /// Requests telematics data from the vehicle
+    ///
+    /// - Parameter types: Data types which need to be retrieved
     func requestTelematicsData(_ types: [TelematicsDataType]) -> Void
-}
-
-protocol TelematicsManagerInternalType {
-    var delegate: TelematicsManagerDelegate? { get set }
-    func consume(change: ServiceGrantChange) -> ServiceGrantChange?
 }

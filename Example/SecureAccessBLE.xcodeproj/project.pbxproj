@@ -16,6 +16,10 @@
 		99123D7C224A79DF003FB064 /* TelematicsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99123D7B224A79DF003FB064 /* TelematicsData.swift */; };
 		99123D7E224A7EF6003FB064 /* TelematicsDataResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99123D7D224A7EF6003FB064 /* TelematicsDataResponseTests.swift */; };
 		99123D81224B5333003FB064 /* TripMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99123D7F224B5329003FB064 /* TripMetaData.swift */; };
+		99123D85224D228E003FB064 /* TelematicsManagerInternalType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99123D84224D228E003FB064 /* TelematicsManagerInternalType.swift */; };
+		99123D87224D2310003FB064 /* TelematicsDataChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99123D86224D2310003FB064 /* TelematicsDataChange.swift */; };
+		99123D89224D2395003FB064 /* TelematicsDataError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99123D88224D2395003FB064 /* TelematicsDataError.swift */; };
+		99123D8B224D23A9003FB064 /* TelematicsDataResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99123D8A224D23A9003FB064 /* TelematicsDataResponse.swift */; };
 		9913240420D94C81001D83FC /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9913240320D94C81001D83FC /* Result.swift */; };
 		9913240520D94C8F001D83FC /* ArrayExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991323F120D94C29001D83FC /* ArrayExtensions.swift */; };
 		9913240620D94C9A001D83FC /* UUIDExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991323E220D94C29001D83FC /* UUIDExtension.swift */; };
@@ -121,6 +125,10 @@
 		99123D7B224A79DF003FB064 /* TelematicsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelematicsData.swift; sourceTree = "<group>"; };
 		99123D7D224A7EF6003FB064 /* TelematicsDataResponseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelematicsDataResponseTests.swift; sourceTree = "<group>"; };
 		99123D7F224B5329003FB064 /* TripMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripMetaData.swift; sourceTree = "<group>"; };
+		99123D84224D228E003FB064 /* TelematicsManagerInternalType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelematicsManagerInternalType.swift; sourceTree = "<group>"; };
+		99123D86224D2310003FB064 /* TelematicsDataChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelematicsDataChange.swift; sourceTree = "<group>"; };
+		99123D88224D2395003FB064 /* TelematicsDataError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelematicsDataError.swift; sourceTree = "<group>"; };
+		99123D8A224D23A9003FB064 /* TelematicsDataResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelematicsDataResponse.swift; sourceTree = "<group>"; };
 		991323DE20D94C28001D83FC /* ChangeSignal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangeSignal.swift; sourceTree = "<group>"; };
 		991323DF20D94C28001D83FC /* StateSignal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateSignal.swift; sourceTree = "<group>"; };
 		991323E020D94C28001D83FC /* EventSignal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventSignal.swift; sourceTree = "<group>"; };
@@ -372,6 +380,7 @@
 			children = (
 				99123D71224A19B4003FB064 /* TelematicsManager.swift */,
 				99123D78224A326B003FB064 /* TelematicsManagerType.swift */,
+				99123D84224D228E003FB064 /* TelematicsManagerInternalType.swift */,
 			);
 			path = TelematicsManager;
 			sourceTree = "<group>";
@@ -389,6 +398,9 @@
 			children = (
 				99123D7B224A79DF003FB064 /* TelematicsData.swift */,
 				99123D7F224B5329003FB064 /* TripMetaData.swift */,
+				99123D86224D2310003FB064 /* TelematicsDataChange.swift */,
+				99123D88224D2395003FB064 /* TelematicsDataError.swift */,
+				99123D8A224D23A9003FB064 /* TelematicsDataResponse.swift */,
 			);
 			path = TelematicsData;
 			sourceTree = "<group>";
@@ -893,8 +905,10 @@
 				9917E9F21FBAF7E7002D5CE3 /* ConnectionManager.swift in Sources */,
 				9917E9E71FBAF7DB002D5CE3 /* AesCbcCryptoManager.swift in Sources */,
 				9917E9FD1FBAF804002D5CE3 /* SorcMessage.swift in Sources */,
+				99123D85224D228E003FB064 /* TelematicsManagerInternalType.swift in Sources */,
 				9917E9F81FBAF7FE002D5CE3 /* PhoneToSorcChallenge.swift in Sources */,
 				9917E9E31FBAF7D5002D5CE3 /* SecurityManagerType.swift in Sources */,
+				99123D8B224D23A9003FB064 /* TelematicsDataResponse.swift in Sources */,
 				9917EA011FBAF80F002D5CE3 /* DataFrame.swift in Sources */,
 				9913240F20D94CAC001D83FC /* EventSignal.swift in Sources */,
 				9913241020D94CB3001D83FC /* BehaviorSubject.swift in Sources */,
@@ -920,6 +934,7 @@
 				9913240520D94C8F001D83FC /* ArrayExtensions.swift in Sources */,
 				9917E9D91FBAF7C8002D5CE3 /* SorcManager.swift in Sources */,
 				9913240A20D94CA1001D83FC /* DefaultLogger.swift in Sources */,
+				99123D87224D2310003FB064 /* TelematicsDataChange.swift in Sources */,
 				9917EA091FBAF81F002D5CE3 /* AppActivityStatusProvider.swift in Sources */,
 				9917E9F61FBAF7F8002D5CE3 /* LeaseToken.swift in Sources */,
 				9917E9DA1FBAF7C8002D5CE3 /* SorcManagerConfiguration.swift in Sources */,
@@ -931,6 +946,7 @@
 				9917EA081FBAF81F002D5CE3 /* AppActivityStatusProviderType.swift in Sources */,
 				9917E9E11FBAF7CE002D5CE3 /* SessionManager.swift in Sources */,
 				9917E9ED1FBAF7E2002D5CE3 /* TransportManager.swift in Sources */,
+				99123D89224D2395003FB064 /* TelematicsDataError.swift in Sources */,
 				9913241120D94CB3001D83FC /* Subscriber.swift in Sources */,
 				9913240720D94C9A001D83FC /* DataExtension.swift in Sources */,
 				9913241420D94CB3001D83FC /* ChangeSubject.swift in Sources */,

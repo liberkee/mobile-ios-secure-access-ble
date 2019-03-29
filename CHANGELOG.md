@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 ### Added
+- 2019-03-28 : (PLB2B-249)  : Added telematics interface
 ### Changed
 ### Fixed
 ### Removed

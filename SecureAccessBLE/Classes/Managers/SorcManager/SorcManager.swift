@@ -12,8 +12,6 @@ public class SorcManager: SorcManagerType {
     private let scanner: ScannerType
     fileprivate let sessionManager: SessionManagerType
     private let telematicsManagerInternal: (TelematicsManagerType & TelematicsManagerInternalType)?
-    public let telematicsManager: TelematicsManagerType?
-
     enum TelematicsRequestResult {
         case success, notConnected
     }
@@ -89,6 +87,9 @@ public class SorcManager: SorcManagerType {
         sessionManager.requestServiceGrant(serviceGrantID)
     }
 
+    /// Telematics manager which can be used to retrieve telematics data
+    public let telematicsManager: TelematicsManagerType?
+
     init(
         bluetoothStatusProvider: BluetoothStatusProviderType,
         scanner: ScannerType,
@@ -100,6 +101,10 @@ public class SorcManager: SorcManagerType {
         self.sessionManager = sessionManager
         telematicsManagerInternal = telematicsManager
         self.telematicsManager = telematicsManager
+        subscribeToServiceGrantChange()
+    }
+
+    private func subscribeToServiceGrantChange() {
         sessionManager.serviceGrantChange.subscribeNext { [weak self] change in
             guard let strongSelf = self else { return }
             if let telematicsManager = strongSelf.telematicsManagerInternal {
