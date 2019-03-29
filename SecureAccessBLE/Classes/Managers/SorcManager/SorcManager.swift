@@ -87,7 +87,8 @@ public class SorcManager: SorcManagerType {
         sessionManager.requestServiceGrant(serviceGrantID)
     }
 
-    /// Telematics manager which can be used to retrieve telematics data
+    /// Telematics manager which can be used to retrieve telematics data.
+    /// It is `nil` if telematics interface is not configured.
     public let telematicsManager: TelematicsManagerType?
 
     init(

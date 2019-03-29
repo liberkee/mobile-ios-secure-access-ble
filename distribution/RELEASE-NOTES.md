@@ -1,3 +1,7 @@
+# [3.4.0] - 2019-03-29
+
+- Added telematics interface to retrieve telematics data from vehicle
+
 # [3.3.1] - 2019-01-31
 
 - Added support for the new BLE advertisment protocol which contains the company identifier
