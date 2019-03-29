@@ -10,7 +10,7 @@ import Foundation
 public protocol TelematicsManagerType {
     /// Telematics data change signal which can be used to retrieve data changes
     var telematicsDataChange: ChangeSignal<TelematicsDataChange> { get }
-    
+
     /// Requests telematics data from the vehicle
     ///
     /// - Parameter types: Data types which need to be retrieved

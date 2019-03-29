@@ -20,7 +20,7 @@ class TelematicsManagerTests: QuickSpec {
         }
     }
 
-    // swiftlint:disable function_body_length line_length
+    // swiftlint:disable function_body_length
     override func spec() {
         var sut: TelematicsManager!
         var consumeResult: ServiceGrantChange?
@@ -114,21 +114,21 @@ class TelematicsManagerTests: QuickSpec {
                                     expect(expectedResponses).to(haveCount(3))
                                 }
                                 it("notified change contains odometer data") {
-                                    let expectedOdometerData = TelematicsData.odometer(timestamp: "1970-01-01T00:00:00Z",
-                                                                                       value: 333_000.3,
-                                                                                       unit: TelematicsData.odometerUnit)
+                                    let expectedOdometerData = TelematicsData(type: .odometer,
+                                                                              timestamp: "1970-01-01T00:00:00Z",
+                                                                              value: 333_000.3)
                                     expect(expectedResponses).to(contain(TelematicsDataResponse.success(expectedOdometerData)))
                                 }
                                 it("notified change contains fuel absolute data") {
-                                    let expectedFuelLevelAbsoluteData = TelematicsData.fuelLevelAbsolute(timestamp: "1970-01-01T00:00:00Z",
-                                                                                                         value: 41.56,
-                                                                                                         unit: TelematicsData.fuelLevelAbsoluteUnit)
+                                    let expectedFuelLevelAbsoluteData = TelematicsData(type: .fuelLevelAbsolute,
+                                                                                       timestamp: "1970-01-01T00:00:00Z",
+                                                                                       value: 41.56)
                                     expect(expectedResponses).to(contain(TelematicsDataResponse.success(expectedFuelLevelAbsoluteData)))
                                 }
                                 it("notified change contains fuel percentage data") {
-                                    let expectedFuelLevelRelativeData = TelematicsData.fuelLevelPercentage(timestamp: "1970-01-01T00:00:00Z",
-                                                                                                           value: 80.88,
-                                                                                                           unit: TelematicsData.fuelLevelPercentageUnit)
+                                    let expectedFuelLevelRelativeData = TelematicsData(type: .fuelLevelPercentage,
+                                                                                       timestamp: "1970-01-01T00:00:00Z",
+                                                                                       value: 80.88)
                                     expect(expectedResponses).to(contain(TelematicsDataResponse.success(expectedFuelLevelRelativeData)))
                                 }
                             }

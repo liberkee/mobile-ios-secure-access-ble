@@ -21,9 +21,9 @@ class TelematicsDataResponseTests: QuickSpec {
                                                         odometer: 160_000.9)
 
                         let sut = TelematicsDataResponse(tripMetaData: tripMetaData, requestedType: .odometer)
-                        let expectedData = TelematicsData.odometer(timestamp: "1970-01-01T00:00:00Z",
-                                                                   value: 160_000.9,
-                                                                   unit: TelematicsData.odometerUnit)
+                        let expectedData = TelematicsData(type: .odometer,
+                                                          timestamp: "1970-01-01T00:00:00Z",
+                                                          value: 160_000.9)
                         let expectedResponse = TelematicsDataResponse.success(expectedData)
                         expect(sut) == expectedResponse
                     }
@@ -55,9 +55,9 @@ class TelematicsDataResponseTests: QuickSpec {
                                                                 odometer: nil)
 
                                 let sut = TelematicsDataResponse(tripMetaData: tripMetaData, requestedType: .fuelLevelAbsolute)
-                                let expectedData = TelematicsData.fuelLevelAbsolute(timestamp: "1970-01-01T00:00:00Z",
-                                                                                    value: 80.0,
-                                                                                    unit: TelematicsData.fuelLevelAbsoluteUnit)
+                                let expectedData = TelematicsData(type: .fuelLevelAbsolute,
+                                                                  timestamp: "1970-01-01T00:00:00Z",
+                                                                  value: 80.0)
                                 let expectedResponse = TelematicsDataResponse.success(expectedData)
                                 expect(sut) == expectedResponse
                             }
@@ -107,9 +107,9 @@ class TelematicsDataResponseTests: QuickSpec {
                                                                 odometer: nil)
 
                                 let sut = TelematicsDataResponse(tripMetaData: tripMetaData, requestedType: .fuelLevelPercentage)
-                                let expectedData = TelematicsData.fuelLevelPercentage(timestamp: "1970-01-01T00:00:00Z",
-                                                                                      value: 90.0,
-                                                                                      unit: TelematicsData.fuelLevelPercentageUnit)
+                                let expectedData = TelematicsData(type: .fuelLevelPercentage,
+                                                                  timestamp: "1970-01-01T00:00:00Z",
+                                                                  value: 90.0)
                                 let expectedResponse = TelematicsDataResponse.success(expectedData)
                                 expect(sut) == expectedResponse
                             }

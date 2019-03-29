@@ -14,17 +14,31 @@ public enum TelematicsDataType {
     case fuelLevelAbsolute
     /// Percentage fuel level
     case fuelLevelPercentage
+
+    func unit() -> String {
+        switch self {
+        case .odometer: return "meter"
+        case .fuelLevelAbsolute: return " liter"
+        case .fuelLevelPercentage: return "percent"
+        }
+    }
 }
 
 /// Telematics data
-public enum TelematicsData: Equatable {
-    static let odometerUnit = "meter"
-    static let fuelLevelAbsoluteUnit = "liter"
-    static let fuelLevelPercentageUnit = "percent"
-    /// Odometer data
-    case odometer(timestamp: String, value: Double, unit: String)
-    /// Absolute fuel level data
-    case fuelLevelAbsolute(timestamp: String, value: Double, unit: String)
-    /// Percentage fuel level data
-    case fuelLevelPercentage(timestamp: String, value: Double, unit: String)
+public struct TelematicsData: Equatable {
+    /// Type of the data
+    public let type: TelematicsDataType
+    /// Timestamp of the retrieved data
+    public let timestamp: String
+    /// Value of the data
+    public let value: Double
+    /// Unit of the data depending on type, can be meter, liter or percent
+    public let unit: String
+
+    init(type: TelematicsDataType, timestamp: String, value: Double) {
+        self.type = type
+        self.timestamp = timestamp
+        self.value = value
+        unit = type.unit()
+    }
 }

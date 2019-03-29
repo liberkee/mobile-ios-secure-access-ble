@@ -18,25 +18,25 @@ public enum TelematicsDataResponse: Equatable {
         switch requestedType {
         case .odometer:
             if let value = tripMetaData.odometer {
-                telematicsData = TelematicsData.odometer(timestamp: tripMetaData.timeStamp,
-                                                         value: value,
-                                                         unit: TelematicsData.odometerUnit)
+                telematicsData = TelematicsData(type: .odometer,
+                                                timestamp: tripMetaData.timeStamp,
+                                                value: value)
             } else {
                 telematicsData = nil
             }
         case .fuelLevelAbsolute:
             if let value = tripMetaData.fuelLevelAbsolute, [.both, .absoluteOnly].contains(tripMetaData.fuelLevelFlag) {
-                telematicsData = TelematicsData.fuelLevelAbsolute(timestamp: tripMetaData.timeStamp,
-                                                                  value: value,
-                                                                  unit: TelematicsData.fuelLevelAbsoluteUnit)
+                telematicsData = TelematicsData(type: .fuelLevelAbsolute,
+                                                timestamp: tripMetaData.timeStamp,
+                                                value: value)
             } else {
                 telematicsData = nil
             }
         case .fuelLevelPercentage:
             if let value = tripMetaData.fuelLevelPercentage, [.both, .percentageOnly].contains(tripMetaData.fuelLevelFlag) {
-                telematicsData = TelematicsData.fuelLevelPercentage(timestamp: tripMetaData.timeStamp,
-                                                                    value: value,
-                                                                    unit: TelematicsData.fuelLevelPercentageUnit)
+                telematicsData = TelematicsData(type: .fuelLevelPercentage,
+                                                timestamp: tripMetaData.timeStamp,
+                                                value: value)
             } else {
                 telematicsData = nil
             }
