@@ -103,7 +103,7 @@ sorcManager.requestServiceGrant(GrantId.lock.rawValue)
 ```
 
 
-### Retreieve telematics data
+### Retrieve telematics data
 
 * To enable telematics interface you need to create `SorcManager` with `SorcManager.Configuration` struct where you can set appropriate flag:
 
