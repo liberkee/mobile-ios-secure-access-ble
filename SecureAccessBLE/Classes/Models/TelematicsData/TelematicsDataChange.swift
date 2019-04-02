@@ -30,7 +30,7 @@ extension TelematicsDataChange {
     public enum Action: Equatable {
         /// Initial action
         case initial
-        /// Action notifying that data is bein requested with list of requested types
+        /// Action notifying that data is being requested with list of requested types
         case requestingData(types: [TelematicsDataType])
         /// Action notifying that responses were received with the list of responses
         case responseReceived(responses: [TelematicsDataResponse])

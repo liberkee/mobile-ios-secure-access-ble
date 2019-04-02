@@ -18,7 +18,7 @@ public enum TelematicsDataType {
     func unit() -> String {
         switch self {
         case .odometer: return "meter"
-        case .fuelLevelAbsolute: return " liter"
+        case .fuelLevelAbsolute: return "liter"
         case .fuelLevelPercentage: return "percent"
         }
     }

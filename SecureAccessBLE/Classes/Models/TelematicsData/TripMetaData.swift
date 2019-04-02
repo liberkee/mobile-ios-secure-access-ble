@@ -43,6 +43,7 @@ struct TripMetaData: Decodable {
 
 extension TripMetaData: Equatable {}
 
+// Initializer which should only be used in tests
 extension TripMetaData {
     init(timeStamp: String,
          fuelLevelFlag: FuelLevelFlag,
