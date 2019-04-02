@@ -16,6 +16,7 @@ class SecurityManager: SecurityManagerType {
 
     let connectionChange = ChangeSubject<SecureConnectionChange>(state: .disconnected)
 
+    // TODO: There is nowhere an onNext call on this subject, although some logic in SessionManager rely on this (but is never executed)
     let messageSent = PublishSubject<Result<SorcMessage>>()
     let messageReceived = PublishSubject<Result<SorcMessage>>()
 

@@ -2,9 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [3.4.0] - Unreleased
 
 ### Added
+- 2019-04-02 : (PLB2B-249)  : Added telematics interface
 ### Changed
 ### Fixed
 ### Removed

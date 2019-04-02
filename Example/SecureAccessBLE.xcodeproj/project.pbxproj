@@ -9,7 +9,18 @@
 /* Begin PBXBuildFile section */
 		46B760911DA26C40003ADDB1 /* BLEManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760901DA26C40003ADDB1 /* BLEManagerTests.swift */; };
 		46B760971DA26C8C003ADDB1 /* BLECryptorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760961DA26C8C003ADDB1 /* BLECryptorTests.swift */; };
+		5BD4F475ACC4A5E1B97B3F5B /* Pods_SecureAccessBLE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BBD4A7868F38CDDFDA78FE2 /* Pods_SecureAccessBLE.framework */; };
 		7B054B1F895284FFC83B8030 /* AesCbcTestCryptoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B054736D9EB7B3AA766E37F /* AesCbcTestCryptoManager.swift */; };
+		99123D72224A19B4003FB064 /* TelematicsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99123D71224A19B4003FB064 /* TelematicsManager.swift */; };
+		99123D75224A1D01003FB064 /* TelematicsManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99123D74224A1D01003FB064 /* TelematicsManagerTests.swift */; };
+		99123D79224A326B003FB064 /* TelematicsManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99123D78224A326B003FB064 /* TelematicsManagerType.swift */; };
+		99123D7C224A79DF003FB064 /* TelematicsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99123D7B224A79DF003FB064 /* TelematicsData.swift */; };
+		99123D7E224A7EF6003FB064 /* TelematicsDataResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99123D7D224A7EF6003FB064 /* TelematicsDataResponseTests.swift */; };
+		99123D81224B5333003FB064 /* TripMetaData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99123D7F224B5329003FB064 /* TripMetaData.swift */; };
+		99123D85224D228E003FB064 /* TelematicsManagerInternalType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99123D84224D228E003FB064 /* TelematicsManagerInternalType.swift */; };
+		99123D87224D2310003FB064 /* TelematicsDataChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99123D86224D2310003FB064 /* TelematicsDataChange.swift */; };
+		99123D89224D2395003FB064 /* TelematicsDataError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99123D88224D2395003FB064 /* TelematicsDataError.swift */; };
+		99123D8B224D23A9003FB064 /* TelematicsDataResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99123D8A224D23A9003FB064 /* TelematicsDataResponse.swift */; };
 		9913240420D94C81001D83FC /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9913240320D94C81001D83FC /* Result.swift */; };
 		9913240520D94C8F001D83FC /* ArrayExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991323F120D94C29001D83FC /* ArrayExtensions.swift */; };
 		9913240620D94C9A001D83FC /* UUIDExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991323E220D94C29001D83FC /* UUIDExtension.swift */; };
@@ -77,8 +88,7 @@
 		9917EA081FBAF81F002D5CE3 /* AppActivityStatusProviderType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8F8EE1F5EAE9700B629A5 /* AppActivityStatusProviderType.swift */; };
 		9917EA091FBAF81F002D5CE3 /* AppActivityStatusProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8F8EF1F5EAF2800B629A5 /* AppActivityStatusProvider.swift */; };
 		99D1233D1F9A3B20006012DE /* SecureAccessBLE.h in Headers */ = {isa = PBXBuildFile; fileRef = 99D1233B1F9A3B20006012DE /* SecureAccessBLE.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9F97BCBB83BEA00F8033C882 /* Pods_SecureAccessBLE_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7010A8091FD3F155213110F7 /* Pods_SecureAccessBLE_Tests.framework */; };
-		D8C7ECE8556A5DE2C12453C9 /* Pods_SecureAccessBLE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B6E549E83AB9608B021727E /* Pods_SecureAccessBLE.framework */; };
+		B74D2C458E497021C4FA0FFF /* Pods_SecureAccessBLE_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B13A33CB4BB3A0FFB2D7D32E /* Pods_SecureAccessBLE_Tests.framework */; };
 		E504031F1F55BFD50008DF02 /* SessionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E504031B1F55BFD50008DF02 /* SessionManagerTests.swift */; };
 		E50403201F55BFD50008DF02 /* SorcManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E504031D1F55BFD50008DF02 /* SorcManagerTests.swift */; };
 		E50403221F55C0010008DF02 /* TransportManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50403211F55C0010008DF02 /* TransportManagerTests.swift */; };
@@ -89,9 +99,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		132DA7ACD6E05F818A2BBA5F /* Pods-SecureAccessBLE_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		25BE5C07A964BDC1B17763EA /* Pods-SecureAccessBLE.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE.release.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE/Pods-SecureAccessBLE.release.xcconfig"; sourceTree = "<group>"; };
-		2B8587382C230C7B40498ED7 /* Pods-SecureAccessBLE.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE/Pods-SecureAccessBLE.debug.xcconfig"; sourceTree = "<group>"; };
+		0C1609E7E18BCF626ECF8A8C /* Pods-SecureAccessBLE_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		46B7607C1DA2637D003ADDB1 /* PhoneToSorcChallenge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = PhoneToSorcChallenge.swift; sourceTree = "<group>"; };
 		46B7607D1DA2637D003ADDB1 /* PhoneToSorcResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = PhoneToSorcResponse.swift; sourceTree = "<group>"; };
 		46B7607E1DA2637D003ADDB1 /* SorcToPhoneResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SorcToPhoneResponse.swift; sourceTree = "<group>"; };
@@ -104,11 +112,21 @@
 		46B760961DA26C8C003ADDB1 /* BLECryptorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = BLECryptorTests.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		46B760981DA271FC003ADDB1 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; lineEnding = 0; name = CHANGELOG.md; path = ../CHANGELOG.md; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.markdown; };
 		46B760991DA27634003ADDB1 /* ChallengerPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; name = ChallengerPlayground.playground; path = ../SecureAccessBLE/Playgrounds/ChallengerPlayground.playground; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		58F4F19C8792AED6B295CBB4 /* Pods-SecureAccessBLE_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		607FACE51AFB9204008FA782 /* SecureAccessBLE_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SecureAccessBLE_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		7010A8091FD3F155213110F7 /* Pods_SecureAccessBLE_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SecureAccessBLE_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6BBD4A7868F38CDDFDA78FE2 /* Pods_SecureAccessBLE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SecureAccessBLE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B054736D9EB7B3AA766E37F /* AesCbcTestCryptoManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AesCbcTestCryptoManager.swift; sourceTree = "<group>"; };
-		7B6E549E83AB9608B021727E /* Pods_SecureAccessBLE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SecureAccessBLE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		99123D71224A19B4003FB064 /* TelematicsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelematicsManager.swift; sourceTree = "<group>"; };
+		99123D74224A1D01003FB064 /* TelematicsManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelematicsManagerTests.swift; sourceTree = "<group>"; };
+		99123D78224A326B003FB064 /* TelematicsManagerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelematicsManagerType.swift; sourceTree = "<group>"; };
+		99123D7B224A79DF003FB064 /* TelematicsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelematicsData.swift; sourceTree = "<group>"; };
+		99123D7D224A7EF6003FB064 /* TelematicsDataResponseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelematicsDataResponseTests.swift; sourceTree = "<group>"; };
+		99123D7F224B5329003FB064 /* TripMetaData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripMetaData.swift; sourceTree = "<group>"; };
+		99123D84224D228E003FB064 /* TelematicsManagerInternalType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelematicsManagerInternalType.swift; sourceTree = "<group>"; };
+		99123D86224D2310003FB064 /* TelematicsDataChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelematicsDataChange.swift; sourceTree = "<group>"; };
+		99123D88224D2395003FB064 /* TelematicsDataError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelematicsDataError.swift; sourceTree = "<group>"; };
+		99123D8A224D23A9003FB064 /* TelematicsDataResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelematicsDataResponse.swift; sourceTree = "<group>"; };
 		991323DE20D94C28001D83FC /* ChangeSignal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangeSignal.swift; sourceTree = "<group>"; };
 		991323DF20D94C28001D83FC /* StateSignal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateSignal.swift; sourceTree = "<group>"; };
 		991323E020D94C28001D83FC /* EventSignal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventSignal.swift; sourceTree = "<group>"; };
@@ -130,8 +148,11 @@
 		99D123391F9A3B20006012DE /* SecureAccessBLE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SecureAccessBLE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		99D1233B1F9A3B20006012DE /* SecureAccessBLE.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SecureAccessBLE.h; sourceTree = "<group>"; };
 		99D1233C1F9A3B20006012DE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B13A33CB4BB3A0FFB2D7D32E /* Pods_SecureAccessBLE_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SecureAccessBLE_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BDD2935451DD295A50BFBCF1 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		C28A7D5203261E30CA436EC3 /* SecureAccessBLE.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = SecureAccessBLE.podspec; path = ../SecureAccessBLE.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		D712A727A186F4711A4DF11A /* Pods-SecureAccessBLE.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE/Pods-SecureAccessBLE.debug.xcconfig"; sourceTree = "<group>"; };
+		E259868D851C8D27D9E25B3E /* Pods-SecureAccessBLE.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE.release.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE/Pods-SecureAccessBLE.release.xcconfig"; sourceTree = "<group>"; };
 		E50403061F546FFF0008DF02 /* SorcManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SorcManager.swift; sourceTree = "<group>"; };
 		E504030A1F5553830008DF02 /* SorcManagerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SorcManagerType.swift; sourceTree = "<group>"; };
 		E504030B1F5553F50008DF02 /* ConnectionChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionChange.swift; sourceTree = "<group>"; };
@@ -179,7 +200,6 @@
 		E5E308D21F324E6800C1537F /* CBWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBWrapper.swift; sourceTree = "<group>"; };
 		E5E8F8EE1F5EAE9700B629A5 /* AppActivityStatusProviderType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppActivityStatusProviderType.swift; sourceTree = "<group>"; };
 		E5E8F8EF1F5EAF2800B629A5 /* AppActivityStatusProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppActivityStatusProvider.swift; sourceTree = "<group>"; };
-		F1B7EB15ADF6F519CB85932B /* Pods-SecureAccessBLE_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE_Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -187,7 +207,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9F97BCBB83BEA00F8033C882 /* Pods_SecureAccessBLE_Tests.framework in Frameworks */,
+				B74D2C458E497021C4FA0FFF /* Pods_SecureAccessBLE_Tests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -195,13 +215,24 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D8C7ECE8556A5DE2C12453C9 /* Pods_SecureAccessBLE.framework in Frameworks */,
+				5BD4F475ACC4A5E1B97B3F5B /* Pods_SecureAccessBLE.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1480A5DE759168E871AC7257 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				D712A727A186F4711A4DF11A /* Pods-SecureAccessBLE.debug.xcconfig */,
+				E259868D851C8D27D9E25B3E /* Pods-SecureAccessBLE.release.xcconfig */,
+				0C1609E7E18BCF626ECF8A8C /* Pods-SecureAccessBLE_Tests.debug.xcconfig */,
+				58F4F19C8792AED6B295CBB4 /* Pods-SecureAccessBLE_Tests.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		46B760651DA2637D003ADDB1 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
@@ -234,6 +265,7 @@
 		46B7607A1DA2637D003ADDB1 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				99123D7A224A79C7003FB064 /* TelematicsData */,
 				E573A7911EDC2B860093ABA8 /* Lease */,
 				46B7607B1DA2637D003ADDB1 /* Challenger */,
 				E55E6CDA1F4200E900C5934B /* SorcMessage */,
@@ -289,8 +321,8 @@
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,
 				99D1233A1F9A3B20006012DE /* SecureAccessBLE */,
 				607FACD11AFB9204008FA782 /* Products */,
-				60CABDADE13122C436A0C3CC /* Pods */,
-				666CCCC21868CBF7215E348A /* Frameworks */,
+				1480A5DE759168E871AC7257 /* Pods */,
+				A289B325D84F6978DCC6C1DA /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -334,24 +366,34 @@
 			name = "Podspec Metadata";
 			sourceTree = "<group>";
 		};
-		60CABDADE13122C436A0C3CC /* Pods */ = {
+		99123D70224A1999003FB064 /* TelematicsManager */ = {
 			isa = PBXGroup;
 			children = (
-				2B8587382C230C7B40498ED7 /* Pods-SecureAccessBLE.debug.xcconfig */,
-				25BE5C07A964BDC1B17763EA /* Pods-SecureAccessBLE.release.xcconfig */,
-				132DA7ACD6E05F818A2BBA5F /* Pods-SecureAccessBLE_Tests.debug.xcconfig */,
-				F1B7EB15ADF6F519CB85932B /* Pods-SecureAccessBLE_Tests.release.xcconfig */,
+				99123D71224A19B4003FB064 /* TelematicsManager.swift */,
+				99123D78224A326B003FB064 /* TelematicsManagerType.swift */,
+				99123D84224D228E003FB064 /* TelematicsManagerInternalType.swift */,
 			);
-			name = Pods;
+			path = TelematicsManager;
 			sourceTree = "<group>";
 		};
-		666CCCC21868CBF7215E348A /* Frameworks */ = {
+		99123D73224A1CE2003FB064 /* TelematicsManager */ = {
 			isa = PBXGroup;
 			children = (
-				7B6E549E83AB9608B021727E /* Pods_SecureAccessBLE.framework */,
-				7010A8091FD3F155213110F7 /* Pods_SecureAccessBLE_Tests.framework */,
+				99123D74224A1D01003FB064 /* TelematicsManagerTests.swift */,
 			);
-			name = Frameworks;
+			path = TelematicsManager;
+			sourceTree = "<group>";
+		};
+		99123D7A224A79C7003FB064 /* TelematicsData */ = {
+			isa = PBXGroup;
+			children = (
+				99123D7B224A79DF003FB064 /* TelematicsData.swift */,
+				99123D7F224B5329003FB064 /* TripMetaData.swift */,
+				99123D86224D2310003FB064 /* TelematicsDataChange.swift */,
+				99123D88224D2395003FB064 /* TelematicsDataError.swift */,
+				99123D8A224D23A9003FB064 /* TelematicsDataResponse.swift */,
+			);
+			path = TelematicsData;
 			sourceTree = "<group>";
 		};
 		991323DD20D94C28001D83FC /* Signals */ = {
@@ -417,6 +459,7 @@
 			isa = PBXGroup;
 			children = (
 				9916AC0021BA75F700BEC5F0 /* SorcMessageTests.swift */,
+				99123D7D224A7EF6003FB064 /* TelematicsDataResponseTests.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -428,6 +471,15 @@
 				99D1233C1F9A3B20006012DE /* Info.plist */,
 			);
 			path = SecureAccessBLE;
+			sourceTree = "<group>";
+		};
+		A289B325D84F6978DCC6C1DA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6BBD4A7868F38CDDFDA78FE2 /* Pods_SecureAccessBLE.framework */,
+				B13A33CB4BB3A0FFB2D7D32E /* Pods_SecureAccessBLE_Tests.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		E50403051F546FE60008DF02 /* SorcManager */ = {
@@ -468,6 +520,7 @@
 		E50403191F55BFD50008DF02 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				99123D73224A1CE2003FB064 /* TelematicsManager */,
 				E504031C1F55BFD50008DF02 /* SorcManager */,
 				E504031A1F55BFD50008DF02 /* SessionManager */,
 				E5CF3AE41F586EF4009C95A0 /* SecurityManager */,
@@ -559,6 +612,7 @@
 		E59E01631F387BE5006F114D /* Managers */ = {
 			isa = PBXGroup;
 			children = (
+				99123D70224A1999003FB064 /* TelematicsManager */,
 				E50403051F546FE60008DF02 /* SorcManager */,
 				E504030F1F5556780008DF02 /* SessionManager */,
 				E504032D1F56CEFA0008DF02 /* SecurityManager */,
@@ -622,13 +676,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 607FACF21AFB9204008FA782 /* Build configuration list for PBXNativeTarget "SecureAccessBLE_Tests" */;
 			buildPhases = (
-				9F88FB0DBA79DC6016F4304F /* [CP] Check Pods Manifest.lock */,
+				96A849B20892D7AA5AA2D863 /* [CP] Check Pods Manifest.lock */,
 				E58008D51EC9A8020000F40D /* Run SwiftFormat */,
 				607FACE11AFB9204008FA782 /* Sources */,
 				607FACE21AFB9204008FA782 /* Frameworks */,
 				607FACE31AFB9204008FA782 /* Resources */,
 				992167D31F5D93B0005D1C67 /* ShellScript */,
-				10A2866EB3B5AF6816E4E22E /* [CP] Embed Pods Frameworks */,
+				4AFB668D37731075BE15AFB4 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -643,7 +697,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 99D123401F9A3B20006012DE /* Build configuration list for PBXNativeTarget "SecureAccessBLE" */;
 			buildPhases = (
-				C8F8A417F6B2A88A19042BD3 /* [CP] Check Pods Manifest.lock */,
+				0D97CD5E5F356043D559ED2D /* [CP] Check Pods Manifest.lock */,
 				99D123341F9A3B20006012DE /* Sources */,
 				99D123351F9A3B20006012DE /* Frameworks */,
 				99D123361F9A3B20006012DE /* Headers */,
@@ -718,24 +772,76 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		10A2866EB3B5AF6816E4E22E /* [CP] Embed Pods Frameworks */ = {
+		0D97CD5E5F356043D559ED2D /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SecureAccessBLE-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4AFB668D37731075BE15AFB4 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/Nimble/Nimble.framework",
+				"${BUILT_PRODUCTS_DIR}/Quick/Quick.framework",
 				"${BUILT_PRODUCTS_DIR}/SecureAccessBLE/SecureAccessBLE.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CryptoSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Nimble.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Quick.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SecureAccessBLE.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		96A849B20892D7AA5AA2D863 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SecureAccessBLE_Tests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		992167D31F5D93B0005D1C67 /* ShellScript */ = {
@@ -750,42 +856,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# We ignore exit code of linter. This allows the build to complete successfully. Errors and warnings can be viewed in Xcode.\n\"${PODS_ROOT}/SwiftLint/swiftlint\" --config ../.swiftlint.yml || true";
-		};
-		9F88FB0DBA79DC6016F4304F /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-SecureAccessBLE_Tests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C8F8A417F6B2A88A19042BD3 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-SecureAccessBLE-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
 		};
 		E58008D51EC9A8020000F40D /* Run SwiftFormat */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -812,8 +882,10 @@
 				E504031F1F55BFD50008DF02 /* SessionManagerTests.swift in Sources */,
 				E5CF3ADE1F56FDBC009C95A0 /* BoundedQueueTests.swift in Sources */,
 				46B760971DA26C8C003ADDB1 /* BLECryptorTests.swift in Sources */,
+				99123D75224A1D01003FB064 /* TelematicsManagerTests.swift in Sources */,
 				E5CF3AE61F586EF4009C95A0 /* SecurityManagerTests.swift in Sources */,
 				E5CF3AE31F586EB7009C95A0 /* ConnectionManagerTests.swift in Sources */,
+				99123D7E224A7EF6003FB064 /* TelematicsDataResponseTests.swift in Sources */,
 				E50403201F55BFD50008DF02 /* SorcManagerTests.swift in Sources */,
 				9916AC0121BA75F700BEC5F0 /* SorcMessageTests.swift in Sources */,
 				E5CF3AF01F587164009C95A0 /* ChallengerTests.swift in Sources */,
@@ -836,6 +908,7 @@
 				9917E9F91FBAF7FE002D5CE3 /* PhoneToSorcResponse.swift in Sources */,
 				9913241220D94CB3001D83FC /* PublishSubject.swift in Sources */,
 				9913240D20D94CAC001D83FC /* ChangeSignal.swift in Sources */,
+				99123D79224A326B003FB064 /* TelematicsManagerType.swift in Sources */,
 				9917E9F11FBAF7E7002D5CE3 /* PhysicalConnectionChange.swift in Sources */,
 				9917E9DC1FBAF7C8002D5CE3 /* SorcInfo.swift in Sources */,
 				9913240620D94C9A001D83FC /* UUIDExtension.swift in Sources */,
@@ -844,8 +917,10 @@
 				9917E9F21FBAF7E7002D5CE3 /* ConnectionManager.swift in Sources */,
 				9917E9E71FBAF7DB002D5CE3 /* AesCbcCryptoManager.swift in Sources */,
 				9917E9FD1FBAF804002D5CE3 /* SorcMessage.swift in Sources */,
+				99123D85224D228E003FB064 /* TelematicsManagerInternalType.swift in Sources */,
 				9917E9F81FBAF7FE002D5CE3 /* PhoneToSorcChallenge.swift in Sources */,
 				9917E9E31FBAF7D5002D5CE3 /* SecurityManagerType.swift in Sources */,
+				99123D8B224D23A9003FB064 /* TelematicsDataResponse.swift in Sources */,
 				9917EA011FBAF80F002D5CE3 /* DataFrame.swift in Sources */,
 				9913240F20D94CAC001D83FC /* EventSignal.swift in Sources */,
 				9913241020D94CB3001D83FC /* BehaviorSubject.swift in Sources */,
@@ -866,10 +941,12 @@
 				9917E9DE1FBAF7C8002D5CE3 /* ServiceGrantChange.swift in Sources */,
 				9913240C20D94CA1001D83FC /* HSMLogging.swift in Sources */,
 				9917E9E21FBAF7CE002D5CE3 /* SessionManagerConfiguration.swift in Sources */,
+				99123D72224A19B4003FB064 /* TelematicsManager.swift in Sources */,
 				9917E9EC1FBAF7E2002D5CE3 /* TransportConnectionChange.swift in Sources */,
 				9913240520D94C8F001D83FC /* ArrayExtensions.swift in Sources */,
 				9917E9D91FBAF7C8002D5CE3 /* SorcManager.swift in Sources */,
 				9913240A20D94CA1001D83FC /* DefaultLogger.swift in Sources */,
+				99123D87224D2310003FB064 /* TelematicsDataChange.swift in Sources */,
 				9917EA091FBAF81F002D5CE3 /* AppActivityStatusProvider.swift in Sources */,
 				9917E9F61FBAF7F8002D5CE3 /* LeaseToken.swift in Sources */,
 				9917E9DA1FBAF7C8002D5CE3 /* SorcManagerConfiguration.swift in Sources */,
@@ -881,6 +958,7 @@
 				9917EA081FBAF81F002D5CE3 /* AppActivityStatusProviderType.swift in Sources */,
 				9917E9E11FBAF7CE002D5CE3 /* SessionManager.swift in Sources */,
 				9917E9ED1FBAF7E2002D5CE3 /* TransportManager.swift in Sources */,
+				99123D89224D2395003FB064 /* TelematicsDataError.swift in Sources */,
 				9913241120D94CB3001D83FC /* Subscriber.swift in Sources */,
 				9913240720D94C9A001D83FC /* DataExtension.swift in Sources */,
 				9913241420D94CB3001D83FC /* ChangeSubject.swift in Sources */,
@@ -888,6 +966,8 @@
 				9917EA061FBAF81F002D5CE3 /* SystemClock.swift in Sources */,
 				9913240820D94C9A001D83FC /* StringExtension.swift in Sources */,
 				9917EA041FBAF814002D5CE3 /* LTBlobPayload.swift in Sources */,
+				99123D7C224A79DF003FB064 /* TelematicsData.swift in Sources */,
+				99123D81224B5333003FB064 /* TripMetaData.swift in Sources */,
 				9913240420D94C81001D83FC /* Result.swift in Sources */,
 				9917E9E51FBAF7D5002D5CE3 /* SecurityManager.swift in Sources */,
 				9917E9EB1FBAF7E2002D5CE3 /* TransportManagerType.swift in Sources */,
@@ -1004,7 +1084,7 @@
 		};
 		607FACF31AFB9204008FA782 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 132DA7ACD6E05F818A2BBA5F /* Pods-SecureAccessBLE_Tests.debug.xcconfig */;
+			baseConfigurationReference = 0C1609E7E18BCF626ECF8A8C /* Pods-SecureAccessBLE_Tests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				DEVELOPMENT_TEAM = MR9TB5Y4RJ;
@@ -1023,7 +1103,7 @@
 		};
 		607FACF41AFB9204008FA782 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F1B7EB15ADF6F519CB85932B /* Pods-SecureAccessBLE_Tests.release.xcconfig */;
+			baseConfigurationReference = 58F4F19C8792AED6B295CBB4 /* Pods-SecureAccessBLE_Tests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				DEVELOPMENT_TEAM = MR9TB5Y4RJ;
@@ -1038,7 +1118,7 @@
 		};
 		99D1233E1F9A3B20006012DE /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 2B8587382C230C7B40498ED7 /* Pods-SecureAccessBLE.debug.xcconfig */;
+			baseConfigurationReference = D712A727A186F4711A4DF11A /* Pods-SecureAccessBLE.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1078,7 +1158,7 @@
 		};
 		99D1233F1F9A3B20006012DE /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 25BE5C07A964BDC1B17763EA /* Pods-SecureAccessBLE.release.xcconfig */;
+			baseConfigurationReference = E259868D851C8D27D9E25B3E /* Pods-SecureAccessBLE.release.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
