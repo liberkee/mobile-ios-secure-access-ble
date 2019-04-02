@@ -9,8 +9,8 @@ PODS:
 
 DEPENDENCIES:
   - CryptoSwift (= 0.12.0)
-  - Nimble
-  - Quick
+  - Nimble (~> 8.0.1)
+  - Quick (~> 2.0.0)
   - SecureAccessBLE (from `../`)
   - SwiftFormat/CLI
   - SwiftLint (= 0.28.0)
@@ -35,6 +35,6 @@ SPEC CHECKSUMS:
   SwiftFormat: 0762bc591b9f6e8efa99402e714a03ede5151656
   SwiftLint: 088cfacb75b45970017e62b7524d506776d60148
 
-PODFILE CHECKSUM: 366642237ac7ebe426b2a6fa07a00f6533727449
+PODFILE CHECKSUM: 62265ab7af055a90c4f9e2058ee8f6cbdd79372b
 
 COCOAPODS: 1.5.3
