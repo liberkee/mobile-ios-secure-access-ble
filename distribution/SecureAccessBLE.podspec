@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'SecureAccessBLE'
-  s.version          = '3.3.1'
+  s.version          = '3.4.0'
   s.summary          = 'SecureAccess BLE framework'
   s.description      = 'Framework for communicating with the SecureAccess BLE hardware.'
 
@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   s.license          = { :file => 'LICENSE.md' }
   s.author           = 'Huf Secure Mobile GmbH'
   s.source           = { :path => './' }
-  s.ios.deployment_target = '10.0'
+  s.ios.deployment_target = '10.3'
 
   s.frameworks = 'CoreBluetooth'
 
