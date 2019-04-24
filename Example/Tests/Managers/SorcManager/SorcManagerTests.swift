@@ -56,18 +56,6 @@ private class MockSessionManager: SessionManagerType {
     }
 }
 
-private class MockTelematicsManager: TelematicsManagerType, TelematicsManagerInternalType {
-    var telematicsDataChangeSubject = ChangeSubject<TelematicsDataChange>(state: [])
-    var telematicsDataChange: ChangeSignal<TelematicsDataChange> { return telematicsDataChangeSubject.asSignal() }
-    weak var delegate: TelematicsManagerDelegate?
-
-    var consumeResponse: ServiceGrantChange?
-    func consume(change _: ServiceGrantChange) -> ServiceGrantChange? {
-        return consumeResponse
-    }
-    func requestTelematicsData(_: [TelematicsDataType]) {}
-}
-
 extension SorcInfo {
     static var stableTestInstance: SorcInfo {
         return .init(
@@ -95,7 +83,6 @@ class SorcManagerTests: XCTestCase {
     fileprivate var scanner = MockScanner()
     fileprivate var sessionManager = MockSessionManager()
     var sorcManager: SorcManager!
-    fileprivate var telematicsManager = MockTelematicsManager()
 
     override func setUp() {
         super.setUp()
@@ -281,84 +268,5 @@ class SorcManagerTests: XCTestCase {
         // Then
         XCTAssertEqual(receivedChange, change)
     }
-
-    func test_telematicsManager_telematicsEnabled_isNotNull() {
-        let config = SorcManager.Configuration(enableTelematicsInterface: true)
-        let sut = SorcManager(configuration: config)
-        XCTAssertNotNil(sut.telematicsManager)
-    }
-
-    func test_telematicsManager_telematicsDisabled_isNull() {
-        let config = SorcManager.Configuration(enableTelematicsInterface: false)
-        let sut = SorcManager(configuration: config)
-        XCTAssertNil(sut.telematicsManager)
-    }
-
-    func test_serviceGrantChange_telematicsManagerConsumesChange_itDoesNotNotifyChange() {
-        // Given
-        var receivedChange: ServiceGrantChange?
-        telematicsManager.consumeResponse = nil
-        let sut = SorcManager(
-            bluetoothStatusProvider: bluetoothStatusProvider,
-            scanner: scanner,
-            sessionManager: sessionManager,
-            telematicsManager: telematicsManager
-        )
-        telematicsManager.delegate = sut
-        _ = sut.serviceGrantChange.subscribe { change in
-            receivedChange = change
-        }
-
-        // When
-        let change = ServiceGrantChange(
-            state: .init(requestingServiceGrantIDs: [9]),
-            action: .requestServiceGrant(id: 9, accepted: true)
-        )
-
-        sessionManager.serviceGrantChange.onNext(change)
-
-        // Then
-        let initialChange = ServiceGrantChange.initialWithState(.init(requestingServiceGrantIDs: []))
-        XCTAssertEqual(receivedChange, initialChange)
-    }
-
-    func test_requestTelematicsData_connected_succeeds() {
-        // Given
-        let change = ConnectionChange(
-            state: .connected(sorcID: sorcIDA),
-            action: .connectionEstablished(sorcID: sorcIDA)
-        )
-        sessionManager.connectionChange.onNext(change)
-
-        // When
-        let requestTelematicsResult = sorcManager.requestTelematicsData()
-
-        // Then
-        XCTAssertEqual(requestTelematicsResult, .success)
-    }
-
-    func test_requestTelematicsData_connected_requestsServiceGrant() {
-        // Given
-        let change = ConnectionChange(
-            state: .connected(sorcID: sorcIDA),
-            action: .connectionEstablished(sorcID: sorcIDA)
-        )
-        sessionManager.connectionChange.onNext(change)
-
-        // When
-        _ = sorcManager.requestTelematicsData()
-
-        // Then
-        XCTAssertEqual(sessionManager.requestServiceGrantCalledWithID, TelematicsManager.telematicsServiceGrantID)
-    }
-
-    func test_requestTelematicsData_notConnected_returnsNotConnected() {
-        // Given
-
-        // When
-        let requestTelematicsResult = sorcManager.requestTelematicsData()
-
-        // Then
-        XCTAssertEqual(requestTelematicsResult, .notConnected)
-    }
+    //TODO: Add tests for interceptors?
 }

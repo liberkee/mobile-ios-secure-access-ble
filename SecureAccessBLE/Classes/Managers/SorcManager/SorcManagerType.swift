@@ -55,4 +55,7 @@ public protocol SorcManagerType {
      - Parameter serviceGrantID: The ID the of the service grant
      */
     func requestServiceGrant(_ serviceGrantID: ServiceGrantID)
+
+    /// :nodoc:
+    func registerInterceptor(_ interceptor: SorcInterceptor)
 }

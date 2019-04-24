@@ -11,10 +11,7 @@ public class SorcManager: SorcManagerType {
     private let bluetoothStatusProvider: BluetoothStatusProviderType
     private let scanner: ScannerType
     fileprivate let sessionManager: SessionManagerType
-    private let telematicsManagerInternal: (TelematicsManagerType & TelematicsManagerInternalType)?
-    enum TelematicsRequestResult {
-        case success, notConnected
-    }
+    private var interceptors: [SorcInterceptor] = []
 
     // MARK: - BLE Interface
 
@@ -87,35 +84,33 @@ public class SorcManager: SorcManagerType {
         sessionManager.requestServiceGrant(serviceGrantID)
     }
 
-    /// Telematics manager which can be used to retrieve telematics data.
-    /// It is `nil` if telematics interface is not configured.
-    public let telematicsManager: TelematicsManagerType?
-
     init(
         bluetoothStatusProvider: BluetoothStatusProviderType,
         scanner: ScannerType,
-        sessionManager: SessionManagerType,
-        telematicsManager: (TelematicsManagerType & TelematicsManagerInternalType)? = nil
+        sessionManager: SessionManagerType
     ) {
         self.bluetoothStatusProvider = bluetoothStatusProvider
         self.scanner = scanner
         self.sessionManager = sessionManager
-        telematicsManagerInternal = telematicsManager
-        self.telematicsManager = telematicsManager
         subscribeToServiceGrantChange()
     }
 
     private func subscribeToServiceGrantChange() {
         sessionManager.serviceGrantChange.subscribeNext { [weak self] change in
             guard let strongSelf = self else { return }
-            if let telematicsManager = strongSelf.telematicsManagerInternal {
-                if let changeAfterTelematicsCheck = telematicsManager.consume(change: change) {
-                    strongSelf.serviceGrantChangeSubject.onNext(changeAfterTelematicsCheck)
+            var changeAfterInterceptorAppliance: ServiceGrantChange? = change
+            for interceptor in strongSelf.interceptors {
+                changeAfterInterceptorAppliance = interceptor.consume(change: change)!
+                if changeAfterInterceptorAppliance == nil {
+                    return
                 }
-            } else {
-                strongSelf.serviceGrantChangeSubject.onNext(change)
             }
+            strongSelf.serviceGrantChangeSubject.onNext(change)
         }.disposed(by: disposeBag)
+    }
+
+    public func registerInterceptor(_ interceptor: SorcInterceptor) {
+        interceptors.append(interceptor)
     }
 }
 
@@ -147,24 +142,10 @@ extension SorcManager {
 
         let sessionManager = SessionManager(securityManager: securityManager, configuration: sessionConfiguration)
 
-        let telematicsManager: TelematicsManager? = configuration.enableTelematicsInterface ? TelematicsManager() : nil
         self.init(
             bluetoothStatusProvider: connectionManager,
             scanner: connectionManager,
-            sessionManager: sessionManager,
-            telematicsManager: telematicsManager
+            sessionManager: sessionManager
         )
-        telematicsManager?.delegate = self
-    }
-}
-
-extension SorcManager: TelematicsManagerDelegate {
-    func requestTelematicsData() -> SorcManager.TelematicsRequestResult {
-        if case ConnectionChange.State.connected = connectionChange.state {
-            sessionManager.requestServiceGrant(TelematicsManager.telematicsServiceGrantID)
-            return .success
-        } else {
-            return .notConnected
-        }
     }
 }
