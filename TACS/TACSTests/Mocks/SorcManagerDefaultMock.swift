@@ -38,5 +38,10 @@ class SorcManagerDefaultMock: SorcManagerType {
         didRequestServiceGrant += 1
     }
     
-    func registerInterceptor(_ interceptor: SorcInterceptor) {}
+    var didReceiveRegisterInterceptor = 0
+    var receivedRegisterInterceptorInterceptors: [SorcInterceptor] = []
+    func registerInterceptor(_ interceptor: SorcInterceptor) {
+        didReceiveRegisterInterceptor += 1
+        receivedRegisterInterceptorInterceptors.append(interceptor)
+    }
 }

@@ -7,7 +7,7 @@
 
 import SecureAccessBLE
 
-public enum VehicleAccessFeatureResponse {
+public enum VehicleAccessFeatureResponse: Equatable {
     case success(status: VehicleAccessFeatureStatus)
     case failure(feature: VehicleAccessFeature, error: VehicleAccessFeatureError)
     internal init?(feature: VehicleAccessFeature, response: ServiceGrantResponse) {
@@ -28,7 +28,7 @@ public enum VehicleAccessFeatureResponse {
     }
 }
 
-public enum VehicleAccessFeatureStatus {
+public enum VehicleAccessFeatureStatus: Equatable {
     case lock
     case unlock
     case enableIgnition

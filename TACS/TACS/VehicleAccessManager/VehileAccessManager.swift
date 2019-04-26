@@ -12,11 +12,14 @@ class VehicleAccessManager: VehicleAccessManagerType {
     public var vehicleAccessChange: ChangeSignal<VehicleAccessFeatureChange>  {
         return vehicleAccessChangeSubject.asSignal()
     }
+    
+    fileprivate var featuresWaitingForAck: [VehicleAccessFeature] = []
     init(sorcManager: SorcManagerType) {
         self.sorcManager = sorcManager
     }
     
     func requestFeature(_ vehicleAccessFeature: VehicleAccessFeature) {
+        featuresWaitingForAck.append(vehicleAccessFeature)
         sorcManager.requestServiceGrant(vehicleAccessFeature.serviceGrantID())
     }
 }
@@ -29,20 +32,26 @@ extension VehicleAccessManager: SorcInterceptor {
             guard let feature = VehicleAccessFeature(serviceGrantID: serviceGrant) else {
                 return changeWithoutRequestedGrants(from: change)
             }
-            let state: VehicleAccessFeatureChange.State = change.state.requestingServiceGrantIDs.compactMap {
-                VehicleAccessFeature(serviceGrantID: $0)
+            if let index = featuresWaitingForAck.firstIndex(of: feature) {
+                featuresWaitingForAck.remove(at: index)
+                var newState = vehicleAccessChange.state
+                if accepted {
+                    newState.append(feature)
+                }
+                let action: VehicleAccessFeatureChange.Action =
+                    .requestFeature(feature: feature, accepted: accepted)
+                vehicleAccessChangeSubject.onNext(VehicleAccessFeatureChange(state: newState, action: action))
+                return nil
+            } else {
+                return change
             }
-            let action: VehicleAccessFeatureChange.Action =
-                .requestFeature(feature: feature, accepted: accepted)
-            vehicleAccessChangeSubject.onNext(VehicleAccessFeatureChange(state: state, action: action))
-            return nil
         case let .responseReceived(response):
             guard let feature = VehicleAccessFeature(serviceGrantID: response.serviceGrantID) else {
                 return changeWithoutRequestedGrants(from: change)
             }
             // ensure we are waiting for response for this feature, otherwise don't consume
             guard vehicleAccessChangeSubject.state.contains(feature) else {
-                return change
+                return changeWithoutRequestedGrants(from: change)
             }
             let stateWithoutReceivedFeature = vehicleAccessChangeSubject.state.filter { $0 != feature }
             if let response = VehicleAccessFeatureResponse(feature: feature, response: response) {
@@ -55,7 +64,7 @@ extension VehicleAccessManager: SorcInterceptor {
             // It can be considered as remoteFailed error because the data is corrupted.
             // Session manager will clear its queue and restart sending heart beat.
             // This means in this case no service grant responses are running anymore.
-            // Consider clearing propagating the change with filtered state???
+            // Consider propagating the change with filtered state???
             return change
             
         default: return nil

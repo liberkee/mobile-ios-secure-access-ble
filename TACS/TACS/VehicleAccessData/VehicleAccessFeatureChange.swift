@@ -20,9 +20,11 @@ public struct VehicleAccessFeatureChange: ChangeType {
 }
 
 extension VehicleAccessFeatureChange {
-    public enum Action {
+    public enum Action: Equatable {
         case initial
         case requestFeature(feature: VehicleAccessFeature, accepted: Bool)
         case responseReceived(response: VehicleAccessFeatureResponse)
     }
 }
+
+extension VehicleAccessFeatureChange: Equatable {}

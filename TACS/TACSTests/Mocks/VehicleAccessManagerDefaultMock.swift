@@ -9,6 +9,10 @@
 import SecureAccessBLE
 
 class VehicleAccessManagerDefaultMock: VehicleAccessManagerType {
+    var vehicleAccessChangeSubject = ChangeSubject<VehicleAccessFeatureChange>(state: [])
+    var vehicleAccessChange: ChangeSignal<VehicleAccessFeatureChange> {
+        return vehicleAccessChangeSubject.asSignal()
+    }
     var changeAfterConsume: ServiceGrantChange?
     func consume(change: ServiceGrantChange) -> ServiceGrantChange? {
         return changeAfterConsume

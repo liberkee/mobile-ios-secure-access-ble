@@ -27,6 +27,8 @@
 		9967F4D0227201200035AF30 /* VehicleAccessFeatureChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9967F4CF227201200035AF30 /* VehicleAccessFeatureChange.swift */; };
 		9967F4D422720D040035AF30 /* VehicleAccessFeatureResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9967F4D322720D040035AF30 /* VehicleAccessFeatureResponse.swift */; };
 		9967F4D7227300DC0035AF30 /* VehicleAccessManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9967F4D6227300DC0035AF30 /* VehicleAccessManagerTests.swift */; };
+		99719C8C22732A1A0099DF11 /* TACSManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99719C8B22732A1A0099DF11 /* TACSManagerIntegrationTests.swift */; };
+		99719C8F227349900099DF11 /* ServiceGrantChangeFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99719C8E227349900099DF11 /* ServiceGrantChangeFactory.swift */; };
 		99A2C59A225B7558005997B8 /* TACS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99A2C590225B7558005997B8 /* TACS.framework */; };
 		99A2C59F225B7558005997B8 /* TACSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99A2C59E225B7558005997B8 /* TACSTests.swift */; };
 		99A2C5A1225B7558005997B8 /* TACS.h in Headers */ = {isa = PBXBuildFile; fileRef = 99A2C593225B7558005997B8 /* TACS.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -66,6 +68,8 @@
 		9967F4CF227201200035AF30 /* VehicleAccessFeatureChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleAccessFeatureChange.swift; sourceTree = "<group>"; };
 		9967F4D322720D040035AF30 /* VehicleAccessFeatureResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleAccessFeatureResponse.swift; sourceTree = "<group>"; };
 		9967F4D6227300DC0035AF30 /* VehicleAccessManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleAccessManagerTests.swift; sourceTree = "<group>"; };
+		99719C8B22732A1A0099DF11 /* TACSManagerIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TACSManagerIntegrationTests.swift; sourceTree = "<group>"; };
+		99719C8E227349900099DF11 /* ServiceGrantChangeFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceGrantChangeFactory.swift; sourceTree = "<group>"; };
 		99A2C590225B7558005997B8 /* TACS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TACS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		99A2C593225B7558005997B8 /* TACS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TACS.h; sourceTree = "<group>"; };
 		99A2C594225B7558005997B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -161,6 +165,7 @@
 			isa = PBXGroup;
 			children = (
 				9967F4C52271B31F0035AF30 /* TACSManagerTests.swift */,
+				99719C8B22732A1A0099DF11 /* TACSManagerIntegrationTests.swift */,
 			);
 			path = TACSManager;
 			sourceTree = "<group>";
@@ -191,6 +196,14 @@
 				9967F4D6227300DC0035AF30 /* VehicleAccessManagerTests.swift */,
 			);
 			path = VehicleAccessManager;
+			sourceTree = "<group>";
+		};
+		99719C8D227349840099DF11 /* Helper */ = {
+			isa = PBXGroup;
+			children = (
+				99719C8E227349900099DF11 /* ServiceGrantChangeFactory.swift */,
+			);
+			path = Helper;
 			sourceTree = "<group>";
 		};
 		99A2C586225B7558005997B8 = {
@@ -230,6 +243,7 @@
 		99A2C59D225B7558005997B8 /* TACSTests */ = {
 			isa = PBXGroup;
 			children = (
+				99719C8D227349840099DF11 /* Helper */,
 				9967F4D5227300C30035AF30 /* VehicleAccessManager */,
 				9967F4C72271D9860035AF30 /* Mocks */,
 				9967F4C22271B2E00035AF30 /* TACSManager */,
@@ -428,6 +442,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				99719C8C22732A1A0099DF11 /* TACSManagerIntegrationTests.swift in Sources */,
+				99719C8F227349900099DF11 /* ServiceGrantChangeFactory.swift in Sources */,
 				9967F4C92271D9CE0035AF30 /* SorcManagerDefaultMock.swift in Sources */,
 				9906D2B7226F45D400BAA285 /* TelematicsManagerTests.swift in Sources */,
 				9967F4D7227300DC0035AF30 /* VehicleAccessManagerTests.swift in Sources */,

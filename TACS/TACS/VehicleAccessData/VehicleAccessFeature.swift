@@ -12,7 +12,7 @@ import SecureAccessBLE
 // value (locked, unlocked)
 
 /// Enum describing possible vehicle access features
-public enum VehicleAccessFeature: CaseIterable {
+public enum VehicleAccessFeature: CaseIterable, Equatable {
     /// feature for unlocking car doors
     case unlock
     /// feature for locking car doors

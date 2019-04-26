@@ -12,6 +12,7 @@ public class TelematicsManager: TelematicsManagerType, SorcInterceptor {
     private let sorcManager: SorcManagerType
     private let telematicsDataChangeSubject: ChangeSubject<TelematicsDataChange> = ChangeSubject<TelematicsDataChange>(state: [])
     internal static let telematicsServiceGrantID: UInt16 = 9
+    private var requestedTypesWaitingForAck: [TelematicsDataType] = []
 
     /// Telematics data change signal which can be used to retrieve data changes
     public var telematicsDataChange: ChangeSignal<TelematicsDataChange> {
@@ -22,18 +23,23 @@ public class TelematicsManager: TelematicsManagerType, SorcInterceptor {
     ///
     /// - Parameter types: Data types which need to be retrieved
     public func requestTelematicsData(_ types: [TelematicsDataType]) {
+        guard case ConnectionChange.State.connected = sorcManager.connectionChange.state else {
+            requestedTypesWaitingForAck.removeAll()
+            notifyNotConnectedChange(with: types)
+            return
+        }
         if telematicsDataChangeSubject.state.count != 0 {
             // In this state, request is already running, so we only notify requesting state with added types
             let combinedTypes = Array(Set(types + telematicsDataChangeSubject.state))
             notifyRequestingChange(with: combinedTypes)
             return
+        } else if requestedTypesWaitingForAck.count != 0 {
+            // In this state request was sent but not acked yet, so we anly append requested types to wait list
+            requestedTypesWaitingForAck.append(contentsOf: types)
+            return 
         }
-        if case ConnectionChange.State.connected = sorcManager.connectionChange.state {
-            sorcManager.requestServiceGrant(TelematicsManager.telematicsServiceGrantID)
-            notifyRequestingChange(with: types)
-        } else {
-            notifyNotConnectedChange(with: types)
-        }
+        requestedTypesWaitingForAck.append(contentsOf: types)
+        sorcManager.requestServiceGrant(TelematicsManager.telematicsServiceGrantID)
     }
 
     init(sorcManager: SorcManagerType) {
@@ -99,7 +105,13 @@ public class TelematicsManager: TelematicsManagerType, SorcInterceptor {
         case .initial:
             return nil
         case let .requestServiceGrant(id: serviceGrantId, accepted: _):
-            return serviceGrantId == TelematicsManager.telematicsServiceGrantID ? nil : change.withoutTelematicsID()
+            if serviceGrantId == TelematicsManager.telematicsServiceGrantID && !requestedTypesWaitingForAck.isEmpty {
+                notifyRequestingChange(with: requestedTypesWaitingForAck)
+                requestedTypesWaitingForAck.removeAll()
+                return nil
+            } else {
+                return change.withoutTelematicsID()
+            }
         case let .responseReceived(response):
             if response.serviceGrantID == TelematicsManager.telematicsServiceGrantID {
                 onResponseReceived(response)
