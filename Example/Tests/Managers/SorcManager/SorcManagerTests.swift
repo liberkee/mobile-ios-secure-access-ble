@@ -56,6 +56,13 @@ private class MockSessionManager: SessionManagerType {
     }
 }
 
+private class SorcInterceptorMock: SorcInterceptor {
+    var consumeResult: ServiceGrantChange?
+    func consume(change _: ServiceGrantChange) -> ServiceGrantChange? {
+        return consumeResult
+    }
+}
+
 extension SorcInfo {
     static var stableTestInstance: SorcInfo {
         return .init(
@@ -268,5 +275,25 @@ class SorcManagerTests: XCTestCase {
         // Then
         XCTAssertEqual(receivedChange, change)
     }
-    //TODO: Add tests for interceptors?
+
+    func test_serviceGrantChange_interceptorConsumesChange_changeNotNotified() {
+        // Given
+        var receivedChange: ServiceGrantChange?
+        _ = sorcManager.serviceGrantChange.subscribe { change in
+            receivedChange = change
+        }
+        let interceptor = SorcInterceptorMock()
+        interceptor.consumeResult = nil
+        sorcManager.registerInterceptor(interceptor)
+
+        // When
+        let change = ServiceGrantChange(
+            state: .init(requestingServiceGrantIDs: [1]),
+            action: .requestServiceGrant(id: 1, accepted: true)
+        )
+        sessionManager.serviceGrantChange.onNext(change)
+
+        // Then
+        XCTAssertEqual(receivedChange, ServiceGrantChange.initialWithState(.init(requestingServiceGrantIDs: [])))
+    }
 }

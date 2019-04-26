@@ -100,7 +100,7 @@ public class SorcManager: SorcManagerType {
             guard let strongSelf = self else { return }
             var changeAfterInterceptorAppliance: ServiceGrantChange? = change
             for interceptor in strongSelf.interceptors {
-                changeAfterInterceptorAppliance = interceptor.consume(change: change)!
+                changeAfterInterceptorAppliance = interceptor.consume(change: change)
                 if changeAfterInterceptorAppliance == nil {
                     return
                 }

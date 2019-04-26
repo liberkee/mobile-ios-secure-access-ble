@@ -13,7 +13,7 @@ public struct ServiceGrantChange: ChangeType, Equatable {
 
     /// The action that led to the state
     public let action: Action
-    
+
     /// :nodoc:
     public static func initialWithState(_ state: ServiceGrantChange.State) -> ServiceGrantChange {
         return ServiceGrantChange(state: state, action: .initial)
@@ -23,7 +23,7 @@ public struct ServiceGrantChange: ChangeType, Equatable {
     public static func == (lhs: ServiceGrantChange, rhs: ServiceGrantChange) -> Bool {
         return lhs.state == rhs.state && lhs.action == rhs.action
     }
-    
+
     /// :nodoc:
     public init(state: State, action: Action) {
         self.state = state
@@ -36,7 +36,7 @@ extension ServiceGrantChange {
     public struct State: Equatable {
         /// Currently requested service grant IDs
         public let requestingServiceGrantIDs: [ServiceGrantID]
-        
+
         /// :nodoc:
         public init(requestingServiceGrantIDs: [ServiceGrantID]) {
             self.requestingServiceGrantIDs = requestingServiceGrantIDs
