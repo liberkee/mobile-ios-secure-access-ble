@@ -8,5 +8,6 @@
 import Foundation
 import SecureAccessBLE
 
-protocol VehicleAccessManagerType: SorcInterceptor {
+public protocol VehicleAccessManagerType: SorcInterceptor {
+    func requestFeature(_ vehicleAccessFeature: VehicleAccessFeature)
 }

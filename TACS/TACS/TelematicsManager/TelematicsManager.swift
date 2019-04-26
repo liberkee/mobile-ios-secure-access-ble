@@ -8,7 +8,7 @@ import Foundation
 import SecureAccessBLE
 
 /// Telematics manager which can be used to retrieve telematics data from the vehicle
-public class TelematicsManager: TelematicsManagerType {
+public class TelematicsManager: TelematicsManagerType, SorcInterceptor {
     private let sorcManager: SorcManagerType
     private let telematicsDataChangeSubject: ChangeSubject<TelematicsDataChange> = ChangeSubject<TelematicsDataChange>(state: [])
     internal static let telematicsServiceGrantID: UInt16 = 9
@@ -91,12 +91,13 @@ public class TelematicsManager: TelematicsManagerType {
         let change = TelematicsDataChange(state: [], action: .responseReceived(responses: telematicsResponses))
         telematicsDataChangeSubject.onNext(change)
     }
-}
-
-extension TelematicsManager: SorcInterceptor {
+    
+    
+    // SorcInterceptor conformance
     public func consume(change: ServiceGrantChange) -> ServiceGrantChange? {
         switch change.action {
-        case .initial: return change.withoutTelematicsID()
+        case .initial:
+            return nil
         case let .requestServiceGrant(id: serviceGrantId, accepted: _):
             return serviceGrantId == TelematicsManager.telematicsServiceGrantID ? nil : change.withoutTelematicsID()
         case let .responseReceived(response):

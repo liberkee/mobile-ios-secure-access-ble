@@ -10,39 +10,7 @@
  @testable import TACS
  class TelematicsManagerTests: QuickSpec {
     
-    class SorcManagerMock: SorcManagerType {
-        var isBluetoothEnabledSubject = BehaviorSubject<Bool>(value: true)
-        var isBluetoothEnabled: StateSignal<Bool> { return isBluetoothEnabledSubject.asSignal() }
-        
-        let discoveryChangeSubject = ChangeSubject<DiscoveryChange>(state: .init(
-            discoveredSorcs: SorcInfos(),
-            discoveryIsEnabled: false
-        ))
-        
-        var discoveryChange: ChangeSignal<DiscoveryChange> { return discoveryChangeSubject.asSignal() }
-        
-        func startDiscovery() {}
-        
-        func stopDiscovery() {}
-        
-        let connectionChangeSubject = ChangeSubject<ConnectionChange>(state: .disconnected)
-        
-        var connectionChange: ChangeSignal<ConnectionChange> { return connectionChangeSubject.asSignal() }
-        
-        func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob) {}
-        
-        func disconnect() {}
-        
-        let serviceGrantChangeSubject = ChangeSubject<ServiceGrantChange>(state: .init(requestingServiceGrantIDs: []))
-        var serviceGrantChange: ChangeSignal<ServiceGrantChange> { return serviceGrantChangeSubject.asSignal() }
-        
-        var didRequestServiceGrant = 0
-        func requestServiceGrant(_ serviceGrantID: ServiceGrantID) {
-            didRequestServiceGrant += 1
-        }
-        
-        func registerInterceptor(_ interceptor: SorcInterceptor) {}
-        
+    class SorcManagerMock: SorcManagerDefaultMock {
         func setConnected(_ connected: Bool) {
             if connected {
                 connectionChangeSubject.onNext(ConnectionChange(state: .connected(sorcID: UUID(uuidString: "be2fecaf-734b-4252-8312-59d477200a20")!),
@@ -71,12 +39,12 @@
         }
         describe("consume") {
             context("action is initial") {
-                it("does not consume change") {
+                it("consumes change") {
                     let state = ServiceGrantChange.State(requestingServiceGrantIDs: [])
                     let action = ServiceGrantChange.Action.initial
                     let change = ServiceGrantChange(state: state, action: action)
                     let result = sut.consume(change: change)
-                    expect(result) == change
+                    expect(result).to(beNil())
                 }
             }
 
@@ -234,9 +202,10 @@
             context("state contains telematics id") {
                 it("telematics id is removed") {
                     let state = ServiceGrantChange.State(requestingServiceGrantIDs: [9])
-                    let change = ServiceGrantChange.initialWithState(state)
+                    let action = ServiceGrantChange.Action.requestServiceGrant(id: 2, accepted: true)
+                    let change = ServiceGrantChange(state: state, action: action)
                     let result = sut.consume(change: change)
-                    let expectedChange = ServiceGrantChange(state: .init(requestingServiceGrantIDs: []), action: .initial)
+                    let expectedChange = ServiceGrantChange(state: .init(requestingServiceGrantIDs: []), action: .requestServiceGrant(id: 2, accepted: true))
                     expect(result) == expectedChange
                 }
             }
