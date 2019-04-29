@@ -31,7 +31,9 @@ class VehicleAccessManagerTests: QuickSpec {
             }
         }
         
+        //MARK: - consume
         describe("consume") {
+            //MARK: initial
             context("initial") {
                 it("consumes change") {
                     let change = ServiceGrantChange.initialWithState(.init(requestingServiceGrantIDs:[]))
@@ -40,6 +42,7 @@ class VehicleAccessManagerTests: QuickSpec {
                 }
             }
             
+            //MARK: requestServiceGrant
             context("requestServiceGrant") {
                 context("grantIDNotKnown") {
                     it("does not consume") {
@@ -104,6 +107,7 @@ class VehicleAccessManagerTests: QuickSpec {
                     }
                 }
             }
+            //MARK: responseReceived
             context("responseReceived") {
                 context("grantIDNotKnown") {
                     it("does not consume") {

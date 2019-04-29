@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4CD1179851810C919AC4822D /* libPods-TACS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 52C65752AF7CDCA7341B064F /* libPods-TACS.a */; };
+		1F35367535354D9635C55F1D /* Pods_TACS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E73B173CB6E0D5D05649B0C6 /* Pods_TACS.framework */; };
 		9906D2B7226F45D400BAA285 /* TelematicsManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9906D2B6226F45D400BAA285 /* TelematicsManagerTests.swift */; };
 		992F12D0226F023600B228FA /* TelematicsManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 992F12CD226F023600B228FA /* TelematicsManagerType.swift */; };
 		992F12D1226F023600B228FA /* TelematicsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 992F12CE226F023600B228FA /* TelematicsManager.swift */; };
@@ -33,7 +33,7 @@
 		99A2C59F225B7558005997B8 /* TACSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99A2C59E225B7558005997B8 /* TACSTests.swift */; };
 		99A2C5A1225B7558005997B8 /* TACS.h in Headers */ = {isa = PBXBuildFile; fileRef = 99A2C593225B7558005997B8 /* TACS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		99A2C5AB225B764E005997B8 /* TACSManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99A2C5AA225B764E005997B8 /* TACSManager.swift */; };
-		F84DD222498E6FDD38FD8DE3 /* libPods-TACS-TACSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E601F1C76B4D89C365AA95A8 /* libPods-TACS-TACSTests.a */; };
+		E1DDBCEA7F5991B445B2D246 /* Pods_TACS_TACSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B3D71515FAF4CF4AE5F758C /* Pods_TACS_TACSTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,7 +47,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		52C65752AF7CDCA7341B064F /* libPods-TACS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TACS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6617B205BCD9D66BBEDE9041 /* Pods-TACS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TACS.debug.xcconfig"; path = "Target Support Files/Pods-TACS/Pods-TACS.debug.xcconfig"; sourceTree = "<group>"; };
 		9906D2B6226F45D400BAA285 /* TelematicsManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TelematicsManagerTests.swift; sourceTree = "<group>"; };
 		992F12CD226F023600B228FA /* TelematicsManagerType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TelematicsManagerType.swift; sourceTree = "<group>"; };
@@ -77,8 +76,9 @@
 		99A2C59E225B7558005997B8 /* TACSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TACSTests.swift; sourceTree = "<group>"; };
 		99A2C5A0225B7558005997B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		99A2C5AA225B764E005997B8 /* TACSManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TACSManager.swift; sourceTree = "<group>"; };
+		9B3D71515FAF4CF4AE5F758C /* Pods_TACS_TACSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TACS_TACSTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B206053133420692D413CF6A /* Pods-TACS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TACS.release.xcconfig"; path = "Target Support Files/Pods-TACS/Pods-TACS.release.xcconfig"; sourceTree = "<group>"; };
-		E601F1C76B4D89C365AA95A8 /* libPods-TACS-TACSTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TACS-TACSTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E73B173CB6E0D5D05649B0C6 /* Pods_TACS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TACS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F78D527A92F3E45DAF535332 /* Pods-TACS-TACSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TACS-TACSTests.release.xcconfig"; path = "Target Support Files/Pods-TACS-TACSTests/Pods-TACS-TACSTests.release.xcconfig"; sourceTree = "<group>"; };
 		FF3F16157B6A1D19733B016C /* Pods-TACS-TACSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TACS-TACSTests.debug.xcconfig"; path = "Target Support Files/Pods-TACS-TACSTests/Pods-TACS-TACSTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -88,7 +88,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4CD1179851810C919AC4822D /* libPods-TACS.a in Frameworks */,
+				1F35367535354D9635C55F1D /* Pods_TACS.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -97,7 +97,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				99A2C59A225B7558005997B8 /* TACS.framework in Frameworks */,
-				F84DD222498E6FDD38FD8DE3 /* libPods-TACS-TACSTests.a in Frameworks */,
+				E1DDBCEA7F5991B445B2D246 /* Pods_TACS_TACSTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -258,8 +258,8 @@
 		AEDD1D87B1A9208B2F601B75 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				52C65752AF7CDCA7341B064F /* libPods-TACS.a */,
-				E601F1C76B4D89C365AA95A8 /* libPods-TACS-TACSTests.a */,
+				E73B173CB6E0D5D05649B0C6 /* Pods_TACS.framework */,
+				9B3D71515FAF4CF4AE5F758C /* Pods_TACS_TACSTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -305,6 +305,7 @@
 				99A2C595225B7558005997B8 /* Sources */,
 				99A2C596225B7558005997B8 /* Frameworks */,
 				99A2C597225B7558005997B8 /* Resources */,
+				DCC8501A4131EFD5FBF8E78E /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -413,6 +414,34 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DCC8501A4131EFD5FBF8E78E /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TACS-TACSTests/Pods-TACS-TACSTests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SecureAccessBLE/SecureAccessBLE.framework",
+				"${BUILT_PRODUCTS_DIR}/Nimble/Nimble.framework",
+				"${BUILT_PRODUCTS_DIR}/Quick/Quick.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CryptoSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SecureAccessBLE.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Nimble.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Quick.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TACS-TACSTests/Pods-TACS-TACSTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -651,7 +680,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = FF3F16157B6A1D19733B016C /* Pods-TACS-TACSTests.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = MR9TB5Y4RJ;
 				INFOPLIST_FILE = TACSTests/Info.plist;
@@ -672,7 +701,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = F78D527A92F3E45DAF535332 /* Pods-TACS-TACSTests.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = MR9TB5Y4RJ;
 				INFOPLIST_FILE = TACSTests/Info.plist;

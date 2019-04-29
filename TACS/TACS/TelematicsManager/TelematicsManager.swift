@@ -119,7 +119,12 @@ public class TelematicsManager: TelematicsManagerType, SorcInterceptor {
             } else {
                 return change.withoutTelematicsID()
             }
-        case .requestFailed, .reset:
+        case .requestFailed:
+            if (!requestedTypesWaitingForAck.isEmpty || !telematicsDataChangeSubject.state.isEmpty) {
+                notifyRemoteFailedChange()
+            }
+            return change.withoutTelematicsID()
+        case .reset: // happens on disconnect
             return change.withoutTelematicsID()
         }
     }

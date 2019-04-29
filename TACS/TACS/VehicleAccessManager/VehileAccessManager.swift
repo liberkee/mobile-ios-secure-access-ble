@@ -60,19 +60,27 @@ extension VehicleAccessManager: SorcInterceptor {
             }
             return nil
         case .requestFailed:
-            //TODO: This happens if Session manager was not able to read the data
-            // It can be considered as remoteFailed error because the data is corrupted.
-            // Session manager will clear its queue and restart sending heart beat.
-            // This means in this case no service grant responses are running anymore.
-            // Consider propagating the change with filtered state???
-            return change
-            
-        default: return nil
+            notifyRemoteFailedChangeIfNeeded()
+            return changeWithoutRequestedGrants(from: change)
+
+        case .reset: // happens on disconnect
+            return changeWithoutRequestedGrants(from: change)
         }
     }
     
     private func changeWithoutRequestedGrants(from change: ServiceGrantChange) -> ServiceGrantChange {
         return change.withoutGrantIDs(vehicleAccessChangeSubject.state.map { $0.serviceGrantID() })
+    }
+    
+    private func notifyRemoteFailedChangeIfNeeded() {
+        guard let lastRequestedFeature = vehicleAccessChangeSubject.state.last else {
+            return
+        }
+        featuresWaitingForAck.removeAll()
+        let response = VehicleAccessFeatureResponse.failure(feature: lastRequestedFeature, error: .remoteFailed)
+        let action = VehicleAccessFeatureChange.Action.responseReceived(response: response)
+        let remoteFailedChange = VehicleAccessFeatureChange(state: [], action: action)
+        vehicleAccessChangeSubject.onNext(remoteFailedChange)
     }
 }
 

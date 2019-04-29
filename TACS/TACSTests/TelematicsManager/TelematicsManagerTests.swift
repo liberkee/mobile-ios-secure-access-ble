@@ -197,13 +197,29 @@ class TelematicsManagerTests: QuickSpec {
                     }
                 }
                 
+                //MARK: .requestFailed
                 context("action is requestFailed") {
-                    it("does not consume change") {
+                    var change: ServiceGrantChange!
+                    beforeEach {
                         let state = ServiceGrantChange.State(requestingServiceGrantIDs: [])
-                        let action = ServiceGrantChange.Action.requestFailed(.sendingFailed)
-                        let change = ServiceGrantChange(state: state, action: action)
+                        let action = ServiceGrantChange.Action.requestFailed(.receivedInvalidData)
+                        change = ServiceGrantChange(state: state, action: action)
+                    }
+                    it("does not consume change") {
                         let result = sut.consume(change: change)
                         expect(result) == change
+                    }
+                    it("does not notify error if no request is pending") {
+                        _ = sut.consume(change: change)
+                        expect(telematicsDataChange) == TelematicsDataChange.initialWithState([])
+                    }
+                    it("notifies error if request was pending and acked") {
+                        sorcManager.setConnected(true)
+                        sut.requestTelematicsData([.odometer])
+                        _ = sut.consume(change: ServiceGrantChangeFactory.acceptedTelematicsRequestChange())
+                        _ = sut.consume(change: change)
+                        let response = TelematicsDataResponse.error(.odometer, .remoteFailed)
+                        expect(telematicsDataChange) == TelematicsDataChange(state: [], action: .responseReceived(responses: [response]))
                     }
                 }
                 

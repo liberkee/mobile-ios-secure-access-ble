@@ -9,8 +9,10 @@ import Foundation
 
 import SecureAccessBLE
 
-class TACSManager {
-    private let sorcManager: SorcManagerType
+public class TACSManager {
+    private let internalSorcManager: SorcManagerType
+    @available(*, deprecated: 1.0, message: "Use VehicleAccessManager or TelematicsManager instead.")
+    public var sorcManager: SorcManagerType { return internalSorcManager }
     
     public let telematicsManager: TelematicsManagerType
     public let vehicleAccessManager: VehicleAccessManagerType
@@ -19,31 +21,31 @@ class TACSManager {
     
     /// The bluetooth enabled status
     public var isBluetoothEnabled: StateSignal<Bool> {
-        return sorcManager.isBluetoothEnabled
+        return internalSorcManager.isBluetoothEnabled
     }
     
     // MARK: - Discovery
     
     /// Starts discovery of SORCs
     public func startDiscovery() {
-        sorcManager.startDiscovery()
+        internalSorcManager.startDiscovery()
     }
     
     /// Stops discovery of SORCs
     public func stopDiscovery() {
-        sorcManager.stopDiscovery()
+        internalSorcManager.stopDiscovery()
     }
     
     /// The state of SORC discovery with the action that led to this state
     public var discoveryChange: ChangeSignal<DiscoveryChange> {
-        return sorcManager.discoveryChange
+        return internalSorcManager.discoveryChange
     }
     
     // MARK: - Connection
     
     /// The state of the connection with the action that led to this state
     public var connectionChange: ChangeSignal<ConnectionChange> {
-        return sorcManager.connectionChange
+        return internalSorcManager.connectionChange
     }
     
     /// Connects to a SORC
@@ -52,24 +54,24 @@ class TACSManager {
     ///   - leaseToken: The lease token for the SORC
     ///   - leaseTokenBlob: The blob for the SORC
     public func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob) {
-        sorcManager.connectToSorc(leaseToken: leaseToken, leaseTokenBlob: leaseTokenBlob)
+        internalSorcManager.connectToSorc(leaseToken: leaseToken, leaseTokenBlob: leaseTokenBlob)
     }
     
     /**
      Disconnects from current SORC
      */
     public func disconnect() {
-        sorcManager.disconnect()
+        internalSorcManager.disconnect()
     }
     
     init(sorcManager: SorcManagerType,
          telematicsManager: TelematicsManagerType,
          vehicleAccessManager: VehicleAccessManagerType) {
-        self.sorcManager = sorcManager
+        self.internalSorcManager = sorcManager
         self.telematicsManager = telematicsManager
         self.vehicleAccessManager = vehicleAccessManager
-        self.sorcManager.registerInterceptor(telematicsManager)
-        self.sorcManager.registerInterceptor(vehicleAccessManager)
+        self.internalSorcManager.registerInterceptor(telematicsManager)
+        self.internalSorcManager.registerInterceptor(vehicleAccessManager)
     }
     
     public convenience init() {
@@ -77,7 +79,7 @@ class TACSManager {
         let sorcManager = SorcManager()
         let telematicsManager = TelematicsManager(sorcManager: sorcManager)
         let vehicleAccessManager = VehicleAccessManager(sorcManager: sorcManager)
-        self.init(sorcManager: SorcManager(),
+        self.init(sorcManager: sorcManager,
                   telematicsManager: telematicsManager,
                   vehicleAccessManager: vehicleAccessManager)
     }
