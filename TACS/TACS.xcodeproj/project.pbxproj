@@ -313,6 +313,7 @@
 			buildConfigurationList = 99A2C5A7225B7558005997B8 /* Build configuration list for PBXNativeTarget "TACSTests" */;
 			buildPhases = (
 				7A36C1DFBD457836C4F1A5E8 /* [CP] Check Pods Manifest.lock */,
+				99B826A42278528A003AA20D /* Run SwiftFormat */,
 				99A2C595225B7558005997B8 /* Sources */,
 				99A2C596225B7558005997B8 /* Frameworks */,
 				99A2C597225B7558005997B8 /* Resources */,
@@ -427,6 +428,24 @@
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
+		};
+		99B826A42278528A003AA20D /* Run SwiftFormat */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run SwiftFormat";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ -z ${CI_BUILD+x} ]; then echo \"Starting swift format...\"; else echo \"Skipping swift format in ci build\"; exit 0;fi\n\nSWIFT_FORMAT_FOLDERS_TO_CHECK=\"../TACS TACSTests\"\nSWIFT_FORMAT_ARGS=\"--commas false\"\n\nPods/SwiftFormat/CommandLineTool/swiftformat $SWIFT_FORMAT_FOLDERS_TO_CHECK $SWIFT_FORMAT_ARGS\n\n";
 		};
 		DCC8501A4131EFD5FBF8E78E /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;

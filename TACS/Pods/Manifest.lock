@@ -4,17 +4,23 @@ PODS:
   - Quick (2.0.0)
   - SecureAccessBLE (3.4.0):
     - CryptoSwift (= 0.12.0)
+  - SwiftFormat/CLI (0.40.8)
+  - SwiftLint (0.28.0)
 
 DEPENDENCIES:
   - Nimble (= 8.0.1)
   - Quick (= 2.0.0)
   - SecureAccessBLE (from `../`)
+  - SwiftFormat/CLI
+  - SwiftLint (= 0.28.0)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
     - CryptoSwift
     - Nimble
     - Quick
+    - SwiftFormat
+    - SwiftLint
 
 EXTERNAL SOURCES:
   SecureAccessBLE:
@@ -25,7 +31,9 @@ SPEC CHECKSUMS:
   Nimble: 45f786ae66faa9a709624227fae502db55a8bdd0
   Quick: ce1276c7c27ba2da3cb2fd0cde053c3648b3b22d
   SecureAccessBLE: 06ac6af3bceb6c11e42ddfa1edd06edd4b80756e
+  SwiftFormat: d9e5ca1aed735164fe9d26510ec508ddb8a93598
+  SwiftLint: 088cfacb75b45970017e62b7524d506776d60148
 
-PODFILE CHECKSUM: e88874db56f914bff2b9918c5cc51ab19f64876c
+PODFILE CHECKSUM: 30d0b945740efc8c130c2537031fc226b9f9650b
 
 COCOAPODS: 1.6.0
