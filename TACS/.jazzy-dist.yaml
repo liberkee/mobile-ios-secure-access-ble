@@ -1,0 +1,6 @@
+author: 'Huf Secure Mobile GmbH' 
+xcodebuild_arguments: [build,-workspace,TACS.xcworkspace,-scheme,TACS] 
+module: 'TACS'
+output: 'Docs'
+min_acl: 'public'
+hide_documentation_coverage: true
