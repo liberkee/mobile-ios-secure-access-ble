@@ -33,6 +33,7 @@
 		99A2C59F225B7558005997B8 /* TACSTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99A2C59E225B7558005997B8 /* TACSTests.swift */; };
 		99A2C5A1225B7558005997B8 /* TACS.h in Headers */ = {isa = PBXBuildFile; fileRef = 99A2C593225B7558005997B8 /* TACS.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		99A2C5AB225B764E005997B8 /* TACSManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99A2C5AA225B764E005997B8 /* TACSManager.swift */; };
+		99B826A32278519C003AA20D /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 99B826A22278519C003AA20D /* README.md */; };
 		E1DDBCEA7F5991B445B2D246 /* Pods_TACS_TACSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B3D71515FAF4CF4AE5F758C /* Pods_TACS_TACSTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -76,6 +77,7 @@
 		99A2C59E225B7558005997B8 /* TACSTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TACSTests.swift; sourceTree = "<group>"; };
 		99A2C5A0225B7558005997B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		99A2C5AA225B764E005997B8 /* TACSManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TACSManager.swift; sourceTree = "<group>"; };
+		99B826A22278519C003AA20D /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		9B3D71515FAF4CF4AE5F758C /* Pods_TACS_TACSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TACS_TACSTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B206053133420692D413CF6A /* Pods-TACS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TACS.release.xcconfig"; path = "Target Support Files/Pods-TACS/Pods-TACS.release.xcconfig"; sourceTree = "<group>"; };
 		E73B173CB6E0D5D05649B0C6 /* Pods_TACS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TACS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -209,6 +211,7 @@
 		99A2C586225B7558005997B8 = {
 			isa = PBXGroup;
 			children = (
+				99B826A22278519C003AA20D /* README.md */,
 				99A2C592225B7558005997B8 /* TACS */,
 				99A2C59D225B7558005997B8 /* TACSTests */,
 				99A2C591225B7558005997B8 /* Products */,
@@ -367,6 +370,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				99B826A32278519C003AA20D /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
