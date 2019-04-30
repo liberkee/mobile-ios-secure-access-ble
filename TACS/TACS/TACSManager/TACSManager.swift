@@ -75,7 +75,6 @@ public class TACSManager {
     }
     
     public convenience init() {
-        //TODO: Provide configuration!
         let sorcManager = SorcManager()
         let telematicsManager = TelematicsManager(sorcManager: sorcManager)
         let vehicleAccessManager = VehicleAccessManager(sorcManager: sorcManager)

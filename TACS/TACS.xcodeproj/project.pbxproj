@@ -229,13 +229,13 @@
 		99A2C592225B7558005997B8 /* TACS */ = {
 			isa = PBXGroup;
 			children = (
+				99B8269F227843C2003AA20D /* TACSManager */,
 				9967F4CE2272008E0035AF30 /* VehicleAccessData */,
 				9967F4B8226F5DD60035AF30 /* VehicleAccessManager */,
 				992F12D3226F037900B228FA /* TelematicsData */,
 				992F12CC226F023600B228FA /* TelematicsManager */,
 				99A2C593225B7558005997B8 /* TACS.h */,
 				99A2C594225B7558005997B8 /* Info.plist */,
-				99A2C5AA225B764E005997B8 /* TACSManager.swift */,
 			);
 			path = TACS;
 			sourceTree = "<group>";
@@ -253,6 +253,14 @@
 				99A2C5A0225B7558005997B8 /* Info.plist */,
 			);
 			path = TACSTests;
+			sourceTree = "<group>";
+		};
+		99B8269F227843C2003AA20D /* TACSManager */ = {
+			isa = PBXGroup;
+			children = (
+				99A2C5AA225B764E005997B8 /* TACSManager.swift */,
+			);
+			path = TACSManager;
 			sourceTree = "<group>";
 		};
 		AEDD1D87B1A9208B2F601B75 /* Frameworks */ = {

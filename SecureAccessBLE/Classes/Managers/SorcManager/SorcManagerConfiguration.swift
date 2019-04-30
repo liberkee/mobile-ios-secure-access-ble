@@ -35,9 +35,6 @@ extension SorcManager {
         /// The interval a timer is triggered to remove outdated discovered SORCs
         public let removeOutdatedSorcsInterval: TimeInterval?
 
-        /// Activates telematics interface which can be used to retrieve telematics data from the vehicle
-        public let enableTelematicsInterface: Bool
-
         /// :nodoc:
         public init(
             heartbeatInterval: TimeInterval? = nil,
@@ -47,8 +44,7 @@ extension SorcManager {
             notifyCharacteristicID: String? = nil,
             writeCharacteristicID: String? = nil,
             sorcOutdatedDuration: TimeInterval? = nil,
-            removeOutdatedSorcsInterval: TimeInterval? = nil,
-            enableTelematicsInterface: Bool = false
+            removeOutdatedSorcsInterval: TimeInterval? = nil
         ) {
             self.heartbeatInterval = heartbeatInterval
             self.heartbeatTimeout = heartbeatTimeout
@@ -58,7 +54,6 @@ extension SorcManager {
             self.writeCharacteristicID = writeCharacteristicID
             self.sorcOutdatedDuration = sorcOutdatedDuration
             self.removeOutdatedSorcsInterval = removeOutdatedSorcsInterval
-            self.enableTelematicsInterface = enableTelematicsInterface
         }
     }
 }
