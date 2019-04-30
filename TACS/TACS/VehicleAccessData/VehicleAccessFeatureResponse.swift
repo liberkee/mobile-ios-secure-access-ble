@@ -35,6 +35,7 @@ public enum VehicleAccessFeatureStatus: Equatable {
     case lockStatus(locked: Bool)
     case ignitionStatus(enabled: Bool)
 
+    // swiftlint:disable:next cyclomatic_complexity
     init?(feature: VehicleAccessFeature, serviceGrantResponseData: String) {
         switch feature {
         case .lock:

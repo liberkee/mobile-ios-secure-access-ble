@@ -805,7 +805,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# We ignore exit code of linter. This allows the build to complete successfully. Errors and warnings can be viewed in Xcode.\n\"${PODS_ROOT}/SwiftLint/swiftlint\" --config ../.swiftlint.yml || true";
+			shellScript = "# We ignore exit code of linter. This allows the build to complete successfully. Errors and warnings can be viewed in Xcode.\n\"${PODS_ROOT}/SwiftLint/swiftlint\" --config ../.swiftlint.yml || true\n";
 		};
 		E58008D51EC9A8020000F40D /* Run SwiftFormat */ = {
 			isa = PBXShellScriptBuildPhase;

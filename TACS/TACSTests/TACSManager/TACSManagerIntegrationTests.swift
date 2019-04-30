@@ -11,16 +11,18 @@ import SecureAccessBLE
 
 class TACSManagerIntegrationTests: QuickSpec {
     class SorcManagerMock: SorcManagerDefaultMock {
+        let sorcID = UUID(uuidString: "be2fecaf-734b-4252-8312-59d477200a20")!
         func setConnected(_ connected: Bool) {
             if connected {
-                connectionChangeSubject.onNext(ConnectionChange(state: .connected(sorcID: UUID(uuidString: "be2fecaf-734b-4252-8312-59d477200a20")!),
-                                                                action: .connectionEstablished(sorcID: UUID(uuidString: "be2fecaf-734b-4252-8312-59d477200a20")!)))
+                connectionChangeSubject.onNext(ConnectionChange(state: .connected(sorcID: sorcID),
+                                                                action: .connectionEstablished(sorcID: sorcID)))
             } else {
                 connectionChangeSubject.onNext(ConnectionChange(state: .disconnected, action: .disconnect))
             }
         }
     }
 
+    // swiftlint:disable:next function_body_length
     override func spec() {
         var sorcManagerMock: SorcManagerMock!
         var sut: TACSManager!

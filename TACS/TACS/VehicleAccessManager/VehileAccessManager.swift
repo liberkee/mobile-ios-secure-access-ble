@@ -26,46 +26,21 @@ class VehicleAccessManager: VehicleAccessManagerType {
 
 extension VehicleAccessManager: SorcInterceptor {
     func consume(change: ServiceGrantChange) -> ServiceGrantChange? {
+        let result: ServiceGrantChange?
         switch change.action {
-        case .initial: return nil
+        case .initial:
+            result = nil
         case let .requestServiceGrant(id: serviceGrant, accepted: accepted):
-            guard let feature = VehicleAccessFeature(serviceGrantID: serviceGrant) else {
-                return changeWithoutRequestedGrants(from: change)
-            }
-            if let index = featuresWaitingForAck.firstIndex(of: feature) {
-                featuresWaitingForAck.remove(at: index)
-                var newState = vehicleAccessChange.state
-                if accepted {
-                    newState.append(feature)
-                }
-                let action: VehicleAccessFeatureChange.Action =
-                    .requestFeature(feature: feature, accepted: accepted)
-                vehicleAccessChangeSubject.onNext(VehicleAccessFeatureChange(state: newState, action: action))
-                return nil
-            } else {
-                return change
-            }
+            result = consumeRequestServiceGrantChange(change, serviceGrant: serviceGrant, accepted: accepted)
         case let .responseReceived(response):
-            guard let feature = VehicleAccessFeature(serviceGrantID: response.serviceGrantID) else {
-                return changeWithoutRequestedGrants(from: change)
-            }
-            // ensure we are waiting for response for this feature, otherwise don't consume
-            guard vehicleAccessChangeSubject.state.contains(feature) else {
-                return changeWithoutRequestedGrants(from: change)
-            }
-            let stateWithoutReceivedFeature = vehicleAccessChangeSubject.state.filter { $0 != feature }
-            if let response = VehicleAccessFeatureResponse(feature: feature, response: response) {
-                let featureChange = VehicleAccessFeatureChange(state: stateWithoutReceivedFeature, action: .responseReceived(response: response))
-                vehicleAccessChangeSubject.onNext(featureChange)
-            }
-            return nil
+            result = consumeResponseReceivedChange(change, response: response)
         case .requestFailed:
             notifyRemoteFailedChangeIfNeeded()
-            return changeWithoutRequestedGrants(from: change)
-
+            result = changeWithoutRequestedGrants(from: change)
         case .reset: // happens on disconnect
-            return changeWithoutRequestedGrants(from: change)
+            result = changeWithoutRequestedGrants(from: change)
         }
+        return result
     }
 
     private func changeWithoutRequestedGrants(from change: ServiceGrantChange) -> ServiceGrantChange {
@@ -81,6 +56,44 @@ extension VehicleAccessManager: SorcInterceptor {
         let action = VehicleAccessFeatureChange.Action.responseReceived(response: response)
         let remoteFailedChange = VehicleAccessFeatureChange(state: [], action: action)
         vehicleAccessChangeSubject.onNext(remoteFailedChange)
+    }
+
+    private func consumeRequestServiceGrantChange(_ change: ServiceGrantChange,
+                                                  serviceGrant: ServiceGrantID,
+                                                  accepted: Bool) -> ServiceGrantChange? {
+        guard let feature = VehicleAccessFeature(serviceGrantID: serviceGrant) else {
+            return changeWithoutRequestedGrants(from: change)
+        }
+        if let index = featuresWaitingForAck.firstIndex(of: feature) {
+            featuresWaitingForAck.remove(at: index)
+            var newState = vehicleAccessChange.state
+            if accepted {
+                newState.append(feature)
+            }
+            let action: VehicleAccessFeatureChange.Action =
+                .requestFeature(feature: feature, accepted: accepted)
+            vehicleAccessChangeSubject.onNext(VehicleAccessFeatureChange(state: newState, action: action))
+            return nil
+        } else {
+            return change
+        }
+    }
+
+    private func consumeResponseReceivedChange(_ change: ServiceGrantChange,
+                                               response: ServiceGrantResponse) -> ServiceGrantChange? {
+        guard let feature = VehicleAccessFeature(serviceGrantID: response.serviceGrantID) else {
+            return changeWithoutRequestedGrants(from: change)
+        }
+        // ensure we are waiting for response for this feature, otherwise don't consume
+        guard vehicleAccessChangeSubject.state.contains(feature) else {
+            return changeWithoutRequestedGrants(from: change)
+        }
+        let stateWithoutReceivedFeature = vehicleAccessChangeSubject.state.filter { $0 != feature }
+        if let response = VehicleAccessFeatureResponse(feature: feature, response: response) {
+            let featureChange = VehicleAccessFeatureChange(state: stateWithoutReceivedFeature, action: .responseReceived(response: response))
+            vehicleAccessChangeSubject.onNext(featureChange)
+        }
+        return nil
     }
 }
 

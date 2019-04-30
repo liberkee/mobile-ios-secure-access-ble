@@ -15,5 +15,5 @@ public protocol TelematicsManagerType: SorcInterceptor {
     /// Requests telematics data from the vehicle
     ///
     /// - Parameter types: Data types which need to be retrieved
-    func requestTelematicsData(_ types: [TelematicsDataType]) -> Void
+    func requestTelematicsData(_ types: [TelematicsDataType])
 }

@@ -318,6 +318,7 @@
 				99A2C596225B7558005997B8 /* Frameworks */,
 				99A2C597225B7558005997B8 /* Resources */,
 				DCC8501A4131EFD5FBF8E78E /* [CP] Embed Pods Frameworks */,
+				99B826A522785419003AA20D /* Run SwiftLint */,
 			);
 			buildRules = (
 			);
@@ -446,6 +447,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "if [ -z ${CI_BUILD+x} ]; then echo \"Starting swift format...\"; else echo \"Skipping swift format in ci build\"; exit 0;fi\n\nSWIFT_FORMAT_FOLDERS_TO_CHECK=\"TACS TACSTests\"\nSWIFT_FORMAT_ARGS=\"--commas false\"\n\nPods/SwiftFormat/CommandLineTool/swiftformat $SWIFT_FORMAT_FOLDERS_TO_CHECK $SWIFT_FORMAT_ARGS\n\n";
+		};
+		99B826A522785419003AA20D /* Run SwiftLint */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Run SwiftLint";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# We ignore exit code of linter. This allows the build to complete successfully. Errors and warnings can be viewed in Xcode.\n\"${PODS_ROOT}/SwiftLint/swiftlint\" --config ../.swiftlint.yml || true\n";
 		};
 		DCC8501A4131EFD5FBF8E78E /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;

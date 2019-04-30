@@ -10,6 +10,7 @@ import Quick
 @testable import TACS
 
 class TelematicsDataResponseTests: QuickSpec {
+    // swiftlint:disable:next function_body_length
     override func spec() {
         describe("init") {
             context("requested type odometer") {

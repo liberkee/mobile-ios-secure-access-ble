@@ -12,6 +12,7 @@ import Quick
 class VehicleAccessManagerTests: QuickSpec {
     static let sorcID = UUID(uuidString: "be2fecaf-734b-4252-8312-59d477200a20")!
 
+    // swiftlint:disable:next function_body_length
     override func spec() {
         var sut: VehicleAccessManager!
         var sorcManagerMock: SorcManagerDefaultMock!

@@ -11,9 +11,10 @@ import Quick
 class TelematicsManagerTests: QuickSpec {
     class SorcManagerMock: SorcManagerDefaultMock {
         func setConnected(_ connected: Bool) {
+            let sorcID = UUID(uuidString: "be2fecaf-734b-4252-8312-59d477200a20")!
             if connected {
-                connectionChangeSubject.onNext(ConnectionChange(state: .connected(sorcID: UUID(uuidString: "be2fecaf-734b-4252-8312-59d477200a20")!),
-                                                                action: .connectionEstablished(sorcID: UUID(uuidString: "be2fecaf-734b-4252-8312-59d477200a20")!)))
+                connectionChangeSubject.onNext(ConnectionChange(state: .connected(sorcID: sorcID),
+                                                                action: .connectionEstablished(sorcID: sorcID)))
             } else {
                 connectionChangeSubject.onNext(ConnectionChange(state: .disconnected, action: .disconnect))
             }
@@ -246,7 +247,8 @@ class TelematicsManagerTests: QuickSpec {
                         let action = ServiceGrantChange.Action.requestServiceGrant(id: 2, accepted: true)
                         let change = ServiceGrantChange(state: state, action: action)
                         let result = sut.consume(change: change)
-                        let expectedChange = ServiceGrantChange(state: .init(requestingServiceGrantIDs: []), action: .requestServiceGrant(id: 2, accepted: true))
+                        let expectedChange = ServiceGrantChange(state: .init(requestingServiceGrantIDs: []),
+                                                                action: .requestServiceGrant(id: 2, accepted: true))
                         expect(result) == expectedChange
                     }
                 }
