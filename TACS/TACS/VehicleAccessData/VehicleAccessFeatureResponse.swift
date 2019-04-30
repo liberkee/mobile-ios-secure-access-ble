@@ -4,7 +4,6 @@
 // Created on 25.04.19.
 // Copyright © 2019 Huf Secure Mobile. All rights reserved.
 
-
 import SecureAccessBLE
 
 public enum VehicleAccessFeatureResponse: Equatable {
@@ -35,7 +34,7 @@ public enum VehicleAccessFeatureStatus: Equatable {
     case disableIgnition
     case lockStatus(locked: Bool)
     case ignitionStatus(enabled: Bool)
-    
+
     init?(feature: VehicleAccessFeature, serviceGrantResponseData: String) {
         switch feature {
         case .lock:
@@ -90,7 +89,7 @@ private enum FeatureResult: String {
     case disabled = "DISABLED"
     // unknown result
     case unknown = "UNKNOWN"
-    
+
     init(responseData: String) {
         guard !responseData.isEmpty, let result = FeatureResult(rawValue: responseData) else {
             self = .unknown
@@ -99,4 +98,3 @@ private enum FeatureResult: String {
         self = result
     }
 }
-

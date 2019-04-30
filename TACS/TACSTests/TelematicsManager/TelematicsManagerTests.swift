@@ -9,7 +9,6 @@ import Quick
 @testable import SecureAccessBLE
 @testable import TACS
 class TelematicsManagerTests: QuickSpec {
-    
     class SorcManagerMock: SorcManagerDefaultMock {
         func setConnected(_ connected: Bool) {
             if connected {
@@ -20,16 +19,16 @@ class TelematicsManagerTests: QuickSpec {
             }
         }
     }
-    
+
     private let sorcID = UUID(uuidString: "be2fecaf-734b-4252-8312-59d477200a20")!
-    
+
     // swiftlint:disable function_body_length
     override func spec() {
         var sut: TelematicsManager!
         var consumeResult: ServiceGrantChange?
         var telematicsDataChange: TelematicsDataChange?
         var sorcManager: SorcManagerMock!
-        
+
         beforeEach {
             sorcManager = SorcManagerMock()
             sut = TelematicsManager(sorcManager: sorcManager)
@@ -37,9 +36,12 @@ class TelematicsManagerTests: QuickSpec {
                 telematicsDataChange = change
             }
         }
-        //MARK: - consume
+
+        // MARK: - consume
+
         describe("consume") {
-            //MARK: .initial
+            // MARK: .initial
+
             context("initial") {
                 it("consumes change") {
                     let state = ServiceGrantChange.State(requestingServiceGrantIDs: [])
@@ -49,7 +51,9 @@ class TelematicsManagerTests: QuickSpec {
                     expect(result).to(beNil())
                 }
             }
-            //MARK: .requestServiceGrant
+
+            // MARK: .requestServiceGrant
+
             context("requestServiceGrant in connected state") {
                 var serviceGrantChange: ServiceGrantChange!
                 beforeEach {
@@ -71,7 +75,7 @@ class TelematicsManagerTests: QuickSpec {
                         }
                         it("notifies change") {
                             let expectedAction = TelematicsDataChange.Action.requestingData(types: [.odometer])
-                            expect(telematicsDataChange) == TelematicsDataChange(state: [.odometer], action:  expectedAction)
+                            expect(telematicsDataChange) == TelematicsDataChange(state: [.odometer], action: expectedAction)
                         }
                     }
                     context("service grant id is not telematics") {
@@ -84,7 +88,7 @@ class TelematicsManagerTests: QuickSpec {
                         }
                     }
                 }
-                
+
                 context("data was not requested") {
                     it("does not consume change") {
                         consumeResult = sut.consume(change: serviceGrantChange)
@@ -92,7 +96,9 @@ class TelematicsManagerTests: QuickSpec {
                     }
                 }
             }
-            //MARK: .responseReceived
+
+            // MARK: .responseReceived
+
             context("responseReceived in connected state") {
                 var change: ServiceGrantChange!
                 var responseStatus: ServiceGrantResponse.Status!
@@ -111,7 +117,7 @@ class TelematicsManagerTests: QuickSpec {
                             responseStatus = ServiceGrantResponse.Status.success
                             beforeEach {
                                 let state = ServiceGrantChange.State(requestingServiceGrantIDs: [])
-                                
+
                                 let response = ServiceGrantResponse(sorcID: self.sorcID,
                                                                     serviceGrantID: serviceGrantID,
                                                                     status: responseStatus,
@@ -119,7 +125,7 @@ class TelematicsManagerTests: QuickSpec {
                                 let action = ServiceGrantChange.Action.responseReceived(response)
                                 change = ServiceGrantChange(state: state, action: action)
                             }
-                            
+
                             it("consumes change") {
                                 consumeResult = sut.consume(change: change)
                                 expect(consumeResult).to(beNil())
@@ -180,7 +186,7 @@ class TelematicsManagerTests: QuickSpec {
                             }
                         }
                     }
-                    
+
                     context("service grant id is not telematics") {
                         it("does not consume change") {
                             serviceGrantID = 4
@@ -196,8 +202,9 @@ class TelematicsManagerTests: QuickSpec {
                         }
                     }
                 }
-                
-                //MARK: .requestFailed
+
+                // MARK: .requestFailed
+
                 context("action is requestFailed") {
                     var change: ServiceGrantChange!
                     beforeEach {
@@ -222,7 +229,7 @@ class TelematicsManagerTests: QuickSpec {
                         expect(telematicsDataChange) == TelematicsDataChange(state: [], action: .responseReceived(responses: [response]))
                     }
                 }
-                
+
                 context("action is reset") {
                     it("does not consume change") {
                         let state = ServiceGrantChange.State(requestingServiceGrantIDs: [])
@@ -232,7 +239,7 @@ class TelematicsManagerTests: QuickSpec {
                         expect(result) == change
                     }
                 }
-                
+
                 context("state contains telematics id") {
                     it("telematics id is removed") {
                         let state = ServiceGrantChange.State(requestingServiceGrantIDs: [9])
@@ -244,7 +251,9 @@ class TelematicsManagerTests: QuickSpec {
                     }
                 }
             }
-            //MARK: - requestTelematicsData
+
+            // MARK: - requestTelematicsData
+
             describe("requestTelematicsData") {
                 context("connected and already requesting") {
                     beforeEach {
@@ -268,13 +277,13 @@ class TelematicsManagerTests: QuickSpec {
                         expect(sorcManager.didRequestServiceGrant) == 1
                     }
                 }
-                
+
                 context("not connected") {
                     it("notifies updated requesting change") {
                         sorcManager.setConnected(false)
                         let types: [TelematicsDataType] = [.odometer, .fuelLevelAbsolute]
                         sut.requestTelematicsData(types)
-                        
+
                         let expectedresponses = types.map { TelematicsDataResponse.error($0, .notConnected) }
                         let expectedAction = TelematicsDataChange.Action.responseReceived(responses: expectedresponses)
                         let expectedChange = TelematicsDataChange(state: [],
@@ -284,8 +293,8 @@ class TelematicsManagerTests: QuickSpec {
                 }
             }
         }
-        
     }
+
     private func tripMetaDataresponseString() -> String {
         let string = """
         {

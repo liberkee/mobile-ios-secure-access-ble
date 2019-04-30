@@ -4,11 +4,10 @@
 // Created on 26.04.19.
 // Copyright © 2019 Huf Secure Mobile. All rights reserved.
 
-
-import Quick
 import Nimble
-@testable import TACS
+import Quick
 @testable import SecureAccessBLE
+@testable import TACS
 
 class VehicleAccessManagerTests: QuickSpec {
     static let sorcID = UUID(uuidString: "be2fecaf-734b-4252-8312-59d477200a20")!
@@ -30,19 +29,22 @@ class VehicleAccessManagerTests: QuickSpec {
                 expect(sut).toNot(beNil())
             }
         }
-        
-        //MARK: - consume
+
+        // MARK: - consume
+
         describe("consume") {
-            //MARK: initial
+            // MARK: initial
+
             context("initial") {
                 it("consumes change") {
-                    let change = ServiceGrantChange.initialWithState(.init(requestingServiceGrantIDs:[]))
+                    let change = ServiceGrantChange.initialWithState(.init(requestingServiceGrantIDs: []))
                     let changeAfterConsume = sut.consume(change: change)
                     expect(changeAfterConsume).to(beNil())
                 }
             }
-            
-            //MARK: requestServiceGrant
+
+            // MARK: requestServiceGrant
+
             context("requestServiceGrant") {
                 context("grantIDNotKnown") {
                     it("does not consume") {
@@ -107,7 +109,9 @@ class VehicleAccessManagerTests: QuickSpec {
                     }
                 }
             }
-            //MARK: responseReceived
+
+            // MARK: responseReceived
+
             context("responseReceived") {
                 context("grantIDNotKnown") {
                     it("does not consume") {

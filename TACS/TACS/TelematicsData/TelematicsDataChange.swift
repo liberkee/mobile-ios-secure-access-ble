@@ -23,7 +23,7 @@ public struct TelematicsDataChange: ChangeType {
     }
 
     /// State type which is an array of `TelematicsDataType`
-    public typealias State = Array<TelematicsDataType>
+    public typealias State = [TelematicsDataType]
 }
 
 extension TelematicsDataChange {

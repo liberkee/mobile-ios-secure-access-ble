@@ -4,7 +4,6 @@
 // Created on 26.04.19.
 // Copyright © 2019 Huf Secure Mobile. All rights reserved.
 
-
 @testable import SecureAccessBLE
 @testable import TACS
 
@@ -15,7 +14,7 @@ class ServiceGrantChangeFactory {
         let serviceGrantChange = ServiceGrantChange(state: state, action: action)
         return serviceGrantChange
     }
-    
+
     static func responseReceivedChange(feature: VehicleAccessFeature) -> ServiceGrantChange {
         let state = ServiceGrantChange.State(requestingServiceGrantIDs: [])
         let response = ServiceGrantResponse(sorcID: VehicleAccessManagerTests.sorcID,
@@ -26,7 +25,7 @@ class ServiceGrantChangeFactory {
         let change = ServiceGrantChange(state: state, action: action)
         return change
     }
-    
+
     static func acceptedTelematicsRequestChange() -> ServiceGrantChange {
         let state = ServiceGrantChange.State(requestingServiceGrantIDs: [])
         let action = ServiceGrantChange.Action.requestServiceGrant(id: TelematicsManager.telematicsServiceGrantID, accepted: true)

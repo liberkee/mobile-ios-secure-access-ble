@@ -9,15 +9,15 @@ import SecureAccessBLE
 class VehicleAccessManager: VehicleAccessManagerType {
     private let sorcManager: SorcManagerType
     private let vehicleAccessChangeSubject = ChangeSubject<VehicleAccessFeatureChange>(state: [])
-    public var vehicleAccessChange: ChangeSignal<VehicleAccessFeatureChange>  {
+    public var vehicleAccessChange: ChangeSignal<VehicleAccessFeatureChange> {
         return vehicleAccessChangeSubject.asSignal()
     }
-    
+
     fileprivate var featuresWaitingForAck: [VehicleAccessFeature] = []
     init(sorcManager: SorcManagerType) {
         self.sorcManager = sorcManager
     }
-    
+
     func requestFeature(_ vehicleAccessFeature: VehicleAccessFeature) {
         featuresWaitingForAck.append(vehicleAccessFeature)
         sorcManager.requestServiceGrant(vehicleAccessFeature.serviceGrantID())
@@ -67,11 +67,11 @@ extension VehicleAccessManager: SorcInterceptor {
             return changeWithoutRequestedGrants(from: change)
         }
     }
-    
+
     private func changeWithoutRequestedGrants(from change: ServiceGrantChange) -> ServiceGrantChange {
         return change.withoutGrantIDs(vehicleAccessChangeSubject.state.map { $0.serviceGrantID() })
     }
-    
+
     private func notifyRemoteFailedChangeIfNeeded() {
         guard let lastRequestedFeature = vehicleAccessChangeSubject.state.last else {
             return

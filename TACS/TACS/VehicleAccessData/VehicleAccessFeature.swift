@@ -4,7 +4,6 @@
 // Created on 24.04.19.
 // Copyright © 2019 Huf Secure Mobile. All rights reserved.
 
-
 import Foundation
 import SecureAccessBLE
 
@@ -25,7 +24,7 @@ public enum VehicleAccessFeature: CaseIterable, Equatable {
     case lockStatus
     /// feature for calling up ignition-status
     case ignitionStatus
-    
+
     internal func serviceGrantID() -> ServiceGrantID {
         switch self {
         case .unlock:
@@ -42,7 +41,7 @@ public enum VehicleAccessFeature: CaseIterable, Equatable {
             return 0x06
         }
     }
-    
+
     internal init?(serviceGrantID: ServiceGrantID) {
         switch serviceGrantID {
         case 0x01: self = .unlock

@@ -36,7 +36,7 @@ public class TelematicsManager: TelematicsManagerType, SorcInterceptor {
         } else if requestedTypesWaitingForAck.count != 0 {
             // In this state request was sent but not acked yet, so we anly append requested types to wait list
             requestedTypesWaitingForAck.append(contentsOf: types)
-            return 
+            return
         }
         requestedTypesWaitingForAck.append(contentsOf: types)
         sorcManager.requestServiceGrant(TelematicsManager.telematicsServiceGrantID)
@@ -97,15 +97,14 @@ public class TelematicsManager: TelematicsManagerType, SorcInterceptor {
         let change = TelematicsDataChange(state: [], action: .responseReceived(responses: telematicsResponses))
         telematicsDataChangeSubject.onNext(change)
     }
-    
-    
+
     // SorcInterceptor conformance
     public func consume(change: ServiceGrantChange) -> ServiceGrantChange? {
         switch change.action {
         case .initial:
             return nil
         case let .requestServiceGrant(id: serviceGrantId, accepted: _):
-            if serviceGrantId == TelematicsManager.telematicsServiceGrantID && !requestedTypesWaitingForAck.isEmpty {
+            if serviceGrantId == TelematicsManager.telematicsServiceGrantID, !requestedTypesWaitingForAck.isEmpty {
                 notifyRequestingChange(with: requestedTypesWaitingForAck)
                 requestedTypesWaitingForAck.removeAll()
                 return nil
@@ -120,7 +119,7 @@ public class TelematicsManager: TelematicsManagerType, SorcInterceptor {
                 return change.withoutTelematicsID()
             }
         case .requestFailed:
-            if (!requestedTypesWaitingForAck.isEmpty || !telematicsDataChangeSubject.state.isEmpty) {
+            if !requestedTypesWaitingForAck.isEmpty || !telematicsDataChangeSubject.state.isEmpty {
                 notifyRemoteFailedChange()
             }
             return change.withoutTelematicsID()

@@ -4,14 +4,12 @@
 // Created on 08.04.19.
 // Copyright © 2019 Huf Secure Mobile. All rights reserved.
 
-
-import Quick
 import Nimble
-@testable import TACS
+import Quick
 import SecureAccessBLE
+@testable import TACS
 
 class TACSTests: QuickSpec {
-
     override func spec() {
         describe("init") {
 //            let sut = TACSManager()
@@ -20,5 +18,4 @@ class TACSTests: QuickSpec {
             }
         }
     }
-
 }

@@ -4,14 +4,12 @@
 // Created on 26.04.19.
 // Copyright © 2019 Huf Secure Mobile. All rights reserved.
 
-
-import Quick
 import Nimble
-@testable import TACS
+import Quick
 import SecureAccessBLE
+@testable import TACS
 
 class TACSManagerIntegrationTests: QuickSpec {
-    
     class SorcManagerMock: SorcManagerDefaultMock {
         func setConnected(_ connected: Bool) {
             if connected {
@@ -22,7 +20,7 @@ class TACSManagerIntegrationTests: QuickSpec {
             }
         }
     }
-    
+
     override func spec() {
         var sorcManagerMock: SorcManagerMock!
         var sut: TACSManager!
@@ -51,7 +49,7 @@ class TACSManagerIntegrationTests: QuickSpec {
                 expect(sorcManagerMock.receivedRegisterInterceptorInterceptors[1]) === sut.vehicleAccessManager
             }
         }
-        
+
         describe("send requests via both managers in connected state") {
             beforeEach {
                 sorcManagerMock.setConnected(true)
@@ -77,7 +75,7 @@ class TACSManagerIntegrationTests: QuickSpec {
                     expect(vehicleAccessChanges) == [VehicleAccessFeatureChange.initialWithState([])]
                 }
             }
-            
+
             context("request change with feature") {
                 beforeEach {
                     _ = sut.vehicleAccessManager.consume(change: ServiceGrantChangeFactory.acceptedRequestChange(feature: .lock))
@@ -88,7 +86,7 @@ class TACSManagerIntegrationTests: QuickSpec {
                 it("vehicle access manager does not notify change") {
                     expect(vehicleAccessChanges).to(haveCount(2))
                     let expectedChange = VehicleAccessFeatureChange(state: [.lock],
-                                                            action: .requestFeature(feature: .lock, accepted: true))
+                                                                    action: .requestFeature(feature: .lock, accepted: true))
                     expect(vehicleAccessChanges[1]) == expectedChange
                 }
             }

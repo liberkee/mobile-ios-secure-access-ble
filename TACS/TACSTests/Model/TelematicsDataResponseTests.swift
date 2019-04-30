@@ -20,7 +20,7 @@ class TelematicsDataResponseTests: QuickSpec {
                                                         fuelLevelPercentage: 80.00,
                                                         fuelLevelAbsolute: 80.00,
                                                         odometer: 160_000.9)
-                        
+
                         let sut = TelematicsDataResponse(tripMetaData: tripMetaData, requestedType: .odometer)
                         let expectedData = TelematicsData(type: .odometer,
                                                           timestamp: "1970-01-01T00:00:00Z",
@@ -29,7 +29,7 @@ class TelematicsDataResponseTests: QuickSpec {
                         expect(sut) == expectedResponse
                     }
                 }
-                
+
                 context("response does not contain data") {
                     it("not supported") {
                         let tripMetaData = TripMetaData(timeStamp: "1970-01-01T00:00:00Z",
@@ -37,7 +37,7 @@ class TelematicsDataResponseTests: QuickSpec {
                                                         fuelLevelPercentage: 80.00,
                                                         fuelLevelAbsolute: 80.00,
                                                         odometer: nil)
-                        
+
                         let sut = TelematicsDataResponse(tripMetaData: tripMetaData, requestedType: .odometer)
                         let expectedResponse = TelematicsDataResponse.error(.odometer, .notSupported)
                         expect(sut) == expectedResponse
@@ -54,7 +54,7 @@ class TelematicsDataResponseTests: QuickSpec {
                                                                 fuelLevelPercentage: nil,
                                                                 fuelLevelAbsolute: 80.00,
                                                                 odometer: nil)
-                                
+
                                 let sut = TelematicsDataResponse(tripMetaData: tripMetaData, requestedType: .fuelLevelAbsolute)
                                 let expectedData = TelematicsData(type: .fuelLevelAbsolute,
                                                                   timestamp: "1970-01-01T00:00:00Z",
@@ -72,16 +72,16 @@ class TelematicsDataResponseTests: QuickSpec {
                                                                 fuelLevelPercentage: nil,
                                                                 fuelLevelAbsolute: 80.00,
                                                                 odometer: nil)
-                                
+
                                 let sut = TelematicsDataResponse(tripMetaData: tripMetaData, requestedType: .fuelLevelAbsolute)
-                                
+
                                 let expectedResponse = TelematicsDataResponse.error(.fuelLevelAbsolute, .notSupported)
                                 expect(sut) == expectedResponse
                             }
                         }
                     }
                 }
-                
+
                 context("response does not contain data") {
                     it("not supported") {
                         let tripMetaData = TripMetaData(timeStamp: "1970-01-01T00:00:00Z",
@@ -89,7 +89,7 @@ class TelematicsDataResponseTests: QuickSpec {
                                                         fuelLevelPercentage: nil,
                                                         fuelLevelAbsolute: nil,
                                                         odometer: nil)
-                        
+
                         let sut = TelematicsDataResponse(tripMetaData: tripMetaData, requestedType: .fuelLevelAbsolute)
                         let expectedResponse = TelematicsDataResponse.error(.fuelLevelAbsolute, .notSupported)
                         expect(sut) == expectedResponse
@@ -106,7 +106,7 @@ class TelematicsDataResponseTests: QuickSpec {
                                                                 fuelLevelPercentage: 90.0,
                                                                 fuelLevelAbsolute: nil,
                                                                 odometer: nil)
-                                
+
                                 let sut = TelematicsDataResponse(tripMetaData: tripMetaData, requestedType: .fuelLevelPercentage)
                                 let expectedData = TelematicsData(type: .fuelLevelPercentage,
                                                                   timestamp: "1970-01-01T00:00:00Z",
@@ -124,7 +124,7 @@ class TelematicsDataResponseTests: QuickSpec {
                                                                 fuelLevelPercentage: 90.0,
                                                                 fuelLevelAbsolute: nil,
                                                                 odometer: nil)
-                                
+
                                 let sut = TelematicsDataResponse(tripMetaData: tripMetaData, requestedType: .fuelLevelPercentage)
                                 let expectedResponse = TelematicsDataResponse.error(.fuelLevelPercentage, .notSupported)
                                 expect(sut) == expectedResponse
@@ -132,7 +132,7 @@ class TelematicsDataResponseTests: QuickSpec {
                         }
                     }
                 }
-                
+
                 context("response does not contain data") {
                     it("not supported") {
                         let tripMetaData = TripMetaData(timeStamp: "1970-01-01T00:00:00Z",
@@ -140,7 +140,7 @@ class TelematicsDataResponseTests: QuickSpec {
                                                         fuelLevelPercentage: nil,
                                                         fuelLevelAbsolute: nil,
                                                         odometer: nil)
-                        
+
                         let sut = TelematicsDataResponse(tripMetaData: tripMetaData, requestedType: .fuelLevelPercentage)
                         let expectedResponse = TelematicsDataResponse.error(.fuelLevelPercentage, .notSupported)
                         expect(sut) == expectedResponse
