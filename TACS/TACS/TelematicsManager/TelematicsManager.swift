@@ -23,7 +23,7 @@ public class TelematicsManager: TelematicsManagerType, SorcInterceptor {
     ///
     /// - Parameter types: Data types which need to be retrieved
     public func requestTelematicsData(_ types: [TelematicsDataType]) {
-        guard case ConnectionChange.State.connected = sorcManager.connectionChange.state else {
+        guard case SecureAccessBLE.ConnectionChange.State.connected = sorcManager.connectionChange.state else {
             requestedTypesWaitingForAck.removeAll()
             notifyNotConnectedChange(with: types)
             return

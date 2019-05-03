@@ -17,7 +17,10 @@ class SorcManagerDefaultMock: SorcManagerType {
 
     var discoveryChange: ChangeSignal<DiscoveryChange> { return discoveryChangeSubject.asSignal() }
 
-    func startDiscovery() {}
+    var didReceiveStartDiscovery = 0
+    func startDiscovery() {
+        didReceiveStartDiscovery += 1
+    }
 
     func stopDiscovery() {}
 
@@ -25,7 +28,14 @@ class SorcManagerDefaultMock: SorcManagerType {
 
     var connectionChange: ChangeSignal<ConnectionChange> { return connectionChangeSubject.asSignal() }
 
-    func connectToSorc(leaseToken _: LeaseToken, leaseTokenBlob _: LeaseTokenBlob) {}
+    var didReceiveConnectToSorc = 0
+    var receivedConnectToSorcLeaseToken: LeaseToken?
+    var receivedConnectToSorcLeaseTokenBlob: LeaseTokenBlob?
+    func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob) {
+        didReceiveConnectToSorc += 1
+        receivedConnectToSorcLeaseToken = leaseToken
+        receivedConnectToSorcLeaseTokenBlob = leaseTokenBlob
+    }
 
     func disconnect() {}
 
