@@ -105,6 +105,9 @@ extension ConnectionChange {
         /// Connecting to provided `VehicleRef` failed with `ConnectingFailedError`
         case connectingFailed(vehicleRef: VehicleRef, error: ConnectingFailedError)
 
+        /// Connecting to provided `vehicleAccessGrantId` failed due to missing blob data in key ring
+        case connectingFailedDataMissing(vehicleAccessGrantId: String)
+
         /// Disconnect
         case disconnect
 
@@ -155,9 +158,6 @@ public enum ConnectingFailedError: Error {
 
     /// BLOB time check failed
     case invalidTimeFrame
-
-    /// Lease does not contain necessary information
-    case leaseDataError
 
     init(from error: SecureAccessBLE.ConnectingFailedError) {
         switch error {

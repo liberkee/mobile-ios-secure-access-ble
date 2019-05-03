@@ -40,6 +40,9 @@
 		99B826AF227AE495003AA20D /* TACSKeyRingFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99B826AE227AE495003AA20D /* TACSKeyRingFactory.swift */; };
 		99B826B1227AE819003AA20D /* ConnectionChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99B826B0227AE819003AA20D /* ConnectionChange.swift */; };
 		99B826B3227B08A7003AA20D /* DiscoveryChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99B826B2227B08A7003AA20D /* DiscoveryChange.swift */; };
+		99FF4EB0227C209200BAF772 /* BLEDiscoveryChangeFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99FF4EAF227C209200BAF772 /* BLEDiscoveryChangeFactory.swift */; };
+		99FF4EB2227C219A00BAF772 /* TACSDiscoveryChangeFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99FF4EB1227C219A00BAF772 /* TACSDiscoveryChangeFactory.swift */; };
+		99FF4EB4227C277A00BAF772 /* TACSConnectionChangeFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99FF4EB3227C277A00BAF772 /* TACSConnectionChangeFactory.swift */; };
 		E1DDBCEA7F5991B445B2D246 /* Pods_TACS_TACSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B3D71515FAF4CF4AE5F758C /* Pods_TACS_TACSTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -90,6 +93,9 @@
 		99B826AE227AE495003AA20D /* TACSKeyRingFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TACSKeyRingFactory.swift; sourceTree = "<group>"; };
 		99B826B0227AE819003AA20D /* ConnectionChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionChange.swift; sourceTree = "<group>"; };
 		99B826B2227B08A7003AA20D /* DiscoveryChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryChange.swift; sourceTree = "<group>"; };
+		99FF4EAF227C209200BAF772 /* BLEDiscoveryChangeFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEDiscoveryChangeFactory.swift; sourceTree = "<group>"; };
+		99FF4EB1227C219A00BAF772 /* TACSDiscoveryChangeFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TACSDiscoveryChangeFactory.swift; sourceTree = "<group>"; };
+		99FF4EB3227C277A00BAF772 /* TACSConnectionChangeFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TACSConnectionChangeFactory.swift; sourceTree = "<group>"; };
 		9B3D71515FAF4CF4AE5F758C /* Pods_TACS_TACSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TACS_TACSTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B206053133420692D413CF6A /* Pods-TACS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TACS.release.xcconfig"; path = "Target Support Files/Pods-TACS/Pods-TACS.release.xcconfig"; sourceTree = "<group>"; };
 		E73B173CB6E0D5D05649B0C6 /* Pods_TACS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TACS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -217,6 +223,9 @@
 			children = (
 				99719C8E227349900099DF11 /* ServiceGrantChangeFactory.swift */,
 				99B826AE227AE495003AA20D /* TACSKeyRingFactory.swift */,
+				99FF4EAF227C209200BAF772 /* BLEDiscoveryChangeFactory.swift */,
+				99FF4EB1227C219A00BAF772 /* TACSDiscoveryChangeFactory.swift */,
+				99FF4EB3227C277A00BAF772 /* TACSConnectionChangeFactory.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -561,9 +570,12 @@
 			files = (
 				99719C8C22732A1A0099DF11 /* TACSManagerIntegrationTests.swift in Sources */,
 				99719C8F227349900099DF11 /* ServiceGrantChangeFactory.swift in Sources */,
+				99FF4EB0227C209200BAF772 /* BLEDiscoveryChangeFactory.swift in Sources */,
 				9967F4C92271D9CE0035AF30 /* SorcManagerDefaultMock.swift in Sources */,
+				99FF4EB2227C219A00BAF772 /* TACSDiscoveryChangeFactory.swift in Sources */,
 				9906D2B7226F45D400BAA285 /* TelematicsManagerTests.swift in Sources */,
 				99B826AD227ADF39003AA20D /* TACSKeyRingTests.swift in Sources */,
+				99FF4EB4227C277A00BAF772 /* TACSConnectionChangeFactory.swift in Sources */,
 				9967F4D7227300DC0035AF30 /* VehicleAccessManagerTests.swift in Sources */,
 				99A2C59F225B7558005997B8 /* TACSTests.swift in Sources */,
 				9967F4C62271B31F0035AF30 /* TACSManagerTests.swift in Sources */,
