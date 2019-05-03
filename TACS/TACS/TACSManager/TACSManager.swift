@@ -87,7 +87,8 @@ public class TACSManager {
         guard let tacsLease = keyRing.leaseToken(for: vehicleAccessGrantId),
             let tacsBlobData = keyRing.blobData(for: tacsLease.sorcId) else {
             // blob data error
-            let connectionChange = ConnectionChange(state: connectionChangeSubject.state, action: .connectingFailedDataMissing(vehicleAccessGrantId: vehicleAccessGrantId))
+            let connectionChange = ConnectionChange(state: connectionChangeSubject.state,
+                                                    action: .connectingFailedDataMissing(vehicleAccessGrantId: vehicleAccessGrantId))
             connectionChangeSubject.onNext(connectionChange)
             return
         }
