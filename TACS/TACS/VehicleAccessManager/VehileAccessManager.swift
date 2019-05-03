@@ -8,17 +8,25 @@ import SecureAccessBLE
 
 class VehicleAccessManager: VehicleAccessManagerType {
     private let sorcManager: SorcManagerType
+    private let queue: DispatchQueue
     private let vehicleAccessChangeSubject = ChangeSubject<VehicleAccessFeatureChange>(state: [])
     public var vehicleAccessChange: ChangeSignal<VehicleAccessFeatureChange> {
         return vehicleAccessChangeSubject.asSignal()
     }
 
     fileprivate var featuresWaitingForAck: [VehicleAccessFeature] = []
-    init(sorcManager: SorcManagerType) {
+    init(sorcManager: SorcManagerType, queue: DispatchQueue) {
         self.sorcManager = sorcManager
+        self.queue = queue
     }
 
-    func requestFeature(_ vehicleAccessFeature: VehicleAccessFeature) {
+    public func requestFeature(_ vehicleAccessFeature: VehicleAccessFeature) {
+        queue.async { [weak self] in
+            self?.requestFeatureInternal(vehicleAccessFeature)
+        }
+    }
+
+    func requestFeatureInternal(_ vehicleAccessFeature: VehicleAccessFeature) {
         featuresWaitingForAck.append(vehicleAccessFeature)
         sorcManager.requestServiceGrant(vehicleAccessFeature.serviceGrantID())
     }

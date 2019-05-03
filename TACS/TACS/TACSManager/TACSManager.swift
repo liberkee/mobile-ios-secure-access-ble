@@ -13,6 +13,13 @@ typealias SorcToVehicleRefMap = [SorcID: VehicleRef]
 public class TACSManager {
     private let internalSorcManager: SorcManagerType
     private let disposeBag = DisposeBag()
+    private let queue: DispatchQueue
+
+    // Here we store sorc id and vehicle ref of currently active vehicle
+    private var activeVehicle: (sorcID: SorcID, vehicleRef: VehicleRef)?
+    private var activeKeyRingForScan: TACSKeyRing?
+    private var activeKeyRingForConnect: TACSKeyRing?
+
     /// :nodoc:
     @available(*, deprecated: 1.0, message: "Use VehicleAccessManager or TelematicsManager instead.")
     public var sorcManager: SorcManagerType { return internalSorcManager }
@@ -31,12 +38,13 @@ public class TACSManager {
 
     // MARK: - Discovery
 
-    // Here we store sorc id and vehicle ref of currently active vehicle
-    private var activeVehicle: (sorcID: SorcID, vehicleRef: VehicleRef)?
-    private var activeKeyRingForScan: TACSKeyRing?
-    private var activeKeyRingForConnect: TACSKeyRing?
-
     public func scanForVehicles(vehicleRefs: [VehicleRef], keyRing: TACSKeyRing) {
+        queue.async { [weak self] in
+            self?.scanForVehiclesInternal(vehicleRefs: vehicleRefs, keyRing: keyRing)
+        }
+    }
+
+    internal func scanForVehiclesInternal(vehicleRefs: [VehicleRef], keyRing: TACSKeyRing) {
         activeKeyRingForScan = keyRing
         var foundVehicleWithMatchingSorcID = false
         vehicleRefs.forEach { ref in
@@ -57,6 +65,12 @@ public class TACSManager {
 
     /// Stops discovery of all vehicles
     public func stopScanning() {
+        queue.async { [weak self] in
+            self?.stopScanningInternal()
+        }
+    }
+
+    internal func stopScanningInternal() {
         activeKeyRingForScan = nil
         internalSorcManager.stopDiscovery()
     }
@@ -83,6 +97,12 @@ public class TACSManager {
     ///   - vehicleAccessGrantId: Vehicle access grant id
     ///   - keyRing: Key ring containing necessary key data
     public func connect(vehicleAccessGrantId: String, keyRing: TACSKeyRing) {
+        queue.async { [weak self] in
+            self?.connectInternal(vehicleAccessGrantId: vehicleAccessGrantId, keyRing: keyRing)
+        }
+    }
+
+    internal func connectInternal(vehicleAccessGrantId: String, keyRing: TACSKeyRing) {
         activeKeyRingForConnect = keyRing
         guard let tacsLease = keyRing.leaseToken(for: vehicleAccessGrantId),
             let tacsBlobData = keyRing.blobData(for: tacsLease.sorcId) else {
@@ -115,28 +135,37 @@ public class TACSManager {
      Disconnects from current SORC
      */
     public func disconnect() {
+        queue.async { [weak self] in
+            self?.disconnectInternal()
+        }
+    }
+
+    internal func disconnectInternal() {
         internalSorcManager.disconnect()
     }
 
     init(sorcManager: SorcManagerType,
          telematicsManager: TelematicsManagerType,
-         vehicleAccessManager: VehicleAccessManagerType) {
+         vehicleAccessManager: VehicleAccessManagerType,
+         queue: DispatchQueue) {
         internalSorcManager = sorcManager
         self.telematicsManager = telematicsManager
         self.vehicleAccessManager = vehicleAccessManager
+        self.queue = queue
         internalSorcManager.registerInterceptor(telematicsManager)
         internalSorcManager.registerInterceptor(vehicleAccessManager)
         subscribeToDiscoveryChanges()
         subscribeToConnectionChanges()
     }
 
-    public convenience init() {
-        let sorcManager = SorcManager()
-        let telematicsManager = TelematicsManager(sorcManager: sorcManager)
-        let vehicleAccessManager = VehicleAccessManager(sorcManager: sorcManager)
+    public convenience init(queue: DispatchQueue = DispatchQueue.main) {
+        let sorcManager = SorcManager(queue: queue)
+        let telematicsManager = TelematicsManager(sorcManager: sorcManager, queue: queue)
+        let vehicleAccessManager = VehicleAccessManager(sorcManager: sorcManager, queue: queue)
         self.init(sorcManager: sorcManager,
                   telematicsManager: telematicsManager,
-                  vehicleAccessManager: vehicleAccessManager)
+                  vehicleAccessManager: vehicleAccessManager,
+                  queue: queue)
     }
 
     private func subscribeToConnectionChanges() {
@@ -191,11 +220,4 @@ extension TACSKeyRing {
             $0.blob.sorcId == sorcID
         })
     }
-}
-
-struct TACSVehicleReference {
-    let sorcID: UUID
-    let blob: LeaseTokenBlob
-    let keyholderID: String?
-    let tokens: [String: LeaseToken]
 }

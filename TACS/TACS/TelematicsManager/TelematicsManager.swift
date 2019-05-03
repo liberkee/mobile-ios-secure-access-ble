@@ -8,8 +8,9 @@ import Foundation
 import SecureAccessBLE
 
 /// Telematics manager which can be used to retrieve telematics data from the vehicle
-public class TelematicsManager: TelematicsManagerType, SorcInterceptor {
+public class TelematicsManager: TelematicsManagerType {
     private let sorcManager: SorcManagerType
+    private let queue: DispatchQueue
     private let telematicsDataChangeSubject: ChangeSubject<TelematicsDataChange> = ChangeSubject<TelematicsDataChange>(state: [])
     internal static let telematicsServiceGrantID: UInt16 = 9
     private var requestedTypesWaitingForAck: [TelematicsDataType] = []
@@ -23,6 +24,12 @@ public class TelematicsManager: TelematicsManagerType, SorcInterceptor {
     ///
     /// - Parameter types: Data types which need to be retrieved
     public func requestTelematicsData(_ types: [TelematicsDataType]) {
+        queue.async { [weak self] in
+            self?.requestTelematicsDataInternal(types)
+        }
+    }
+
+    internal func requestTelematicsDataInternal(_ types: [TelematicsDataType]) {
         guard case SecureAccessBLE.ConnectionChange.State.connected = sorcManager.connectionChange.state else {
             requestedTypesWaitingForAck.removeAll()
             notifyNotConnectedChange(with: types)
@@ -42,8 +49,9 @@ public class TelematicsManager: TelematicsManagerType, SorcInterceptor {
         sorcManager.requestServiceGrant(TelematicsManager.telematicsServiceGrantID)
     }
 
-    init(sorcManager: SorcManagerType) {
+    init(sorcManager: SorcManagerType, queue: DispatchQueue) {
         self.sorcManager = sorcManager
+        self.queue = queue
     }
 
     private func onResponseReceived(_ response: ServiceGrantResponse) {
@@ -99,6 +107,7 @@ public class TelematicsManager: TelematicsManagerType, SorcInterceptor {
     }
 
     // SorcInterceptor conformance
+    /// :nodoc:
     public func consume(change: ServiceGrantChange) -> ServiceGrantChange? {
         switch change.action {
         case .initial:

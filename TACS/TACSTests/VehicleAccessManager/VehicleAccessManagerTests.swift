@@ -9,6 +9,8 @@ import Quick
 @testable import SecureAccessBLE
 @testable import TACS
 
+// To simplify testing, the internal interface of VehicleAccessManager is used which perform synchronously
+// on the same queue
 class VehicleAccessManagerTests: QuickSpec {
     static let sorcID = UUID(uuidString: "be2fecaf-734b-4252-8312-59d477200a20")!
 
@@ -19,15 +21,9 @@ class VehicleAccessManagerTests: QuickSpec {
         var vehicleAccessChange: VehicleAccessFeatureChange!
         beforeEach {
             sorcManagerMock = SorcManagerDefaultMock()
-            sut = VehicleAccessManager(sorcManager: sorcManagerMock)
+            sut = VehicleAccessManager(sorcManager: sorcManagerMock, queue: DispatchQueue(label: "com.queue.ble"))
             _ = sut.vehicleAccessChange.subscribe { change in
                 vehicleAccessChange = change
-            }
-        }
-        describe("init") {
-            it("should not be nil") {
-                let sut = VehicleAccessManager(sorcManager: SorcManagerDefaultMock())
-                expect(sut).toNot(beNil())
             }
         }
 
@@ -68,8 +64,8 @@ class VehicleAccessManagerTests: QuickSpec {
                                                         action: action)
 
                         // request features and ack them via .requestServiceGrant change
-                        sut.requestFeature(.lock)
-                        sut.requestFeature(.unlock)
+                        sut.requestFeatureInternal(.lock)
+                        sut.requestFeatureInternal(.unlock)
                         _ = sut.consume(change: ServiceGrantChangeFactory.acceptedRequestChange(feature: .lock))
                         _ = sut.consume(change: ServiceGrantChangeFactory.acceptedRequestChange(feature: .unlock))
 
@@ -88,7 +84,7 @@ class VehicleAccessManagerTests: QuickSpec {
                     }
                     context("feature was requested") {
                         beforeEach {
-                            sut.requestFeature(feature)
+                            sut.requestFeatureInternal(feature)
                         }
                         it("consumes change") {
                             let changeAfterConsume = sut.consume(change: serviceGrantChange)
@@ -137,7 +133,7 @@ class VehicleAccessManagerTests: QuickSpec {
                     }
                     context("feature was requested and acked") {
                         beforeEach {
-                            sut.requestFeature(feature)
+                            sut.requestFeatureInternal(feature)
                             _ = sut.consume(change: ServiceGrantChangeFactory.acceptedRequestChange(feature: .lock))
                         }
                         it("consumes change") {

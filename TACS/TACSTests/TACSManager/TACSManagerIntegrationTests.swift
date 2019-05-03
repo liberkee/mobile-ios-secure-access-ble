@@ -28,13 +28,16 @@ class TACSManagerIntegrationTests: QuickSpec {
         var sut: TACSManager!
         var telematicsDataChanges: [TelematicsDataChange]!
         var vehicleAccessChanges: [VehicleAccessFeatureChange]!
+        var queue: DispatchQueue!
         beforeEach {
             sorcManagerMock = SorcManagerMock()
-            let telematicsManager = TelematicsManager(sorcManager: sorcManagerMock)
-            let vehicleAccessManager = VehicleAccessManager(sorcManager: sorcManagerMock)
+            queue = DispatchQueue.main
+            let telematicsManager = TelematicsManager(sorcManager: sorcManagerMock, queue: queue)
+            let vehicleAccessManager = VehicleAccessManager(sorcManager: sorcManagerMock, queue: queue)
             sut = TACSManager(sorcManager: sorcManagerMock,
                               telematicsManager: telematicsManager,
-                              vehicleAccessManager: vehicleAccessManager)
+                              vehicleAccessManager: vehicleAccessManager,
+                              queue: queue)
             telematicsDataChanges = []
             vehicleAccessChanges = []
             _ = sut.telematicsManager.telematicsDataChange.subscribe { change in
@@ -55,8 +58,8 @@ class TACSManagerIntegrationTests: QuickSpec {
         describe("send requests via both managers in connected state") {
             beforeEach {
                 sorcManagerMock.setConnected(true)
-                sut.telematicsManager.requestTelematicsData([.odometer])
-                sut.vehicleAccessManager.requestFeature(.lock)
+                (sut.telematicsManager as! TelematicsManager).requestTelematicsDataInternal([.odometer])
+                (sut.vehicleAccessManager as! VehicleAccessManager).requestFeatureInternal(.lock)
             }
             context("no change from sorcManager received") {
                 it("no change notified via managers") {
@@ -85,7 +88,7 @@ class TACSManagerIntegrationTests: QuickSpec {
                 it("telematics manager does not notify change") {
                     expect(telematicsDataChanges) == [TelematicsDataChange.initialWithState([])]
                 }
-                it("vehicle access manager does not notify change") {
+                it("vehicle access manager notifies change") {
                     expect(vehicleAccessChanges).to(haveCount(2))
                     let expectedChange = VehicleAccessFeatureChange(state: [.lock],
                                                                     action: .requestFeature(feature: .lock, accepted: true))

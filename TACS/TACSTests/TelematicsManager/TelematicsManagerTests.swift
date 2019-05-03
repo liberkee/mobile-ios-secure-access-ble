@@ -8,6 +8,9 @@ import Nimble
 import Quick
 @testable import SecureAccessBLE
 @testable import TACS
+
+// To simplify testing, the internal interface of TelematicsManager is used which perform synchronously
+// on the same queue
 class TelematicsManagerTests: QuickSpec {
     class SorcManagerMock: SorcManagerDefaultMock {
         func setConnected(_ connected: Bool) {
@@ -32,7 +35,7 @@ class TelematicsManagerTests: QuickSpec {
 
         beforeEach {
             sorcManager = SorcManagerMock()
-            sut = TelematicsManager(sorcManager: sorcManager)
+            sut = TelematicsManager(sorcManager: sorcManager, queue: DispatchQueue(label: "com.queue.ble"))
             _ = sut.telematicsDataChange.subscribe { change in
                 telematicsDataChange = change
             }
@@ -65,7 +68,7 @@ class TelematicsManagerTests: QuickSpec {
                 }
                 context("data was requested") {
                     beforeEach {
-                        sut.requestTelematicsData([.odometer])
+                        sut.requestTelematicsDataInternal([.odometer])
                     }
                     context("service grant id is telematics") {
                         beforeEach {
@@ -111,7 +114,7 @@ class TelematicsManagerTests: QuickSpec {
                     }
                     context("all data was requested and acked") {
                         beforeEach {
-                            sut.requestTelematicsData([.odometer, .fuelLevelAbsolute, .fuelLevelPercentage])
+                            sut.requestTelematicsDataInternal([.odometer, .fuelLevelAbsolute, .fuelLevelPercentage])
                             _ = sut.consume(change: ServiceGrantChangeFactory.acceptedTelematicsRequestChange())
                         }
                         context("status success") {
@@ -174,7 +177,7 @@ class TelematicsManagerTests: QuickSpec {
                                 change = ServiceGrantChange(state: state, action: action)
                             }
                             it("notifies denied state") {
-                                sut.requestTelematicsData([.odometer, .fuelLevelAbsolute, .fuelLevelPercentage])
+                                sut.requestTelematicsDataInternal([.odometer, .fuelLevelAbsolute, .fuelLevelPercentage])
                                 _ = sut.consume(change: change)
                                 var expectedResponses: [TelematicsDataResponse]?
                                 if case let TelematicsDataChange.Action.responseReceived(responses) = telematicsDataChange!.action {
@@ -223,7 +226,7 @@ class TelematicsManagerTests: QuickSpec {
                     }
                     it("notifies error if request was pending and acked") {
                         sorcManager.setConnected(true)
-                        sut.requestTelematicsData([.odometer])
+                        sut.requestTelematicsDataInternal([.odometer])
                         _ = sut.consume(change: ServiceGrantChangeFactory.acceptedTelematicsRequestChange())
                         _ = sut.consume(change: change)
                         let response = TelematicsDataResponse.error(.odometer, .remoteFailed)
@@ -260,8 +263,8 @@ class TelematicsManagerTests: QuickSpec {
                 context("connected and already requesting") {
                     beforeEach {
                         sorcManager.setConnected(true)
-                        sut.requestTelematicsData([.odometer])
-                        sut.requestTelematicsData([.fuelLevelPercentage])
+                        sut.requestTelematicsDataInternal([.odometer])
+                        sut.requestTelematicsDataInternal([.fuelLevelPercentage])
                         _ = sut.consume(change: ServiceGrantChangeFactory.acceptedTelematicsRequestChange())
                     }
                     it("notifies updated requesting change") {
@@ -284,7 +287,7 @@ class TelematicsManagerTests: QuickSpec {
                     it("notifies updated requesting change") {
                         sorcManager.setConnected(false)
                         let types: [TelematicsDataType] = [.odometer, .fuelLevelAbsolute]
-                        sut.requestTelematicsData(types)
+                        sut.requestTelematicsDataInternal(types)
 
                         let expectedresponses = types.map { TelematicsDataResponse.error($0, .notConnected) }
                         let expectedAction = TelematicsDataChange.Action.responseReceived(responses: expectedresponses)

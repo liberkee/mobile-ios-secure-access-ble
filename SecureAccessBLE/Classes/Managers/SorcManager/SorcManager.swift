@@ -121,7 +121,8 @@ extension SorcManager {
     /// Note: Only use one instance at a time.
     ///
     /// - Parameter configuration: The configuration for the `SorcManager`
-    public convenience init(configuration: SorcManager.Configuration = SorcManager.Configuration()) {
+    public convenience init(configuration: SorcManager.Configuration = SorcManager.Configuration(),
+                            queue: DispatchQueue = DispatchQueue.main) {
         let connectionConfiguration = ConnectionManager.Configuration(
             serviceID: configuration.serviceID,
             notifyCharacteristicID: configuration.notifyCharacteristicID,
@@ -130,7 +131,7 @@ extension SorcManager {
             removeOutdatedSorcsInterval: configuration.removeOutdatedSorcsInterval
         )
 
-        let connectionManager = ConnectionManager(configuration: connectionConfiguration)
+        let connectionManager = ConnectionManager(configuration: connectionConfiguration, queue: queue)
         let transportManager = TransportManager(connectionManager: connectionManager)
         let securityManager = SecurityManager(transportManager: transportManager)
 

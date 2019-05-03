@@ -23,7 +23,8 @@ class TACSManagerTests: QuickSpec {
             let vehicleAccessManager = VehicleAccessManagerDefaultMock()
             sut = TACSManager(sorcManager: sorcManager,
                               telematicsManager: telematicsManager,
-                              vehicleAccessManager: vehicleAccessManager)
+                              vehicleAccessManager: vehicleAccessManager,
+                              queue: DispatchQueue(label: "com.queue.ble"))
             receivedConnectionChanges = []
             _ = sut.connectionChange.subscribe { change in
                 receivedConnectionChanges.append(change)
@@ -43,7 +44,7 @@ class TACSManagerTests: QuickSpec {
             context("lease contains data for vehicle") {
                 it("starts discovery") {
                     let vehicleRef = "4321"
-                    sut.scanForVehicles(vehicleRefs: [vehicleRef], keyRing: TACSKeyRingFactory.validDefaultKeyRing())
+                    sut.scanForVehiclesInternal(vehicleRefs: [vehicleRef], keyRing: TACSKeyRingFactory.validDefaultKeyRing())
                     expect(sorcManager.didReceiveStartDiscovery) == 1
                 }
             }
@@ -51,7 +52,7 @@ class TACSManagerTests: QuickSpec {
             context("lease does not contain data for vehicle") {
                 beforeEach {
                     let vehicleRef = "NOTEXISTING"
-                    sut.scanForVehicles(vehicleRefs: [vehicleRef], keyRing: TACSKeyRingFactory.validDefaultKeyRing())
+                    sut.scanForVehiclesInternal(vehicleRefs: [vehicleRef], keyRing: TACSKeyRingFactory.validDefaultKeyRing())
                 }
                 it("does not start discovery") {
                     expect(sorcManager.didReceiveStartDiscovery) == 0
@@ -72,7 +73,7 @@ class TACSManagerTests: QuickSpec {
                     let bleDiscoveryChange = BLEDiscoveryChangeFactory.discoveredChange(with: keyRing.sorcID(for: vehicleRef)!, date: date)
 
                     let expectedChange = TACSDiscoveryChangeFactory.discoveredChange(with: vehicleRef, date: date)
-                    sut.scanForVehicles(vehicleRefs: [vehicleRef], keyRing: TACSKeyRingFactory.validDefaultKeyRing())
+                    sut.scanForVehiclesInternal(vehicleRefs: [vehicleRef], keyRing: TACSKeyRingFactory.validDefaultKeyRing())
                     sorcManager.discoveryChangeSubject.onNext(bleDiscoveryChange)
 
                     expect(receivedDiscoveryChanges).to(haveCount(2))
@@ -94,7 +95,7 @@ class TACSManagerTests: QuickSpec {
                     let expectedBlob = try! SecureAccessBLE.LeaseTokenBlob(messageCounter: Int(blobFromKeyRing.blobMessageCounter)!,
                                                                            data: blobFromKeyRing.blob)
 
-                    sut.connect(vehicleAccessGrantId: keyRing.tacsLeaseTokenTable.first!.vehicleAccessGrantId, keyRing: keyRing)
+                    sut.connectInternal(vehicleAccessGrantId: keyRing.tacsLeaseTokenTable.first!.vehicleAccessGrantId, keyRing: keyRing)
 
                     expect(sorcManager.didReceiveConnectToSorc) == 1
                     expect(sorcManager.receivedConnectToSorcLeaseToken) == expectedToken
@@ -106,7 +107,7 @@ class TACSManagerTests: QuickSpec {
                 beforeEach {
                     vehicleAccessGrantId = "NOTEXISITNG"
                     let keyRing = TACSKeyRingFactory.validDefaultKeyRing()
-                    sut.connect(vehicleAccessGrantId: vehicleAccessGrantId, keyRing: keyRing)
+                    sut.connectInternal(vehicleAccessGrantId: vehicleAccessGrantId, keyRing: keyRing)
                 }
                 it("dose not start connecting") {
                     expect(sorcManager.didReceiveConnectToSorc) == 0
@@ -129,7 +130,7 @@ class TACSManagerTests: QuickSpec {
                         let expectedChange = TACS.ConnectionChange(state: .connecting(vehicleRef: vehicleRef, state: .physical),
                                                                    action: .connect(vehicleRef: vehicleRef))
 
-                        sut.connect(vehicleAccessGrantId: keyRing.tacsLeaseTokenTable.first!.vehicleAccessGrantId, keyRing: keyRing)
+                        sut.connectInternal(vehicleAccessGrantId: keyRing.tacsLeaseTokenTable.first!.vehicleAccessGrantId, keyRing: keyRing)
                         sorcManager.connectionChangeSubject.onNext(bleConnectionChange)
 
                         expect(receivedConnectionChanges).to(haveCount(2))
@@ -140,7 +141,7 @@ class TACSManagerTests: QuickSpec {
                     it("does not notify change") {
                         let vehicleRef = "4321"
                         let keyRing = TACSKeyRingFactory.validDefaultKeyRing()
-                        sut.scanForVehicles(vehicleRefs: [vehicleRef], keyRing: keyRing)
+                        sut.scanForVehiclesInternal(vehicleRefs: [vehicleRef], keyRing: keyRing)
                         let sorcID = SorcID(uuidString: "be2fecaf-734b-4252-8312-59d477200a20")!
                         let bleConnectionChange = SecureAccessBLE.ConnectionChange(state: .connecting(sorcID: sorcID, state: .physical),
                                                                                    action: .connect(sorcID: sorcID))
