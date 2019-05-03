@@ -26,13 +26,7 @@ public struct DiscoveryChange: ChangeType {
     }
 }
 
-extension DiscoveryChange: Equatable {
-    /// :nodoc:
-    public static func == (lhs: DiscoveryChange, rhs: DiscoveryChange) -> Bool {
-        return lhs.state == rhs.state
-            && lhs.action == rhs.action
-    }
-}
+extension DiscoveryChange: Equatable {}
 
 extension DiscoveryChange {
     /// The state a `DiscoveryChange` can be in
@@ -50,12 +44,6 @@ extension DiscoveryChange {
         public init(discoveredSorcs: SorcInfos, discoveryIsEnabled: Bool) {
             self.discoveredSorcs = discoveredSorcs
             self.discoveryIsEnabled = discoveryIsEnabled
-        }
-
-        /// :nodoc:
-        public static func == (lhs: State, rhs: State) -> Bool {
-            return lhs.discoveredSorcs == rhs.discoveredSorcs
-                && lhs.discoveryIsEnabled == rhs.discoveryIsEnabled
         }
     }
 }
@@ -92,22 +80,6 @@ extension DiscoveryChange {
 
         /// Discovery stopped
         case stopDiscovery
-
-        /// :nodoc:
-        public static func == (lhs: Action, rhs: Action) -> Bool {
-            switch (lhs, rhs) {
-            case (.initial, .initial): return true
-            case let (.discovered(lSorcID), .discovered(rSorcID)) where lSorcID == rSorcID: return true
-            case let (.rediscovered(lSorcID), .rediscovered(rSorcID)) where lSorcID == rSorcID: return true
-            case let (.lost(lSorcIDs), .lost(rSorcIDs)) where lSorcIDs == rSorcIDs: return true
-            case let (.disconnect(lSorcID), .disconnect(rSorcID)) where lSorcID == rSorcID: return true
-            case let (.disconnected(lSorcID), .disconnected(rSorcID)) where lSorcID == rSorcID: return true
-            case (.reset, .reset): return true
-            case (.startDiscovery, .startDiscovery): return true
-            case (.stopDiscovery, .stopDiscovery): return true
-            default: return false
-            }
-        }
     }
 }
 
@@ -147,10 +119,5 @@ public struct SorcInfos: Equatable {
 
     public init(_ sorcInfoByID: [SorcID: SorcInfo] = [:]) {
         self.sorcInfoByID = sorcInfoByID
-    }
-
-    /// :nodoc:
-    public static func == (lhs: SorcInfos, rhs: SorcInfos) -> Bool {
-        return lhs.sorcInfoByID == rhs.sorcInfoByID
     }
 }
