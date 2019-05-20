@@ -141,7 +141,7 @@ extension SorcManager {
             maximumEnqueuedMessages: configuration.maximumEnqueuedMessages
         )
 
-        let sessionManager = SessionManager(securityManager: securityManager, configuration: sessionConfiguration)
+        let sessionManager = SessionManager(securityManager: securityManager, configuration: sessionConfiguration, queue: queue)
 
         self.init(
             bluetoothStatusProvider: connectionManager,

@@ -72,7 +72,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     fileprivate let systemClock: SystemClockType
 
     /// Timer to remove outdated discovered SORCs
-    fileprivate var filterTimer: Timer?
+    fileprivate var filterTimer: RepeatingBackgroundTimer?
 
     private let appActivityStatusProvider: AppActivityStatusProviderType
 
@@ -126,7 +126,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
 
     deinit {
         disconnect()
-        filterTimer?.invalidate()
+        filterTimer?.suspend()
     }
 
     /// Starts discovery if the central manager state is `poweredOn`.
@@ -310,13 +310,9 @@ extension ConnectionManager {
         let systemClock = SystemClock()
 
         let createTimer: ConnectionManager.CreateTimer = { block in
-            Timer.scheduledTimer(
-                withTimeInterval: configuration.removeOutdatedSorcsInterval,
-                repeats: true,
-                block: { _ in
-                    block()
-                }
-            )
+            RepeatingBackgroundTimer.scheduledTimer(timeInterval: configuration.removeOutdatedSorcsInterval,
+                                                    queue: queue,
+                                                    handler: block)
         }
 
         let appActivityStatusProvider = AppActivityStatusProvider(notificationCenter: NotificationCenter.default)

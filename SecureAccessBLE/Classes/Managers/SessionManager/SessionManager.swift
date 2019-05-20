@@ -19,8 +19,8 @@ class SessionManager: SessionManagerType {
 
     private let disposeBag = DisposeBag()
 
-    private var sendHeartbeatsTimer: Timer?
-    private var checkHeartbeatsResponseTimer: Timer?
+    private var sendHeartbeatsTimer: RepeatingBackgroundTimer?
+    private var checkHeartbeatsResponseTimer: RepeatingBackgroundTimer?
     private var lastHeartbeatResponseDate = Date()
 
     /// Used to know how to handle a response based on what we sent before
@@ -35,9 +35,12 @@ class SessionManager: SessionManagerType {
         BoundedQueue(maximumElements: self.configuration.maximumEnqueuedMessages)
     }()
 
-    init(securityManager: SecurityManagerType, configuration: Configuration = Configuration()) {
+    private let timerQueue: DispatchQueue
+
+    init(securityManager: SecurityManagerType, configuration: Configuration = Configuration(), queue: DispatchQueue = DispatchQueue.main) {
         self.securityManager = securityManager
         self.configuration = configuration
+        timerQueue = queue
 
         securityManager.connectionChange.subscribeNext { [weak self] change in
             self?.handleSecureConnectionChange(change)
@@ -298,20 +301,13 @@ class SessionManager: SessionManagerType {
     // MARK: - Heartbeat handling
 
     private func scheduleHeartbeatTimers() {
-        sendHeartbeatsTimer = Timer.scheduledTimer(
-            timeInterval: configuration.heartbeatInterval,
-            target: self,
-            selector: #selector(SessionManager.startSendingHeartbeat),
-            userInfo: nil,
-            repeats: true
-        )
-        checkHeartbeatsResponseTimer = Timer.scheduledTimer(
-            timeInterval: configuration.heartbeatTimeout,
-            target: self,
-            selector: #selector(SessionManager.checkOutHeartbeatResponse),
-            userInfo: nil,
-            repeats: true
-        )
+        sendHeartbeatsTimer = RepeatingBackgroundTimer.scheduledTimer(timeInterval: configuration.heartbeatTimeout,
+                                                                      queue: timerQueue,
+                                                                      handler: startSendingHeartbeat)
+
+        checkHeartbeatsResponseTimer = RepeatingBackgroundTimer.scheduledTimer(timeInterval: configuration.heartbeatTimeout,
+                                                                               queue: timerQueue,
+                                                                               handler: checkOutHeartbeatResponse)
     }
 
     @objc func startSendingHeartbeat() {
@@ -321,8 +317,8 @@ class SessionManager: SessionManagerType {
     }
 
     private func stopSendingHeartbeat() {
-        sendHeartbeatsTimer?.invalidate()
-        checkHeartbeatsResponseTimer?.invalidate()
+        sendHeartbeatsTimer?.suspend()
+        checkHeartbeatsResponseTimer?.suspend()
     }
 
     @objc func checkOutHeartbeatResponse() {
@@ -333,8 +329,8 @@ class SessionManager: SessionManagerType {
 
     private func rescheduleHeartbeat() {
         lastHeartbeatResponseDate = Date()
-        checkHeartbeatsResponseTimer?.fireDate = lastHeartbeatResponseDate
-            .addingTimeInterval(configuration.heartbeatTimeout)
+        let nextFireDate = lastHeartbeatResponseDate.addingTimeInterval(configuration.heartbeatTimeout)
+        checkHeartbeatsResponseTimer?.restart(timeInterval: nextFireDate.timeIntervalSinceNow)
     }
 }
 
