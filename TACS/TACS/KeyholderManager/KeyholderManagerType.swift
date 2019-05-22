@@ -12,7 +12,7 @@ public protocol KeyholderManagerType {
     var keyholderChange: ChangeSignal<KeyholderStatusChange> { get }
 }
 
-extension KeyholderManagerType {
+public extension KeyholderManagerType {
     func requestStatus() {
         requestStatus(timeout: 5.0)
     }

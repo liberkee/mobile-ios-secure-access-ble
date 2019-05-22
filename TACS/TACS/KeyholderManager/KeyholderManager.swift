@@ -58,6 +58,7 @@ public class KeyholderManager: NSObject, KeyholderManagerType {
     }
 
     private func onTimeout() {
+        scanTimeoutTimer?.suspend()
         centralManager.stopScan()
         let change = KeyholderStatusChange(state: .stopped, action: .failed(.scanTimeout))
         keyholderChangeSubject.onNext(change)
