@@ -18,7 +18,7 @@ public class KeyholderManager: NSObject, KeyholderManagerType {
     private let queue: DispatchQueue
     internal var keyholderIDProvider: (() -> UUID?)!
 
-    private let keyholderServiceId = "0x180A"
+    private let keyholderServiceId = "180A"
     private var scanTimeoutTimer: RepeatingBackgroundTimer?
 
     required init(centralManager: CBCentralManagerType, queue: DispatchQueue) {
@@ -92,7 +92,7 @@ extension KeyholderManager {
 extension KeyholderManager: CBCentralManagerDelegate {
     public func centralManagerDidUpdateState(_: CBCentralManager) {}
 
-    private func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
+     public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
                                 advertisementData: [String: Any], rssi RSSI: NSNumber) {
         centralManager_(central as CBCentralManagerType,
                         didDiscover: peripheral as CBPeripheralType,
