@@ -66,6 +66,7 @@ class ViewController: UIViewController {
         tacsManager.keyholderManager.keyholderChange.subscribe { [weak self] change  in
             self?.onKeyholderStatusChange(change)
         }
+        .disposed(by: disposeBag)
         
         // Prepare tacsmanager with vehicleAccessGrantId and appropriate keyring
         let useAccessGrantResult = tacsManager.useAccessGrant(with: vehicleAccessGrantId, from: keyRing)

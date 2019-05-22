@@ -10,6 +10,7 @@ class VehicleAccessManager: VehicleAccessManagerType {
     private let sorcManager: SorcManagerType
     private let queue: DispatchQueue
     private let vehicleAccessChangeSubject = ChangeSubject<VehicleAccessFeatureChange>(state: [])
+    /// Vehicle access feature change which can be used to retrieve vehicle access feature changes.
     public var vehicleAccessChange: ChangeSignal<VehicleAccessFeatureChange> {
         return vehicleAccessChangeSubject.asSignal()
     }
@@ -19,7 +20,9 @@ class VehicleAccessManager: VehicleAccessManagerType {
         self.sorcManager = sorcManager
         self.queue = queue
     }
-
+    /// Requests a feature from vehicle.
+    ///
+    /// - Parameter vehicleAccessFeature: Feature which has to be requested.
     public func requestFeature(_ vehicleAccessFeature: VehicleAccessFeature) {
         queue.async { [weak self] in
             self?.requestFeatureInternal(vehicleAccessFeature)

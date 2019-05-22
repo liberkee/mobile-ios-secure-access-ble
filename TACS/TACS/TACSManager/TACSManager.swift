@@ -19,6 +19,7 @@ struct ActiveVehicleSetup {
     let keyholderId: UUID?
 }
 
+/// TACSManager, the main entry point of the TACS SDK.
 public class TACSManager {
     private let internalSorcManager: SorcManagerType
     private let disposeBag = DisposeBag()
@@ -51,13 +52,20 @@ public class TACSManager {
 
     // MARK: - BLE Interface
 
-    /// The bluetooth enabled status
+    /// The status of bluetooth device.
     public var isBluetoothEnabled: StateSignal<Bool> {
         return internalSorcManager.isBluetoothEnabled
     }
 
     // MARK: - Set up keyring and grant
 
+    /// Configures manager for usage with specified `vehicleAccessGrantId` and `keyRing`.
+    /// Call this method before performing any actions on manager.
+    ///
+    /// - Parameters:
+    ///   - vehicleAccessGrantId: VehicleAccessGrantId which should be used.
+    ///   - keyRing: Key ring which should be used. Must contain lease data for given `vehicleAccessGrantId`.
+    /// - Returns: `true` if the setup succeeded, `false` if necessary data could not be retrieved from keyring.
     public func useAccessGrant(with vehicleAccessGrantId: String, from keyRing: TACSKeyRing) -> Bool {
         guard let tacsLease = keyRing.leaseToken(for: vehicleAccessGrantId),
             let tacsBlobData = keyRing.blobData(for: tacsLease.sorcId) else {
@@ -87,10 +95,20 @@ public class TACSManager {
         activeVehicleSetup = setup
         return true
     }
+    
+    /// Resets the manager state. Disconnects from vehicle, stops scanning and resets
+    /// lease data which was previously set up via `useAccessGrant(with: from:)`
+    public func reset() {
+        queue.async { [weak self] in
+            self?.stopScanningInternal()
+            self?.activeVehicleSetup = nil
+        }
+    }
 
     // MARK: - Discovery
 
-    public func scan() {
+    /// Starts BLE discovery. Changes will be notified via `discoveryChange`.
+    public func startScanning() {
         queue.async { [weak self] in
             self?.scanInternal()
         }
@@ -105,7 +123,7 @@ public class TACSManager {
         internalSorcManager.startDiscovery()
     }
 
-    /// Stops discovery of all vehicles
+    /// Stops BLE discovery. Changes will be notified via `discoveryChange`.
     public func stopScanning() {
         queue.async { [weak self] in
             self?.stopScanningInternal()
@@ -118,7 +136,7 @@ public class TACSManager {
 
     private let discoveryChangeSubject = ChangeSubject<DiscoveryChange>(state: .init(discoveredVehicles: VehicleInfos()))
 
-    /// The state of SORC discovery with the action that led to this state
+    /// The state of vehicle discovery with the action that led to this state.
     public var discoveryChange: ChangeSignal<DiscoveryChange> {
         return discoveryChangeSubject.asSignal()
     }
@@ -152,7 +170,7 @@ public class TACSManager {
     }
 
     /**
-     Disconnects from current SORC
+     Disconnects from current vehicle
      */
     public func disconnect() {
         queue.async { [weak self] in
@@ -181,6 +199,14 @@ public class TACSManager {
         subscribeToConnectionChanges()
     }
 
+    /// Creates instance of `TACSManager`. Only one reference should be used.
+    ///
+    /// - Parameter queue: Optional queue which will be used to do the related work.
+    ///
+    /// Changes of all managers (`TACSManager`, `VehicleAccessManager`, `TelematicsManager` and `KeyholderManager`)
+    /// will notify events on the provided queue with one exception: Initial actions are notified on the same queue
+    /// where the subscription (call to `subscribe`) happens.
+    /// If the queue is not provided, the main queue will be used.
     public convenience init(queue: DispatchQueue = DispatchQueue.main) {
         let sorcManager = SorcManager(queue: queue)
         let telematicsManager = TelematicsManager(sorcManager: sorcManager, queue: queue)
