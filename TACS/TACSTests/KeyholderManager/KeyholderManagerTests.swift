@@ -76,13 +76,13 @@ class KeyholderManagerTests: QuickSpec {
             sut = KeyholderManager(centralManager: centralManagerMock, queue: DispatchQueue.main)
             receivedChanges = []
             _ = sut.keyholderChange.subscribe { change in receivedChanges.append(change) }
-            sut.keyhodlerIDProvider = { nil }
+            sut.keyholderIDProvider = { nil }
         }
 
         describe("requestStatus") {
             context("no keyholder id provided") {
                 it("notifies failure") {
-                    sut.keyhodlerIDProvider = { nil }
+                    sut.keyholderIDProvider = { nil }
                     sut.requestStatusInternal(timeout: 5.0)
                     expect(receivedChanges).to(haveCount(2))
                     expect(receivedChanges.last) == KeyholderStatusChangeFactory.failedIdMissingChange()
@@ -91,7 +91,7 @@ class KeyholderManagerTests: QuickSpec {
 
             context("keyholder id provided and device on") {
                 beforeEach {
-                    sut.keyhodlerIDProvider = { UUID(uuidString: "be2fecaf-734b-4252-8312-59d477200a20")! }
+                    sut.keyholderIDProvider = { UUID(uuidString: "be2fecaf-734b-4252-8312-59d477200a20")! }
                     centralManagerMock.state = .poweredOn
                 }
                 it("starts discovery") {
@@ -108,7 +108,7 @@ class KeyholderManagerTests: QuickSpec {
                 it("notifies timeout") {
                     let timeout: TimeInterval = 0.01
                     let expectedTimeoutChange = KeyholderStatusChange(state: .stopped, action: .failed(.scanTimeout))
-                    sut.keyhodlerIDProvider = { UUID(uuidString: "be2fecaf-734b-4252-8312-59d477200a20")! }
+                    sut.keyholderIDProvider = { UUID(uuidString: "be2fecaf-734b-4252-8312-59d477200a20")! }
                     centralManagerMock.state = .poweredOn
                     sut.requestStatusInternal(timeout: timeout)
                     expect(receivedChanges).toEventually(haveCount(3), timeout: timeout + 0.01)
@@ -119,7 +119,7 @@ class KeyholderManagerTests: QuickSpec {
                 var expectedKeyholderInfo: KeyholderInfo!
                 beforeEach {
                     let keyholderID = "7026839CCE854CB1901999B07F56DEFA"
-                    sut.keyhodlerIDProvider = { UUID(hexString: keyholderID)! }
+                    sut.keyholderIDProvider = { UUID(hexString: keyholderID)! }
                     centralManagerMock.state = .poweredOn
                     let manufacturerData = ("0A07" + keyholderID + "036000000001010A").dataFromHexadecimalString()!
                     let advertisementData: [String: Any] = [

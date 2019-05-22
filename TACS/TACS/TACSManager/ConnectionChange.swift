@@ -105,8 +105,8 @@ extension ConnectionChange {
         /// Connecting to provided `VehicleRef` failed with `ConnectingFailedError`
         case connectingFailed(vehicleRef: VehicleRef, error: ConnectingFailedError)
 
-        /// Connecting to provided `vehicleAccessGrantId` failed due to missing blob data in key ring
-        case connectingFailedDataMissing(vehicleAccessGrantId: String)
+        /// Connecting failed due to missing blob data.
+        case connectingFailedDataMissing
 
         /// Disconnect
         case disconnect

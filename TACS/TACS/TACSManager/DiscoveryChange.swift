@@ -84,8 +84,8 @@ extension DiscoveryChange {
         /// Discovery stopped
         case stopDiscovery
 
-        /// Discovery for a specific `VehicleRef` could not be started due to missing data in key ring
-        case missingBlobData(vehicleRef: VehicleRef)
+        /// Discovery could not be started due to missing data in key ring
+        case missingBlobData
 
         init(from action: SecureAccessBLE.DiscoveryChange.Action, sorcToVehicleRefMap: SorcToVehicleRefMap) throws {
             switch action {

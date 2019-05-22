@@ -10,14 +10,33 @@ import SecureAccessBLE
 
 typealias SorcToVehicleRefMap = [SorcID: VehicleRef]
 
+struct ActiveVehicleSetup {
+    let keyring: TACSKeyRing
+    let saLeaseToken: SecureAccessBLE.LeaseToken
+    let saBlob: SecureAccessBLE.LeaseTokenBlob
+    let sorcId: SorcID
+    let extenralVehicleRef: String
+    let keyholderId: UUID?
+}
+
 public class TACSManager {
     private let internalSorcManager: SorcManagerType
     private let disposeBag = DisposeBag()
     private let queue: DispatchQueue
 
-    // Here we store sorc id and vehicle ref of currently active vehicle
-    private var activeVehicle: (sorcID: SorcID, vehicleRef: VehicleRef, keyholderID: SorcID?)?
-    private var activeKeyRing: TACSKeyRing?
+    // Queue for read/write active vehicle setup to make it thread safe
+    private let keyRingSavingQueue = DispatchQueue(label: "com.hufsm.ble.keyRingSaver")
+    private var activeVehicleSetupUnsafe: ActiveVehicleSetup?
+    private var activeVehicleSetup: ActiveVehicleSetup? {
+        get {
+            return keyRingSavingQueue.sync { activeVehicleSetupUnsafe }
+        }
+        set {
+            keyRingSavingQueue.sync {
+                activeVehicleSetupUnsafe = newValue
+            }
+        }
+    }
 
     /// :nodoc:
     @available(*, deprecated: 1.0, message: "Use VehicleAccessManager or TelematicsManager instead.")
@@ -37,31 +56,53 @@ public class TACSManager {
         return internalSorcManager.isBluetoothEnabled
     }
 
+    // MARK: - Set up keyring and grant
+
+    public func useAccessGrant(with vehicleAccessGrantId: String, from keyRing: TACSKeyRing) -> Bool {
+        guard let tacsLease = keyRing.leaseToken(for: vehicleAccessGrantId),
+            let tacsBlobData = keyRing.blobData(for: tacsLease.sorcId) else {
+            // blob data error
+            return false
+        }
+
+        // throws if sorcAccessKey is empty
+        guard let leaseToken = try? SecureAccessBLE.LeaseToken(id: tacsLease.leaseTokenId.uuidString,
+                                                               leaseID: tacsLease.leaseId.uuidString,
+                                                               sorcID: tacsLease.sorcId,
+                                                               sorcAccessKey: tacsLease.sorcAccessKey) else {
+            return false
+        }
+
+        let tacsBlob = tacsBlobData.blob
+        guard let blob = try? SecureAccessBLE.LeaseTokenBlob(messageCounter: Int(tacsBlob.blobMessageCounter)!, data: tacsBlob.blob) else {
+            return false
+        }
+
+        let setup = ActiveVehicleSetup(keyring: keyRing,
+                                       saLeaseToken: leaseToken,
+                                       saBlob: blob,
+                                       sorcId: tacsLease.sorcId,
+                                       extenralVehicleRef: tacsBlobData.externalVehicleRef,
+                                       keyholderId: tacsBlobData.keyholderId)
+        activeVehicleSetup = setup
+        return true
+    }
+
     // MARK: - Discovery
 
-    public func scanForVehicles(vehicleRefs: [VehicleRef], keyRing: TACSKeyRing) {
+    public func scan() {
         queue.async { [weak self] in
-            self?.scanForVehiclesInternal(vehicleRefs: vehicleRefs, keyRing: keyRing)
+            self?.scanInternal()
         }
     }
 
-    internal func scanForVehiclesInternal(vehicleRefs: [VehicleRef], keyRing: TACSKeyRing) {
-        activeKeyRing = keyRing
-        var foundVehicleWithMatchingSorcID = false
-        vehicleRefs.forEach { ref in
-            if keyRing.sorcID(for: ref) != nil {
-                foundVehicleWithMatchingSorcID = true
-            } else {
-                // notify missing value in key ring
-                let change = DiscoveryChange(state: discoveryChange.state, action: .missingBlobData(vehicleRef: ref))
-                discoveryChangeSubject.onNext(change)
-            }
+    internal func scanInternal() {
+        guard activeVehicleSetup != nil else {
+            let change = DiscoveryChange(state: discoveryChange.state, action: .missingBlobData)
+            discoveryChangeSubject.onNext(change)
+            return
         }
-
-        if foundVehicleWithMatchingSorcID {
-            // some sorc ids found, start scanning
-            internalSorcManager.startDiscovery()
-        }
+        internalSorcManager.startDiscovery()
     }
 
     /// Stops discovery of all vehicles
@@ -90,44 +131,24 @@ public class TACSManager {
         return connectionChangeSubject.asSignal()
     }
 
-    /// Connects to a vehicle if key ring contains necessary data for given `vehicleAccessGrantId`.
-    /// If key ring does not contain necessary data, the error will be notified via `connectionChange`.
-    ///
-    /// - Parameters:
-    ///   - vehicleAccessGrantId: Vehicle access grant id
-    ///   - keyRing: Key ring containing necessary key data
-    public func connect(vehicleAccessGrantId: String, keyRing: TACSKeyRing) {
+    /// Starts connecting to vehicle if the keyring and accessGrantId was set before.
+    public func connect() {
         queue.async { [weak self] in
-            self?.connectInternal(vehicleAccessGrantId: vehicleAccessGrantId, keyRing: keyRing)
+            self?.connectInternal()
         }
     }
 
-    internal func connectInternal(vehicleAccessGrantId: String, keyRing: TACSKeyRing) {
-        activeKeyRing = keyRing
-        guard let tacsLease = keyRing.leaseToken(for: vehicleAccessGrantId),
-            let tacsBlobData = keyRing.blobData(for: tacsLease.sorcId) else {
+    internal func connectInternal() {
+        guard let activeVehicleSetup = self.activeVehicleSetup else {
             // blob data error
             let connectionChange = ConnectionChange(state: connectionChangeSubject.state,
-                                                    action: .connectingFailedDataMissing(vehicleAccessGrantId: vehicleAccessGrantId))
+                                                    action: .connectingFailedDataMissing)
             connectionChangeSubject.onNext(connectionChange)
             return
         }
 
-        // throws if sorcAccessKey is empty
-        guard let leaseToken = try? SecureAccessBLE.LeaseToken(id: tacsLease.leaseTokenId.uuidString,
-                                                               leaseID: tacsLease.leaseId.uuidString,
-                                                               sorcID: tacsLease.sorcId,
-                                                               sorcAccessKey: tacsLease.sorcAccessKey) else {
-            return
-        }
-
-        let tacsBlob = tacsBlobData.blob
-        guard let blob = try? SecureAccessBLE.LeaseTokenBlob(messageCounter: Int(tacsBlob.blobMessageCounter)!, data: tacsBlob.blob) else {
-            return
-        }
-
-        activeVehicle = (tacsLease.sorcId, tacsBlobData.externalVehicleRef, tacsBlobData.keyholderId)
-        internalSorcManager.connectToSorc(leaseToken: leaseToken, leaseTokenBlob: blob)
+        internalSorcManager.connectToSorc(leaseToken: activeVehicleSetup.saLeaseToken,
+                                          leaseTokenBlob: activeVehicleSetup.saBlob)
     }
 
     /**
@@ -153,7 +174,7 @@ public class TACSManager {
         self.vehicleAccessManager = vehicleAccessManager
         self.keyholderManager = keyholderManager
         self.queue = queue
-        (self.keyholderManager as? KeyholderManager)?.keyhodlerIDProvider = { self.activeVehicle?.keyholderID }
+        (self.keyholderManager as? KeyholderManager)?.keyholderIDProvider = { self.activeVehicleSetup?.keyholderId }
         internalSorcManager.registerInterceptor(telematicsManager)
         internalSorcManager.registerInterceptor(vehicleAccessManager)
         subscribeToDiscoveryChanges()
@@ -174,10 +195,11 @@ public class TACSManager {
 
     private func subscribeToConnectionChanges() {
         internalSorcManager.connectionChange.subscribe { [weak self] change in
-            guard let strongSelf = self else { return }
-            guard let activeSorcID = strongSelf.activeVehicle?.sorcID,
-                let activeVehicleRef = strongSelf.activeVehicle?.vehicleRef else { return }
-            guard let transformedChange = try? ConnectionChange(from: change, activeSorcID: activeSorcID, activeVehicleRef: activeVehicleRef) else {
+            guard let strongSelf = self,
+                let activeVehicleSetup = strongSelf.activeVehicleSetup else { return }
+            guard let transformedChange = try? ConnectionChange(from: change,
+                                                                activeSorcID: activeVehicleSetup.sorcId,
+                                                                activeVehicleRef: activeVehicleSetup.extenralVehicleRef) else {
                 // Is this case possible? We get a change for a sorcID we did not ask to connect to.
                 return
             }
@@ -187,9 +209,10 @@ public class TACSManager {
 
     private func subscribeToDiscoveryChanges() {
         internalSorcManager.discoveryChange.subscribe { [weak self] change in
-            guard let strongSelf = self,
-                let keyRing = strongSelf.activeKeyRing else { return }
-            guard let transformedChange = try? TACS.DiscoveryChange(from: change, sorcToVehicleRefMap: keyRing.sorcToVehicleRefDict()) else {
+            guard let strongSelf = self, let activeVehicleSetup = strongSelf.activeVehicleSetup else { return }
+            let sorcToVehicleRefMap = [activeVehicleSetup.sorcId: activeVehicleSetup.extenralVehicleRef]
+            guard let transformedChange = try? TACS.DiscoveryChange(from: change,
+                                                                    sorcToVehicleRefMap: sorcToVehicleRefMap) else {
                 return
             }
             strongSelf.discoveryChangeSubject.onNext(transformedChange)
@@ -203,14 +226,6 @@ extension TACSKeyRing {
             return nil
         }
         return blobTableEntry.blob.sorcId
-    }
-
-    func sorcToVehicleRefDict() -> SorcToVehicleRefMap {
-        var result: SorcToVehicleRefMap = [:]
-        tacsSorcBlobTable.forEach {
-            result[$0.blob.sorcId] = $0.externalVehicleRef
-        }
-        return result
     }
 
     func leaseToken(for vehicleAccessGrantId: String) -> LeaseToken? {

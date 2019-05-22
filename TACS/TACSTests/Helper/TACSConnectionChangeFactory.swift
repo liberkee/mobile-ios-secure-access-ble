@@ -8,9 +8,9 @@ import Foundation
 @testable import TACS
 
 class TACSConnectionChangeFactory {
-    static func leaseDataErrorChange(vehicleAccessGrantId: String) -> ConnectionChange {
+    static func leaseDataErrorChange() -> ConnectionChange {
         let state = ConnectionChange.State.disconnected
-        let action = ConnectionChange.Action.connectingFailedDataMissing(vehicleAccessGrantId: vehicleAccessGrantId)
+        let action = ConnectionChange.Action.connectingFailedDataMissing
         let change = ConnectionChange(state: state, action: action)
         return change
     }

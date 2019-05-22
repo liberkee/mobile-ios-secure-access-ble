@@ -16,7 +16,7 @@ public class KeyholderManager: NSObject, KeyholderManagerType {
 
     private let centralManager: CBCentralManagerType
     private let queue: DispatchQueue
-    internal var keyhodlerIDProvider: (() -> UUID?)!
+    internal var keyholderIDProvider: (() -> UUID?)!
 
     private let keyholderServiceId = "0x180A"
     private var scanTimeoutTimer: RepeatingBackgroundTimer?
@@ -35,7 +35,7 @@ public class KeyholderManager: NSObject, KeyholderManagerType {
     }
 
     internal func requestStatusInternal(timeout: TimeInterval) {
-        guard keyhodlerIDProvider() != nil else {
+        guard keyholderIDProvider() != nil else {
             let change = KeyholderStatusChange(state: .stopped, action: .failed(.keyholderIdMissing))
             keyholderChangeSubject.onNext(change)
             return
@@ -67,7 +67,7 @@ public class KeyholderManager: NSObject, KeyholderManagerType {
                          advertisementData: [String: Any], rssi _: NSNumber) {
         if let manufacturerData = advertisementData[CBAdvertisementDataManufacturerDataKey] as? Data,
             let keyholderInfo = KeyholderInfo(manufacturerData: manufacturerData),
-            keyholderInfo.keyholderId == keyhodlerIDProvider() {
+            keyholderInfo.keyholderId == keyholderIDProvider() {
             onKeyholderDiscovered(keyholderInfo: keyholderInfo)
         }
     }
