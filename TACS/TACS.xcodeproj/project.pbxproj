@@ -28,6 +28,14 @@
 		9967F4D422720D040035AF30 /* VehicleAccessFeatureResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9967F4D322720D040035AF30 /* VehicleAccessFeatureResponse.swift */; };
 		9967F4D7227300DC0035AF30 /* VehicleAccessManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9967F4D6227300DC0035AF30 /* VehicleAccessManagerTests.swift */; };
 		9970A5A2229544D80078FFBB /* CBWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9970A5A1229544D80078FFBB /* CBWrapper.swift */; };
+		9970A5AA22957B920078FFBB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9970A5A922957B920078FFBB /* AppDelegate.swift */; };
+		9970A5AC22957B920078FFBB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9970A5AB22957B920078FFBB /* ViewController.swift */; };
+		9970A5B122957B940078FFBB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 9970A5B022957B940078FFBB /* Assets.xcassets */; };
+		9970A5B422957B940078FFBB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9970A5B222957B940078FFBB /* LaunchScreen.storyboard */; };
+		9970A5BB22957BD20078FFBB /* TACS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99A2C590225B7558005997B8 /* TACS.framework */; };
+		9970A5BC22957BD20078FFBB /* TACS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 99A2C590225B7558005997B8 /* TACS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9970A5BF22957D5D0078FFBB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9970A5BE22957D5D0078FFBB /* Main.storyboard */; };
+		9970A5C122957D6B0078FFBB /* mock_keyring.json in Resources */ = {isa = PBXBuildFile; fileRef = 9970A5C022957D6B0078FFBB /* mock_keyring.json */; };
 		99719C8C22732A1A0099DF11 /* TACSManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99719C8B22732A1A0099DF11 /* TACSManagerIntegrationTests.swift */; };
 		99719C8F227349900099DF11 /* ServiceGrantChangeFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99719C8E227349900099DF11 /* ServiceGrantChangeFactory.swift */; };
 		99A2C59A225B7558005997B8 /* TACS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99A2C590225B7558005997B8 /* TACS.framework */; };
@@ -51,10 +59,18 @@
 		99FF4EB4227C277A00BAF772 /* TACSConnectionChangeFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99FF4EB3227C277A00BAF772 /* TACSConnectionChangeFactory.swift */; };
 		99FF4EB9227C714C00BAF772 /* KeyholderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99FF4EB8227C714C00BAF772 /* KeyholderManager.swift */; };
 		99FF4EBB227C719E00BAF772 /* KeyholderManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99FF4EBA227C719E00BAF772 /* KeyholderManagerType.swift */; };
+		9AF348CCFB5575D1DE4484C7 /* Pods_SampleApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 549E07FECF8B510B19F5672F /* Pods_SampleApp.framework */; };
 		E1DDBCEA7F5991B445B2D246 /* Pods_TACS_TACSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B3D71515FAF4CF4AE5F758C /* Pods_TACS_TACSTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		9970A5B922957BB10078FFBB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 99A2C587225B7558005997B8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 99A2C58F225B7558005997B8;
+			remoteInfo = TACS;
+		};
 		99A2C59B225B7558005997B8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 99A2C587225B7558005997B8 /* Project object */;
@@ -64,7 +80,23 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		9970A5BD22957BD20078FFBB /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				9970A5BC22957BD20078FFBB /* TACS.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		26371BDA58E26C3B9D6FC0A1 /* Pods-SampleApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SampleApp.debug.xcconfig"; path = "Target Support Files/Pods-SampleApp/Pods-SampleApp.debug.xcconfig"; sourceTree = "<group>"; };
+		549E07FECF8B510B19F5672F /* Pods_SampleApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SampleApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6617B205BCD9D66BBEDE9041 /* Pods-TACS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TACS.debug.xcconfig"; path = "Target Support Files/Pods-TACS/Pods-TACS.debug.xcconfig"; sourceTree = "<group>"; };
 		9906D2B6226F45D400BAA285 /* TelematicsManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TelematicsManagerTests.swift; sourceTree = "<group>"; };
 		992F12CD226F023600B228FA /* TelematicsManagerType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TelematicsManagerType.swift; sourceTree = "<group>"; };
@@ -86,6 +118,14 @@
 		9967F4D322720D040035AF30 /* VehicleAccessFeatureResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleAccessFeatureResponse.swift; sourceTree = "<group>"; };
 		9967F4D6227300DC0035AF30 /* VehicleAccessManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleAccessManagerTests.swift; sourceTree = "<group>"; };
 		9970A5A1229544D80078FFBB /* CBWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBWrapper.swift; sourceTree = "<group>"; };
+		9970A5A722957B920078FFBB /* SampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		9970A5A922957B920078FFBB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		9970A5AB22957B920078FFBB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		9970A5B022957B940078FFBB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		9970A5B322957B940078FFBB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		9970A5B522957B940078FFBB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9970A5BE22957D5D0078FFBB /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		9970A5C022957D6B0078FFBB /* mock_keyring.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = mock_keyring.json; sourceTree = "<group>"; };
 		99719C8B22732A1A0099DF11 /* TACSManagerIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TACSManagerIntegrationTests.swift; sourceTree = "<group>"; };
 		99719C8E227349900099DF11 /* ServiceGrantChangeFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceGrantChangeFactory.swift; sourceTree = "<group>"; };
 		99A2C590225B7558005997B8 /* TACS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TACS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -117,9 +157,19 @@
 		E73B173CB6E0D5D05649B0C6 /* Pods_TACS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TACS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F78D527A92F3E45DAF535332 /* Pods-TACS-TACSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TACS-TACSTests.release.xcconfig"; path = "Target Support Files/Pods-TACS-TACSTests/Pods-TACS-TACSTests.release.xcconfig"; sourceTree = "<group>"; };
 		FF3F16157B6A1D19733B016C /* Pods-TACS-TACSTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TACS-TACSTests.debug.xcconfig"; path = "Target Support Files/Pods-TACS-TACSTests/Pods-TACS-TACSTests.debug.xcconfig"; sourceTree = "<group>"; };
+		FFA9A94EB3D4429F6A4D97B1 /* Pods-SampleApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SampleApp.release.xcconfig"; path = "Target Support Files/Pods-SampleApp/Pods-SampleApp.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		9970A5A422957B920078FFBB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9970A5BB22957BD20078FFBB /* TACS.framework in Frameworks */,
+				9AF348CCFB5575D1DE4484C7 /* Pods_SampleApp.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		99A2C58D225B7558005997B8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -147,6 +197,8 @@
 				B206053133420692D413CF6A /* Pods-TACS.release.xcconfig */,
 				FF3F16157B6A1D19733B016C /* Pods-TACS-TACSTests.debug.xcconfig */,
 				F78D527A92F3E45DAF535332 /* Pods-TACS-TACSTests.release.xcconfig */,
+				26371BDA58E26C3B9D6FC0A1 /* Pods-SampleApp.debug.xcconfig */,
+				FFA9A94EB3D4429F6A4D97B1 /* Pods-SampleApp.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -235,6 +287,20 @@
 			path = VehicleAccessManager;
 			sourceTree = "<group>";
 		};
+		9970A5A822957B920078FFBB /* SampleApp */ = {
+			isa = PBXGroup;
+			children = (
+				9970A5C022957D6B0078FFBB /* mock_keyring.json */,
+				9970A5BE22957D5D0078FFBB /* Main.storyboard */,
+				9970A5A922957B920078FFBB /* AppDelegate.swift */,
+				9970A5AB22957B920078FFBB /* ViewController.swift */,
+				9970A5B022957B940078FFBB /* Assets.xcassets */,
+				9970A5B222957B940078FFBB /* LaunchScreen.storyboard */,
+				9970A5B522957B940078FFBB /* Info.plist */,
+			);
+			path = SampleApp;
+			sourceTree = "<group>";
+		};
 		99719C8D227349840099DF11 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
@@ -254,6 +320,7 @@
 				99B826A22278519C003AA20D /* README.md */,
 				99A2C592225B7558005997B8 /* TACS */,
 				99A2C59D225B7558005997B8 /* TACSTests */,
+				9970A5A822957B920078FFBB /* SampleApp */,
 				99A2C591225B7558005997B8 /* Products */,
 				44B728E32100EC5406DF6C6B /* Pods */,
 				AEDD1D87B1A9208B2F601B75 /* Frameworks */,
@@ -265,6 +332,7 @@
 			children = (
 				99A2C590225B7558005997B8 /* TACS.framework */,
 				99A2C599225B7558005997B8 /* TACSTests.xctest */,
+				9970A5A722957B920078FFBB /* SampleApp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -354,6 +422,7 @@
 			children = (
 				E73B173CB6E0D5D05649B0C6 /* Pods_TACS.framework */,
 				9B3D71515FAF4CF4AE5F758C /* Pods_TACS_TACSTests.framework */,
+				549E07FECF8B510B19F5672F /* Pods_SampleApp.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -372,6 +441,27 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		9970A5A622957B920078FFBB /* SampleApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9970A5B622957B940078FFBB /* Build configuration list for PBXNativeTarget "SampleApp" */;
+			buildPhases = (
+				F6954A53049724218DCBB839 /* [CP] Check Pods Manifest.lock */,
+				9970A5A322957B920078FFBB /* Sources */,
+				9970A5A422957B920078FFBB /* Frameworks */,
+				9970A5A522957B920078FFBB /* Resources */,
+				9970A5BD22957BD20078FFBB /* Embed Frameworks */,
+				75408D9CF15AE699A8955211 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				9970A5BA22957BB10078FFBB /* PBXTargetDependency */,
+			);
+			name = SampleApp;
+			productName = SampleApp;
+			productReference = 9970A5A722957B920078FFBB /* SampleApp.app */;
+			productType = "com.apple.product-type.application";
+		};
 		99A2C58F225B7558005997B8 /* TACS */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 99A2C5A4225B7558005997B8 /* Build configuration list for PBXNativeTarget "TACS" */;
@@ -419,10 +509,13 @@
 		99A2C587225B7558005997B8 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1020;
+				LastSwiftUpdateCheck = 1010;
 				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = "Huf Secure Mobile";
 				TargetAttributes = {
+					9970A5A622957B920078FFBB = {
+						CreatedOnToolsVersion = 10.1;
+					};
 					99A2C58F225B7558005997B8 = {
 						CreatedOnToolsVersion = 10.2;
 						LastSwiftMigration = 1020;
@@ -438,6 +531,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 99A2C586225B7558005997B8;
 			productRefGroup = 99A2C591225B7558005997B8 /* Products */;
@@ -446,11 +540,23 @@
 			targets = (
 				99A2C58F225B7558005997B8 /* TACS */,
 				99A2C598225B7558005997B8 /* TACSTests */,
+				9970A5A622957B920078FFBB /* SampleApp */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		9970A5A522957B920078FFBB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9970A5BF22957D5D0078FFBB /* Main.storyboard in Resources */,
+				9970A5B422957B940078FFBB /* LaunchScreen.storyboard in Resources */,
+				9970A5B122957B940078FFBB /* Assets.xcassets in Resources */,
+				9970A5C122957D6B0078FFBB /* mock_keyring.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		99A2C58E225B7558005997B8 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -490,6 +596,30 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		75408D9CF15AE699A8955211 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SampleApp/Pods-SampleApp-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/CryptoSwift/CryptoSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SecureAccessBLE/SecureAccessBLE.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/CryptoSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SecureAccessBLE.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SampleApp/Pods-SampleApp-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		7A36C1DFBD457836C4F1A5E8 /* [CP] Check Pods Manifest.lock */ = {
@@ -578,9 +708,40 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TACS-TACSTests/Pods-TACS-TACSTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		F6954A53049724218DCBB839 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SampleApp-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		9970A5A322957B920078FFBB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9970A5AC22957B920078FFBB /* ViewController.swift in Sources */,
+				9970A5AA22957B920078FFBB /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		99A2C58C225B7558005997B8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -637,6 +798,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		9970A5BA22957BB10078FFBB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 99A2C58F225B7558005997B8 /* TACS */;
+			targetProxy = 9970A5B922957BB10078FFBB /* PBXContainerItemProxy */;
+		};
 		99A2C59C225B7558005997B8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 99A2C58F225B7558005997B8 /* TACS */;
@@ -644,7 +810,60 @@
 		};
 /* End PBXTargetDependency section */
 
+/* Begin PBXVariantGroup section */
+		9970A5B222957B940078FFBB /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9970A5B322957B940078FFBB /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
+		9970A5B722957B940078FFBB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 26371BDA58E26C3B9D6FC0A1 /* Pods-SampleApp.debug.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = MR9TB5Y4RJ;
+				INFOPLIST_FILE = SampleApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.hufsm.SampleApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		9970A5B822957B940078FFBB /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = FFA9A94EB3D4429F6A4D97B1 /* Pods-SampleApp.release.xcconfig */;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = MR9TB5Y4RJ;
+				INFOPLIST_FILE = SampleApp/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.hufsm.SampleApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.2;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		99A2C5A2225B7558005997B8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -871,6 +1090,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		9970A5B622957B940078FFBB /* Build configuration list for PBXNativeTarget "SampleApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9970A5B722957B940078FFBB /* Debug */,
+				9970A5B822957B940078FFBB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		99A2C58A225B7558005997B8 /* Build configuration list for PBXProject "TACS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

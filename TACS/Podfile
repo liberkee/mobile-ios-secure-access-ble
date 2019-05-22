@@ -16,3 +16,7 @@ target 'TACS' do
   end
 
 end
+
+target 'SampleApp' do
+  pod 'SecureAccessBLE', :path => '../'
+end

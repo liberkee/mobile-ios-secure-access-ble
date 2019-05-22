@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_0" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="BLEQuickStart" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Jyv-sq-Oy8">
+                                <rect key="frame" x="20" y="40" width="280" height="160"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="4M9-bl-FZv">
+                                        <rect key="frame" x="0.0" y="0.0" width="60" height="160"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r3L-K7-y47">
+                                                <rect key="frame" x="0.0" y="0.0" width="60" height="53.5"/>
+                                                <state key="normal" title="Connect"/>
+                                                <connections>
+                                                    <action selector="connect:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ZgB-6D-SZB"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LQW-9x-9Wh">
+                                                <rect key="frame" x="0.0" y="53.5" width="60" height="53"/>
+                                                <state key="normal" title="Lock"/>
+                                                <connections>
+                                                    <action selector="lockDoors:" destination="BYZ-38-t0r" eventType="touchUpInside" id="AFy-zZ-tja"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KFo-oc-a4E">
+                                                <rect key="frame" x="0.0" y="106.5" width="60" height="53.5"/>
+                                                <state key="normal" title="Unlock"/>
+                                                <connections>
+                                                    <action selector="unlockDoors:" destination="BYZ-38-t0r" eventType="touchUpInside" id="DJ8-G3-snA"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="60" id="Zv6-jp-f3Y"/>
+                                            <constraint firstAttribute="height" constant="160" id="eYF-ZO-qEz"/>
+                                        </constraints>
+                                    </stackView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lld-1a-yI4">
+                                        <rect key="frame" x="60" y="70" width="220" height="20.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                            </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CSA-HQ-hDu">
+                                <rect key="frame" x="91" y="224" width="138" height="30"/>
+                                <state key="normal" title="Get Telematics Data"/>
+                                <connections>
+                                    <action selector="getTelematicsData:" destination="BYZ-38-t0r" eventType="touchUpInside" id="c0h-Xk-1Ki"/>
+                                </connections>
+                            </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="9tg-Lv-iPO">
+                                <rect key="frame" x="20" y="262" width="280" height="138"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="138" id="8Zt-PU-rz9"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QWH-A6-no2">
+                                <rect key="frame" x="71.5" y="408" width="177" height="30"/>
+                                <state key="normal" title="Request Keyholder Status"/>
+                                <connections>
+                                    <action selector="requestKeyholderStatus:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9UO-7m-k6z"/>
+                                </connections>
+                            </button>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="Wzj-Zy-vMZ">
+                                <rect key="frame" x="20" y="446" width="280" height="122"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="9tg-Lv-iPO" firstAttribute="top" secondItem="CSA-HQ-hDu" secondAttribute="bottom" constant="8" id="5wD-2q-S6g"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="9tg-Lv-iPO" secondAttribute="trailing" constant="20" id="CuW-FG-0GV"/>
+                            <constraint firstItem="CSA-HQ-hDu" firstAttribute="top" secondItem="Jyv-sq-Oy8" secondAttribute="bottom" constant="24" id="La7-mc-QJN"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Jyv-sq-Oy8" secondAttribute="trailing" constant="20" id="Rxt-ZM-cbk"/>
+                            <constraint firstItem="CSA-HQ-hDu" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="Sgo-SU-YXB"/>
+                            <constraint firstItem="Wzj-Zy-vMZ" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="Vq9-Hw-3B4"/>
+                            <constraint firstItem="9tg-Lv-iPO" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="aPI-UA-FnI"/>
+                            <constraint firstItem="Jyv-sq-Oy8" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="20" id="cR4-E4-OPO"/>
+                            <constraint firstItem="QWH-A6-no2" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="efI-Zd-Xdz"/>
+                            <constraint firstItem="QWH-A6-no2" firstAttribute="top" secondItem="9tg-Lv-iPO" secondAttribute="bottom" constant="8" id="elF-Ea-oFi"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Wzj-Zy-vMZ" secondAttribute="trailing" constant="20" id="kFr-oy-4Q9"/>
+                            <constraint firstItem="Wzj-Zy-vMZ" firstAttribute="top" secondItem="QWH-A6-no2" secondAttribute="bottom" constant="8" id="l6W-3J-URz"/>
+                            <constraint firstItem="Wzj-Zy-vMZ" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="lf3-zS-tut"/>
+                            <constraint firstItem="Jyv-sq-Oy8" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="qwb-r9-xmJ"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                    </view>
+                    <connections>
+                        <outlet property="keyholderStatusOutputView" destination="Wzj-Zy-vMZ" id="Dlv-lb-0kK"/>
+                        <outlet property="statusLabel" destination="lld-1a-yI4" id="ilf-Dx-58x"/>
+                        <outlet property="telematicsOutputView" destination="9tg-Lv-iPO" id="awj-ZN-XIS"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="136.80000000000001" y="98.50074962518741"/>
+        </scene>
+    </scenes>
+</document>
