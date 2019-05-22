@@ -10,14 +10,13 @@ import Foundation
 /// RepeatingTimer mimics the API of DispatchSourceTimer but in a way that prevents
 /// crashes that occur from calling resume multiple times on a timer that is
 /// already resumed (noted by https://github.com/SiftScience/sift-ios/issues/52
-class RepeatingBackgroundTimer {
+public class RepeatingBackgroundTimer {
     private var timeInterval: TimeInterval
     private let queue: DispatchQueue
 
-    static func scheduledTimer(timeInterval: TimeInterval,
+    public static func scheduledTimer(timeInterval: TimeInterval,
                                queue: DispatchQueue,
-                               handler: @escaping () -> Void,
-                               repeats _: Bool = true) -> RepeatingBackgroundTimer {
+                               handler: @escaping () -> Void) -> RepeatingBackgroundTimer {
         let timer = RepeatingBackgroundTimer(timeInterval: timeInterval, queue: queue)
         timer.eventHandler = handler
         timer.resume()
@@ -64,7 +63,7 @@ class RepeatingBackgroundTimer {
         eventHandler = nil
     }
 
-    func resume() {
+    public func resume() {
         if state == .resumed {
             return
         }
@@ -72,7 +71,7 @@ class RepeatingBackgroundTimer {
         timer.resume()
     }
 
-    func suspend() {
+    public func suspend() {
         if state == .suspended {
             return
         }

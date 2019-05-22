@@ -21,9 +21,11 @@ class TACSManagerTests: QuickSpec {
             sorcManager = SorcManagerDefaultMock()
             let telematicsManager = TelematicsManagerDefaultMock()
             let vehicleAccessManager = VehicleAccessManagerDefaultMock()
+            let keyholderManager = KeyholderManagerDefaultMock()
             sut = TACSManager(sorcManager: sorcManager,
                               telematicsManager: telematicsManager,
                               vehicleAccessManager: vehicleAccessManager,
+                              keyholderManager: keyholderManager,
                               queue: DispatchQueue(label: "com.queue.ble"))
             receivedConnectionChanges = []
             _ = sut.connectionChange.subscribe { change in

@@ -27,6 +27,7 @@
 		9967F4D0227201200035AF30 /* VehicleAccessFeatureChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9967F4CF227201200035AF30 /* VehicleAccessFeatureChange.swift */; };
 		9967F4D422720D040035AF30 /* VehicleAccessFeatureResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9967F4D322720D040035AF30 /* VehicleAccessFeatureResponse.swift */; };
 		9967F4D7227300DC0035AF30 /* VehicleAccessManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9967F4D6227300DC0035AF30 /* VehicleAccessManagerTests.swift */; };
+		9970A5A2229544D80078FFBB /* CBWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9970A5A1229544D80078FFBB /* CBWrapper.swift */; };
 		99719C8C22732A1A0099DF11 /* TACSManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99719C8B22732A1A0099DF11 /* TACSManagerIntegrationTests.swift */; };
 		99719C8F227349900099DF11 /* ServiceGrantChangeFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99719C8E227349900099DF11 /* ServiceGrantChangeFactory.swift */; };
 		99A2C59A225B7558005997B8 /* TACS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99A2C590225B7558005997B8 /* TACS.framework */; };
@@ -40,9 +41,16 @@
 		99B826AF227AE495003AA20D /* TACSKeyRingFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99B826AE227AE495003AA20D /* TACSKeyRingFactory.swift */; };
 		99B826B1227AE819003AA20D /* ConnectionChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99B826B0227AE819003AA20D /* ConnectionChange.swift */; };
 		99B826B3227B08A7003AA20D /* DiscoveryChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99B826B2227B08A7003AA20D /* DiscoveryChange.swift */; };
+		99F19B282293F803003D9956 /* KeyholderStatusChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99F19B272293F803003D9956 /* KeyholderStatusChange.swift */; };
+		99F19B2B22941CB0003D9956 /* KeyholderManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99F19B2A22941CB0003D9956 /* KeyholderManagerTests.swift */; };
+		99F19B2D22942414003D9956 /* KeyholderManagerDefaultMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99F19B2C22942414003D9956 /* KeyholderManagerDefaultMock.swift */; };
+		99F19B2F2294445D003D9956 /* KeyholderChangeFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99F19B2E2294445D003D9956 /* KeyholderChangeFactory.swift */; };
+		99F19B3122944958003D9956 /* KeyholderInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99F19B3022944958003D9956 /* KeyholderInfo.swift */; };
 		99FF4EB0227C209200BAF772 /* BLEDiscoveryChangeFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99FF4EAF227C209200BAF772 /* BLEDiscoveryChangeFactory.swift */; };
 		99FF4EB2227C219A00BAF772 /* TACSDiscoveryChangeFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99FF4EB1227C219A00BAF772 /* TACSDiscoveryChangeFactory.swift */; };
 		99FF4EB4227C277A00BAF772 /* TACSConnectionChangeFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99FF4EB3227C277A00BAF772 /* TACSConnectionChangeFactory.swift */; };
+		99FF4EB9227C714C00BAF772 /* KeyholderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99FF4EB8227C714C00BAF772 /* KeyholderManager.swift */; };
+		99FF4EBB227C719E00BAF772 /* KeyholderManagerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99FF4EBA227C719E00BAF772 /* KeyholderManagerType.swift */; };
 		E1DDBCEA7F5991B445B2D246 /* Pods_TACS_TACSTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B3D71515FAF4CF4AE5F758C /* Pods_TACS_TACSTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -77,6 +85,7 @@
 		9967F4CF227201200035AF30 /* VehicleAccessFeatureChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleAccessFeatureChange.swift; sourceTree = "<group>"; };
 		9967F4D322720D040035AF30 /* VehicleAccessFeatureResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleAccessFeatureResponse.swift; sourceTree = "<group>"; };
 		9967F4D6227300DC0035AF30 /* VehicleAccessManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VehicleAccessManagerTests.swift; sourceTree = "<group>"; };
+		9970A5A1229544D80078FFBB /* CBWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CBWrapper.swift; sourceTree = "<group>"; };
 		99719C8B22732A1A0099DF11 /* TACSManagerIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TACSManagerIntegrationTests.swift; sourceTree = "<group>"; };
 		99719C8E227349900099DF11 /* ServiceGrantChangeFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceGrantChangeFactory.swift; sourceTree = "<group>"; };
 		99A2C590225B7558005997B8 /* TACS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TACS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -93,9 +102,16 @@
 		99B826AE227AE495003AA20D /* TACSKeyRingFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TACSKeyRingFactory.swift; sourceTree = "<group>"; };
 		99B826B0227AE819003AA20D /* ConnectionChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionChange.swift; sourceTree = "<group>"; };
 		99B826B2227B08A7003AA20D /* DiscoveryChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscoveryChange.swift; sourceTree = "<group>"; };
+		99F19B272293F803003D9956 /* KeyholderStatusChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyholderStatusChange.swift; sourceTree = "<group>"; };
+		99F19B2A22941CB0003D9956 /* KeyholderManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyholderManagerTests.swift; sourceTree = "<group>"; };
+		99F19B2C22942414003D9956 /* KeyholderManagerDefaultMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyholderManagerDefaultMock.swift; sourceTree = "<group>"; };
+		99F19B2E2294445D003D9956 /* KeyholderChangeFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyholderChangeFactory.swift; sourceTree = "<group>"; };
+		99F19B3022944958003D9956 /* KeyholderInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyholderInfo.swift; sourceTree = "<group>"; };
 		99FF4EAF227C209200BAF772 /* BLEDiscoveryChangeFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BLEDiscoveryChangeFactory.swift; sourceTree = "<group>"; };
 		99FF4EB1227C219A00BAF772 /* TACSDiscoveryChangeFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TACSDiscoveryChangeFactory.swift; sourceTree = "<group>"; };
 		99FF4EB3227C277A00BAF772 /* TACSConnectionChangeFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TACSConnectionChangeFactory.swift; sourceTree = "<group>"; };
+		99FF4EB8227C714C00BAF772 /* KeyholderManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyholderManager.swift; sourceTree = "<group>"; };
+		99FF4EBA227C719E00BAF772 /* KeyholderManagerType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyholderManagerType.swift; sourceTree = "<group>"; };
 		9B3D71515FAF4CF4AE5F758C /* Pods_TACS_TACSTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TACS_TACSTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B206053133420692D413CF6A /* Pods-TACS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TACS.release.xcconfig"; path = "Target Support Files/Pods-TACS/Pods-TACS.release.xcconfig"; sourceTree = "<group>"; };
 		E73B173CB6E0D5D05649B0C6 /* Pods_TACS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TACS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -196,6 +212,7 @@
 				9967F4C82271D9CE0035AF30 /* SorcManagerDefaultMock.swift */,
 				9967F4CA2271DA1F0035AF30 /* TelematicsManagerDefaultMock.swift */,
 				9967F4CC2271DAD80035AF30 /* VehicleAccessManagerDefaultMock.swift */,
+				99F19B2C22942414003D9956 /* KeyholderManagerDefaultMock.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -226,6 +243,7 @@
 				99FF4EAF227C209200BAF772 /* BLEDiscoveryChangeFactory.swift */,
 				99FF4EB1227C219A00BAF772 /* TACSDiscoveryChangeFactory.swift */,
 				99FF4EB3227C277A00BAF772 /* TACSConnectionChangeFactory.swift */,
+				99F19B2E2294445D003D9956 /* KeyholderChangeFactory.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -254,6 +272,7 @@
 		99A2C592225B7558005997B8 /* TACS */ = {
 			isa = PBXGroup;
 			children = (
+				99FF4EB7227C713300BAF772 /* KeyholderManager */,
 				99B826A622787451003AA20D /* Model */,
 				99B8269F227843C2003AA20D /* TACSManager */,
 				9967F4CE2272008E0035AF30 /* VehicleAccessData */,
@@ -269,6 +288,7 @@
 		99A2C59D225B7558005997B8 /* TACSTests */ = {
 			isa = PBXGroup;
 			children = (
+				99F19B2922941C8E003D9956 /* KeyholderManager */,
 				99B826A9227ADE65003AA20D /* TACSKeyRing */,
 				99719C8D227349840099DF11 /* Helper */,
 				9967F4D5227300C30035AF30 /* VehicleAccessManager */,
@@ -307,6 +327,26 @@
 				99B826AC227ADF39003AA20D /* TACSKeyRingTests.swift */,
 			);
 			path = TACSKeyRing;
+			sourceTree = "<group>";
+		};
+		99F19B2922941C8E003D9956 /* KeyholderManager */ = {
+			isa = PBXGroup;
+			children = (
+				99F19B2A22941CB0003D9956 /* KeyholderManagerTests.swift */,
+			);
+			path = KeyholderManager;
+			sourceTree = "<group>";
+		};
+		99FF4EB7227C713300BAF772 /* KeyholderManager */ = {
+			isa = PBXGroup;
+			children = (
+				99FF4EB8227C714C00BAF772 /* KeyholderManager.swift */,
+				99FF4EBA227C719E00BAF772 /* KeyholderManagerType.swift */,
+				99F19B272293F803003D9956 /* KeyholderStatusChange.swift */,
+				99F19B3022944958003D9956 /* KeyholderInfo.swift */,
+				9970A5A1229544D80078FFBB /* CBWrapper.swift */,
+			);
+			path = KeyholderManager;
 			sourceTree = "<group>";
 		};
 		AEDD1D87B1A9208B2F601B75 /* Frameworks */ = {
@@ -546,18 +586,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				992F12DD226F037900B228FA /* TelematicsDataResponse.swift in Sources */,
+				99F19B3122944958003D9956 /* KeyholderInfo.swift in Sources */,
 				992F12D0226F023600B228FA /* TelematicsManagerType.swift in Sources */,
+				99F19B282293F803003D9956 /* KeyholderStatusChange.swift in Sources */,
 				99B826A822787500003AA20D /* TACSKeyRing.swift in Sources */,
 				9967F4BA226F5DEA0035AF30 /* VehileAccessManager.swift in Sources */,
 				9967F4D422720D040035AF30 /* VehicleAccessFeatureResponse.swift in Sources */,
 				992F12D1226F023600B228FA /* TelematicsManager.swift in Sources */,
+				9970A5A2229544D80078FFBB /* CBWrapper.swift in Sources */,
 				99A2C5AB225B764E005997B8 /* TACSManager.swift in Sources */,
 				992F12D9226F037900B228FA /* TelematicsDataChange.swift in Sources */,
 				992F12DC226F037900B228FA /* TripMetaData.swift in Sources */,
+				99FF4EBB227C719E00BAF772 /* KeyholderManagerType.swift in Sources */,
 				9967F4C122705EFF0035AF30 /* VehicleAccessFeature.swift in Sources */,
 				99B826B1227AE819003AA20D /* ConnectionChange.swift in Sources */,
 				992F12DB226F037900B228FA /* TelematicsData.swift in Sources */,
 				9967F4BC227059490035AF30 /* VehicleAccessManagerType.swift in Sources */,
+				99FF4EB9227C714C00BAF772 /* KeyholderManager.swift in Sources */,
 				9967F4D0227201200035AF30 /* VehicleAccessFeatureChange.swift in Sources */,
 				99B826B3227B08A7003AA20D /* DiscoveryChange.swift in Sources */,
 				992F12DA226F037900B228FA /* TelematicsDataError.swift in Sources */,
@@ -574,11 +619,14 @@
 				9967F4C92271D9CE0035AF30 /* SorcManagerDefaultMock.swift in Sources */,
 				99FF4EB2227C219A00BAF772 /* TACSDiscoveryChangeFactory.swift in Sources */,
 				9906D2B7226F45D400BAA285 /* TelematicsManagerTests.swift in Sources */,
+				99F19B2F2294445D003D9956 /* KeyholderChangeFactory.swift in Sources */,
+				99F19B2D22942414003D9956 /* KeyholderManagerDefaultMock.swift in Sources */,
 				99B826AD227ADF39003AA20D /* TACSKeyRingTests.swift in Sources */,
 				99FF4EB4227C277A00BAF772 /* TACSConnectionChangeFactory.swift in Sources */,
 				9967F4D7227300DC0035AF30 /* VehicleAccessManagerTests.swift in Sources */,
 				99A2C59F225B7558005997B8 /* TACSTests.swift in Sources */,
 				9967F4C62271B31F0035AF30 /* TACSManagerTests.swift in Sources */,
+				99F19B2B22941CB0003D9956 /* KeyholderManagerTests.swift in Sources */,
 				9967F4CB2271DA1F0035AF30 /* TelematicsManagerDefaultMock.swift in Sources */,
 				9967F4BF22705C210035AF30 /* TelematicsDataResponseTests.swift in Sources */,
 				9967F4CD2271DAD80035AF30 /* VehicleAccessManagerDefaultMock.swift in Sources */,

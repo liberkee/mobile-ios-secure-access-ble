@@ -16,9 +16,8 @@ public class TACSManager {
     private let queue: DispatchQueue
 
     // Here we store sorc id and vehicle ref of currently active vehicle
-    private var activeVehicle: (sorcID: SorcID, vehicleRef: VehicleRef)?
-    private var activeKeyRingForScan: TACSKeyRing?
-    private var activeKeyRingForConnect: TACSKeyRing?
+    private var activeVehicle: (sorcID: SorcID, vehicleRef: VehicleRef, keyholderID: SorcID?)?
+    private var activeKeyRing: TACSKeyRing?
 
     /// :nodoc:
     @available(*, deprecated: 1.0, message: "Use VehicleAccessManager or TelematicsManager instead.")
@@ -28,6 +27,8 @@ public class TACSManager {
     public let telematicsManager: TelematicsManagerType
     /// Vehicle access manager which can be used to control vehicle access
     public let vehicleAccessManager: VehicleAccessManagerType
+    /// Keyholder manager which can be used to retrieve keyholder status
+    public let keyholderManager: KeyholderManagerType
 
     // MARK: - BLE Interface
 
@@ -45,7 +46,7 @@ public class TACSManager {
     }
 
     internal func scanForVehiclesInternal(vehicleRefs: [VehicleRef], keyRing: TACSKeyRing) {
-        activeKeyRingForScan = keyRing
+        activeKeyRing = keyRing
         var foundVehicleWithMatchingSorcID = false
         vehicleRefs.forEach { ref in
             if keyRing.sorcID(for: ref) != nil {
@@ -71,7 +72,6 @@ public class TACSManager {
     }
 
     internal func stopScanningInternal() {
-        activeKeyRingForScan = nil
         internalSorcManager.stopDiscovery()
     }
 
@@ -103,7 +103,7 @@ public class TACSManager {
     }
 
     internal func connectInternal(vehicleAccessGrantId: String, keyRing: TACSKeyRing) {
-        activeKeyRingForConnect = keyRing
+        activeKeyRing = keyRing
         guard let tacsLease = keyRing.leaseToken(for: vehicleAccessGrantId),
             let tacsBlobData = keyRing.blobData(for: tacsLease.sorcId) else {
             // blob data error
@@ -121,13 +121,12 @@ public class TACSManager {
             return
         }
 
-        // TODO: counter is a string?????
         let tacsBlob = tacsBlobData.blob
         guard let blob = try? SecureAccessBLE.LeaseTokenBlob(messageCounter: Int(tacsBlob.blobMessageCounter)!, data: tacsBlob.blob) else {
             return
         }
 
-        activeVehicle = (tacsLease.sorcId, tacsBlobData.externalVehicleRef)
+        activeVehicle = (tacsLease.sorcId, tacsBlobData.externalVehicleRef, tacsBlobData.keyholderId)
         internalSorcManager.connectToSorc(leaseToken: leaseToken, leaseTokenBlob: blob)
     }
 
@@ -147,11 +146,14 @@ public class TACSManager {
     init(sorcManager: SorcManagerType,
          telematicsManager: TelematicsManagerType,
          vehicleAccessManager: VehicleAccessManagerType,
+         keyholderManager: KeyholderManagerType,
          queue: DispatchQueue) {
         internalSorcManager = sorcManager
         self.telematicsManager = telematicsManager
         self.vehicleAccessManager = vehicleAccessManager
+        self.keyholderManager = keyholderManager
         self.queue = queue
+        (self.keyholderManager as? KeyholderManager)?.keyhodlerIDProvider = { self.activeVehicle?.keyholderID }
         internalSorcManager.registerInterceptor(telematicsManager)
         internalSorcManager.registerInterceptor(vehicleAccessManager)
         subscribeToDiscoveryChanges()
@@ -162,9 +164,11 @@ public class TACSManager {
         let sorcManager = SorcManager(queue: queue)
         let telematicsManager = TelematicsManager(sorcManager: sorcManager, queue: queue)
         let vehicleAccessManager = VehicleAccessManager(sorcManager: sorcManager, queue: queue)
+        let keyholderManager = KeyholderManager(queue: queue)
         self.init(sorcManager: sorcManager,
                   telematicsManager: telematicsManager,
                   vehicleAccessManager: vehicleAccessManager,
+                  keyholderManager: keyholderManager,
                   queue: queue)
     }
 
@@ -184,7 +188,7 @@ public class TACSManager {
     private func subscribeToDiscoveryChanges() {
         internalSorcManager.discoveryChange.subscribe { [weak self] change in
             guard let strongSelf = self,
-                let keyRing = strongSelf.activeKeyRingForScan else { return }
+                let keyRing = strongSelf.activeKeyRing else { return }
             guard let transformedChange = try? TACS.DiscoveryChange(from: change, sorcToVehicleRefMap: keyRing.sorcToVehicleRefDict()) else {
                 return
             }

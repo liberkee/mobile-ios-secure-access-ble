@@ -34,9 +34,11 @@ class TACSManagerIntegrationTests: QuickSpec {
             queue = DispatchQueue.main
             let telematicsManager = TelematicsManager(sorcManager: sorcManagerMock, queue: queue)
             let vehicleAccessManager = VehicleAccessManager(sorcManager: sorcManagerMock, queue: queue)
+            let keyholderManager = KeyholderManager(queue: queue)
             sut = TACSManager(sorcManager: sorcManagerMock,
                               telematicsManager: telematicsManager,
                               vehicleAccessManager: vehicleAccessManager,
+                              keyholderManager: keyholderManager,
                               queue: queue)
             telematicsDataChanges = []
             vehicleAccessChanges = []

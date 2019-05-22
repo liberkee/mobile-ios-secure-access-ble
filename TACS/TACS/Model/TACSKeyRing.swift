@@ -44,7 +44,7 @@ public struct TacsLeaseTokenTableEntry: Decodable {
 public struct TacsSorcBlobTableEntry: Decodable {
     let tenantId: String
     let externalVehicleRef: VehicleRef
-    let keyholderId: String?
+    let keyholderId: UUID?
     let blob: LeaseTokenBlob
 }
 
