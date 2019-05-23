@@ -95,7 +95,7 @@ public class TACSManager {
         activeVehicleSetup = setup
         return true
     }
-    
+
     /// Resets the manager state. Disconnects from vehicle, stops scanning and resets
     /// lease data which was previously set up via `useAccessGrant(with: from:)`
     public func reset() {

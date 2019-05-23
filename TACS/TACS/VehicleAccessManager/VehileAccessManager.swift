@@ -20,6 +20,7 @@ class VehicleAccessManager: VehicleAccessManagerType {
         self.sorcManager = sorcManager
         self.queue = queue
     }
+
     /// Requests a feature from vehicle.
     ///
     /// - Parameter vehicleAccessFeature: Feature which has to be requested.

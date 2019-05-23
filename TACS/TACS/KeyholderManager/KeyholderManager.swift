@@ -73,6 +73,13 @@ public class KeyholderManager: NSObject, KeyholderManagerType {
         }
     }
 
+    func centralManagerDidUpdateState_(_ centralManager: CBCentralManagerType) {
+        if keyholderChange.state == .searching {
+            centralManager.stopScan()
+            keyholderChangeSubject.onNext(KeyholderStatusChange(state: .stopped, action: .failed(.bluetoothOff)))
+        }
+    }
+
     private func onKeyholderDiscovered(keyholderInfo: KeyholderInfo) {
         scanTimeoutTimer?.suspend()
         centralManager.stopScan()
@@ -82,7 +89,7 @@ public class KeyholderManager: NSObject, KeyholderManagerType {
 }
 
 extension KeyholderManager {
-    public convenience init(queue: DispatchQueue) {
+    convenience init(queue: DispatchQueue) {
         let centralManager = CBCentralManager(delegate: nil, queue: queue,
                                               options: [CBPeripheralManagerOptionShowPowerAlertKey: 0])
         self.init(centralManager: centralManager, queue: queue)
@@ -90,10 +97,12 @@ extension KeyholderManager {
 }
 
 extension KeyholderManager: CBCentralManagerDelegate {
-    public func centralManagerDidUpdateState(_: CBCentralManager) {}
+    public func centralManagerDidUpdateState(_ central: CBCentralManager) {
+        centralManagerDidUpdateState_(central)
+    }
 
-     public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
-                                advertisementData: [String: Any], rssi RSSI: NSNumber) {
+    public func centralManager(_ central: CBCentralManager, didDiscover peripheral: CBPeripheral,
+                               advertisementData: [String: Any], rssi RSSI: NSNumber) {
         centralManager_(central as CBCentralManagerType,
                         didDiscover: peripheral as CBPeripheralType,
                         advertisementData: advertisementData,

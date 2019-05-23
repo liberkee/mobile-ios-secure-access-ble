@@ -89,6 +89,35 @@ class KeyholderManagerTests: QuickSpec {
                 }
             }
 
+            context("deviceOff") {
+                it("notifies error") {
+                    centralManagerMock.state = .poweredOff
+                    sut.keyholderIDProvider = { UUID(uuidString: "be2fecaf-734b-4252-8312-59d477200a20")! }
+                    sut.requestStatusInternal(timeout: 5.0)
+                    expect(receivedChanges).to(haveCount(2))
+                    expect(receivedChanges.last) == KeyholderStatusChange(state: .stopped, action: .failed(.bluetoothOff))
+                }
+            }
+
+            context("device off during discovery") {
+                beforeEach {
+                    centralManagerMock.state = .poweredOn
+                    sut.keyholderIDProvider = { UUID(uuidString: "be2fecaf-734b-4252-8312-59d477200a20")! }
+                    sut.requestStatusInternal(timeout: 5.0)
+                    centralManagerMock.state = .poweredOff
+                    sut.centralManagerDidUpdateState_(centralManagerMock)
+                }
+
+                it("stops discovery") {
+                    expect(centralManagerMock.stopScanCalled) == true
+                }
+
+                it("notifies error") {
+                    expect(receivedChanges).to(haveCount(3))
+                    expect(receivedChanges.last) == KeyholderStatusChange(state: .stopped, action: .failed(.bluetoothOff))
+                }
+            }
+
             context("keyholder id provided and device on") {
                 beforeEach {
                     sut.keyholderIDProvider = { UUID(uuidString: "be2fecaf-734b-4252-8312-59d477200a20")! }

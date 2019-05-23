@@ -75,7 +75,7 @@ class ViewController: UIViewController {
     
     @IBAction func connect(_ sender: Any) {
         // Start scanning for vehicles
-        tacsManager.scan()
+        tacsManager.startScanning()
     }
     
     @IBAction func lockDoors(_ sender: Any) {
@@ -91,7 +91,8 @@ class ViewController: UIViewController {
     }
     
     @IBAction func requestKeyholderStatus(_ sender: Any) {
-        tacsManager.keyholderManager.requestStatus(timeout: 20.0)
+        keyholderStatusOutputView.text = ""
+        tacsManager.keyholderManager.requestStatus(timeout: 10.0)
     }
     
     private func onDiscoveryChange(_ discoveryChange: TACS.DiscoveryChange) {
@@ -223,8 +224,8 @@ extension KeyholderInfo: CustomStringConvertible {
         return "keyholderId: " + keyholderId.uuidString
             + "\nbatteryVoltage: " + String(batteryVoltage)
             + "\nactivationCount: " + String(activationCount)
-            + "\nisCardInserted" + (isCardInserted ? "true" : "false")
-            + "\nbatteryChangeCount" + String(batteryChangeCount)
+            + "\nisCardInserted: " + (isCardInserted ? "true" : "false")
+            + "\nbatteryChangeCount: " + String(batteryChangeCount)
     }
 }
 
