@@ -25,16 +25,17 @@ Copyright © 2018 Huf Secure Mobile GmbH. All rights reserved.
 ### Create binary framework
 You can create the framework by running
 ```bash
-carthage build --no-skip-current
+./build_release.sh
 ```
 in the project root.
 
-The output can be found in `Carthage/Build/iOS` folder by default.
+The output can be found in `BUILD` folder.
+
 ### Installation
 
 To install the framework in the project via Cocoapods
-* copy contents of `Carthage/Build/iOS` and `distribution` folders in one folder, e.g. `Libs/TACS` 
-* reference the folder in your project
+* copy contents of `BUILD` into a folder in your project, e.g. `Libs/TACS` 
+* reference the folder in your project (see below)
 
 Since both `SecureAccessBLE` and `TACS` frameworks are necessary, a `Podfile` would look like
 
