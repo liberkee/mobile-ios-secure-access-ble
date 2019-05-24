@@ -82,6 +82,7 @@ public class TACSManager {
         }
 
         let tacsBlob = tacsBlobData.blob
+        // throws if data is empty
         guard let blob = try? SecureAccessBLE.LeaseTokenBlob(messageCounter: Int(tacsBlob.blobMessageCounter)!, data: tacsBlob.blob) else {
             return false
         }

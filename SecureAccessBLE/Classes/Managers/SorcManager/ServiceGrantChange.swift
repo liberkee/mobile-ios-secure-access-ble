@@ -18,6 +18,12 @@ public struct ServiceGrantChange: ChangeType, Equatable {
     public static func initialWithState(_ state: ServiceGrantChange.State) -> ServiceGrantChange {
         return ServiceGrantChange(state: state, action: .initial)
     }
+    
+    /// :nodoc:
+    public init(state: State, action: Action) {
+        self.state = state
+        self.action = action
+    }
 }
 
 extension ServiceGrantChange {
@@ -25,6 +31,11 @@ extension ServiceGrantChange {
     public struct State: Equatable {
         /// Currently requested service grant IDs
         public let requestingServiceGrantIDs: [ServiceGrantID]
+        
+        /// :nodoc:
+        public init(requestingServiceGrantIDs: [ServiceGrantID]) {
+            self.requestingServiceGrantIDs = requestingServiceGrantIDs
+        }
     }
 }
 
