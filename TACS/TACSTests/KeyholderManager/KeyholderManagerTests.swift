@@ -132,6 +132,12 @@ class KeyholderManagerTests: QuickSpec {
                     expect(receivedChanges).to(haveCount(2))
                     expect(receivedChanges.last) == KeyholderStatusChange(state: .searching, action: .discoveryStarted)
                 }
+                it("does not start discovery twice") {
+                    sut.requestStatusInternal(timeout: 5.0)
+                    sut.requestStatusInternal(timeout: 5.0)
+                    expect(receivedChanges).to(haveCount(2))
+                    expect(receivedChanges.last) == KeyholderStatusChange(state: .searching, action: .discoveryStarted)
+                }
             }
             context("timeout") {
                 it("notifies timeout") {

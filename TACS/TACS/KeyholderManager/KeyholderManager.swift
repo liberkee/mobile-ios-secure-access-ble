@@ -35,6 +35,7 @@ public class KeyholderManager: NSObject, KeyholderManagerType {
     }
 
     internal func requestStatusInternal(timeout: TimeInterval) {
+        guard keyholderChange.state == .stopped else { return }
         guard keyholderIDProvider() != nil else {
             let change = KeyholderStatusChange(state: .stopped, action: .failed(.keyholderIdMissing))
             keyholderChangeSubject.onNext(change)
@@ -45,7 +46,6 @@ public class KeyholderManager: NSObject, KeyholderManagerType {
             keyholderChangeSubject.onNext(change)
             return
         }
-
         let cbuuid = CBUUID(string: keyholderServiceId)
         centralManager.scanForPeripherals(withServices: [cbuuid], options: nil)
         scheduleTimeoutTimer(timeout: timeout)
@@ -75,6 +75,7 @@ public class KeyholderManager: NSObject, KeyholderManagerType {
 
     func centralManagerDidUpdateState_(_ centralManager: CBCentralManagerType) {
         if keyholderChange.state == .searching {
+            scanTimeoutTimer?.suspend()
             centralManager.stopScan()
             keyholderChangeSubject.onNext(KeyholderStatusChange(state: .stopped, action: .failed(.bluetoothOff)))
         }

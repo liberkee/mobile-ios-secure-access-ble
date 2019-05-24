@@ -24,8 +24,6 @@ class ViewController: UIViewController {
     let keyRing = TACSKeyRingProvider.keyRing()
     var vehicleAccessGrantId: String = "MySampleAccessGrantId"
     
-    var vehicleDiscovered = false
-    
     @IBOutlet weak var statusLabel: UILabel!
     @IBOutlet weak var telematicsOutputView: UITextView!
     @IBOutlet weak var keyholderStatusOutputView: UITextView!
@@ -99,9 +97,8 @@ class ViewController: UIViewController {
         switch discoveryChange.action {
         case .discovered(vehicleRef: let vehicleRef):
             // If the vehicle is discovered, we stop scanning and try to connect to the vehicle.
-            vehicleDiscovered = true
             tacsManager.stopScanning()
-            connect()
+            tacsManager.connect()
         default: break
         }
     }
@@ -189,11 +186,6 @@ class ViewController: UIViewController {
         DispatchQueue.main.async {
             self.keyholderStatusOutputView.insertText(outputText)
         }
-    }
-    
-    private func connect() {
-        guard vehicleDiscovered == true else { return }
-        tacsManager.connect()
     }
     
     private func getStatus() {
