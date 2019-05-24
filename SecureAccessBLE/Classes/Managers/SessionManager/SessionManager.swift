@@ -301,13 +301,17 @@ class SessionManager: SessionManagerType {
     // MARK: - Heartbeat handling
 
     private func scheduleHeartbeatTimers() {
-        sendHeartbeatsTimer = RepeatingBackgroundTimer.scheduledTimer(timeInterval: configuration.heartbeatTimeout,
-                                                                      queue: timerQueue,
-                                                                      handler: startSendingHeartbeat)
+        sendHeartbeatsTimer = RepeatingBackgroundTimer.scheduledTimer(
+            timeInterval: configuration.heartbeatTimeout,
+            queue: timerQueue,
+            handler: startSendingHeartbeat
+        )
 
-        checkHeartbeatsResponseTimer = RepeatingBackgroundTimer.scheduledTimer(timeInterval: configuration.heartbeatTimeout,
-                                                                               queue: timerQueue,
-                                                                               handler: checkOutHeartbeatResponse)
+        checkHeartbeatsResponseTimer = RepeatingBackgroundTimer.scheduledTimer(
+            timeInterval: configuration.heartbeatTimeout,
+            queue: timerQueue,
+            handler: checkOutHeartbeatResponse
+        )
     }
 
     @objc func startSendingHeartbeat() {

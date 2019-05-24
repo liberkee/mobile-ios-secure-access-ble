@@ -6,17 +6,19 @@
 
 import Foundation
 
-/// A custom timer implementation influenced by https://medium.com/over-engineering/a-background-repeating-timer-in-swift-412cecfd2ef9
-/// RepeatingTimer mimics the API of DispatchSourceTimer but in a way that prevents
-/// crashes that occur from calling resume multiple times on a timer that is
-/// already resumed (noted by https://github.com/SiftScience/sift-ios/issues/52
+/// :nodoc:
+// A custom timer implementation influenced by https://medium.com/over-engineering/a-background-repeating-timer-in-swift-412cecfd2ef9
+// RepeatingTimer mimics the API of DispatchSourceTimer but in a way that prevents
+// crashes that occur from calling resume multiple times on a timer that is
+// already resumed (noted by https://github.com/SiftScience/sift-ios/issues/52
 public class RepeatingBackgroundTimer {
     private var timeInterval: TimeInterval
     private let queue: DispatchQueue
 
+    /// :nodoc:
     public static func scheduledTimer(timeInterval: TimeInterval,
-                               queue: DispatchQueue,
-                               handler: @escaping () -> Void) -> RepeatingBackgroundTimer {
+                                      queue: DispatchQueue,
+                                      handler: @escaping () -> Void) -> RepeatingBackgroundTimer {
         let timer = RepeatingBackgroundTimer(timeInterval: timeInterval, queue: queue)
         timer.eventHandler = handler
         timer.resume()
@@ -63,6 +65,7 @@ public class RepeatingBackgroundTimer {
         eventHandler = nil
     }
 
+    /// :nodoc:
     public func resume() {
         if state == .resumed {
             return
@@ -71,6 +74,7 @@ public class RepeatingBackgroundTimer {
         timer.resume()
     }
 
+    /// :nodoc:
     public func suspend() {
         if state == .suspended {
             return
