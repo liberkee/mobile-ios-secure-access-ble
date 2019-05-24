@@ -87,6 +87,7 @@ extension DiscoveryChange {
         /// Discovery could not be started due to missing data in key ring
         case missingBlobData
 
+        // swiftlint:disable:next cyclomatic_complexity
         init(from action: SecureAccessBLE.DiscoveryChange.Action, sorcToVehicleRefMap: SorcToVehicleRefMap) throws {
             switch action {
             case .initial:

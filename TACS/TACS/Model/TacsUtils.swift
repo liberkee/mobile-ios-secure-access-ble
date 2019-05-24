@@ -7,6 +7,7 @@
 import Foundation
 
 public extension TACSKeyRing {
+    /// :nodoc:
     // swiftlint:disable:next function_parameter_count
     static func craftKeyring(leaseTokenId: UUID,
                              leaseId: UUID,

@@ -14,6 +14,7 @@ public struct KeyholderInfo: Equatable {
     private let isCardInsertedRange = 24 ..< 25
     private let batteryChangeCountRange = 25 ..< 26
     private let fullVoltageScale = 3.6
+    private let advertisedCompanyId: [UInt8] = [0x0A, 0x07]
 
     public let keyholderId: UUID
     public let batteryVoltage: Double
@@ -22,9 +23,8 @@ public struct KeyholderInfo: Equatable {
     public let batteryChangeCount: Int
 
     init?(manufacturerData: Data) {
-        guard manufacturerData.count == manufacturerDataLength else {
-            return nil
-        }
+        guard manufacturerData.count == manufacturerDataLength else { return nil }
+        guard manufacturerData.subdata(in: 0 ..< 2) == Data(bytes: advertisedCompanyId) else { return nil }
         // keyholder id
         let keyholderIdString = manufacturerData.subdata(in: keyholderIdRange).toHexString()
         guard let id = UUID(hexString: keyholderIdString) else { return nil }

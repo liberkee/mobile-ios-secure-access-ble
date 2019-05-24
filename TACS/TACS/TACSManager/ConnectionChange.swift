@@ -114,6 +114,7 @@ extension ConnectionChange {
         /// Connection lost with `ConnectionLostError`
         case connectionLost(error: ConnectionLostError)
 
+        // swiftlint:disable:next cyclomatic_complexity
         init(from action: SecureAccessBLE.ConnectionChange.Action, activeSorcID: SorcID, activeVehicleRef: VehicleRef) throws {
             switch action {
             case .initial:

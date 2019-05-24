@@ -66,6 +66,7 @@ class KeyholderManagerTests: QuickSpec {
         }
     }
 
+    // swiftlint:disable:next function_body_length
     override func spec() {
         var centralManagerMock: CBCentralManagerMock!
         var sut: KeyholderManager!
