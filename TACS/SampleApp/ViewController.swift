@@ -35,6 +35,11 @@ class ViewController: UIViewController {
         let queue = DispatchQueue(label: "com.queue.blehandling")
         tacsManager = TACSManager(queue: queue)
         
+        tacsManager.isBluetoothEnabled.subscribe { [weak self] bluetoothOn in
+            self?.onBluetoothStatusChange(bluetoothOn)
+        }
+        .disposed(by: disposeBag)
+        
         // Subscribe to discovery change signal
         tacsManager.discoveryChange.subscribe { [weak self] discoveryChange in
             // handle discovery state changes
@@ -78,10 +83,12 @@ class ViewController: UIViewController {
     
     @IBAction func lockDoors(_ sender: Any) {
         tacsManager.vehicleAccessManager.requestFeature(.lock)
+        tacsManager.vehicleAccessManager.requestFeature(.lockStatus)
     }
     
     @IBAction func unlockDoors(_ sender: Any) {
         tacsManager.vehicleAccessManager.requestFeature(.unlock)
+        tacsManager.vehicleAccessManager.requestFeature(.lockStatus)
     }
     
     @IBAction func getTelematicsData(_ sender: Any) {
@@ -93,9 +100,14 @@ class ViewController: UIViewController {
         tacsManager.keyholderManager.requestStatus(timeout: 10.0)
     }
     
+    private func onBluetoothStatusChange(_ bluetoothOn: Bool) {
+        // Reflect on ble device change by providing necessary feedback to the user.
+        // Running discoveries for vehicle or keyholder will automatically stop and notified via signals.
+    }
+    
     private func onDiscoveryChange(_ discoveryChange: TACS.DiscoveryChange) {
         switch discoveryChange.action {
-        case .discovered(vehicleRef: let vehicleRef):
+        case .discovered:
             // If the vehicle is discovered, we stop scanning and try to connect to the vehicle.
             tacsManager.stopScanning()
             tacsManager.connect()
@@ -104,106 +116,44 @@ class ViewController: UIViewController {
     }
     
     private func onVehicleAccessFeatureChange(_ vehicleAccessFeatureChange: VehicleAccessFeatureChange) {
-        var statusText: String?
         if case let .responseReceived(response) = vehicleAccessFeatureChange.action {
             if case let .success(status: status) = response {
-                switch status {
-                case .lock:
-                    statusText = "Locked"
-                case .unlock:
-                    statusText = "Unlocked"
-                case .enableIgnition: // update UI if needed
-                    break
-                case .disableIgnition: // update UI if needed
-                    break
-                case .lockStatus(let locked):
-                    statusText = locked ? "Locked" : "Unlocked"
-                case .ignitionStatus(let enabled): // update UI if needed
-                    break
+                DispatchQueue.main.async {
+                    self.statusLabel.text = String(describing: status)
                 }
-            }
-        }
-        if let text = statusText {
-            DispatchQueue.main.async {
-                self.statusLabel.text = text
             }
         }
     }
     
     private func onConnectionChange(_ connectionChange: TACS.ConnectionChange) {
-        let statusText: String
-        switch connectionChange.state {
-        case .disconnected:
-            statusText = "Disconnected"
-            print("Sorc disconnected")
-        case .connecting(let sorcID, let state):
-            statusText = "Connecting..."
-            print("Connecting to sorc with id \(sorcID). Current state \(state)")
-        case .connected(let sorcID):
-            statusText = "Connected"
-            print("Connected to sorc with id \(sorcID)")
-            getStatus()
-        }
         DispatchQueue.main.async {
-            self.statusLabel.text = statusText
+            self.statusLabel.text = String(describing: connectionChange.action)
+            // You can also inspect connectionChange.state at any time to check the connection state
         }
     }
     
     private func onTelematicsDataChange(_ telematicsDataChange: TelematicsDataChange) {
-        print("Telematics data change with state:")
-        if telematicsDataChange.state.count > 0 {
-            print("Requesting telematics data with types: \(telematicsDataChange.state)")
-        } else {
-            print("No telematics data requests pending")
-        }
-        print("Action:")
-        switch telematicsDataChange.action {
-        case .initial:
-            print("Initial telematics change")
-        case let .requestingData(types: types):
-            print("Requesting data with types \(types)")
-        case let .responseReceived(responses: responses):
-            print("Response received with telematics responses: \(responses)")
-            DispatchQueue.main.async {
-                self.telematicsOutputView.text = self.outputStringFromTelematicsData(responses)
-            }
+        DispatchQueue.main.async {
+            self.telematicsOutputView.text = String(describing: telematicsDataChange.action)
         }
     }
     
     private func onKeyholderStatusChange(_ change: KeyholderStatusChange) {
-        let outputText: String
-        switch change.action {
-        case .initial:
-            outputText = "\nInitial action"
-        case .discoveryStarted:
-            outputText = "\nDiscovery started"
-        case .discovered(let keyholderInfo):
-            outputText = "\nDiscovered keyholder:\n" + String(describing: keyholderInfo)
-        case .failed(let error):
-            outputText = "\nDiscovery failed with error:\n" + String(describing: error)
-            break
-        }
         DispatchQueue.main.async {
-            self.keyholderStatusOutputView.insertText(outputText)
+            self.keyholderStatusOutputView.insertText(String(describing: change.action))
         }
     }
     
     private func getStatus() {
         tacsManager.vehicleAccessManager.requestFeature(.lockStatus)
     }
-    
-    private func outputStringFromTelematicsData(_ responses: [TelematicsDataResponse]) -> String {
-        let result: [String] = responses.map { response in
-            switch response {
-            case let .success(data):
-                return String(describing: data)
-            case let .error(type, error):
-                return "\(type) error: \(error)"
-            }
-        }
-        return result.joined(separator: "\n\n")
-    }
 }
+
+
+
+//MARK: - String representations
+// This section contains conformances to `CustomStringConvertible` for some types.
+
 
 extension TelematicsData: CustomStringConvertible {
     public var description: String {
@@ -228,5 +178,89 @@ extension KeyholderStatusError: CustomStringConvertible {
         case .keyholderIdMissing: return "keyholder id is missing"
         case .scanTimeout: return "discovery timed out"
         }
+    }
+}
+
+
+extension TACS.ConnectionChange.Action: CustomStringConvertible {
+    public var description: String {
+        let result: String
+        switch self {
+        case .initial: result = "Initial action"
+        case .connect: result = "Connecting..."
+        case .physicalConnectionEstablished: result = "Physical connection established"
+        case .transportConnectionEstablished: result = "Transport connection established"
+        case .connectionEstablished: result = "Connected"
+        case .connectingFailed(vehicleRef: _, error: let error): result = "Connecting failed with error: \(String(describing: error))"
+        case .connectingFailedDataMissing: result = "Connecting failed due to missing blob data"
+        case .disconnect: result = "Disconnected"
+        case .connectionLost(let error): result = "Connection lost with error: \(String(describing: error))"
+        }
+        return result
+    }
+}
+
+extension TACS.ConnectingFailedError: CustomStringConvertible {
+    public var description: String {
+        let result: String
+        switch self {
+        case .blobOutdated: result = "Blob data is outdated"
+        case .challengeFailed: result = "Challenge failed"
+        case .invalidMTUResponse: result = "Invalid MTU response"
+        case .invalidTimeFrame: result = "Invalid time frame"
+        case .physicalConnectingFailed: result = "Physical connecting failed"
+        }
+        return result
+    }
+}
+
+extension VehicleAccessFeatureStatus: CustomStringConvertible {
+    public var description: String {
+        let result: String
+        switch self {
+        case .disableIgnition: result = "Disable ignition..."
+        case .enableIgnition: result = "Enable ignition..."
+        case .ignitionStatus(enabled: let enabled): result = enabled ? "Ignition enabled" : "Ignition disabled"
+        case .lock: result = "Lock doors..."
+        case .unlock: result = "Unlock doors..."
+        case .lockStatus(locked: let locked): result = locked ? "Doors locked" : "Doors unlocked"
+        }
+        return result
+    }
+}
+
+extension TelematicsDataChange.Action: CustomStringConvertible {
+    public var description: String {
+        let result: String
+        switch self {
+        case .initial: result = "Initial action"
+        case .requestingData(types: let types): result = "Requesting data with types: \(String(describing: types))"
+        case .responseReceived(responses: let responses):
+            let responsesDescription = responses.map { String(describing: $0) }.joined(separator: "\n")
+            result = "Response received: \(String(describing: responsesDescription))"
+        }
+        return result
+    }
+}
+
+extension TelematicsDataResponse: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case let .success(data): return String(describing: data)
+        case let .error(type, error): return "\(type) error: \(error)"
+        }
+    }
+}
+
+extension KeyholderStatusChange.Action: CustomStringConvertible {
+    public var description: String {
+        let result: String
+        switch self {
+        case .initial: result = "Initial action"
+        case .discoveryStarted: result = "Discovery started"
+        case .discovered(let info): result = "Discovered keyholder:\n\(String(describing: info))"
+        case .failed(let error): result = "Keyholder discovery failed with error:\n\(String(describing: error))"
+        }
+        return result
     }
 }
