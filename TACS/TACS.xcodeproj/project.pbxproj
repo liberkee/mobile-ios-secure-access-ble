@@ -36,6 +36,7 @@
 		9970A5BC22957BD20078FFBB /* TACS.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 99A2C590225B7558005997B8 /* TACS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9970A5BF22957D5D0078FFBB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9970A5BE22957D5D0078FFBB /* Main.storyboard */; };
 		9970A5C122957D6B0078FFBB /* mock_keyring.json in Resources */ = {isa = PBXBuildFile; fileRef = 9970A5C022957D6B0078FFBB /* mock_keyring.json */; };
+		9970A5E52296E7670078FFBB /* TacsUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9970A5E42296E7670078FFBB /* TacsUtils.swift */; };
 		99719C8C22732A1A0099DF11 /* TACSManagerIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99719C8B22732A1A0099DF11 /* TACSManagerIntegrationTests.swift */; };
 		99719C8F227349900099DF11 /* ServiceGrantChangeFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99719C8E227349900099DF11 /* ServiceGrantChangeFactory.swift */; };
 		99A2C59A225B7558005997B8 /* TACS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99A2C590225B7558005997B8 /* TACS.framework */; };
@@ -126,6 +127,7 @@
 		9970A5B522957B940078FFBB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9970A5BE22957D5D0078FFBB /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		9970A5C022957D6B0078FFBB /* mock_keyring.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = mock_keyring.json; sourceTree = "<group>"; };
+		9970A5E42296E7670078FFBB /* TacsUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TacsUtils.swift; sourceTree = "<group>"; };
 		99719C8B22732A1A0099DF11 /* TACSManagerIntegrationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TACSManagerIntegrationTests.swift; sourceTree = "<group>"; };
 		99719C8E227349900099DF11 /* ServiceGrantChangeFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceGrantChangeFactory.swift; sourceTree = "<group>"; };
 		99A2C590225B7558005997B8 /* TACS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TACS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -384,6 +386,7 @@
 			isa = PBXGroup;
 			children = (
 				99B826A722787500003AA20D /* TACSKeyRing.swift */,
+				9970A5E42296E7670078FFBB /* TacsUtils.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -758,6 +761,7 @@
 				99A2C5AB225B764E005997B8 /* TACSManager.swift in Sources */,
 				992F12D9226F037900B228FA /* TelematicsDataChange.swift in Sources */,
 				992F12DC226F037900B228FA /* TripMetaData.swift in Sources */,
+				9970A5E52296E7670078FFBB /* TacsUtils.swift in Sources */,
 				99FF4EBB227C719E00BAF772 /* KeyholderManagerType.swift in Sources */,
 				9967F4C122705EFF0035AF30 /* VehicleAccessFeature.swift in Sources */,
 				99B826B1227AE819003AA20D /* ConnectionChange.swift in Sources */,
