@@ -32,7 +32,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let queue = DispatchQueue(label: "com.queue.blehandling")
+        let queue = DispatchQueue(label: "com.hufsm.blehandling")
         tacsManager = TACSManager(queue: queue)
         
         // Subscribe to bluetooth status signal
