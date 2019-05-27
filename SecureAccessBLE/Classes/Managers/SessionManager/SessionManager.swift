@@ -307,6 +307,7 @@ class SessionManager: SessionManagerType {
             handler: startSendingHeartbeat
         )
 
+        lastHeartbeatResponseDate = Date()
         checkHeartbeatsResponseTimer = RepeatingBackgroundTimer.scheduledTimer(
             timeInterval: configuration.heartbeatTimeout,
             queue: timerQueue,
@@ -326,7 +327,8 @@ class SessionManager: SessionManagerType {
     }
 
     @objc func checkOutHeartbeatResponse() {
-        if (lastHeartbeatResponseDate.timeIntervalSinceNow + configuration.heartbeatTimeout) < 0 {
+        let offset = lastHeartbeatResponseDate.timeIntervalSinceNow + configuration.heartbeatTimeout + 1
+        if offset < 0 {
             disconnect(withAction: .connectionLost(error: .heartbeatTimedOut))
         }
     }
