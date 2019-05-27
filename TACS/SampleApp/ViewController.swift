@@ -24,7 +24,7 @@ class ViewController: UIViewController {
     let keyRing = TACSKeyRingProvider.keyRing()
     var vehicleAccessGrantId: String = "MySampleAccessGrantId"
     
-    @IBOutlet weak var statusLabel: UILabel!
+    @IBOutlet weak var vehicleStatusOutputView: UITextView!
     @IBOutlet weak var telematicsOutputView: UITextView!
     @IBOutlet weak var keyholderStatusOutputView: UITextView!
     
@@ -35,6 +35,7 @@ class ViewController: UIViewController {
         let queue = DispatchQueue(label: "com.queue.blehandling")
         tacsManager = TACSManager(queue: queue)
         
+        // Subscribe to bluetooth status signal
         tacsManager.isBluetoothEnabled.subscribe { [weak self] bluetoothOn in
             self?.onBluetoothStatusChange(bluetoothOn)
         }
@@ -53,7 +54,9 @@ class ViewController: UIViewController {
             }
             .disposed(by: disposeBag)
         
+        // Subscribe to vehicle access change signal
         tacsManager.vehicleAccessManager.vehicleAccessChange.subscribe { [weak self] vehicleAccessChange in
+            // Handle vehicle access changes
             self?.onVehicleAccessFeatureChange(vehicleAccessChange)
             }
             .disposed(by: disposeBag)
@@ -77,6 +80,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func connect(_ sender: Any) {
+        if case .connected = tacsManager.connectionChange.state { return }
         // Start scanning for vehicles
         tacsManager.startScanning()
     }
@@ -96,22 +100,30 @@ class ViewController: UIViewController {
     }
     
     @IBAction func requestKeyholderStatus(_ sender: Any) {
-        keyholderStatusOutputView.text = ""
         tacsManager.keyholderManager.requestStatus(timeout: 10.0)
     }
     
     private func onBluetoothStatusChange(_ bluetoothOn: Bool) {
         // Reflect on ble device change by providing necessary feedback to the user.
         // Running discoveries for vehicle or keyholder will automatically stop and notified via signals.
+        DispatchQueue.main.async { [weak self] in
+            let stateString = bluetoothOn ? "on" : "off"
+            self?.vehicleStatusOutputView.insertText("\nBluetooth state \(stateString)")
+        }
     }
     
     private func onDiscoveryChange(_ discoveryChange: TACS.DiscoveryChange) {
-        switch discoveryChange.action {
-        case .discovered:
+        let action = discoveryChange.action
+        let actionDescription = String(describing: action)
+        if !actionDescription.isEmpty {
+            DispatchQueue.main.async { [weak self] in
+                self?.vehicleStatusOutputView.insertText("\n" + actionDescription)
+            }
+        }
+        if case .discovered = action {
             // If the vehicle is discovered, we stop scanning and try to connect to the vehicle.
             tacsManager.stopScanning()
             tacsManager.connect()
-        default: break
         }
     }
     
@@ -119,7 +131,7 @@ class ViewController: UIViewController {
         if case let .responseReceived(response) = vehicleAccessFeatureChange.action {
             if case let .success(status: status) = response {
                 DispatchQueue.main.async {
-                    self.statusLabel.text = String(describing: status)
+                    self.vehicleStatusOutputView.insertText("\n" + String(describing: status))
                 }
             }
         }
@@ -127,20 +139,20 @@ class ViewController: UIViewController {
     
     private func onConnectionChange(_ connectionChange: TACS.ConnectionChange) {
         DispatchQueue.main.async {
-            self.statusLabel.text = String(describing: connectionChange.action)
+            self.vehicleStatusOutputView.insertText("\n" + String(describing: connectionChange.action))
             // You can also inspect connectionChange.state at any time to check the connection state
         }
     }
     
     private func onTelematicsDataChange(_ telematicsDataChange: TelematicsDataChange) {
         DispatchQueue.main.async {
-            self.telematicsOutputView.text = String(describing: telematicsDataChange.action)
+            self.telematicsOutputView.insertText("\n" + String(describing: telematicsDataChange.action))
         }
     }
     
     private func onKeyholderStatusChange(_ change: KeyholderStatusChange) {
         DispatchQueue.main.async {
-            self.keyholderStatusOutputView.insertText(String(describing: change.action))
+            self.keyholderStatusOutputView.insertText("\n" + String(describing: change.action))
         }
     }
     
@@ -237,7 +249,7 @@ extension TelematicsDataChange.Action: CustomStringConvertible {
         case .requestingData(types: let types): result = "Requesting data with types: \(String(describing: types))"
         case .responseReceived(responses: let responses):
             let responsesDescription = responses.map { String(describing: $0) }.joined(separator: "\n")
-            result = "Response received: \(String(describing: responsesDescription))"
+            result = "Response received:\n\(String(describing: responsesDescription))"
         }
         return result
     }
@@ -262,5 +274,17 @@ extension KeyholderStatusChange.Action: CustomStringConvertible {
         case .failed(let error): result = "Keyholder discovery failed with error:\n\(String(describing: error))"
         }
         return result
+    }
+}
+
+extension TACS.DiscoveryChange.Action: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .startDiscovery: return "Started discovery"
+        case .stopDiscovery: return "Stopped discovery"
+        case .discovered: return "Discovered vehicle"
+        case .missingBlobData: return "Discovery start failed: blob data missing"
+        default: return ""
+        }
     }
 }
