@@ -73,7 +73,7 @@ struct AesCbcCryptoManager: CryptoManager {
                 return SorcMessage(id: SorcMessageID.notValid, payload: EmptyPayload())
             }
 
-            let dataWithoutMac = data.subdata(in: 0 ..< data.count - 8) // NSMakeRange(0, data.count-8))
+            let dataWithoutMac = data.subdata(in: 0 ..< data.count - 8)
             let decryptedBytes = try AES(key: key, blockMode: CBC(iv: decIV), padding: Padding.noPadding).decrypt(dataWithoutMac.bytes)
             decIV = dataWithoutMac.subdata(in: dataWithoutMac.count - 16 ..< dataWithoutMac.count).bytes
             let messageDataBytes = Array(decryptedBytes[1 ..< decryptedBytes.count - 1])

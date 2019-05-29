@@ -51,8 +51,6 @@ import SecureAccessBLE
 let sorcManager = SorcManager()
 ```
 
-NOTICE: To use telematics interface, the manager needs to be initialized with appropriate configuration. See telematics section below.
-
 ### Discovery (Finding SORCs near by)
 
 * Subscribe to discovery change events
@@ -100,28 +98,4 @@ sorcManager.serviceGrantChange.subscribe { serviceGrantChange in
 
 ```swift
 sorcManager.requestServiceGrant(GrantId.lock.rawValue)
-```
-
-
-### Retrieve telematics data
-
-* To enable telematics interface you need to create `SorcManager` with `SorcManager.Configuration` struct where you can set appropriate flag:
-
-```swift
-let configuration = SorcManager.Configuration(enableTelematicsInterface: true)
-let sorcManager = SorcManager(configuration: configuration)
-```
-
-* Subscribe to telematics data change events
-
-```swift
-sorcManager.telematicsManager?.telematicsDataChange.subscribe { telematicsDataChange in
-    // handle telematics data change events
-}
-```
-
-* Request telematics data
-
-```swift
-sorcManager.telematicsManager?.requestTelematicsData([.odometer, .fuelLevelAbsolute, .fuelLevelPercentage])
 ```

@@ -40,12 +40,4 @@ public struct ServiceGrantResponse: Equatable {
         /// The request is not allowed
         case notAllowed = 0x04
     }
-
-    /// :nodoc:
-    public static func == (lhs: ServiceGrantResponse, rhs: ServiceGrantResponse) -> Bool {
-        return lhs.sorcID == rhs.sorcID
-            && lhs.serviceGrantID == rhs.serviceGrantID
-            && lhs.status == rhs.status
-            && lhs.responseData == rhs.responseData
-    }
 }

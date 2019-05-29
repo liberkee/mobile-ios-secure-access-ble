@@ -26,14 +26,6 @@ public struct LeaseToken: Equatable {
     /// The SORC access key
     public let sorcAccessKey: String
 
-    /// :nodoc:
-    public static func == (lhs: LeaseToken, rhs: LeaseToken) -> Bool {
-        return lhs.id == rhs.id
-            && lhs.leaseID == rhs.leaseID
-            && lhs.sorcID == rhs.sorcID
-            && lhs.sorcAccessKey == rhs.sorcAccessKey
-    }
-
     /// Lease Token Initializer
     ///
     /// - Parameters:

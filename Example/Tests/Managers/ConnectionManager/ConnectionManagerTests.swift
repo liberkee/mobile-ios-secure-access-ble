@@ -100,8 +100,8 @@ class AppActivityStatusProviderMock: AppActivityStatusProviderType {
 
 extension ConnectionManager {
     convenience init(centralManager: CBCentralManagerType, createTimer: CreateTimer? = nil) {
-        let createTimer: CreateTimer = createTimer ?? { block in
-            Timer(timeInterval: 1000, repeats: false, block: { _ in block() })
+        let createTimer: CreateTimer = createTimer ?? { _ in
+            RepeatingBackgroundTimer(timeInterval: 1000, queue: DispatchQueue.main)
         }
         let appActivityStatusProvider = AppActivityStatusProvider(notificationCenter: NotificationCenter.default)
         self.init(
@@ -113,8 +113,8 @@ extension ConnectionManager {
     }
 
     convenience init(centralManager: CBCentralManagerType, systemClock: SystemClockType) {
-        let createTimer: CreateTimer = { block in
-            Timer(timeInterval: 1000, repeats: false, block: { _ in block() })
+        let createTimer: CreateTimer = { _ in
+            RepeatingBackgroundTimer(timeInterval: 1000, queue: DispatchQueue.main)
         }
         let appActivityStatusProvider = AppActivityStatusProvider(notificationCenter: NotificationCenter.default)
         self.init(
@@ -126,8 +126,8 @@ extension ConnectionManager {
     }
 
     convenience init(centralManager: CBCentralManagerType, appActivityStatusProvider: AppActivityStatusProviderType) {
-        let createTimer: CreateTimer = { block in
-            Timer(timeInterval: 1000, repeats: false, block: { _ in block() })
+        let createTimer: CreateTimer = { _ in
+            RepeatingBackgroundTimer(timeInterval: 1000, queue: DispatchQueue.main)
         }
         self.init(
             centralManager: centralManager,
@@ -1045,7 +1045,7 @@ class ConnectionManagerTests: XCTestCase {
         var fireTimer: (() -> Void)!
         let createTimer: ConnectionManager.CreateTimer = { block in
             fireTimer = block
-            return Timer()
+            return RepeatingBackgroundTimer(timeInterval: 1000, queue: DispatchQueue.main)
         }
 
         let connectionManager = ConnectionManager(
@@ -1074,7 +1074,7 @@ class ConnectionManagerTests: XCTestCase {
         var fireTimer: (() -> Void)!
         let createTimer: ConnectionManager.CreateTimer = { block in
             fireTimer = block
-            return Timer()
+            return RepeatingBackgroundTimer(timeInterval: 1000, queue: DispatchQueue.main)
         }
 
         let connectionManager = ConnectionManager(

@@ -72,7 +72,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     fileprivate let systemClock: SystemClockType
 
     /// Timer to remove outdated discovered SORCs
-    fileprivate var filterTimer: Timer?
+    fileprivate var filterTimer: RepeatingBackgroundTimer?
 
     private let appActivityStatusProvider: AppActivityStatusProviderType
 
@@ -126,7 +126,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
 
     deinit {
         disconnect()
-        filterTimer?.invalidate()
+        filterTimer?.suspend()
     }
 
     /// Starts discovery if the central manager state is `poweredOn`.
@@ -299,23 +299,17 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
 }
 
 extension ConnectionManager {
-    convenience init(configuration: ConnectionManager.Configuration = Configuration()) {
-        // Notice: since the queue is not specified here, the central manager will use current queue and
-        // call us on this queue accordingly, e.g. if we are on main thread here
-        // all the work of SecureAccessBLE library will be done on main.
-        let centralManager = CBCentralManager(delegate: nil, queue: nil,
+    convenience init(configuration: ConnectionManager.Configuration = Configuration(),
+                     queue: DispatchQueue = DispatchQueue.main) {
+        let centralManager = CBCentralManager(delegate: nil, queue: queue,
                                               options: [CBPeripheralManagerOptionShowPowerAlertKey: 0])
 
         let systemClock = SystemClock()
 
         let createTimer: ConnectionManager.CreateTimer = { block in
-            Timer.scheduledTimer(
-                withTimeInterval: configuration.removeOutdatedSorcsInterval,
-                repeats: true,
-                block: { _ in
-                    block()
-                }
-            )
+            RepeatingBackgroundTimer.scheduledTimer(timeInterval: configuration.removeOutdatedSorcsInterval,
+                                                    queue: queue,
+                                                    handler: block)
         }
 
         let appActivityStatusProvider = AppActivityStatusProvider(notificationCenter: NotificationCenter.default)

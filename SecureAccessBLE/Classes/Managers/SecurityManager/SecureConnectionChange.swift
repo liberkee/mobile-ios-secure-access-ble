@@ -17,15 +17,6 @@ struct SecureConnectionChange: ChangeType, Equatable {
 
     /// The action that led to the state
     let action: Action
-
-    init(state: State, action: Action) {
-        self.state = state
-        self.action = action
-    }
-
-    static func == (lhs: SecureConnectionChange, rhs: SecureConnectionChange) -> Bool {
-        return lhs.state == rhs.state && lhs.action == rhs.action
-    }
 }
 
 extension SecureConnectionChange {
@@ -34,18 +25,6 @@ extension SecureConnectionChange {
         case disconnected
         case connecting(sorcID: SorcID, state: ConnectingState)
         case connected(sorcID: SorcID)
-
-        static func == (lhs: State, rhs: State) -> Bool {
-            switch (lhs, rhs) {
-            case (.disconnected, .disconnected): return true
-            case let (.connecting(lSorcID, lState), .connecting(rSorcID, rState)):
-                return lSorcID == rSorcID && lState == rState
-            case let (.connected(lSorcID), .connected(rSorcID)):
-                return lSorcID == rSorcID
-            default:
-                return false
-            }
-        }
 
         enum ConnectingState {
             case physical
@@ -66,29 +45,6 @@ extension SecureConnectionChange {
         case connectingFailed(sorcID: SorcID, error: ConnectingFailedError)
         case disconnect
         case connectionLost(error: ConnectionLostError)
-
-        static func == (lhs: Action, rhs: Action) -> Bool {
-            switch (lhs, rhs) {
-            case (.initial, .initial):
-                return true
-            case let (.connect(lSorcID), .connect(rSorcID)):
-                return lSorcID == rSorcID
-            case let (.physicalConnectionEstablished(lSorcID), .physicalConnectionEstablished(rSorcID)):
-                return lSorcID == rSorcID
-            case let (.transportConnectionEstablished(lSorcID), .transportConnectionEstablished(rSorcID)):
-                return lSorcID == rSorcID
-            case let (.connectionEstablished(lSorcID), .connectionEstablished(rSorcID)):
-                return lSorcID == rSorcID
-            case let (.connectingFailed(lError, lSorcID), .connectingFailed(rError, rSorcID)):
-                return lError == rError && lSorcID == rSorcID
-            case (.disconnect, .disconnect):
-                return true
-            case let (.connectionLost(lError), .connectionLost(rError)):
-                return lError == rError
-            default:
-                return false
-            }
-        }
     }
 
     /// The errors that can occur if the connection attempt fails

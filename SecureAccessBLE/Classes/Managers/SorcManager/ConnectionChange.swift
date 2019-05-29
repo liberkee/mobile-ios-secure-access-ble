@@ -20,11 +20,6 @@ public struct ConnectionChange: ChangeType, Equatable {
     }
 
     /// :nodoc:
-    public static func == (lhs: ConnectionChange, rhs: ConnectionChange) -> Bool {
-        return lhs.state == rhs.state && lhs.action == rhs.action
-    }
-
-    /// :nodoc:
     public init(state: State, action: Action) {
         self.state = state
         self.action = action
@@ -53,19 +48,6 @@ extension ConnectionChange {
 
             /// Challenging state
             case challenging
-        }
-
-        /// :nodoc:
-        public static func == (lhs: State, rhs: State) -> Bool {
-            switch (lhs, rhs) {
-            case (.disconnected, .disconnected): return true
-            case let (.connecting(lSorcID, lState), .connecting(rSorcID, rState)):
-                return lSorcID == rSorcID && lState == rState
-            case let (.connected(lSorcID), .connected(rSorcID)):
-                return lSorcID == rSorcID
-            default:
-                return false
-            }
         }
     }
 }
@@ -96,30 +78,6 @@ extension ConnectionChange {
 
         /// Connection lost with `ConnectionLostError`
         case connectionLost(error: ConnectionLostError)
-
-        /// :nodoc:
-        public static func == (lhs: Action, rhs: Action) -> Bool {
-            switch (lhs, rhs) {
-            case (.initial, .initial):
-                return true
-            case let (.connect(lSorcID), .connect(rSorcID)):
-                return lSorcID == rSorcID
-            case let (.physicalConnectionEstablished(lSorcID), .physicalConnectionEstablished(rSorcID)):
-                return lSorcID == rSorcID
-            case let (.transportConnectionEstablished(lSorcID), .transportConnectionEstablished(rSorcID)):
-                return lSorcID == rSorcID
-            case let (.connectionEstablished(lSorcID), .connectionEstablished(rSorcID)):
-                return lSorcID == rSorcID
-            case let (.connectingFailed(lError, lSorcID), .connectingFailed(rError, rSorcID)):
-                return lError == rError && lSorcID == rSorcID
-            case (.disconnect, .disconnect):
-                return true
-            case let (.connectionLost(lError), .connectionLost(rError)):
-                return lError == rError
-            default:
-                return false
-            }
-        }
     }
 }
 

@@ -20,11 +20,7 @@ public struct ServiceGrantChange: ChangeType, Equatable {
     }
 
     /// :nodoc:
-    public static func == (lhs: ServiceGrantChange, rhs: ServiceGrantChange) -> Bool {
-        return lhs.state == rhs.state && lhs.action == rhs.action
-    }
-
-    init(state: State, action: Action) {
+    public init(state: State, action: Action) {
         self.state = state
         self.action = action
     }
@@ -37,8 +33,8 @@ extension ServiceGrantChange {
         public let requestingServiceGrantIDs: [ServiceGrantID]
 
         /// :nodoc:
-        public static func == (lhs: State, rhs: State) -> Bool {
-            return lhs.requestingServiceGrantIDs == rhs.requestingServiceGrantIDs
+        public init(requestingServiceGrantIDs: [ServiceGrantID]) {
+            self.requestingServiceGrantIDs = requestingServiceGrantIDs
         }
     }
 }
@@ -60,24 +56,6 @@ extension ServiceGrantChange {
 
         /// Reset
         case reset
-
-        /// :nodoc:
-        public static func == (lhs: Action, rhs: Action) -> Bool {
-            switch (lhs, rhs) {
-            case (.initial, .initial):
-                return true
-            case let (.requestServiceGrant(lID, lAccepted), .requestServiceGrant(rID, rAccepted)):
-                return lID == rID && lAccepted == rAccepted
-            case let (.responseReceived(lServiceGrantResponse), .responseReceived(rServiceGrantResponse)):
-                return lServiceGrantResponse == rServiceGrantResponse
-            case let (.requestFailed(lError), .requestFailed(rError)):
-                return lError == rError
-            case (.reset, .reset):
-                return true
-            default:
-                return false
-            }
-        }
     }
 
     /// Error which can occur on `requestFailed` case
