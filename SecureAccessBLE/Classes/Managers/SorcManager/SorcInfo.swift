@@ -23,11 +23,4 @@ public struct SorcInfo: Equatable {
         self.discoveryDate = discoveryDate
         self.rssi = rssi
     }
-
-    /// :nodoc:
-    public static func == (lhs: SorcInfo, rhs: SorcInfo) -> Bool {
-        return lhs.sorcID == rhs.sorcID
-            && lhs.discoveryDate == rhs.discoveryDate
-            && lhs.rssi == rhs.rssi
-    }
 }

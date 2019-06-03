@@ -20,12 +20,6 @@ public struct LeaseTokenBlob: Equatable {
     /// The encrypted lease token BLOB data
     public let data: String
 
-    /// :nodoc:
-    public static func == (lhs: LeaseTokenBlob, rhs: LeaseTokenBlob) -> Bool {
-        return lhs.messageCounter == rhs.messageCounter
-            && lhs.data == rhs.data
-    }
-
     /// LeaseTokenBlob Initializer
     ///
     /// - Parameters:

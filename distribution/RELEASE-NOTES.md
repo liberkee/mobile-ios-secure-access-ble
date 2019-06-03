@@ -1,6 +1,6 @@
-# [3.4.0] - 2019-04-03
+# [3.4.0] - 2019-05-24
 
-- Added telematics interface to retrieve telematics data from vehicle
+- Added ability to provide background queue to SorcManager
 
 # [3.3.1] - 2019-01-31
 
