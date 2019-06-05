@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+set -xe
 
 rm -rf BUILD
 cd Example
