@@ -226,7 +226,7 @@ class SecurityManagerTests: XCTestCase {
         let blob = try! LeaseTokenBlob(messageCounter: 5, data: "MQ==")
         prepareChallengingConnecting(blob: blob)
 
-        let ltBlobRequestMessage = SorcMessage(rawData: Data(bytes: [
+        let ltBlobRequestMessage = SorcMessage(rawData: Data([
             SorcMessageID.ltBlobRequest.rawValue,
             0x01, // blob type
             0x00, 0x00, 0x00, 0x04 // blob message counter
@@ -246,7 +246,7 @@ class SecurityManagerTests: XCTestCase {
         // Given
         let blob = try! LeaseTokenBlob(messageCounter: 5, data: "MQ==")
         prepareChallengingConnecting(blob: blob)
-        let ltBlobRequestMessage = SorcMessage(rawData: Data(bytes: [
+        let ltBlobRequestMessage = SorcMessage(rawData: Data([
             SorcMessageID.ltBlobRequest.rawValue,
             0x01, // blob type
             0x00, 0x00, 0x00, 0x05 // blob message counter
@@ -264,7 +264,7 @@ class SecurityManagerTests: XCTestCase {
         let blob = try! LeaseTokenBlob(messageCounter: 5, data: "MQ==")
         prepareChallengingConnecting(blob: blob)
 
-        let badChallengeResponseMessage = SorcMessage(rawData: Data(bytes: [
+        let badChallengeResponseMessage = SorcMessage(rawData: Data([
             SorcMessageID.badChallengeSorcResponse.rawValue,
             0x01, // blob type
             0x00, 0x00, 0x00, 0x04 // blob message counter
@@ -285,7 +285,7 @@ class SecurityManagerTests: XCTestCase {
         let blob = try! LeaseTokenBlob(messageCounter: 5, data: "MQ==")
         prepareChallengingConnecting(blob: blob)
 
-        let badChallengeResponseMessage = SorcMessage(rawData: Data(bytes: [
+        let badChallengeResponseMessage = SorcMessage(rawData: Data([
             SorcMessageID.badChallengeSorcResponse.rawValue,
             0x01, // blob type
             0x00, 0x00, 0x00, 0x05 // blob message counter

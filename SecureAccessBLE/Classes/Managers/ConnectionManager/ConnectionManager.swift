@@ -39,6 +39,8 @@ private extension CBManagerState {
         case .unauthorized: return "Unauthorized"
         case .poweredOff: return "PoweredOff"
         case .poweredOn: return "PoweredOn"
+            @unknown default:
+            return "Unknown"
         }
     }
 }
@@ -288,7 +290,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     }
 
     private func extractSorcID(from manufacturerData: Data) -> UUID? {
-        if manufacturerData.count >= 18, manufacturerData.subdata(in: 0 ..< 2) == Data(bytes: Configuration.advertisedCompanyID) {
+        if manufacturerData.count >= 18, manufacturerData.subdata(in: 0 ..< 2) == Data(Configuration.advertisedCompanyID) {
             return UUID(data: manufacturerData.subdata(in: 2 ..< 18))
         } else if manufacturerData.count >= 16 {
             return UUID(data: manufacturerData.subdata(in: 0 ..< 16))

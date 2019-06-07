@@ -23,7 +23,7 @@ extension Data {
                 output += "0" + nextCharacter
             }
 
-            if [3, 5, 7, 9].index(of: index) != nil {
+            if [3, 5, 7, 9].firstIndex(of: index) != nil {
                 output += "-"
             }
         }

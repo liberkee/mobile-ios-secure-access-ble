@@ -36,6 +36,6 @@ public class LoggingManager {
 
     func log(message: @autoclosure () -> String, file: String = #file, function: StaticString = #function, line: UInt = #line,
              level: LogLevel) {
-        logger.log(message: message, file: file, function: function, line: line, level: level)
+        logger.log(message: message(), file: file, function: function, line: line, level: level)
     }
 }

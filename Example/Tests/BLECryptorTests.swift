@@ -28,7 +28,7 @@ class BLECryptorTests: XCTestCase {
         /// testing with encrypting message
         XCTAssertNotNil(zeroCryptor.encryptMessage(mtuRequestMessage), "Crypto manager returned NIL for encrpting message")
 
-        let mtuReceivMessage = zeroCryptor.decryptData(Data(bytes: mtuReceiveData))
+        let mtuReceivMessage = zeroCryptor.decryptData(Data(mtuReceiveData))
         /// testing with decrypting received message data
         XCTAssertNotNil(mtuReceivMessage, "Crypto manager returned NIL for decrpting message")
 
@@ -70,7 +70,7 @@ class BLECryptorTests: XCTestCase {
         XCTAssertNotNil(aesCryptor.encryptMessage(sendingMessage), "Crypto manager returned NIL for encrpting message!")
 
         /// Received data will decrypted to SORC message object with AES crypto manager
-        let receivedMessage = aesCryptor.decryptData(Data(bytes: receivedData))
+        let receivedMessage = aesCryptor.decryptData(Data(receivedData))
 
         /// Testing if received message will be correctly decrypted
         XCTAssertNotNil(receivedMessage, "Crypto manager returned NIL for decrpting message!")
@@ -88,7 +88,7 @@ class BLECryptorTests: XCTestCase {
         // Given
         let sessionKey = [0x00, 0xBA, 0x14, 0xA1, 0x50, 0x20, 0x9F, 0xE2, 0x30, 0xE7, 0x1A, 0x2B, 0x78, 0x0F, 0x06, 0x45] as [UInt8]
         var aesCryptor = AesCbcCryptoManager(key: sessionKey)
-        let receivedServiceTriggerData = Data(bytes: [0x30, 0x02, 0x00, 0x00] as [UInt8])
+        let receivedServiceTriggerData = Data([0x30, 0x02, 0x00, 0x00] as [UInt8])
 
         // When
         let receivedMessage = aesCryptor.decryptData(receivedServiceTriggerData)

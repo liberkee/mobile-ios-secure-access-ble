@@ -17,7 +17,7 @@ public protocol HSMLogging {
 extension HSMLogging {
     func log(message: @autoclosure () -> String, file: String = #file, function: StaticString = #function, line: UInt = #line,
              level: LogLevel) {
-        HSMLog(message: message, file: file, function: function, line: line, level: level)
+        HSMLog(message: message(), file: file, function: function, line: line, level: level)
     }
 }
 
@@ -26,6 +26,6 @@ func HSMLog(message: @autoclosure () -> String, file: String = #file, function: 
             line: UInt = #line, level: LogLevel) {
     #if DEBUG
         guard level.rawValue <= LoggingManager.shared.logLevel.rawValue else { return }
-        LoggingManager.shared.log(message: message, file: file, function: function, line: line, level: level)
+    LoggingManager.shared.log(message: message(), file: file, function: function, line: line, level: level)
     #endif
 }

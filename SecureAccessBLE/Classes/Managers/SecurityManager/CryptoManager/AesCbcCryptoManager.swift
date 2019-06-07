@@ -47,7 +47,7 @@ struct AesCbcCryptoManager: CryptoManager {
             let mac = createShortMac(encData, iv: encIV)
             let encDataWithMac = NSMutableData()
             encDataWithMac.append(encData)
-            encDataWithMac.append(Data(bytes: mac))
+            encDataWithMac.append(Data(mac))
             let ivData = encData.subdata(in: encData.count - 16 ..< encData.count)
             encIV = [UInt8](ivData)
 
@@ -77,7 +77,7 @@ struct AesCbcCryptoManager: CryptoManager {
             let decryptedBytes = try AES(key: key, blockMode: CBC(iv: decIV), padding: Padding.noPadding).decrypt(dataWithoutMac.bytes)
             decIV = dataWithoutMac.subdata(in: dataWithoutMac.count - 16 ..< dataWithoutMac.count).bytes
             let messageDataBytes = Array(decryptedBytes[1 ..< decryptedBytes.count - 1])
-            let message = SorcMessage(rawData: Data(bytes: messageDataBytes))
+            let message = SorcMessage(rawData: Data(messageDataBytes))
             return message
         } catch {
             return SorcMessage(id: SorcMessageID.notValid, payload: EmptyPayload())
@@ -96,7 +96,7 @@ struct AesCbcCryptoManager: CryptoManager {
      - returns: encrypted message data as NSData object
      */
     func createEncData(_ data: Data, paddingLength: Int) throws -> Data {
-        let paddingData = Data(bytes: [UInt8](repeating: 0x0, count: paddingLength))
+        let paddingData = Data([UInt8](repeating: 0x0, count: paddingLength))
         let header = CryptoHeader(direction: .toSorc, padding: UInt8(paddingLength))
         let dataWithPadding = NSMutableData()
         dataWithPadding.append(header.data)
@@ -104,7 +104,7 @@ struct AesCbcCryptoManager: CryptoManager {
         dataWithPadding.append(paddingData)
         let theData: Data = dataWithPadding as Data
         let bytes = try AES(key: key, blockMode: CBC(iv: encIV), padding: Padding.noPadding).encrypt(theData.bytes)
-        let encData = Data(bytes: bytes)
+        let encData = Data(bytes)
         return encData
     }
 
