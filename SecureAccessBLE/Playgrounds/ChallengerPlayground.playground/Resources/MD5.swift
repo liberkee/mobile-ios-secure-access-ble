@@ -97,7 +97,7 @@ final class MD5: HashProtocol {
                 dTemp = D
                 D = C
                 C = B
-                B = B &+ rotateLeft((A &+ F &+ k[j] &+ M[g]), n: s[j])
+                B = B &+ rotateLeft(A &+ F &+ k[j] &+ M[g], n: s[j])
                 A = dTemp
             }
 
@@ -108,10 +108,10 @@ final class MD5: HashProtocol {
         }
 
         let buf: NSMutableData = NSMutableData()
-        hh.forEach({ (item) -> Void in
+        hh.forEach { (item) -> Void in
             var i: UInt32 = item.littleEndian
             buf.appendBytes(&i, length: sizeofValue(i))
-        })
+        }
 
         return buf.copy() as! NSData
     }
