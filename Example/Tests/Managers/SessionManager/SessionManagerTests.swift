@@ -16,7 +16,7 @@ private let leaseTokenBlobA = try! LeaseTokenBlob(messageCounter: 1, data: "1a")
 private let serviceGrantIDA = ServiceGrantID(2)
 private let serviceGrantIDB = ServiceGrantID(3)
 private let serviceGrantIDAResponse = ServiceGrantID(4)
-private let serviceGrantAResponseMessage = SorcMessage(rawData: Data(bytes: [
+private let serviceGrantAResponseMessage = SorcMessage(rawData: Data([
     SorcMessageID.serviceGrantTrigger.rawValue,
     UInt8(serviceGrantIDAResponse), 0x00,
     ServiceGrantResponse.Status.pending.rawValue

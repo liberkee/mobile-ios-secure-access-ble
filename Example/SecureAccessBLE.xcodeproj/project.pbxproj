@@ -671,7 +671,7 @@
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
 						DevelopmentTeam = MR9TB5Y4RJ;
-						LastSwiftMigration = 0930;
+						LastSwiftMigration = 1020;
 						TestTargetID = 607FACCF1AFB9204008FA782;
 					};
 					99D123381F9A3B20006012DE = {
@@ -686,6 +686,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -799,7 +800,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ -z ${CI_BUILD+x} ]; then echo \"Starting swift format...\"; else echo \"Skipping swift format in ci build\"; exit 0;fi\n\nSWIFT_FORMAT_FOLDERS_TO_CHECK=\"../SecureAccessBLE Tests\"\nSWIFT_FORMAT_ARGS=\"--commas false\"\n\nPods/SwiftFormat/CommandLineTool/swiftformat $SWIFT_FORMAT_FOLDERS_TO_CHECK $SWIFT_FORMAT_ARGS";
+			shellScript = "if [ -z ${CI_BUILD+x} ]; then echo \"Starting swift format...\"; else echo \"Skipping swift format in ci build\"; exit 0;fi\n\nSWIFT_FORMAT_FOLDERS_TO_CHECK=\"../SecureAccessBLE Tests\"\nSWIFT_FORMAT_ARGS=\"--commas false\"\n\nPods/SwiftFormat/CommandLineTool/swiftformat $SWIFT_FORMAT_FOLDERS_TO_CHECK $SWIFT_FORMAT_ARGS\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -949,7 +950,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -997,7 +998,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -1017,7 +1018,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -1032,7 +1033,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -1069,7 +1070,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -1107,7 +1108,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.huf.SecureAccessBLE;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = NO;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";

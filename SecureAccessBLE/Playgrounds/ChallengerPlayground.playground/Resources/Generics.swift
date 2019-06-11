@@ -36,7 +36,7 @@ func integerFromBitsArray<T: UnsignedIntegerType>(bits: [Bit]) -> T {
 /// Initialize integer from array of bytes.
 /// This method may be slow
 func integerWithBytes<T: IntegerType where T: ByteConvertible, T: BitshiftOperationsType>(bytes: [UInt8]) -> T {
-    var bytes = bytes.reverse() as Array<UInt8> // FIXME: check it this is equivalent of Array(...)
+    var bytes = bytes.reverse() as [UInt8] // FIXME: check it this is equivalent of Array(...)
     if bytes.count < sizeof(T) {
         let paddingCount = sizeof(T) - bytes.count
         if paddingCount > 0 {

@@ -10,7 +10,7 @@ import Foundation
 
 extension Array {
     /** split in chunks with given chunk size */
-    func chunks(chunksize: Int) -> [Array<Element>] {
+    func chunks(chunksize: Int) -> [[Element]] {
         var words = [[Element]]()
         words.reserveCapacity(count / chunksize)
         for var idx = chunksize; idx <= count; idx = idx + chunksize {

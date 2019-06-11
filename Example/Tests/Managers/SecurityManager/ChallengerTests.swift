@@ -80,7 +80,7 @@ class ChallengerTests: XCTestCase {
         /// check if the encryted results between BLE-functions and online tool the same
         XCTAssertEqual(checkB0, b0, "Tests with encrypting SorcMessage failed")
 
-        let checkB0Data = Data(bytes: checkB0)
+        let checkB0Data = Data(checkB0)
         let checkNc = crypto.decryptRawData(checkB0Data) as Data
 
         ///  check decrypted message from web tool identical with original message
