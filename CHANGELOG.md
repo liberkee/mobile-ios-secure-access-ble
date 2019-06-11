@@ -2,9 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [3.3.2] - Unreleased (planned as a hotfix release since 3.4.0 is already on develop branch)
 
 ### Added
+- 2019-06-11 : (PLB2B-600)  : Added Swift 5.0 compatibility
+
 ### Changed
 ### Fixed
 ### Removed
