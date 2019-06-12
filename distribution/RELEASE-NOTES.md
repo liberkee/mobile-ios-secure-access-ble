@@ -1,10 +1,14 @@
+# [3.3.2] - 2019-06-12
+
+- Added Swift 5.0 compatibility
+
 # [3.3.1] - 2019-01-31
 
 - Added support for the new BLE advertisment protocol which contains the company identifier
 
 # [3.3.0] - 2018-12-13
 
-- The library now explicitly communicates expired leases instead of reporting them as generic security errors / service grant denied.
+- The library now explicitly communicates expired leases instead of reporting them as generic security errors / service grant denied
 
 # [3.2.2] - 2018-12-03
 
