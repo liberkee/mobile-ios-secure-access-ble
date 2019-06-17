@@ -5,8 +5,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 ### Added
--2019-04-02 : (PLB2B-249)  : Added support for tacs
-
 ### Changed
 ### Fixed
 ### Removed
@@ -14,7 +12,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [3.4.0] - 2019-04-03
 
 ### Added
-- 2019-04-02 : (PLB2B-249)  : Added telematics interface
+- 2019-04-02 : (PLB2B-249)  : Added support for tacs
 
 ## [3.3.1] - 2019-01-31
 
