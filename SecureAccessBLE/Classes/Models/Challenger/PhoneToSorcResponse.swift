@@ -26,6 +26,6 @@ struct PhoneToSorcResponse: SorcMessagePayload {
      - returns: payload object to SORC as NSData
      */
     init(response: [UInt8]) {
-        data = Data(bytes: response) // Data.withBytes(response)
+        data = Data(response) // Data.withBytes(response)
     }
 }

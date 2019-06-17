@@ -9,7 +9,7 @@ import XCTest
 
 class SorcMessageTests: XCTestCase {
     func test_blobRequestMessage() {
-        let sorcMessage = SorcMessage(rawData: Data(bytes: [
+        let sorcMessage = SorcMessage(rawData: Data([
             SorcMessageID.ltBlobRequest.rawValue,
             0x01, // blob type
             0x00, 0x00, 0x00, 0xFF // blob messsage counter
