@@ -39,7 +39,7 @@ private extension CBManagerState {
         case .unauthorized: return "Unauthorized"
         case .poweredOff: return "PoweredOff"
         case .poweredOn: return "PoweredOn"
-            @unknown default: return "Unknown"
+        @unknown default: return "Unknown"
         }
     }
 }

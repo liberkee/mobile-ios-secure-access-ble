@@ -6,7 +6,7 @@
 Framework for communicating with the SecureAccess BLE hardware.
 
 ## Prerequisites
-* [Xcode 10.1](https://developer.apple.com/xcode/ide/)
+* [Xcode 10.2](https://developer.apple.com/xcode/ide/)
 * [Bundler](http://bundler.io)
 * [CocoaPods](https://cocoapods.org)
 * [Jazzy](https://github.com/realm/jazzy)

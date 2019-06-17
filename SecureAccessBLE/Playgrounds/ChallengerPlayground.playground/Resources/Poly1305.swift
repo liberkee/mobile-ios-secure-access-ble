@@ -249,9 +249,9 @@ public final class Poly1305 {
 
         /* select h if h < p, or h + -p if h >= p */
         let bits: [Bit] = (context.h[16] >> 7).bits()
-        let invertedBits = bits.map({ (bit) -> Bit in
+        let invertedBits = bits.map { (bit) -> Bit in
             bit.inverted()
-        })
+        }
 
         let negative = UInt8(bits: invertedBits)
         for i in 0 ..< 17 {

@@ -269,10 +269,10 @@ final class SHA2: HashProtocol {
         // Produce the final hash value (big-endian)
         let buf: NSMutableData = NSMutableData()
 
-        variant.resultingArray(hh).forEach({ (item) -> Void in
+        variant.resultingArray(hh).forEach { (item) -> Void in
             var i = item.bigEndian
             buf.appendBytes(&i, length: sizeofValue(i))
-        })
+        }
 
         return buf.copy() as! NSData
     }

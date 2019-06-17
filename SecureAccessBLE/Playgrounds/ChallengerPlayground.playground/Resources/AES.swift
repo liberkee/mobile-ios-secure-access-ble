@@ -407,7 +407,7 @@ extension AES {
         var state = state
         let invColBox: [[UInt8]] = [[14, 11, 13, 9], [9, 14, 11, 13], [13, 9, 14, 11], [11, 13, 9, 14]]
 
-        var colOrderState = state.map({ val -> [UInt8] in val.map { _ in 0 } }) // zeroing
+        var colOrderState = state.map { val -> [UInt8] in val.map { _ in 0 } } // zeroing
 
         for i in 0 ..< state.count {
             for j in 0 ..< state[0].count {
@@ -415,7 +415,7 @@ extension AES {
             }
         }
 
-        var newState = state.map({ val -> [UInt8] in val.map { _ in 0 } })
+        var newState = state.map { val -> [UInt8] in val.map { _ in 0 } }
 
         for (i, row) in colOrderState.enumerate() {
             newState[i] = matrixMultiplyPolys(invColBox, row)
