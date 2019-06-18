@@ -66,7 +66,7 @@ struct SorcMessage: Equatable {
     }
 
     /// Start value of SORC message as Data
-    var data: Data = Data(bytes: UnsafePointer<UInt8>(([0x00] as [UInt8])), count: 1)
+    var data: Data = Data(bytes: UnsafePointer<UInt8>([0x00] as [UInt8]), count: 1)
 
     /**
      Initialization point of SORC message instance

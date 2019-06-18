@@ -137,7 +137,7 @@ class Challenger {
         let key = sharedKey.bytes // .arrayOfBytes()
 
         do {
-            let iv = Array<UInt8>(repeating: 0, count: AES.blockSize)
+            let iv = [UInt8](repeating: 0, count: AES.blockSize)
             let aesCrypto = try AES(key: key, blockMode: CBC(iv: iv), padding: Padding.noPadding)
             crypto = aesCrypto
         } catch {

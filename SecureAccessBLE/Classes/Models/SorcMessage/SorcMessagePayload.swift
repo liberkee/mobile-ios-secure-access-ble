@@ -32,6 +32,6 @@ struct EmptyPayload: SorcMessagePayload {
      - returns: new message payload instance
      */
     init() {
-        data = Data(bytes: [0x00])
+        data = Data([0x00])
     }
 }

@@ -447,7 +447,7 @@ class ConnectionManagerTests: XCTestCase {
         let peripheral = CBPeripheralMock()
         prepareConnectedSorc(sorcID1, peripheral: peripheral, connectionManager: connectionManager,
                              centralManager: centralManager)
-        let data = Data(bytes: [42])
+        let data = Data([42])
 
         // When
         connectionManager.sendData(data)
@@ -462,7 +462,7 @@ class ConnectionManagerTests: XCTestCase {
         // Given
         let connectionManager = ConnectionManager(centralManager: centralManager)
         let peripheral = CBPeripheralMock()
-        let data = Data(bytes: [42])
+        let data = Data([42])
 
         // When
         connectionManager.sendData(data)
