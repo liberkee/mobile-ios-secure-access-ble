@@ -1,3 +1,7 @@
+# [3.5.0] - 2019-05-18
+
+- Updated for Xcode 10.2 and Swift 5.0
+
 # [3.4.0] - 2019-05-24
 
 - Added ability to provide background queue to SorcManager

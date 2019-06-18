@@ -5,11 +5,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 ### Added
-- 2019-06-17 : (PLB2B-412)  : Upgrade to Swift 5
-
 ### Changed
 ### Fixed
 ### Removed
+
+
+## [3.5.0] - 2019-06-18
+
+### Added
+- 2019-06-17 : (PLB2B-412)  : Upgrade to Swift 5
 
 ## [3.4.0] - 2019-04-03
 
