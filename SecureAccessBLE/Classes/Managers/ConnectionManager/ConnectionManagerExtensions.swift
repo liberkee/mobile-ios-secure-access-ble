@@ -8,10 +8,6 @@
 
 import CoreBluetooth
 
-extension ConnectionManager {
-    typealias CreateTimer = (@escaping () -> Void) -> RepeatingBackgroundTimer
-}
-
 // MARK: - CBCentralManagerDelegate
 
 extension ConnectionManager: CBCentralManagerDelegate {

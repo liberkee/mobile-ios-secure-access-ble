@@ -21,7 +21,7 @@ class SessionManager: SessionManagerType {
 
     private var sendHeartbeatsTimer: RepeatingBackgroundTimer?
     private var checkHeartbeatsResponseTimer: RepeatingBackgroundTimer?
-    private var lastHeartbeatResponseDate = Date()
+    private var lastHeartbeatResponseDate: Date
 
     /// Used to know how to handle a response based on what we sent before
     private var lastMessageSent: SorcMessage?
@@ -35,12 +35,19 @@ class SessionManager: SessionManagerType {
         BoundedQueue(maximumElements: self.configuration.maximumEnqueuedMessages)
     }()
 
-    private let timerQueue: DispatchQueue
+    private let systemClock: SystemClockType
 
-    init(securityManager: SecurityManagerType, configuration: Configuration = Configuration(), queue: DispatchQueue = DispatchQueue.main) {
+    init(securityManager: SecurityManagerType,
+         configuration: Configuration = Configuration(),
+         sendHeartbeatsTimer: CreateTimer,
+         checkHeartbeatsResponseTimer: CreateTimer,
+         systemClock: SystemClockType = SystemClock()) {
         self.securityManager = securityManager
         self.configuration = configuration
-        timerQueue = queue
+        self.systemClock = systemClock
+        lastHeartbeatResponseDate = systemClock.now()
+        self.sendHeartbeatsTimer = sendHeartbeatsTimer(sendHeartbeat)
+        self.checkHeartbeatsResponseTimer = checkHeartbeatsResponseTimer(checkOutHeartbeatResponse)
 
         securityManager.connectionChange.subscribeNext { [weak self] change in
             self?.handleSecureConnectionChange(change)
@@ -212,6 +219,7 @@ class SessionManager: SessionManagerType {
         securityManager.sendMessage(message)
     }
 
+    // TODO: Not called as described in comments on `messageSent` property in SecurityManager
     private func handleMessageSent(result: Result<SorcMessage>) {
         guard case .connected = connectionChange.state,
             case .failure = result,
@@ -241,13 +249,13 @@ class SessionManager: SessionManagerType {
 
         switch message.id {
         case .heartBeatResponse:
-            rescheduleHeartbeat()
+            resetLastHeartBeatResponseDate()
         case .serviceGrantTrigger:
             guard let response = ServiceGrantResponse(sorcID: sorcID, message: message) else {
                 applyServiceGrantChangeAction(.requestFailed(.receivedInvalidData))
                 return
             }
-            rescheduleHeartbeat()
+            resetLastHeartBeatResponseDate()
             applyServiceGrantChangeAction(.responseReceived(response))
         default:
             return
@@ -292,7 +300,7 @@ class SessionManager: SessionManagerType {
         switch error {
         case .sendingFailed, .receivedInvalidData:
             messageQueue.clear()
-            startSendingHeartbeat()
+            sendHeartbeat()
             let state = ServiceGrantChange.State(requestingServiceGrantIDs: [])
             serviceGrantChange.onNext(.init(state: state, action: .requestFailed(error)))
         }
@@ -301,24 +309,19 @@ class SessionManager: SessionManagerType {
     // MARK: - Heartbeat handling
 
     private func scheduleHeartbeatTimers() {
-        sendHeartbeatsTimer = RepeatingBackgroundTimer.scheduledTimer(
-            timeInterval: configuration.heartbeatTimeout,
-            queue: timerQueue,
-            handler: startSendingHeartbeat
-        )
-
-        lastHeartbeatResponseDate = Date()
-        checkHeartbeatsResponseTimer = RepeatingBackgroundTimer.scheduledTimer(
-            timeInterval: configuration.heartbeatTimeout,
-            queue: timerQueue,
-            handler: checkOutHeartbeatResponse
-        )
+        sendHeartbeatsTimer?.resume()
+        lastHeartbeatResponseDate = systemClock.now()
+        checkHeartbeatsResponseTimer?.resume()
     }
 
-    @objc func startSendingHeartbeat() {
-        guard !waitingForResponse else { return }
+    @objc func sendHeartbeat() {
         let message = SorcMessage(id: SorcMessageID.heartBeatRequest, payload: MTUSize())
-        try? enqueueMessage(message)
+        do {
+            try enqueueMessage(message)
+            HSMLog(message: "Enqueued heartbeat message", level: .debug)
+        } catch {
+            HSMLog(message: "Could not enqueue heartbeat message", level: .warning)
+        }
     }
 
     private func stopSendingHeartbeat() {
@@ -327,16 +330,14 @@ class SessionManager: SessionManagerType {
     }
 
     @objc func checkOutHeartbeatResponse() {
-        let offset = lastHeartbeatResponseDate.timeIntervalSinceNow + configuration.heartbeatTimeout + 1
+        let offset = lastHeartbeatResponseDate.timeIntervalSince(systemClock.now()) + configuration.heartbeatTimeout
         if offset < 0 {
             disconnect(withAction: .connectionLost(error: .heartbeatTimedOut))
         }
     }
 
-    private func rescheduleHeartbeat() {
-        lastHeartbeatResponseDate = Date()
-        let nextFireDate = lastHeartbeatResponseDate.addingTimeInterval(configuration.heartbeatTimeout)
-        checkHeartbeatsResponseTimer?.restart(timeInterval: nextFireDate.timeIntervalSinceNow)
+    private func resetLastHeartBeatResponseDate() {
+        lastHeartbeatResponseDate = systemClock.now()
     }
 }
 

@@ -1043,7 +1043,7 @@ class ConnectionManagerTests: XCTestCase {
         let systemClock = SystemClockMock(currentNow: Date(timeIntervalSince1970: 0))
 
         var fireTimer: (() -> Void)!
-        let createTimer: ConnectionManager.CreateTimer = { block in
+        let createTimer: CreateTimer = { block in
             fireTimer = block
             return RepeatingBackgroundTimer(timeInterval: 1000, queue: DispatchQueue.main)
         }
@@ -1064,7 +1064,7 @@ class ConnectionManagerTests: XCTestCase {
         fireTimer()
 
         // Then
-        XCTAssert(!connectionManager.discoveryChange.state.discoveredSorcs.contains(sorcID1))
+        XCTAssertFalse(connectionManager.discoveryChange.state.discoveredSorcs.contains(sorcID1))
     }
 
     func test_filterTimerFired_ifDiscoveredSorcIsOutdatedAndConnected_keepsIt() {
@@ -1072,7 +1072,7 @@ class ConnectionManagerTests: XCTestCase {
         let systemClock = SystemClockMock(currentNow: Date(timeIntervalSince1970: 0))
 
         var fireTimer: (() -> Void)!
-        let createTimer: ConnectionManager.CreateTimer = { block in
+        let createTimer: CreateTimer = { block in
             fireTimer = block
             return RepeatingBackgroundTimer(timeInterval: 1000, queue: DispatchQueue.main)
         }

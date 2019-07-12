@@ -307,7 +307,7 @@ extension ConnectionManager {
 
         let systemClock = SystemClock()
 
-        let createTimer: ConnectionManager.CreateTimer = { block in
+        let createTimer: CreateTimer = { block in
             RepeatingBackgroundTimer.scheduledTimer(timeInterval: configuration.removeOutdatedSorcsInterval,
                                                     queue: queue,
                                                     handler: block)

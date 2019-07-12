@@ -141,7 +141,22 @@ extension SorcManager {
             maximumEnqueuedMessages: configuration.maximumEnqueuedMessages
         )
 
-        let sessionManager = SessionManager(securityManager: securityManager, configuration: sessionConfiguration, queue: queue)
+        let sendHeartbeatsTimer: CreateTimer = { block in
+            let timer = RepeatingBackgroundTimer(timeInterval: sessionConfiguration.heartbeatInterval, queue: queue)
+            timer.eventHandler = block
+            return timer
+        }
+
+        let checkHeartbeatsResponseTimer: CreateTimer = { block in
+            let timer = RepeatingBackgroundTimer(timeInterval: sessionConfiguration.heartbeatInterval, queue: queue)
+            timer.eventHandler = block
+            return timer
+        }
+
+        let sessionManager = SessionManager(securityManager: securityManager,
+                                            configuration: sessionConfiguration,
+                                            sendHeartbeatsTimer: sendHeartbeatsTimer,
+                                            checkHeartbeatsResponseTimer: checkHeartbeatsResponseTimer)
 
         self.init(
             bluetoothStatusProvider: connectionManager,

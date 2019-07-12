@@ -77,6 +77,7 @@
 		9917EA071FBAF81F002D5CE3 /* BoundedQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5CF3ADB1F56FD51009C95A0 /* BoundedQueue.swift */; };
 		9917EA081FBAF81F002D5CE3 /* AppActivityStatusProviderType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8F8EE1F5EAE9700B629A5 /* AppActivityStatusProviderType.swift */; };
 		9917EA091FBAF81F002D5CE3 /* AppActivityStatusProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E8F8EF1F5EAF2800B629A5 /* AppActivityStatusProvider.swift */; };
+		998F67D822D8A9DB0032CEDD /* CreateTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 998F67D722D8A9DB0032CEDD /* CreateTimer.swift */; };
 		99B9BC30226F344300517BCB /* SorcInterceptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99B9BC2F226F344300517BCB /* SorcInterceptor.swift */; };
 		99D1233D1F9A3B20006012DE /* SecureAccessBLE.h in Headers */ = {isa = PBXBuildFile; fileRef = 99D1233B1F9A3B20006012DE /* SecureAccessBLE.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		99F19B262292FBC9003D9956 /* RepeatingBackgroundTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99F19B252292FBC9003D9956 /* RepeatingBackgroundTimer.swift */; };
@@ -127,6 +128,7 @@
 		991323F120D94C29001D83FC /* ArrayExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayExtensions.swift; sourceTree = "<group>"; };
 		9913240320D94C81001D83FC /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
 		9916AC0021BA75F700BEC5F0 /* SorcMessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SorcMessageTests.swift; sourceTree = "<group>"; };
+		998F67D722D8A9DB0032CEDD /* CreateTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTimer.swift; sourceTree = "<group>"; };
 		99B9BC2F226F344300517BCB /* SorcInterceptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SorcInterceptor.swift; sourceTree = "<group>"; };
 		99D123391F9A3B20006012DE /* SecureAccessBLE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SecureAccessBLE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		99D1233B1F9A3B20006012DE /* SecureAccessBLE.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SecureAccessBLE.h; sourceTree = "<group>"; };
@@ -243,6 +245,7 @@
 				E5E8F8EE1F5EAE9700B629A5 /* AppActivityStatusProviderType.swift */,
 				E5E8F8EF1F5EAF2800B629A5 /* AppActivityStatusProvider.swift */,
 				99F19B252292FBC9003D9956 /* RepeatingBackgroundTimer.swift */,
+				998F67D722D8A9DB0032CEDD /* CreateTimer.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -850,6 +853,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9917E9EF1FBAF7E7002D5CE3 /* ScannerType.swift in Sources */,
+				998F67D822D8A9DB0032CEDD /* CreateTimer.swift in Sources */,
 				9913240920D94CA1001D83FC /* LoggingManager.swift in Sources */,
 				9917E9EE1FBAF7E7002D5CE3 /* BluetoothStatusProviderType.swift in Sources */,
 				9917EA071FBAF81F002D5CE3 /* BoundedQueue.swift in Sources */,
