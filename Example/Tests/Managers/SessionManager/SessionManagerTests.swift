@@ -51,7 +51,13 @@ class SessionManagerTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        sessionManager = SessionManager(securityManager: securityManager)
+        let sendHeartBeatsTimer: CreateTimer = { _ in self.defaultTimer() }
+
+        let checkHeartbeatsResponseTimer: CreateTimer = { _ in self.defaultTimer() }
+
+        sessionManager = SessionManager(securityManager: securityManager,
+                                        sendHeartbeatsTimer: sendHeartBeatsTimer,
+                                        checkHeartbeatsResponseTimer: checkHeartbeatsResponseTimer)
     }
 
     // MARK: - Tests
@@ -286,7 +292,15 @@ class SessionManagerTests: XCTestCase {
     func test_requestServiceGrant_ifConnectedAndQueueIsFull_itDoesNotSendMessageAndItNotifiesNotAccepted() {
         // Given
         let configuration = SessionManager.Configuration(maximumEnqueuedMessages: 2)
-        sessionManager = SessionManager(securityManager: securityManager, configuration: configuration)
+
+        let sendHeartBeatsTimer: CreateTimer = { _ in self.defaultTimer() }
+
+        let checkHeartbeatsResponseTimer: CreateTimer = { _ in self.defaultTimer() }
+
+        sessionManager = SessionManager(securityManager: securityManager,
+                                        configuration: configuration,
+                                        sendHeartbeatsTimer: sendHeartBeatsTimer,
+                                        checkHeartbeatsResponseTimer: checkHeartbeatsResponseTimer)
         prepareConnected()
 
         // added and instantly removed from queue
@@ -337,6 +351,116 @@ class SessionManagerTests: XCTestCase {
             action: .initial
         )
         XCTAssertEqual(receivedServiceGrantChange!, expectedServiceGrantChange)
+    }
+
+    // MARK: Heart beat handling
+
+    func test_checkHeartBeat_ifTimedOut_disconnects() {
+        // Given
+        let timeout = TimeInterval(1)
+        let configuration = SessionManager.Configuration(heartbeatTimeout: timeout)
+
+        let sendHeartBeatsTimer: CreateTimer = { _ in self.defaultTimer() }
+
+        var checkHeartbeatHandler: (() -> Void)!
+        let checkHeartbeatsResponseTimer: CreateTimer = { block in
+            checkHeartbeatHandler = block
+            return self.defaultTimer()
+        }
+        // start x seconds in the past where x = timeout
+        let clock = SystemClockMock(currentNow: Date().addingTimeInterval(-timeout))
+        sessionManager = SessionManager(securityManager: securityManager,
+                                        configuration: configuration,
+                                        sendHeartbeatsTimer: sendHeartBeatsTimer,
+                                        checkHeartbeatsResponseTimer: checkHeartbeatsResponseTimer,
+                                        systemClock: clock)
+
+        prepareConnected()
+
+        // When
+        // Turn clock to now
+        clock.currentNow = Date()
+        checkHeartbeatHandler()
+
+        // Then
+        XCTAssertTrue(securityManager.disconnectCalled)
+    }
+
+    func test_checkHeartBeat_heartBeatWasSent_doesNotDisconnect() {
+        // Given
+        let timeout: TimeInterval = 5
+        let configuration = SessionManager.Configuration(heartbeatTimeout: timeout)
+
+        var sendHeartBeatHandler: (() -> Void)!
+        let sendHeartBeatsTimer: CreateTimer = { block in
+            sendHeartBeatHandler = block
+            return self.defaultTimer()
+        }
+
+        var checkHeartbeatHandler: (() -> Void)!
+        let checkHeartbeatsResponseTimer: CreateTimer = { block in
+            checkHeartbeatHandler = block
+            return self.defaultTimer()
+        }
+
+        // Instantiate sessionManager and prepare connection with "now" in the past
+        let systemClock = SystemClockMock(currentNow: Date().addingTimeInterval(-timeout))
+        sessionManager = SessionManager(securityManager: securityManager,
+                                        configuration: configuration,
+                                        sendHeartbeatsTimer: sendHeartBeatsTimer,
+                                        checkHeartbeatsResponseTimer: checkHeartbeatsResponseTimer,
+                                        systemClock: systemClock)
+
+        prepareConnected()
+
+        // Change "now" to be < heartbeatTimeout
+        systemClock.currentNow = Date().addingTimeInterval(-timeout + 1)
+
+        // Send heart beat and receive response (this will reset internal lastHeartbeatResponseDate of SessionManager to current "now")
+        sendHeartBeatHandler()
+        let sorcMessage = SorcMessage(id: .heartBeatResponse, payload: EmptyPayload())
+        let result = Result.success(sorcMessage)
+        securityManager.messageReceived.onNext(result)
+
+        // Check heart beat
+        checkHeartbeatHandler()
+
+        XCTAssertFalse(securityManager.disconnectCalled)
+    }
+
+    func test_sendHeartBeat_ifConnectedAndWaitingForResponse_enquesHeartBeat() {
+        // Given
+        let configuration = SessionManager.Configuration(maximumEnqueuedMessages: 2)
+
+        var sendHeartBeatHandler: (() -> Void)!
+        let sendHeartBeatsTimer: CreateTimer = { block in
+            sendHeartBeatHandler = block
+            return self.defaultTimer()
+        }
+
+        let checkHeartbeatsResponseTimer: CreateTimer = { _ in self.defaultTimer() }
+
+        sessionManager = SessionManager(securityManager: securityManager,
+                                        configuration: configuration,
+                                        sendHeartbeatsTimer: sendHeartBeatsTimer,
+                                        checkHeartbeatsResponseTimer: checkHeartbeatsResponseTimer)
+        prepareConnected()
+
+        // Added to the queue, instantly removed and waiting for response
+        sessionManager.requestServiceGrant(serviceGrantIDA)
+
+        // When
+        sendHeartBeatHandler() // trigger "heart beat send"
+        // On receiving response
+        securityManager.messageReceived.onNext(.success(serviceGrantAResponseMessage))
+
+        // Then
+        let expectedMessage = SorcMessage(
+            id: SorcMessageID.heartBeatRequest,
+            payload: MTUSize()
+        )
+        let lastMessagePassedToSecManager = securityManager.sendMessageCalledWithMessage!
+        XCTAssertEqual(lastMessagePassedToSecManager, expectedMessage)
     }
 
     // MARK: - State preparation
@@ -419,5 +543,9 @@ class SessionManagerTests: XCTestCase {
             file: file,
             line: line
         )
+    }
+
+    private func defaultTimer() -> RepeatingBackgroundTimer {
+        return RepeatingBackgroundTimer(timeInterval: 1000, queue: .main)
     }
 }
