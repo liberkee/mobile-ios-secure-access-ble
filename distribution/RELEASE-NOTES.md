@@ -1,6 +1,6 @@
-# [3.5.0] - 2019-05-18
+# [3.5.1] - 2019-07-17
 
-- Updated for Xcode 10.2 and Swift 5.0
+- Fix issue where a disconnection could happen in a stress test scenario
 
 # [3.4.0] - 2019-05-24
 

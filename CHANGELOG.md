@@ -6,12 +6,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 ### Changed
+### Fixed
+### Removed
+
+## [3.5.1] - 2019-07-17
 
 ### Fixed
 - 2019-07-12 : (PLB2B-703)  : Fix issue where heart beat messages were not enqueued in stress test scenario
-
-### Removed
-
 
 ## [3.5.0] - 2019-06-18
 
