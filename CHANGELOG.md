@@ -9,10 +9,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 ### Removed
 
-## [3.5.1] - 2019-07-17
+## [3.5.1] - 2019-08-06
+### Added
+- 2019-08-06 : (PLB2B-784)  : Added opt out for carthage verbose setting since it can fail in Jenkins environment
 
 ### Fixed
-- 2019-07-12 : (PLB2B-703)  : Fix issue where heart beat messages were not enqueued in stress test scenario
+- 2019-07-12 : (PLB2B-703)  : Fixed issue where heart beat messages were not enqueued in stress test scenario
 
 ## [3.5.0] - 2019-06-18
 
