@@ -1,7 +1,6 @@
-set -e
-
 CURRENT_TAG=$(git describe --exact-match --tags HEAD)
 if [ ! -z "$CURRENT_TAG" ]; then
+    set -e
     echo "Current tag is ${CURRENT_TAG}"
     BRANCH_NAME=release/${CURRENT_TAG}_static_framework
     echo "Creating branch ${BRANCH_NAME}"
@@ -17,7 +16,7 @@ if [ ! -z "$CURRENT_TAG" ]; then
     echo "Commit..."
     git add .
     git commit -m "Prepare static release ${CURRENT_TAG}"
-    git push --set-upstream origin $(git_current_branch)
+    git push --set-upstream origin ${BRANCH_NAME}
 else 
     echo "No tag found. This script should only be executed on a commit which contains tag."
 fi
