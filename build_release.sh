@@ -5,11 +5,11 @@ cd Example
 rm -rf ../BUILD Carthage DerivedData
 
 if [ ! -z "$STATIC_BUILD" ]; then
-    OUTPUT_PATH=../BUILD/Dynamic
-    CARTHAGE_BUILD_PATH=Carthage/Build/iOS
-else
     OUTPUT_PATH=../BUILD/Static
     CARTHAGE_BUILD_PATH=Carthage/Build/iOS/Static
+else
+    OUTPUT_PATH=../BUILD/Dynamic
+    CARTHAGE_BUILD_PATH=Carthage/Build/iOS
 fi
 
 # CARTHAGE_NO_VERBOSE flag turns off the verbose log of carthage which led to issues in jenkins job,
