@@ -1,3 +1,11 @@
+# This script will prepare project to create a static Cocoa Touch framework.
+# It is there to be executed after creation of a new release and has to be executed on a commit containing a version tag.
+# In detail, it performs following steps:
+# 1. Creates a new branch with the name scheme "release/CURRENT_TAG_static_framework"
+# 2. Changes type of framework to static
+# 3. Reintegrates pods as static library dependencies (with removes "use_frameworks!" call)
+# 4. creates a new tag and pushes it to origin
+
 CURRENT_TAG=$(git describe --exact-match --tags HEAD)
 if [ ! -z "$CURRENT_TAG" ]; then
     set -e
