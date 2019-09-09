@@ -17,6 +17,8 @@ if [ ! -z "$CURRENT_TAG" ]; then
     git add .
     git commit -m "Prepare static release ${CURRENT_TAG}"
     git push --set-upstream origin ${BRANCH_NAME}
+    git tag ${CURRENT_TAG}_static_framework
+    git push origin ${CURRENT_TAG}_static_framework
 else 
     echo "No tag found. This script should only be executed on a commit which contains tag."
 fi
