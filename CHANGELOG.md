@@ -5,11 +5,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 ### Added
-- 2019-09-09 : (PLB2B-846)  : Added setup for creating static framework
-
 ### Changed
 ### Fixed
 ### Removed
+
+## [3.5.2] - 2019-09-20
+
+### Added
+- 2019-09-09 : (PLB2B-846)  : Added setup for creating static framework
 
 ## [3.5.1] - 2019-08-06
 ### Added

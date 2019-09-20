@@ -1,3 +1,7 @@
+# [3.5.2] - 2019-09-20
+
+- Added minor improvements to build tools
+
 # [3.5.1] - 2019-07-17
 
 - Fix issue where a disconnection could happen in a stress test scenario
