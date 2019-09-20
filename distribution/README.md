@@ -5,7 +5,7 @@ Framework for communicating with the Secure Access BLE hardware.
 
 ## Prerequisites
 * [Xcode 10.2.1](https://developer.apple.com/xcode/ide/)
-* [CocoaPods 1.4.0](https://cocoapods.org)
+* [CocoaPods 1.6.0](https://cocoapods.org)
 
 ## License
 Copyright (c) 2018-present, Huf Secure Mobile GmbH
