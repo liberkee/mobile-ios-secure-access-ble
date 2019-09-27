@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+set -e
 
 run_carthage() {
     BUILD_TYPE=$1
@@ -32,14 +32,7 @@ cd Example
 rm -rf ../BUILD Carthage DerivedData
 
 CARTHAGE_BUILD_PATH=Carthage/Build/iOS
-# If the build should include static build, start with dynamic and put it into the Dynamic folder
-if [ ! -z "$INCLUDE_STATIC_BUILD" ]; then
-    #OUTPUT_PATH=../BUILD/Static
-    #CARTHAGE_BUILD_PATH=Carthage/Build/iOS/Static
-    OUTPUT_PATH=../BUILD/Dynamic
-else
-    OUTPUT_PATH=../BUILD/
-fi
+OUTPUT_PATH=../BUILD/Dynamic
 
 echo "**********Starting dynamic build**********"
 run_carthage dynamic
