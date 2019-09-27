@@ -5,9 +5,14 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 ### Added
+- 2019-09-27 : (PLB2B-891)  : Build with Xcode 11
+
 ### Changed
 ### Fixed
+- 2019-09-27 : (PLB2B-891)  : Fixed issue with Carthage which lead to necessity of preparing static setup locally
+
 ### Removed
+- 2019-09-27 : (PLB2B-891)  : Removed static framework creation script
 
 ## [3.5.2] - 2019-09-20
 
