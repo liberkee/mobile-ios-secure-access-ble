@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'SecureAccessBLE'
-  s.version          = '3.5.2'
+  s.version          = '3.6.0'
   s.summary          = 'SecureAccess BLE framework'
   s.description      = 'Framework for communicating with the SecureAccess BLE hardware.'
 
@@ -22,5 +22,5 @@ Pod::Spec.new do |s|
   s.source_files = 'SecureAccessBLE/Classes/**/*'
 
   s.dependency 'CryptoSwift', '1.0.0'
-  s.swift_version = '5.0'
+  s.swift_version = '5.1'
 end

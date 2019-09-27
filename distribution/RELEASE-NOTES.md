@@ -1,3 +1,7 @@
+# [3.6.0] - 2019-09-27
+
+- Added support for Xcode 11
+
 # [3.5.2] - 2019-09-20
 
 - Added minor improvements to build tools
