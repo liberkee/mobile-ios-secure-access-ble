@@ -1,3 +1,7 @@
+# [3.6.1] - 2019-10-10
+
+- Fixed issue where code documentation was missing symbols
+
 # [3.6.0] - 2019-09-27
 
 - Added support for Xcode 11

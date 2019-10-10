@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'SecureAccessBLE'
-  s.version          = '3.6.0'
+  s.version          = '3.6.1'
   s.summary          = 'SecureAccess BLE framework'
   s.description      = 'Framework for communicating with the SecureAccess BLE hardware.'
 
