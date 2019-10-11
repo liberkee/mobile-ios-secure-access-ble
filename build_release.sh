@@ -13,7 +13,6 @@ run_carthage() {
 }
 
 prepare_static_framework() {
-    bundle install
     echo "Changing MACH_O_TYPE of target to staticlib..." 
     sed -i '' 's/MACH_O_TYPE.*/MACH_O_TYPE = staticlib;/g' SecureAccessBLE.xcodeproj/project.pbxproj 
     echo "Reinstalling pods as static libs..."
