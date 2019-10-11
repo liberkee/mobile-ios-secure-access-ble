@@ -6,12 +6,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 ### Changed
+### Fixed
+### Removed
+
+## [3.6.1] - 2019-10-11
+
+### Changed
 - 2019-10-11 : (PLB2B-903)  : Migrated to Cocoapods 1.8.3 (use trunk repo from CDN)
 
 ### Fixed
 - 2019-10-10 : (PLB2B-903)  : Fixed doc generation by upgrading jazzy
-
-### Removed
 
 ## [3.6.0] - 2019-09-27
 
