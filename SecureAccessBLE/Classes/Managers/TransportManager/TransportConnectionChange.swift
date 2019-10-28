@@ -25,13 +25,8 @@ extension TransportConnectionChange {
     /// The state the connection can be in
     enum State: Equatable {
         case disconnected
-        case connecting(sorcID: SorcID, state: ConnectingState)
+        case connecting(sorcID: SorcID)
         case connected(sorcID: SorcID)
-
-        enum ConnectingState {
-            case physical
-            case requestingMTU
-        }
     }
 }
 
@@ -40,7 +35,6 @@ extension TransportConnectionChange {
     enum Action: Equatable {
         case initial
         case connect(sorcID: SorcID)
-        case physicalConnectionEstablished(sorcID: SorcID)
         case connectionEstablished(sorcID: SorcID)
         case connectingFailed(sorcID: SorcID, error: ConnectingFailedError)
         case disconnect
@@ -50,7 +44,6 @@ extension TransportConnectionChange {
     /// The errors that can occur if the connection attempt fails
     enum ConnectingFailedError: Error {
         case physicalConnectingFailed
-        case invalidMTUResponse
     }
 
     /// The errors that can occur if the connection is lost

@@ -43,9 +43,6 @@ extension ConnectionChange {
             /// Physical state
             case physical
 
-            /// Transport state
-            case transport
-
             /// Challenging state
             case challenging
         }
@@ -63,9 +60,6 @@ extension ConnectionChange {
 
         /// Physical connection with provided `SorcID` established
         case physicalConnectionEstablished(sorcID: SorcID)
-
-        /// Transport connection with provided `SorcID` established
-        case transportConnectionEstablished(sorcID: SorcID)
 
         /// Connection with provided `SorcID` established
         case connectionEstablished(sorcID: SorcID)
@@ -85,9 +79,6 @@ extension ConnectionChange {
 public enum ConnectingFailedError: Error {
     /// Physical connecting failed
     case physicalConnectingFailed
-
-    /// Invalid MTU response
-    case invalidMTUResponse
 
     /// Challenge failed
     case challengeFailed

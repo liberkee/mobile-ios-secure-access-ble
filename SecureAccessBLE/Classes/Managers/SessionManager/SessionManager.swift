@@ -142,22 +142,15 @@ class SessionManager: SessionManagerType {
         secureConnectingState: SecureConnectionChange.State.ConnectingState
     ) {
         switch secureConnectingState {
-        case .physical: break
-        case .transport:
+        case .physical:
+            break
+        case .challenging:
             guard case let .connecting(sorcID, .physical) = connectionChange.state, sorcID == securitySorcID else {
                 return
             }
             connectionChange.onNext(.init(
-                state: .connecting(sorcID: sorcID, state: .transport),
-                action: .physicalConnectionEstablished(sorcID: sorcID)
-            ))
-        case .challenging:
-            guard case let .connecting(sorcID, .transport) = connectionChange.state, sorcID == securitySorcID else {
-                return
-            }
-            connectionChange.onNext(.init(
                 state: .connecting(sorcID: sorcID, state: .challenging),
-                action: .transportConnectionEstablished(sorcID: sorcID)
+                action: .physicalConnectionEstablished(sorcID: sorcID)
             ))
         }
     }
@@ -315,7 +308,7 @@ class SessionManager: SessionManagerType {
     }
 
     @objc func sendHeartbeat() {
-        let message = SorcMessage(id: SorcMessageID.heartBeatRequest, payload: MTUSize())
+        let message = SorcMessage(id: SorcMessageID.heartBeatRequest, payload: DefaultMessage())
         do {
             try enqueueMessage(message)
             HSMLog(message: "Enqueued heartbeat message", level: .debug)
@@ -348,8 +341,6 @@ private extension ConnectingFailedError {
         switch secureConnectingFailedError {
         case .physicalConnectingFailed:
             self = .physicalConnectingFailed
-        case .invalidMTUResponse:
-            self = .invalidMTUResponse
         case .challengeFailed:
             self = .challengeFailed
         case .blobOutdated:

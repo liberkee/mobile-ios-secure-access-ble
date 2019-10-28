@@ -20,10 +20,6 @@ enum SorcMessageID: UInt8 {
     case challengePhoneResponse = 0x04
     /// Response message for bad response from mobile to SORC
     case badChallengePhoneResponse = 0x05
-    /// Request to get negotiated MTU Size
-    case mtuRequest = 0x06
-    /// To provide negotiated MTU size
-    case mtuReceive = 0x07
     /// To transfer blob or lease token
     case ltAck = 0x09
     /// Test message from mobile to SORC

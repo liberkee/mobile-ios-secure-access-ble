@@ -434,8 +434,9 @@ extension ConnectionManager {
         }
 
         if writeCharacteristic != nil, notifyCharacteristic != nil {
+            let mtuSize = peripheral.maximumWriteValueLength(for: .withoutResponse)
             connectionChange.onNext(.init(state: .connected(sorcID: sorcID),
-                                          action: .connectionEstablished(sorcID: sorcID)))
+                                          action: .connectionEstablished(sorcID: sorcID, mtuSize: mtuSize)))
         }
     }
 

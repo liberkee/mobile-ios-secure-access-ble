@@ -103,20 +103,16 @@ class SecurityManager: SecurityManagerType {
 
     private func handleTransportConnectionChange(_ transportChange: TransportConnectionChange) {
         switch transportChange.state {
-        case let .connecting(transportSorcID, transportConnectingState):
-            switch transportConnectingState {
-            case .physical: break
-            case .requestingMTU:
-                guard case let .connecting(sorcID, .physical) = connectionChange.state, sorcID == transportSorcID else {
-                    return
-                }
-                connectionChange.onNext(.init(
-                    state: .connecting(sorcID: sorcID, state: .transport),
-                    action: .physicalConnectionEstablished(sorcID: sorcID)
-                ))
+        case let .connecting(transportSorcID):
+            guard case let .connecting(sorcID, .physical) = connectionChange.state, sorcID == transportSorcID else {
+                return
             }
+            connectionChange.onNext(.init(
+                state: .connecting(sorcID: sorcID, state: .physical),
+                action: .physicalConnectionEstablished(sorcID: sorcID)
+            ))
         case let .connected(sorcID):
-            guard connectionChange.state == .connecting(sorcID: sorcID, state: .transport) else { return }
+            guard connectionChange.state == .connecting(sorcID: sorcID, state: .physical) else { return }
             establishCrypto()
         case .disconnected:
             if connectionChange.state == .disconnected { return }
@@ -166,7 +162,7 @@ class SecurityManager: SecurityManagerType {
         do {
             connectionChange.onNext(.init(
                 state: .connecting(sorcID: sorcID, state: .challenging),
-                action: .transportConnectionEstablished(sorcID: sorcID)
+                action: .physicalConnectionEstablished(sorcID: sorcID)
             ))
             try challenger.beginChallenge()
         } catch {
@@ -318,8 +314,6 @@ private extension SecureConnectionChange.ConnectingFailedError {
         switch transportConnectingFailedError {
         case .physicalConnectingFailed:
             self = .physicalConnectingFailed
-        case .invalidMTUResponse:
-            self = .invalidMTUResponse
         }
     }
 }

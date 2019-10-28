@@ -10,8 +10,6 @@
 import XCTest
 
 private let sorcIDA = UUID(uuidString: "be2fecaf-734b-4252-8312-59d477200a20")!
-private let mtuRequestData = Data([0x30, 0x00, 0x01, 0x00, 0x06])
-private let mtuReceiveData = Data([0x36, 0x00, 0x03, 0x00, 0x07, 0xB6, 0x00])
 private let messageDataA = Data([0xAB, 0xCD, 0xEF])
 private let frameDataA = Data([0x30, 0x00, 0x03, 0x00, 0xAB, 0xCD, 0xEF])
 
@@ -67,7 +65,7 @@ class TransportManagerTests: XCTestCase {
         XCTAssertEqual(connectionManager.connectToSorcCalledWithSorcID!, sorcIDA)
 
         let physicalConnectingChange = TransportConnectionChange(
-            state: .connecting(sorcID: sorcIDA, state: .physical),
+            state: .connecting(sorcID: sorcIDA),
             action: .connect(sorcID: sorcIDA)
         )
         XCTAssertEqual(receivedConnectionChange, physicalConnectingChange)
@@ -75,21 +73,8 @@ class TransportManagerTests: XCTestCase {
         // When
         connectionManager.connectionChange.onNext(.init(
             state: .connected(sorcID: sorcIDA),
-            action: .connectionEstablished(sorcID: sorcIDA)
+            action: .connectionEstablished(sorcID: sorcIDA, mtuSize: 150)
         ))
-
-        // Then
-        let transportConnectingChange = TransportConnectionChange(
-            state: .connecting(sorcID: sorcIDA, state: .requestingMTU),
-            action: .physicalConnectionEstablished(sorcID: sorcIDA)
-        )
-        XCTAssertEqual(receivedConnectionChange, transportConnectingChange)
-
-        XCTAssertEqual(connectionManager.sendDataCalledWithData, mtuRequestData)
-
-        // When
-        connectionManager.dataSent.onNext(nil)
-        connectionManager.dataReceived.onNext(.success(mtuReceiveData))
 
         // Then
         let connectedChange = TransportConnectionChange(
@@ -115,14 +100,6 @@ class TransportManagerTests: XCTestCase {
         // Then
         XCTAssertEqual(connectionManager.connectToSorcCalledWithSorcID, sorcIDA)
         XCTAssertEqual(receivedConnectionChange.action, .initial)
-    }
-
-    func test_connectToSorc_ifTransportConnecting_doesNothing() {
-        // Given
-        prepareTransportConnecting()
-
-        // When // Then
-        connectToSorcAndAssertDoesNothing()
     }
 
     func test_connectToSorc_ifConnected_doesNothing() {
@@ -213,18 +190,12 @@ class TransportManagerTests: XCTestCase {
         connectionManager.connectToSorcCalledWithSorcID = nil
     }
 
-    private func prepareTransportConnecting() {
+    private func prepareConnected() {
         preparePhysicalConnecting()
         connectionManager.connectionChange.onNext(.init(
             state: .connected(sorcID: sorcIDA),
-            action: .connectionEstablished(sorcID: sorcIDA)
+            action: .connectionEstablished(sorcID: sorcIDA, mtuSize: 150)
         ))
-    }
-
-    private func prepareConnected() {
-        prepareTransportConnecting()
-        connectionManager.dataSent.onNext(nil)
-        connectionManager.dataReceived.onNext(.success(mtuReceiveData))
     }
 
     // MARK: - Helper

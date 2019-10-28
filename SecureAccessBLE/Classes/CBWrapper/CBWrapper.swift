@@ -46,6 +46,8 @@ protocol CBPeripheralType: class {
 
     func writeValue(_ data: Data, for characteristic: CBCharacteristicType, type: CBCharacteristicWriteType)
 
+    func maximumWriteValueLength(for type: CBCharacteristicWriteType) -> Int
+
     func setNotifyValue(_ enabled: Bool, for characteristic: CBCharacteristicType)
 }
 

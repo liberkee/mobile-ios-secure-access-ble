@@ -74,19 +74,6 @@ class SecurityManagerTests: XCTestCase {
 
         // When
         transportManager.connectionChange.onNext(.init(
-            state: .connecting(sorcID: sorcIDA, state: .requestingMTU),
-            action: .physicalConnectionEstablished(sorcID: sorcIDA)
-        ))
-
-        // Then
-        let transportConnectingChange = SecureConnectionChange(
-            state: .connecting(sorcID: sorcIDA, state: .transport),
-            action: .physicalConnectionEstablished(sorcID: sorcIDA)
-        )
-        XCTAssertEqual(receivedConnectionChange, transportConnectingChange)
-
-        // When
-        transportManager.connectionChange.onNext(.init(
             state: .connected(sorcID: sorcIDA),
             action: .connectionEstablished(sorcID: sorcIDA)
         ))
@@ -94,7 +81,7 @@ class SecurityManagerTests: XCTestCase {
         // Then
         let challengingConnectingChange = SecureConnectionChange(
             state: .connecting(sorcID: sorcIDA, state: .challenging),
-            action: .transportConnectionEstablished(sorcID: sorcIDA)
+            action: .physicalConnectionEstablished(sorcID: sorcIDA)
         )
         XCTAssertEqual(receivedConnectionChange, challengingConnectingChange)
 
@@ -131,14 +118,6 @@ class SecurityManagerTests: XCTestCase {
         // Then
         XCTAssertEqual(transportManager.connectToSorcCalledWithSorcID, sorcIDA)
         XCTAssertEqual(receivedConnectionChange.action, .initial)
-    }
-
-    func test_connectToSorc_ifTransportConnecting_doesNothing() {
-        // Given
-        prepareTransportConnecting()
-
-        // When // Then
-        connectToSorcAndAssertDoesNothing()
     }
 
     func test_connectToSorc_ifChallengingConnecting_doesNothing() {
@@ -317,16 +296,8 @@ class SecurityManagerTests: XCTestCase {
         transportManager.connectToSorcCalledWithSorcID = nil
     }
 
-    private func prepareTransportConnecting(blob: LeaseTokenBlob? = nil) {
-        preparePhysicalConnecting(blob: blob)
-        transportManager.connectionChange.onNext(.init(
-            state: .connecting(sorcID: sorcIDA, state: .requestingMTU),
-            action: .physicalConnectionEstablished(sorcID: sorcIDA)
-        ))
-    }
-
     private func prepareChallengingConnecting(blob: LeaseTokenBlob? = nil) {
-        prepareTransportConnecting(blob: blob)
+        preparePhysicalConnecting(blob: blob)
         transportManager.connectionChange.onNext(.init(
             state: .connected(sorcID: sorcIDA),
             action: .connectionEstablished(sorcID: sorcIDA)
