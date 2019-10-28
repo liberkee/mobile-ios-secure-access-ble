@@ -8,6 +8,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 ### Fixed
 ### Removed
+- 2019-10-28 : (PLB2B-923)  : Removed manual mtu size negotiation
+
 
 ## [3.6.1] - 2019-10-11
 
