@@ -79,6 +79,11 @@ class CBPeripheralMock: CBPeripheralType {
     func setNotifyValue(_ enabled: Bool, for characteristic: CBCharacteristicType) {
         setNotifyValueCalledWithArguments = (enabled, characteristic)
     }
+
+    var mockedMTUSize = 0
+    func maximumWriteValueLength(for _: CBCharacteristicWriteType) -> Int {
+        return mockedMTUSize
+    }
 }
 
 class CBServiceMock: CBServiceType {
@@ -899,7 +904,9 @@ class ConnectionManagerTests: XCTestCase {
         let connectionManager = ConnectionManager(centralManager: centralManager)
         let peripheral = CBPeripheralMock()
         let service = CBServiceMock()
+        let mtuSize = 150
         peripheral.services_ = [service]
+        peripheral.mockedMTUSize = mtuSize
 
         let writeCharacteristic = CBCharacteristicMock()
         writeCharacteristic.uuid = CBUUID(string: writeCharacteristicID)
@@ -920,7 +927,7 @@ class ConnectionManagerTests: XCTestCase {
 
         // Then
         let expected = PhysicalConnectionChange(state: .connected(sorcID: sorcID1),
-                                                action: .connectionEstablished(sorcID: sorcID1))
+                                                action: .connectionEstablished(sorcID: sorcID1, mtuSize: mtuSize))
         XCTAssertEqual(receivedConnectionChange, expected)
 
         if let arguments = peripheral.setNotifyValueCalledWithArguments {

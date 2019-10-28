@@ -28,7 +28,6 @@ extension SecureConnectionChange {
 
         enum ConnectingState {
             case physical
-            case transport
             case challenging
         }
     }
@@ -40,7 +39,6 @@ extension SecureConnectionChange {
         case initial
         case connect(sorcID: SorcID)
         case physicalConnectionEstablished(sorcID: SorcID)
-        case transportConnectionEstablished(sorcID: SorcID)
         case connectionEstablished(sorcID: SorcID)
         case connectingFailed(sorcID: SorcID, error: ConnectingFailedError)
         case disconnect
@@ -50,7 +48,6 @@ extension SecureConnectionChange {
     /// The errors that can occur if the connection attempt fails
     enum ConnectingFailedError: Error {
         case physicalConnectingFailed
-        case invalidMTUResponse
         case challengeFailed
         case blobOutdated
         case invalidTimeFrame

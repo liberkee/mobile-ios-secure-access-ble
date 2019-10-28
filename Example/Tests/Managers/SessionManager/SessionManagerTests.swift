@@ -88,27 +88,14 @@ class SessionManagerTests: XCTestCase {
 
         // When
         securityManager.connectionChange.onNext(.init(
-            state: .connecting(sorcID: sorcIDA, state: .transport),
-            action: .physicalConnectionEstablished(sorcID: sorcIDA)
-        ))
-
-        // Then
-        let transportConnectingChange = ConnectionChange(
-            state: .connecting(sorcID: sorcIDA, state: .transport),
-            action: .physicalConnectionEstablished(sorcID: sorcIDA)
-        )
-        XCTAssertEqual(receivedConnectionChange, transportConnectingChange)
-
-        // When
-        securityManager.connectionChange.onNext(.init(
             state: .connecting(sorcID: sorcIDA, state: .challenging),
-            action: .transportConnectionEstablished(sorcID: sorcIDA)
+            action: .physicalConnectionEstablished(sorcID: sorcIDA)
         ))
 
         // Then
         let challengingConnectingChange = ConnectionChange(
             state: .connecting(sorcID: sorcIDA, state: .challenging),
-            action: .transportConnectionEstablished(sorcID: sorcIDA)
+            action: .physicalConnectionEstablished(sorcID: sorcIDA)
         )
         XCTAssertEqual(receivedConnectionChange, challengingConnectingChange)
 
@@ -143,14 +130,6 @@ class SessionManagerTests: XCTestCase {
         let expectedArguments = (leaseToken: leaseTokenA, leaseTokenBlob: leaseTokenBlobA)
         XCTAssert(securityManager.connectToSorcCalledWithArguments! == expectedArguments)
         XCTAssertEqual(receivedConnectionChange.action, .initial)
-    }
-
-    func test_connectToSorc_ifTransportConnecting_doesNothing() {
-        // Given
-        prepareTransportConnecting()
-
-        // When // Then
-        connectToSorcAndAssertDoesNothing()
     }
 
     func test_connectToSorc_ifChallengingConnecting_doesNothing() {
@@ -457,7 +436,7 @@ class SessionManagerTests: XCTestCase {
         // Then
         let expectedMessage = SorcMessage(
             id: SorcMessageID.heartBeatRequest,
-            payload: MTUSize()
+            payload: DefaultMessage()
         )
         let lastMessagePassedToSecManager = securityManager.sendMessageCalledWithMessage!
         XCTAssertEqual(lastMessagePassedToSecManager, expectedMessage)
@@ -470,19 +449,11 @@ class SessionManagerTests: XCTestCase {
         securityManager.connectToSorcCalledWithArguments = nil
     }
 
-    private func prepareTransportConnecting() {
+    private func prepareChallengingConnecting() {
         preparePhysicalConnecting()
         securityManager.connectionChange.onNext(.init(
-            state: .connecting(sorcID: sorcIDA, state: .transport),
-            action: .physicalConnectionEstablished(sorcID: sorcIDA)
-        ))
-    }
-
-    private func prepareChallengingConnecting() {
-        prepareTransportConnecting()
-        securityManager.connectionChange.onNext(.init(
             state: .connecting(sorcID: sorcIDA, state: .challenging),
-            action: .transportConnectionEstablished(sorcID: sorcIDA)
+            action: .physicalConnectionEstablished(sorcID: sorcIDA)
         ))
     }
 

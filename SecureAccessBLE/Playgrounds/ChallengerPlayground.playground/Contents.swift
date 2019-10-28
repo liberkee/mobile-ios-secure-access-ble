@@ -12,8 +12,6 @@ enum SorcMessageID: UInt8 {
     case sorcTest = 0x13
     case serviceGrant = 0x20
     case serviceGrantTrigger = 0x30
-    case mtuRequest = 0x06
-    case mtuReceive = 0x07
     case notValid = 0xFF
 }
 

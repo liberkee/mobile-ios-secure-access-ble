@@ -55,11 +55,11 @@ class TransportManager: TransportManagerType {
 
     func connectToSorc(_ sorcID: SorcID) {
         guard connectionChange.state == .disconnected
-            || connectionChange.state == .connecting(sorcID: sorcID, state: .physical) else { return }
+            || connectionChange.state == .connecting(sorcID: sorcID) else { return }
 
         if connectionChange.state == .disconnected {
             connectionChange.onNext(.init(
-                state: .connecting(sorcID: sorcID, state: .physical),
+                state: .connecting(sorcID: sorcID),
                 action: .connect(sorcID: sorcID)
             ))
         }
@@ -100,14 +100,18 @@ class TransportManager: TransportManagerType {
         switch change.state {
         case .connecting: break
         case let .connected(dataSorcID):
-            guard case let .connecting(sorcID, .physical) = connectionChange.state,
+            guard case let .connecting(sorcID) = connectionChange.state,
                 sorcID == dataSorcID else { return }
 
+            guard case let .connectionEstablished(sorcID: _, mtuSize: mtuSize) = change.action else {
+                return
+            }
+            self.mtuSize = mtuSize
+
             connectionChange.onNext(.init(
-                state: .connecting(sorcID: sorcID, state: .requestingMTU),
-                action: .physicalConnectionEstablished(sorcID: sorcID)
+                state: .connected(sorcID: sorcID),
+                action: .connectionEstablished(sorcID: sorcID)
             ))
-            sendMTURequest()
 
         case .disconnected:
             if connectionChange.state == .disconnected { return }
@@ -141,23 +145,6 @@ class TransportManager: TransportManagerType {
             default: break
             }
         }
-    }
-
-    // MARK: - MTU handling
-
-    private func sendMTURequest() {
-        let message = SorcMessage(id: SorcMessageID.mtuRequest, payload: MTUSize())
-        sendDataInternal(message.data)
-    }
-
-    private func handleMTUReceived(mtuSize: Int) {
-        guard case let .connecting(sorcID, .requestingMTU) = connectionChange.state else { return }
-
-        self.mtuSize = mtuSize
-        connectionChange.onNext(.init(
-            state: .connected(sorcID: sorcID),
-            action: .connectionEstablished(sorcID: sorcID)
-        ))
     }
 
     // MARK: - Data package and frame handling
@@ -197,13 +184,7 @@ class TransportManager: TransportManagerType {
     }
 
     private func handleReceivedDataResult(_ result: Result<Data>) {
-        switch connectionChange.state {
-        case .connecting(_, .requestingMTU), .connected:
-            break
-        default:
-            return
-        }
-
+        guard case .connected = connectionChange.state else { return }
         switch result {
         case let .success(data):
             handleReceivedData(data)
@@ -225,24 +206,11 @@ class TransportManager: TransportManagerType {
         resetReceivingPackage()
         let messageData = package.message
 
-        if case let .connecting(sorcID, .requestingMTU) = connectionChange.state {
-            let message = SorcMessage(rawData: messageData)
-            if message.id == .mtuReceive, let mtuSize = MTUSize(rawData: message.message).mtuSize {
-                handleMTUReceived(mtuSize: mtuSize)
-            } else {
-                disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .invalidMTUResponse))
-            }
-        } else {
-            dataReceived.onNext(.success(messageData))
-        }
+        dataReceived.onNext(.success(messageData))
     }
 
     private func handleReceivedDataError(_ error: Error) {
-        if case let .connecting(sorcID, .requestingMTU) = connectionChange.state {
-            disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .invalidMTUResponse))
-        } else {
-            dataReceived.onNext(.failure(error))
-        }
+        dataReceived.onNext(.failure(error))
     }
 
     private func resetSendingPackage() {

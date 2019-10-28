@@ -20,29 +20,26 @@ class BLECryptorTests: XCTestCase {
         let zeroCryptor = ZeroSecurityManager()
 
         /// Testing message with get MTU request
-        let mtuRequestMessage = SorcMessage(id: SorcMessageID.mtuRequest, payload: MTUSize())
+        let message = SorcMessage(id: SorcMessageID.challengePhone, payload: DefaultMessage())
 
         /// Mock data from SORC with response MTU Receive Data
         let mtuReceiveData = [0x07, 0x9B, 0x00] as [UInt8]
 
         /// testing with encrypting message
-        XCTAssertNotNil(zeroCryptor.encryptMessage(mtuRequestMessage), "Crypto manager returned NIL for encrpting message")
+        XCTAssertNotNil(zeroCryptor.encryptMessage(message), "Crypto manager returned NIL for encrpting message")
 
         let mtuReceivMessage = zeroCryptor.decryptData(Data(mtuReceiveData))
         /// testing with decrypting received message data
         XCTAssertNotNil(mtuReceivMessage, "Crypto manager returned NIL for decrpting message")
 
         /// Payload for MTUReceivMessage
-        let payload = MTUSize(rawData: mtuReceivMessage.message)
+        let payload = DefaultMessage(rawData: mtuReceivMessage.message)
 
         /// To get MTU Size from SORC message
-        let mtuSize = payload.mtuSize
-
-        /// testing if response message is valid
-        XCTAssertNotNil(mtuSize, "Crypto manager has not received MTU Size")
+        let firstByte = Int(payload.data.bytes.first!)
 
         // The mtu size responses from SORC, 155 was defined for ios APP
-        XCTAssert(payload.mtuSize == 155, "Crypto manager has wrong MTUSize")
+        XCTAssert(firstByte == 155, "Crypto manager has wrong MTUSize")
     }
 
     /**

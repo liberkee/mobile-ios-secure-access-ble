@@ -25,7 +25,7 @@ struct PhysicalConnectionChange: ChangeType, Equatable {
     enum Action: Equatable {
         case initial
         case connect(sorcID: SorcID)
-        case connectionEstablished(sorcID: SorcID)
+        case connectionEstablished(sorcID: SorcID, mtuSize: Int)
         case connectingFailed(sorcID: SorcID)
         case disconnect(sorcID: SorcID)
         case connectionLost(sorcID: SorcID)
