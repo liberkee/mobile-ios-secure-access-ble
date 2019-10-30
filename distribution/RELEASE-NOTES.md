@@ -1,3 +1,8 @@
+# [3.7.0] - 2019-10-30
+
+- Fixed issue where SDK did an attempt to negotiate the MTU size twice
+- Simplified connection change events of SorcManager by removing MTU size as well as transport connection related events. 
+
 # [3.6.1] - 2019-10-10
 
 - Fixed issue where code documentation was missing symbols
