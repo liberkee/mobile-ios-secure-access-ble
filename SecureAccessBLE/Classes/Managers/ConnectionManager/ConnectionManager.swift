@@ -44,9 +44,34 @@ private extension CBManagerState {
     }
 }
 
+/// Describes state of bluetooth adapter
+public enum BluetoothState {
+    /// State is unknown
+    case unknown
+    /// The platform doesn't support Bluetooth Low Energy
+    case unsupported
+    /// The application is not authorized to use the Bluetooth Low Energy.
+    case unauthorized
+    /// Bluetooth is currently powered off
+    case poweredOff
+    /// Bluetooth is currently powered on and available to use
+    case poweredOn
+
+    init(centralState: CBManagerState) {
+        switch centralState {
+        case .poweredOff: self = .poweredOff
+        case .poweredOn: self = .poweredOn
+        case .resetting, .unknown: self = .unknown
+        case .unsupported: self = .unsupported
+        case .unauthorized: self = .unauthorized
+        @unknown default: self = .unknown
+        }
+    }
+}
+
 /// Manages the discovery and connection of SORCs
 class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProviderType, ScannerType {
-    let isBluetoothEnabled: BehaviorSubject<Bool>
+    let bluetoothState: BehaviorSubject<BluetoothState>
     let discoveryChange = ChangeSubject<DiscoveryChange>(state: .init(
         discoveredSorcs: SorcInfos(),
         discoveryIsEnabled: false
@@ -107,7 +132,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
         configuration: Configuration = Configuration()
     ) {
         self.systemClock = systemClock
-        isBluetoothEnabled = BehaviorSubject(value: centralManager.state == .poweredOn)
+        bluetoothState = BehaviorSubject(value: BluetoothState(centralState: centralManager.state))
         self.appActivityStatusProvider = appActivityStatusProvider
         self.configuration = configuration
         super.init()
@@ -345,7 +370,7 @@ extension ConnectionManager {
             }
         }
 
-        isBluetoothEnabled.onNext(central.state == .poweredOn)
+        bluetoothState.onNext(BluetoothState(centralState: central.state))
     }
 
     func centralManager_(_: CBCentralManagerType, didDiscover peripheral: CBPeripheralType,

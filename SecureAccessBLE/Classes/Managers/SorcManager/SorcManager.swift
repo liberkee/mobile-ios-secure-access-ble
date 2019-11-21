@@ -15,9 +15,9 @@ public class SorcManager: SorcManagerType {
 
     // MARK: - BLE Interface
 
-    /// The bluetooth enabled status
-    public var isBluetoothEnabled: StateSignal<Bool> {
-        return bluetoothStatusProvider.isBluetoothEnabled.asSignal()
+    /// The bluetooth status
+    public var bluetoothState: StateSignal<BluetoothState> {
+        return bluetoothStatusProvider.bluetoothState.asSignal()
     }
 
     // MARK: - Discovery
