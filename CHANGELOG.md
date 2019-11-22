@@ -5,12 +5,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 ### Added
-- 2019-11-21 : (PLB2B-943)  : Build with Xcode 11.2
-- 2019-11-21 : (PLB2B-942)  : Provide extended BluetoothState including unauthorized state 
-
 ### Changed
 ### Fixed
 ### Removed
+
+## [3.8.0] - 2019-11-22
+
+### Added
+- 2019-11-21 : (PLB2B-943)  : Build with Xcode 11.2
+- 2019-11-21 : (PLB2B-942)  : Provide extended BluetoothState including unauthorized state 
 
 ## [3.7.0] - 2019-10-30
 

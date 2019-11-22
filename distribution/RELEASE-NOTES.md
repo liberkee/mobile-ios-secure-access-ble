@@ -1,3 +1,8 @@
+# [3.8.0] - 2019-11-22
+
+- Support for Xcode 11.2
+- The `isBluetoothEnabled` signal of `SorcManager` was replaced with `bluetoothState` signal which provides new `BluetoothState` enum. This especially simplifies handling of `unauthorized` state of BLE interface which became important in iOS 13.
+
 # [3.7.0] - 2019-10-30
 
 - Fixed issue where SDK did an attempt to negotiate the MTU size twice
