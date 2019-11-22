@@ -153,22 +153,13 @@ class ConnectionManagerTests: XCTestCase {
 
     let centralManager = CBCentralManagerMock()
 
-    func test_isBluetoothEnabled_ifCentralManagerIsPoweredOn_returnsTrue() {
+    func test_bluetoothState_receivedFromCentralManager() {
         // Given
         centralManager.state = .poweredOn
         let connectionManager = ConnectionManager(centralManager: centralManager)
 
         // Then
-        XCTAssertTrue(connectionManager.isBluetoothEnabled.value)
-    }
-
-    func test_isBluetoothEnabled_ifCentralManagerIsNotPoweredOn_returnsFalse() {
-        // Given
-        centralManager.state = .poweredOff
-        let connectionManager = ConnectionManager(centralManager: centralManager)
-
-        // Then
-        XCTAssertFalse(connectionManager.isBluetoothEnabled.value)
+        XCTAssertTrue(connectionManager.bluetoothState.value == .poweredOn)
     }
 
     func test_startDiscovery_ifCentralManagerIsPoweredOn_scanForPeripheralsIsCalledAndDiscoveryIsEnabled() {
@@ -476,20 +467,21 @@ class ConnectionManagerTests: XCTestCase {
         XCTAssertNil(peripheral.writeValueCalledWithArguments)
     }
 
-    func test_centralManagerDidUpdateState_sendsIsBluetoothEnabledUpdate() {
+    func test_centralManagerDidUpdateState_sendsBluetoothStateUpdate() {
         // Given
         let connectionManager = ConnectionManager(centralManager: centralManager)
 
-        var isBluetoothEnabledUpdate: Bool?
-        _ = connectionManager.isBluetoothEnabled.subscribeNext { isBluetoothEnabled in
-            isBluetoothEnabledUpdate = isBluetoothEnabled
+        var receivedState: BluetoothState?
+        _ = connectionManager.bluetoothState.subscribeNext { state in
+            receivedState = state
         }
 
         // When
+        centralManager.state = .unauthorized
         connectionManager.centralManagerDidUpdateState_(centralManager)
 
         // Then
-        XCTAssertFalse(isBluetoothEnabledUpdate!)
+        XCTAssertEqual(receivedState, .unauthorized)
     }
 
     func test_centralManagerDidUpdateState_ifCentralManagerIsPoweredOnAndDiscoveryIsEnabled_itScansForPeripheralsAllowingDuplicates() {

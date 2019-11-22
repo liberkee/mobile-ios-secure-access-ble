@@ -15,7 +15,7 @@ private let sorcIDB = UUID(uuidString: "fd487104-c03b-4a94-8162-08826746b52d")!
 private let serviceGrantIDA: UInt16 = 0x01
 
 private class MockBluetoothStatusProvider: BluetoothStatusProviderType {
-    let isBluetoothEnabled = BehaviorSubject<Bool>(value: false)
+    let bluetoothState = BehaviorSubject<BluetoothState>(value: .poweredOff)
 }
 
 private class MockScanner: ScannerType {
@@ -108,29 +108,19 @@ class SorcManagerTests: XCTestCase {
         XCTAssertNotNil(SorcManager())
     }
 
-    func test_isBluetoothEnabled_ifTrueIsProvided_isTrue() {
+    func test_bluetoothState_ifNewStatusIsProvided_itNotifiesNewStatus() {
         // Given
-        bluetoothStatusProvider.isBluetoothEnabled.onNext(true)
-
-        // When
-        let isEnabled = sorcManager.isBluetoothEnabled.state
-
-        // Then
-        XCTAssertTrue(isEnabled)
-    }
-
-    func test_isBluetoothEnabled_ifNewStatusIsProvided_itNotifiesNewStatus() {
-        // Given
-        var receivedStatus: Bool?
-        _ = sorcManager.isBluetoothEnabled.subscribe { status in
-            receivedStatus = status
+        var receivedState: BluetoothState?
+        _ = sorcManager.bluetoothState.subscribe { status in
+            receivedState = status
         }
 
         // When
-        bluetoothStatusProvider.isBluetoothEnabled.onNext(true)
+        let newState = BluetoothState.unauthorized
+        bluetoothStatusProvider.bluetoothState.onNext(newState)
 
         // Then
-        XCTAssertTrue(receivedStatus!)
+        XCTAssertEqual(newState, receivedState)
     }
 
     func test_startDiscovery_delegatesCallToScanner() {

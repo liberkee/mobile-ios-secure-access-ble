@@ -6,8 +6,6 @@
 //  Copyright © 2018 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-import CoreBluetooth
-
 protocol ConnectionManagerType {
     var connectionChange: ChangeSubject<PhysicalConnectionChange> { get }
 

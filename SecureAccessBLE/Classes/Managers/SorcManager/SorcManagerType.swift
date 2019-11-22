@@ -13,8 +13,8 @@ public typealias SorcID = UUID
 public protocol SorcManagerType {
     // MARK: - BLE Interface
 
-    /// The bluetooth enabled status
-    var isBluetoothEnabled: StateSignal<Bool> { get }
+    /// The bluetooth  state
+    var bluetoothState: StateSignal<BluetoothState> { get }
 
     // MARK: - Discovery
 

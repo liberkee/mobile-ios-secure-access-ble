@@ -9,5 +9,5 @@
 import Foundation
 
 protocol BluetoothStatusProviderType {
-    var isBluetoothEnabled: BehaviorSubject<Bool> { get }
+    var bluetoothState: BehaviorSubject<BluetoothState> { get }
 }
