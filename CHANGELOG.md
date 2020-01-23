@@ -9,6 +9,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 ### Removed
 
+## [Unreleased] 
+
+### Added
+- 2020-01-23 : (PLB2B-1004)  : Build with Xcode 11.3
+
 ## [3.8.0] - 2019-11-22
 
 ### Added
