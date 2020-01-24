@@ -1,3 +1,7 @@
+# [3.8.1] - 2020-01-24
+
+- Added support for Xcode 11.3
+
 # [3.8.0] - 2019-11-22
 
 - Support for Xcode 11.2
