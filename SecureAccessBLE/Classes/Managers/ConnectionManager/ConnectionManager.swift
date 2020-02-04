@@ -180,6 +180,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     /// If a connection to an undiscovered SORC is tried it fails silently.
     func connectToSorc(_ sorcID: SorcID) {
         guard let peripheral = peripheralMatchingSorcID(sorcID) else {
+//            eventTrackManager.trackEvents(.scanBLE, message: "undiscovered SORC", level: .error)
             HSMLog(message: "BLE - Try to connect to an undiscovered SORC", level: .error)
             return
         }
@@ -270,12 +271,14 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
         switch action {
         case .startDiscovery:
             guard !state.discoveryIsEnabled else { return }
+            HSMTracker(forEvent: .scanBLE, withMessage: "Start Discovery", level: .info)
             discoveryChange.onNext(.init(
                 state: state.withDiscoveryIsEnabled(true),
                 action: action
             ))
         case .stopDiscovery:
             guard state.discoveryIsEnabled else { return }
+            HSMTracker(forEvent: .scanBLE, withMessage: "Stop Discovery", level: .info)
             discoveryChange.onNext(.init(
                 state: state.withDiscoveryIsEnabled(false),
                 action: action

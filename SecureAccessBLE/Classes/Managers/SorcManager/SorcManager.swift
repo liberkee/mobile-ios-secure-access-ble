@@ -52,6 +52,7 @@ public class SorcManager: SorcManagerType {
     ///   - leaseToken: The lease token for the SORC
     ///   - leaseTokenBlob: The blob for the SORC
     public func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob) {
+        HSMTracker(forEvent: .scanBLE, withMessage: "Connected", level: .info)
         HSMLog(message: "BLE - Connected to SORC", level: .verbose)
         sessionManager.connectToSorc(leaseToken: leaseToken, leaseTokenBlob: leaseTokenBlob)
     }
@@ -60,6 +61,7 @@ public class SorcManager: SorcManagerType {
      Disconnects from current SORC
      */
     public func disconnect() {
+        HSMTracker(forEvent: .scanBLE, withMessage: "Disconnected", level: .info)
         HSMLog(message: "BLE - Disconnected", level: .verbose)
         sessionManager.disconnect()
     }

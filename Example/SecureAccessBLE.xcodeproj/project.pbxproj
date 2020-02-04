@@ -82,6 +82,9 @@
 		99D1233D1F9A3B20006012DE /* SecureAccessBLE.h in Headers */ = {isa = PBXBuildFile; fileRef = 99D1233B1F9A3B20006012DE /* SecureAccessBLE.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		99F19B262292FBC9003D9956 /* RepeatingBackgroundTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99F19B252292FBC9003D9956 /* RepeatingBackgroundTimer.swift */; };
 		B74D2C458E497021C4FA0FFF /* Pods_SecureAccessBLE_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B13A33CB4BB3A0FFB2D7D32E /* Pods_SecureAccessBLE_Tests.framework */; };
+		C5403A1723E42638000517BD /* EventTrackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5403A1623E42638000517BD /* EventTrackManager.swift */; };
+		C5422BDD23E97A8D005C21A4 /* TrackingManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5422BDC23E97A8D005C21A4 /* TrackingManagerTests.swift */; };
+		C5422BDF23E97CC5005C21A4 /* TrackingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5422BDE23E97CC5005C21A4 /* TrackingManager.swift */; };
 		E504031F1F55BFD50008DF02 /* SessionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E504031B1F55BFD50008DF02 /* SessionManagerTests.swift */; };
 		E50403201F55BFD50008DF02 /* SorcManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E504031D1F55BFD50008DF02 /* SorcManagerTests.swift */; };
 		E50403221F55C0010008DF02 /* TransportManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E50403211F55C0010008DF02 /* TransportManagerTests.swift */; };
@@ -137,6 +140,9 @@
 		B13A33CB4BB3A0FFB2D7D32E /* Pods_SecureAccessBLE_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SecureAccessBLE_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BDD2935451DD295A50BFBCF1 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		C28A7D5203261E30CA436EC3 /* SecureAccessBLE.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = SecureAccessBLE.podspec; path = ../SecureAccessBLE.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		C5403A1623E42638000517BD /* EventTrackManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventTrackManager.swift; sourceTree = "<group>"; };
+		C5422BDC23E97A8D005C21A4 /* TrackingManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackingManagerTests.swift; sourceTree = "<group>"; };
+		C5422BDE23E97CC5005C21A4 /* TrackingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackingManager.swift; sourceTree = "<group>"; };
 		D712A727A186F4711A4DF11A /* Pods-SecureAccessBLE.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE/Pods-SecureAccessBLE.debug.xcconfig"; sourceTree = "<group>"; };
 		E259868D851C8D27D9E25B3E /* Pods-SecureAccessBLE.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE.release.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE/Pods-SecureAccessBLE.release.xcconfig"; sourceTree = "<group>"; };
 		E50403061F546FFF0008DF02 /* SorcManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = SorcManager.swift; sourceTree = "<group>"; };
@@ -222,6 +228,7 @@
 		46B760651DA2637D003ADDB1 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				C5422BD723E97826005C21A4 /* Tracking */,
 				9913240220D94C81001D83FC /* ErrorHandling */,
 				991323F020D94C29001D83FC /* Collections */,
 				991323E120D94C29001D83FC /* Converters */,
@@ -325,6 +332,7 @@
 		607FACE81AFB9204008FA782 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				C5422BDB23E97A5B005C21A4 /* Tracking */,
 				9916ABFF21BA75DB00BEC5F0 /* Model */,
 				E50403191F55BFD50008DF02 /* Managers */,
 				E5CF3ADC1F56FDAC009C95A0 /* Helper */,
@@ -392,6 +400,7 @@
 				991323ED20D94C29001D83FC /* DefaultLogger.swift */,
 				991323EE20D94C29001D83FC /* LogLevel.swift */,
 				991323EF20D94C29001D83FC /* HSMLogging.swift */,
+				C5403A1623E42638000517BD /* EventTrackManager.swift */,
 			);
 			path = Logging;
 			sourceTree = "<group>";
@@ -436,6 +445,22 @@
 				B13A33CB4BB3A0FFB2D7D32E /* Pods_SecureAccessBLE_Tests.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		C5422BD723E97826005C21A4 /* Tracking */ = {
+			isa = PBXGroup;
+			children = (
+				C5422BDE23E97CC5005C21A4 /* TrackingManager.swift */,
+			);
+			path = Tracking;
+			sourceTree = "<group>";
+		};
+		C5422BDB23E97A5B005C21A4 /* Tracking */ = {
+			isa = PBXGroup;
+			children = (
+				C5422BDC23E97A8D005C21A4 /* TrackingManagerTests.swift */,
+			);
+			path = Tracking;
 			sourceTree = "<group>";
 		};
 		E50403051F546FE60008DF02 /* SorcManager */ = {
@@ -836,6 +861,7 @@
 				46B760971DA26C8C003ADDB1 /* BLECryptorTests.swift in Sources */,
 				E5CF3AE61F586EF4009C95A0 /* SecurityManagerTests.swift in Sources */,
 				E5CF3AE31F586EB7009C95A0 /* ConnectionManagerTests.swift in Sources */,
+				C5422BDD23E97A8D005C21A4 /* TrackingManagerTests.swift in Sources */,
 				E50403201F55BFD50008DF02 /* SorcManagerTests.swift in Sources */,
 				9916AC0121BA75F700BEC5F0 /* SorcMessageTests.swift in Sources */,
 				E5CF3AF01F587164009C95A0 /* ChallengerTests.swift in Sources */,
@@ -892,6 +918,7 @@
 				9913240C20D94CA1001D83FC /* HSMLogging.swift in Sources */,
 				9917E9E21FBAF7CE002D5CE3 /* SessionManagerConfiguration.swift in Sources */,
 				9917E9EC1FBAF7E2002D5CE3 /* TransportConnectionChange.swift in Sources */,
+				C5422BDF23E97CC5005C21A4 /* TrackingManager.swift in Sources */,
 				9913240520D94C8F001D83FC /* ArrayExtensions.swift in Sources */,
 				9917E9D91FBAF7C8002D5CE3 /* SorcManager.swift in Sources */,
 				9913240A20D94CA1001D83FC /* DefaultLogger.swift in Sources */,
@@ -911,6 +938,7 @@
 				9913241420D94CB3001D83FC /* ChangeSubject.swift in Sources */,
 				9917E9D81FBAF7C8002D5CE3 /* SorcManagerType.swift in Sources */,
 				9917EA061FBAF81F002D5CE3 /* SystemClock.swift in Sources */,
+				C5403A1723E42638000517BD /* EventTrackManager.swift in Sources */,
 				9913240820D94C9A001D83FC /* StringExtension.swift in Sources */,
 				9917EA041FBAF814002D5CE3 /* LTBlobPayload.swift in Sources */,
 				9913240420D94C81001D83FC /* Result.swift in Sources */,

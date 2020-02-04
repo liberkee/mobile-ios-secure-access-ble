@@ -119,6 +119,7 @@ class SessionManager: SessionManagerType {
         case .connecting, .connected: break
         default: return
         }
+        HSMTracker(forEvent: .connection, withMessage: "\(action)", level: .error)
         actionLeadingToDisconnect = action
         securityManager.disconnect()
     }
@@ -148,6 +149,7 @@ class SessionManager: SessionManagerType {
             guard case let .connecting(sorcID, .physical) = connectionChange.state, sorcID == securitySorcID else {
                 return
             }
+            HSMTracker(forEvent: .connection, withMessage: "Connecting State", level: .info)
             connectionChange.onNext(.init(
                 state: .connecting(sorcID: sorcID, state: .challenging),
                 action: .physicalConnectionEstablished(sorcID: sorcID)
@@ -157,6 +159,7 @@ class SessionManager: SessionManagerType {
 
     private func handleSecureConnectionChangeConnected(sorcID: SorcID) {
         guard connectionChange.state == .connecting(sorcID: sorcID, state: .challenging) else { return }
+        HSMTracker(forEvent: .connection, withMessage: "Connected State", level: .info)
         connectionChange.onNext(.init(
             state: .connected(sorcID: sorcID),
             action: .connectionEstablished(sorcID: sorcID)
@@ -182,17 +185,20 @@ class SessionManager: SessionManagerType {
                 state: .disconnected,
                 action: .connectingFailed(sorcID: sorcID, error: error)
             ))
+            HSMTracker(forEvent: .connection, withMessage: "Connecting failed", level: .error)
         case .disconnect:
             connectionChange.onNext(.init(
                 state: .disconnected,
                 action: .disconnect
             ))
+            HSMTracker(forEvent: .connection, withMessage: "Disconnected", level: .info)
         case let .connectionLost(secureConnectionLostError):
             let error = ConnectionLostError(secureConnectionLostError: secureConnectionLostError)
             connectionChange.onNext(.init(
                 state: .disconnected,
                 action: .connectionLost(error: error)
             ))
+            HSMTracker(forEvent: .connection, withMessage: "Connection Lost", level: .error)
         default: break
         }
     }
@@ -270,6 +276,7 @@ class SessionManager: SessionManagerType {
                 state: state,
                 action: .requestServiceGrant(id: serviceGrantID, accepted: accepted)
             ))
+            HSMTracker(forEvent: .request, withMessage: "\(serviceGrantID)", level: .info)
         case let .responseReceived(response):
             var ids = serviceGrantChange.state.requestingServiceGrantIDs
             ids.remove(at: 0)
@@ -278,6 +285,7 @@ class SessionManager: SessionManagerType {
                 state: state,
                 action: .responseReceived(response)
             ))
+            HSMTracker(forEvent: .response, withMessage: "\(response.responseData)", level: .info)
         case let .requestFailed(error):
             applyServiceGrantRequestFailed(error: error)
         case .reset:
@@ -286,6 +294,7 @@ class SessionManager: SessionManagerType {
                 state: state,
                 action: .reset
             ))
+            HSMTracker(forEvent: .response, withMessage: "Reset", level: .info)
         }
     }
 
@@ -296,6 +305,7 @@ class SessionManager: SessionManagerType {
             sendHeartbeat()
             let state = ServiceGrantChange.State(requestingServiceGrantIDs: [])
             serviceGrantChange.onNext(.init(state: state, action: .requestFailed(error)))
+            HSMTracker(forEvent: .request, withMessage: error.description, level: .error)
         }
     }
 
