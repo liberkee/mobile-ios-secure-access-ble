@@ -180,7 +180,6 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     /// If a connection to an undiscovered SORC is tried it fails silently.
     func connectToSorc(_ sorcID: SorcID) {
         guard let peripheral = peripheralMatchingSorcID(sorcID) else {
-//            eventTrackManager.trackEvents(.scanBLE, message: "undiscovered SORC", level: .error)
             HSMLog(message: "BLE - Try to connect to an undiscovered SORC", level: .error)
             return
         }
@@ -224,6 +223,9 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
                 centralManager.cancelPeripheralConnection(peripheral)
             }
             discoveredSorcs[sorcID] = nil
+            HSMTracker(SAEvent.connectionDisconnected,
+                       parameters: [parameterKey.sorcID.rawValue: sorcID],
+                       loglevel: .info)
             updateDiscoveryChange(action: .disconnect(sorcID: sorcID))
             updateConnectionChangeToDisconnected(action: action ?? .disconnect(sorcID: sorcID))
         case .disconnected: break
@@ -247,6 +249,9 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
             for sorcID in outdatedSorcIDs {
                 discoveredSorcs[sorcID] = nil
             }
+            HSMTracker(SAEvent.discoveryLost,
+                       parameters: [parameterKey.sorcID.rawValue: outdatedSorcIDs],
+                       loglevel: .error)
             updateDiscoveryChange(action: .lost(sorcIDs: Set(outdatedSorcIDs)))
         }
     }
@@ -258,6 +263,15 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
         let replaced = discoveredSorcs.updateValue(sorc, forKey: sorc.sorcID) != nil
         let action: DiscoveryChange.Action = replaced ?
             .rediscovered(sorcID: sorc.sorcID) : .discovered(sorcID: sorc.sorcID)
+        switch action {
+        case .discovered(sorcID: _):
+            HSMTracker(SAEvent.discoverySuccessful,
+                       parameters: [parameterKey.sorcID.rawValue: sorc.sorcID],
+                       loglevel: .info)
+        default:
+            break
+        }
+
         updateDiscoveryChange(action: action)
     }
 
@@ -271,14 +285,18 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
         switch action {
         case .startDiscovery:
             guard !state.discoveryIsEnabled else { return }
-            HSMTracker(forEvent: .scanBLE, withMessage: "Start Discovery", level: .info)
+            HSMTracker(SAEvent.discoveryStarted,
+                       parameters: [parameterKey.sorcID.rawValue: state.discoveredSorcs.sorcIDs],
+                       loglevel: .info)
             discoveryChange.onNext(.init(
                 state: state.withDiscoveryIsEnabled(true),
                 action: action
             ))
         case .stopDiscovery:
             guard state.discoveryIsEnabled else { return }
-            HSMTracker(forEvent: .scanBLE, withMessage: "Stop Discovery", level: .info)
+            HSMTracker(SAEvent.discoveryStopped,
+                       parameters: [parameterKey.sorcID.rawValue: state.discoveredSorcs.sorcIDs],
+                       loglevel: .info)
             discoveryChange.onNext(.init(
                 state: state.withDiscoveryIsEnabled(false),
                 action: action
@@ -463,6 +481,9 @@ extension ConnectionManager {
 
         if writeCharacteristic != nil, notifyCharacteristic != nil {
             let mtuSize = peripheral.maximumWriteValueLength(for: .withoutResponse)
+            HSMTracker(SAEvent.connectionEstablished,
+                       parameters: [parameterKey.sorcID.rawValue: sorcID],
+                       loglevel: .info)
             connectionChange.onNext(.init(state: .connected(sorcID: sorcID),
                                           action: .connectionEstablished(sorcID: sorcID, mtuSize: mtuSize)))
         }

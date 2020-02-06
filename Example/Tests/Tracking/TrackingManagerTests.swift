@@ -13,13 +13,11 @@ import XCTest
 
 class CustomTracker: EventTracker {
     var receivedEvent: String?
-    var receivedMessage: String?
     var receivedParameters: [String: Any]?
 
-    func trackEvent(_ event: String, message: String, parameters: [String: Any]) {
+    func trackEvent(_ event: String, parameters: [String: Any], loglevel _: LogLevel) {
         receivedEvent = event
         receivedParameters = parameters
-        receivedMessage = message
     }
 }
 
@@ -29,14 +27,13 @@ class TrackingManagerTests: QuickSpec {
         var customTracker: CustomTracker!
 
         describe("track") {
-//            context("") {
             beforeEach {
                 sut = TrackingManager()
                 customTracker = CustomTracker()
                 sut.tracker = customTracker
 
-                let parameter: [String: Any] = ["vehicleRef": "VEHICLEREFERNCE"]
-                sut.track(.discoveryStartedByApp, message: "Discovery action was started by the app", parameters: parameter)
+                let parameter: [String: Any] = [parameterKey.vehicleRef.rawValue: "VEHICLEREFERNCE"]
+                sut.track(SAEvent.discoveryStartedByApp, parameters: parameter, loglevel: .info)
             }
             it("tracks event") {
                 let expectedEvent = "discoveryStartedByApp"
@@ -45,10 +42,6 @@ class TrackingManagerTests: QuickSpec {
             it("has appropriate group") {
                 expect(customTracker.receivedParameters!["group"]) === "Discovery"
             }
-            it("has appropriate message") {
-                let expectedMessage = "Discovery action was started by the app"
-                expect(customTracker.receivedMessage) == expectedMessage
-            }
             it("has timestamp") {
                 expect(customTracker.receivedParameters!["timestamp"]).toNot(beNil())
             }
@@ -56,8 +49,6 @@ class TrackingManagerTests: QuickSpec {
                 let expectedMessage = "VEHICLEREFERNCE"
                 expect(customTracker.receivedParameters!["vehicleRef"]! as? String) == expectedMessage
             }
-
-//            }
         }
     }
 }

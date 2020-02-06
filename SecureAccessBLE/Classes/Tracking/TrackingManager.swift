@@ -9,16 +9,26 @@
 import Foundation
 
 public protocol EventTracker {
-    func trackEvent(_ event: String, message: String, parameters: [String: Any])
+    func trackEvent(_ event: String, parameters: [String: Any], loglevel: LogLevel)
 }
 
-enum Event: String {
-    enum Group: String {
-        case discovery = "Discovery"
-        case connection = "Connection"
-        case vehicleAccess = "VehicleAccess"
-        case telematics = "Telematics"
-        case keyholder = "Keyholder"
+public protocol LogID {
+    func toString() -> String
+    func groupID() -> String
+    func messageOfEvent() -> String
+}
+
+internal enum SAEvent: String, LogID {
+    func toString() -> String {
+        rawValue
+    }
+
+    func groupID() -> String {
+        return group
+    }
+
+    func messageOfEvent() -> String {
+        return message
     }
 
     case discoveryStartedByApp
@@ -35,39 +45,6 @@ enum Event: String {
     case connectionCancelledByApp
     case connectionDisconnected
 
-    case doorsLockRequested
-    case doorsLocked
-    case doorsLockFailed
-    case doorsUnlockRequested
-    case doorsUnlocked
-    case doorsUnlockFailed
-
-    case engineEnableRequested
-    case engineEnabled
-    case engineEnableFailed
-    case engineDisableRequested
-    case engineDisabled
-    case engineDisableFailed
-
-    case doorsStatusRequested
-    case doorsStatusReceived
-    case doorsStatusFailed
-    case engineStatusRequested
-    case engineStatusReceived
-    case engineStatusFailed
-
-    case telematicsRequested
-    case telematicsReceived
-    case telematicsRequestedFailed
-
-    case locationRequested
-    case locationReceived
-    case locationRequestfailed
-
-    case keyholderStatusRequested
-    case keyholderStatusReceived
-    case keyholderStatusFailed
-
     var group: String {
         switch self {
         case .discoveryStartedByApp,
@@ -76,59 +53,80 @@ enum Event: String {
              .discoveryStopped,
              .discoverySuccessful,
              .discoveryLost:
-            return Group.discovery.rawValue
+            return "Discovery"
         case .connectionStartedByApp,
              .connectionStarted,
              .connectionTranferringBLOB,
              .connectionEstablished,
              .connectionCancelledByApp,
              .connectionDisconnected:
-            return Group.connection.rawValue
-        case .doorsLockRequested,
-             .doorsLocked,
-             .doorsLockFailed,
-             .doorsUnlockRequested,
-             .doorsUnlocked,
-             .doorsUnlockFailed,
-             .engineEnableRequested,
-             .engineEnabled,
-             .engineEnableFailed,
-             .engineDisableRequested,
-             .engineDisabled,
-             .engineDisableFailed,
-             .doorsStatusRequested,
-             .doorsStatusReceived,
-             .doorsStatusFailed,
-             .engineStatusRequested,
-             .engineStatusReceived,
-             .engineStatusFailed:
-            return Group.vehicleAccess.rawValue
-        case .telematicsRequested,
-             .telematicsReceived,
-             .telematicsRequestedFailed,
-             .locationReceived,
-             .locationRequested,
-             .locationRequestfailed:
-            return Group.telematics.rawValue
-        case .keyholderStatusRequested,
-             .keyholderStatusReceived,
-             .keyholderStatusFailed:
-            return Group.keyholder.rawValue
+            return "Connection"
         }
     }
+
+    var message: String {
+        switch self {
+        case .discoveryStartedByApp:
+            return "Discovery was started by App"
+        case .discoveryStarted:
+            return "Discovery was started"
+        case .discoveryCancelledbyApp:
+            return "Discovery was cancelled was App"
+        case .discoveryStopped:
+            return "Discovery was stopped"
+        case .discoverySuccessful:
+            return "Discovery was completed successfully"
+        case .discoveryLost:
+            return "Discovery was lost"
+        case .connectionStartedByApp:
+            return "Connection request by App"
+        case .connectionStarted:
+            return "Connection request"
+        case .connectionTranferringBLOB:
+            return "Connection transferring BLOB"
+        case .connectionEstablished:
+            return "Connection is established"
+        case .connectionCancelledByApp:
+            return "Connection is cancelled by App"
+        case .connectionDisconnected:
+            return "Connection is disconnected"
+        }
+    }
+}
+
+public enum parameterKey: String {
+    case group
+    case message
+    case timestamp
+    case vehicleRef
+    case sorcID
+    case accessGrantID
+    case version
+    case phoneModel
+    case osVersion
+    case builder
+    case error
 }
 
 public class TrackingManager {
     public var tracker: EventTracker?
 
-    init() {}
-
+    public var logLevel: LogLevel = .info
+    public static var shared = TrackingManager()
     private var systemClock: SystemClockType = SystemClock()
 
-    func track(_ event: Event, message: String, parameters: [String: Any]) {
-        var trackingParameter = parameters
-        trackingParameter["group"] = event.group
-        trackingParameter["timestamp"] = systemClock.now()
-        tracker?.trackEvent(event.rawValue, message: message, parameters: trackingParameter)
+    internal func track(_ event: LogID, parameters: [String: Any], loglevel: LogLevel) {
+        if logLevel.toString() == loglevel.toString() {
+            var trackingParameter = parameters
+            trackingParameter[parameterKey.group.rawValue] = event.groupID()
+            trackingParameter[parameterKey.timestamp.rawValue] = systemClock.now()
+            trackingParameter[parameterKey.message.rawValue] = event.messageOfEvent()
+
+            tracker?.trackEvent(event.toString(), parameters: trackingParameter, loglevel: loglevel)
+        }
     }
+}
+
+public func HSMTracker(_ event: LogID, parameters: [String: Any], loglevel: LogLevel) {
+    TrackingManager.shared.track(event, parameters: parameters, loglevel: loglevel)
 }

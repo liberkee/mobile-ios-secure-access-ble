@@ -42,23 +42,23 @@
 //    }
 // }
 //
-internal struct TrackingParameter {
-    internal enum group: String {
-        case scanBLE = "Scan BLE"
-        case connection = "Connection"
-        case request = "Request"
-        case response = "Response"
-    }
-
-    internal var message: String
-    internal var timeStamp: Date
-    internal var group: group
-}
-
+// internal struct TrackingParameter {
+//    internal enum group: String {
+//        case scanBLE = "Scan BLE"
+//        case connection = "Connection"
+//        case request = "Request"
+//        case response = "Response"
+//    }
 //
-internal func HSMTracker(forEvent _: TrackingParameter.group, withMessage _: String, level _: LogLevel) {
-//    EventTrackManager.shared.trackEvents(forEvent: group, withMessage: message, for: level)
-}
+//    internal var message: String
+//    internal var timeStamp: Date
+//    internal var group: group
+// }
+//
+////
+// internal func HSMTracker(forEvent _: TrackingParameter.group, withMessage _: String, level _: LogLevel) {
+////    EventTrackManager.shared.trackEvents(forEvent: group, withMessage: message, for: level)
+// }
 
 //
 // public class EventTrackManager {
