@@ -25,14 +25,17 @@ class TrackingManagerTests: QuickSpec {
     override func spec() {
         var sut: TrackingManager!
         var customTracker: CustomTracker!
+        var systemClock: SystemClockType?
 
         describe("track") {
             beforeEach {
-                sut = TrackingManager()
+                let date = Date(timeIntervalSince1970: 0)
+                systemClock = SystemClockMock(currentNow: date)
+                sut = TrackingManager(systemClock: systemClock!)
                 customTracker = CustomTracker()
                 sut.tracker = customTracker
 
-                let parameter: [String: Any] = [parameterKey.vehicleRef.rawValue: "VEHICLEREFERNCE"]
+                let parameter: [String: Any] = [ParameterKey.sorcID.rawValue: UUID(uuidString: "82f6ed49-b70d-4c9e-afa1-4b0377d0de5f")!]
                 sut.track(SAEvent.discoveryStartedByApp, parameters: parameter, loglevel: .info)
             }
             it("tracks event") {
@@ -40,14 +43,15 @@ class TrackingManagerTests: QuickSpec {
                 expect(customTracker.receivedEvent) == expectedEvent
             }
             it("has appropriate group") {
-                expect(customTracker.receivedParameters!["group"]) === "Discovery"
+                expect(customTracker.receivedParameters!["group"]! as? String) == "Discovery"
             }
             it("has timestamp") {
-                expect(customTracker.receivedParameters!["timestamp"]).toNot(beNil())
+                let expectedDate = Date(timeIntervalSince1970: 0)
+                expect(customTracker.receivedParameters!["timestamp"] as? Date) == expectedDate
             }
-            it("has vehicle refernce") {
-                let expectedMessage = "VEHICLEREFERNCE"
-                expect(customTracker.receivedParameters!["vehicleRef"]! as? String) == expectedMessage
+            it("has sorciD") {
+                let expectedSorcID = UUID(uuidString: "82f6ed49-b70d-4c9e-afa1-4b0377d0de5f")
+                expect(customTracker.receivedParameters!["sorcID"]! as? UUID) == expectedSorcID
             }
         }
     }

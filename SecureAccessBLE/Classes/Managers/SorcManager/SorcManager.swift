@@ -24,8 +24,8 @@ public class SorcManager: SorcManagerType {
 
     /// Starts discovery of SORCs
     public func startDiscovery() {
-        HSMTracker(SAEvent.discoveryStartedByApp,
-                   parameters: [parameterKey.sorcID.rawValue: scanner.discoveryChange.state.discoveredSorcs.sorcIDs],
+        HSMTrack(SAEvent.discoveryStartedByApp,
+                   parameters: [ParameterKey.sorcID.rawValue: scanner.discoveryChange.state.discoveredSorcs.sorcIDs],
                    loglevel: .info)
         HSMLog(message: "BLE - Scanner started discovery", level: .verbose)
         scanner.startDiscovery()
@@ -33,8 +33,8 @@ public class SorcManager: SorcManagerType {
 
     /// Stops discovery of SORCs
     public func stopDiscovery() {
-        HSMTracker(SAEvent.discoveryCancelledbyApp,
-                   parameters: [parameterKey.sorcID.rawValue: scanner.discoveryChange.state.discoveredSorcs.sorcIDs],
+        HSMTrack(SAEvent.discoveryCancelledbyApp,
+                   parameters: [ParameterKey.sorcID.rawValue: scanner.discoveryChange.state.discoveredSorcs.sorcIDs],
                    loglevel: .info)
         HSMLog(message: "BLE - Scanner stopped discovery", level: .verbose)
         scanner.stopDiscovery()
@@ -58,8 +58,8 @@ public class SorcManager: SorcManagerType {
     ///   - leaseToken: The lease token for the SORC
     ///   - leaseTokenBlob: The blob for the SORC
     public func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob) {
-        HSMTracker(SAEvent.connectionStartedByApp,
-                   parameters: [parameterKey.sorcID.rawValue: leaseToken.sorcID],
+        HSMTrack(SAEvent.connectionStartedByApp,
+                   parameters: [ParameterKey.sorcID.rawValue: leaseToken.sorcID],
                    loglevel: .info)
         HSMLog(message: "BLE - Connected to SORC", level: .verbose)
         sessionManager.connectToSorc(leaseToken: leaseToken, leaseTokenBlob: leaseTokenBlob)
@@ -70,7 +70,7 @@ public class SorcManager: SorcManagerType {
      */
     public func disconnect() {
         HSMLog(message: "BLE - Disconnected", level: .verbose)
-        HSMTracker(SAEvent.connectionCancelledByApp,
+        HSMTrack(SAEvent.connectionCancelledByApp,
                    parameters: [:],
                    loglevel: .info)
         sessionManager.disconnect()

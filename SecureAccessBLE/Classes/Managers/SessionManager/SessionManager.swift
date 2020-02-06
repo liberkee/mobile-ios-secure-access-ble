@@ -66,8 +66,8 @@ class SessionManager: SessionManagerType {
     }
 
     func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob) {
-        HSMTracker(SAEvent.connectionStarted,
-                   parameters: [parameterKey.sorcID.rawValue: leaseToken.sorcID],
+        HSMTrack(SAEvent.connectionStarted,
+                   parameters: [ParameterKey.sorcID.rawValue: leaseToken.sorcID],
                    loglevel: .info)
 
         guard connectionChange.state == .disconnected
@@ -187,9 +187,9 @@ class SessionManager: SessionManagerType {
                 state: .disconnected,
                 action: .connectingFailed(sorcID: sorcID, error: error)
             ))
-            HSMTracker(SAEvent.connectionDisconnected,
-                       parameters: [parameterKey.sorcID.rawValue: sorcID,
-                                    parameterKey.error.rawValue: error],
+            HSMTrack(SAEvent.connectionDisconnected,
+                       parameters: [ParameterKey.sorcID.rawValue: sorcID,
+                                    ParameterKey.error.rawValue: error],
                        loglevel: .error)
         case .disconnect:
             connectionChange.onNext(.init(
@@ -202,8 +202,8 @@ class SessionManager: SessionManagerType {
                 state: .disconnected,
                 action: .connectionLost(error: error)
             ))
-            HSMTracker(SAEvent.connectionDisconnected,
-                       parameters: [parameterKey.error.rawValue: error],
+            HSMTrack(SAEvent.connectionDisconnected,
+                       parameters: [ParameterKey.error.rawValue: error],
                        loglevel: .error)
 
         default: break
