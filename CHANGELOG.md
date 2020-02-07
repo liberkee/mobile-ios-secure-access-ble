@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 ### Added
+- 2020-02-07 : (PLB2B-721)  : Add Event tracking to the SDK
 ### Changed
 ### Fixed
 ### Removed
