@@ -257,6 +257,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
         let replaced = discoveredSorcs.updateValue(sorc, forKey: sorc.sorcID) != nil
         let action: DiscoveryChange.Action = replaced ?
             .rediscovered(sorcID: sorc.sorcID) : .discovered(sorcID: sorc.sorcID)
+
         updateDiscoveryChange(action: action)
     }
 
