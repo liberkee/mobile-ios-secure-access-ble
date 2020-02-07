@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// Protocol which describes the Tracker interface. Conform to this protocol in your tracker to receive the events.
 public protocol SAEventTracker {
     func trackEvent(_ event: String, parameters: [String: Any], loglevel: LogLevel)
 }
@@ -33,11 +34,14 @@ internal enum ParameterKey: String {
     case os
 }
 
+/// Tracking manager to be used for registering tracker of type `SAEventTracker`.
 public class SATrackingManager {
     private var tracker: SAEventTracker?
 
     private var logLevel: LogLevel = .info
     private let systemClock: SystemClockType
+    
+    /// Static (singleton) instance of the `SATrackingManager`
     public static var shared = SATrackingManager()
 
     private lazy var dateFormatter: DateFormatter = {
@@ -58,6 +62,11 @@ public class SATrackingManager {
     // Set to true to filter out events which should not be reported to TACS Framework since it tracks them on its own
     public var usedByTACSSDK: Bool = false
 
+    
+    /// Registers tracker which will be used to pass events.
+    /// - Parameters:
+    ///   - tracker: the tracker
+    ///   - logLevel: log level which can be used to filter events
     public func registerTracker(_ tracker: SAEventTracker, logLevel: LogLevel) {
         self.tracker = tracker
         self.logLevel = logLevel
