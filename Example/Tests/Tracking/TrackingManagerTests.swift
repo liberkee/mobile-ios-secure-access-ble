@@ -1,5 +1,5 @@
 //
-//  TrackingManagerTests.swift
+//  SATrackingManagerTests.swift
 //  SecureAccessBLE_Tests
 //
 //  Created by Priya Khatri on 04.02.20.
@@ -12,8 +12,8 @@ import Quick
 import XCTest
 
 // swiftlint:disable function_body_length
-class TrackingManagerTests: QuickSpec {
-    class CustomTracker: EventTracker {
+class SATrackingManagerTests: QuickSpec {
+    class CustomTracker: SAEventTracker {
         var receivedEvent: String?
         var receivedParameters: [String: Any]?
 
@@ -24,7 +24,7 @@ class TrackingManagerTests: QuickSpec {
     }
 
     override func spec() {
-        var sut: TrackingManager!
+        var sut: SATrackingManager!
         var customTracker: CustomTracker!
         var systemClock: SystemClockType?
 
@@ -32,7 +32,7 @@ class TrackingManagerTests: QuickSpec {
             beforeEach {
                 let date = Date(timeIntervalSince1970: 0)
                 systemClock = SystemClockMock(currentNow: date)
-                sut = TrackingManager(systemClock: systemClock!)
+                sut = SATrackingManager(systemClock: systemClock!)
                 customTracker = CustomTracker()
                 sut.registerTracker(customTracker, logLevel: .info)
             }

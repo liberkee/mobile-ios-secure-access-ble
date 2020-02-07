@@ -1,5 +1,5 @@
 //
-//  TrackingManager.swift
+//  SATrackingManager.swift
 //  SecureAccessBLE
 //
 //  Created by Priya Khatri on 04.02.20.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-public protocol EventTracker {
+public protocol SAEventTracker {
     func trackEvent(_ event: String, parameters: [String: Any], loglevel: LogLevel)
 }
 
@@ -33,12 +33,12 @@ internal enum ParameterKey: String {
     case os
 }
 
-public class TrackingManager {
-    private var tracker: EventTracker?
+public class SATrackingManager {
+    private var tracker: SAEventTracker?
 
     private var logLevel: LogLevel = .info
     private let systemClock: SystemClockType
-    public static var shared = TrackingManager()
+    public static var shared = SATrackingManager()
 
     private lazy var dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -52,13 +52,13 @@ public class TrackingManager {
         ParameterKey.osVersion.rawValue: UIDevice.current.systemVersion,
         ParameterKey.phoneModel.rawValue: UIDevice.current.name,
         ParameterKey.secureAccessFrameworkVersion.rawValue:
-            Bundle(for: TrackingManager.self).infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
+            Bundle(for: SATrackingManager.self).infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
     ]
     /// :nodoc
     // Set to true to filter out events which should not be reported to TACS Framework since it tracks them on its own
     public var usedByTACSSDK: Bool = false
 
-    public func registerTracker(_ tracker: EventTracker, logLevel: LogLevel) {
+    public func registerTracker(_ tracker: SAEventTracker, logLevel: LogLevel) {
         self.tracker = tracker
         self.logLevel = logLevel
     }
@@ -88,5 +88,5 @@ public class TrackingManager {
 }
 
 internal func HSMTrack(_ event: TrackingEvent, parameters: [String: Any] = [:], loglevel: LogLevel) {
-    TrackingManager.shared.track(event, parameters: parameters, loglevel: loglevel)
+    SATrackingManager.shared.track(event, parameters: parameters, loglevel: loglevel)
 }

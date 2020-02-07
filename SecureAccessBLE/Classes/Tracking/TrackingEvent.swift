@@ -1,5 +1,5 @@
 //
-//  SATracker.swift
+//  TrackingEvent.swift
 //  SecureAccessBLE
 //
 //  Created by Priya Khatri on 06.02.20.
