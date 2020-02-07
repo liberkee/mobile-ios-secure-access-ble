@@ -12,17 +12,15 @@ public protocol EventTracker {
     func trackEvent(_ event: String, parameters: [String: Any], loglevel: LogLevel)
 }
 
-public enum ParameterKey: String {
+internal enum ParameterKey: String {
     case group
     case message
     case timestamp
-    case vehicleRef
     case sorcID
-    case accessGrantID
+    case sorcIDs
     case version
     case phoneModel
     case osVersion
-//    case builder
     case error
     case data // payload for response
 }
@@ -33,6 +31,13 @@ public class TrackingManager {
     private var logLevel: LogLevel = .info
     private let systemClock: SystemClockType
     public static var shared = TrackingManager()
+
+    private lazy var dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
+        return formatter
+    }()
 
     /// :nodoc
     // Set to true to filter out events which should not be reported to TACS Framework since it tracks them on its own
@@ -56,7 +61,7 @@ public class TrackingManager {
             var trackingParameter = event.defaultParameters.merging(parameters) { (defaultParameter, _) -> Any in
                 defaultParameter
             }
-            trackingParameter[ParameterKey.timestamp.rawValue] = systemClock.now()
+            trackingParameter[ParameterKey.timestamp.rawValue] = dateFormatter.string(from: systemClock.now())
 
             tracker?.trackEvent(String(describing: event), parameters: trackingParameter, loglevel: loglevel)
         }

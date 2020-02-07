@@ -13,7 +13,9 @@ internal enum TrackingEvent: String {
     case discoveryStarted
     case discoveryCancelledbyApp
     case discoveryStopped
-    case discoverySuccessfull
+    /// discovered sorc, params should contain discovered sorcID
+    case discoverySorcDiscovered
+    /// lost previously discovered sorcs, sorcIDs should be in params
     case discoveryLost
 
     case connectionStartedByApp
@@ -29,7 +31,7 @@ internal enum TrackingEvent: String {
              .discoveryStarted,
              .discoveryCancelledbyApp,
              .discoveryStopped,
-             .discoverySuccessfull,
+             .discoverySorcDiscovered,
              .discoveryLost:
             return "Discovery"
         case .connectionStartedByApp,
@@ -52,8 +54,8 @@ internal enum TrackingEvent: String {
             return "Discovery was cancelled by App"
         case .discoveryStopped:
             return "Discovery was stopped"
-        case .discoverySuccessfull:
-            return "Discovery was completed successfully"
+        case .discoverySorcDiscovered:
+            return "Discovered sorc"
         case .discoveryLost:
             return "Discovery was lost"
         case .connectionStartedByApp:

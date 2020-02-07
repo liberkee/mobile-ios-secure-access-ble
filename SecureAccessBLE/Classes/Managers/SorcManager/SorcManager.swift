@@ -81,7 +81,21 @@ public class SorcManager: SorcManagerType {
     }
 
     private var serviceGrantChangeSubject = ChangeSubject<ServiceGrantChange>(state: .init(requestingServiceGrantIDs: []))
-    private let disposeBag = DisposeBag()
+    fileprivate let disposeBag = DisposeBag()
+
+    private func subscribeToServiceGrantChange() {
+        sessionManager.serviceGrantChange.subscribeNext { [weak self] change in
+            guard let strongSelf = self else { return }
+            var changeAfterInterceptorAppliance: ServiceGrantChange? = change
+            for interceptor in strongSelf.interceptors {
+                changeAfterInterceptorAppliance = interceptor.consume(change: change)
+                if changeAfterInterceptorAppliance == nil {
+                    return
+                }
+            }
+            strongSelf.serviceGrantChangeSubject.onNext(change)
+        }.disposed(by: disposeBag)
+    }
 
     /**
      Requests a service grant from the connected SORC
@@ -102,20 +116,7 @@ public class SorcManager: SorcManagerType {
         self.scanner = scanner
         self.sessionManager = sessionManager
         subscribeToServiceGrantChange()
-    }
-
-    private func subscribeToServiceGrantChange() {
-        sessionManager.serviceGrantChange.subscribeNext { [weak self] change in
-            guard let strongSelf = self else { return }
-            var changeAfterInterceptorAppliance: ServiceGrantChange? = change
-            for interceptor in strongSelf.interceptors {
-                changeAfterInterceptorAppliance = interceptor.consume(change: change)
-                if changeAfterInterceptorAppliance == nil {
-                    return
-                }
-            }
-            strongSelf.serviceGrantChangeSubject.onNext(change)
-        }.disposed(by: disposeBag)
+        setUpTracking()
     }
 
     public func registerInterceptor(_ interceptor: SorcInterceptor) {
@@ -172,5 +173,64 @@ extension SorcManager {
             scanner: connectionManager,
             sessionManager: sessionManager
         )
+    }
+}
+
+// MARK: - Tracking
+
+extension SorcManager {
+    fileprivate func setUpTracking() {
+        connectionChange.subscribe { change in
+            switch change.action {
+            case let .connect(sorcID: sorcId):
+                HSMTrack(.connectionStarted,
+                         parameters: [ParameterKey.sorcID.rawValue: sorcId],
+                         loglevel: .info)
+            case let .connectingFailed(sorcID: sorcId, error: error):
+                HSMTrack(.connectionDisconnected,
+                         parameters: [ParameterKey.sorcID.rawValue: sorcId,
+                                      ParameterKey.error.rawValue: String(describing: error)],
+                         loglevel: .error)
+            case let .connectionLost(error: error):
+                HSMTrack(.connectionDisconnected,
+                         parameters: [ParameterKey.error.rawValue: String(describing: error)],
+                         loglevel: .error)
+            case let .connectionEstablished(sorcID: sorcId):
+                HSMTrack(.connectionEstablished,
+                         parameters: [ParameterKey.sorcID.rawValue: sorcId],
+                         loglevel: .info)
+
+            case .initial:
+                break
+            case .physicalConnectionEstablished:
+                // TODO: Shouldn't we track that?
+                break
+            case .disconnect:
+                // We track this in discovery change since we get the sorc id there
+                break
+            }
+        }.disposed(by: disposeBag)
+
+        discoveryChange.subscribe { change in
+            switch change.action {
+            case .startDiscovery:
+                HSMTrack(.discoveryStarted, loglevel: .info)
+            case .stopDiscovery:
+                HSMTrack(.discoveryStopped, loglevel: .info)
+            case let .lost(sorcIDs: sorcIDs):
+                let params = [ParameterKey.sorcIDs.rawValue: sorcIDs.map { $0.uuidString }]
+                HSMTrack(.discoveryLost, parameters: params, loglevel: .info)
+            case let .discovered(sorcID: sorcId):
+                HSMTrack(.discoverySorcDiscovered,
+                         parameters: [ParameterKey.sorcID.rawValue: sorcId],
+                         loglevel: .info)
+            case let .disconnected(sorcID: sorcId):
+                HSMTrack(.connectionDisconnected,
+                         parameters: [ParameterKey.sorcID.rawValue: sorcId],
+                         loglevel: .info)
+            case .initial, .rediscovered, .reset, .disconnect:
+                break
+            }
+        }.disposed(by: disposeBag)
     }
 }

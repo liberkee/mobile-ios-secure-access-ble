@@ -48,8 +48,8 @@ class TrackingManagerTests: QuickSpec {
                     expect(customTracker.receivedParameters!["group"]! as? String) == "Discovery"
                 }
                 it("has timestamp") {
-                    let expectedDate = Date(timeIntervalSince1970: 0)
-                    expect(customTracker.receivedParameters!["timestamp"] as? Date) == expectedDate
+                    let expectedDateString = "1970-01-01T00:00:00.000+0000"
+                    expect(customTracker.receivedParameters!["timestamp"] as? String) == expectedDateString
                 }
                 it("has sorciD") {
                     let expectedSorcID = UUID(uuidString: "82f6ed49-b70d-4c9e-afa1-4b0377d0de5f")
