@@ -13,16 +13,24 @@ public protocol EventTracker {
 }
 
 internal enum ParameterKey: String {
+    // default parameters, present in every event
     case group
     case message
     case timestamp
+
+    // additional data
     case sorcID
     case sorcIDs
-    case version
+    case error
+
+    // generic payload data
+    case data
+
+    // system data
+    case secureAccessFrameworkVersion
     case phoneModel
     case osVersion
-    case error
-    case data // payload for response
+    case os
 }
 
 public class TrackingManager {
@@ -39,6 +47,13 @@ public class TrackingManager {
         return formatter
     }()
 
+    private var systemParameters: [String: Any] = [
+        ParameterKey.os.rawValue: UIDevice.current.systemName,
+        ParameterKey.osVersion.rawValue: UIDevice.current.systemVersion,
+        ParameterKey.phoneModel.rawValue: UIDevice.current.name,
+        ParameterKey.secureAccessFrameworkVersion.rawValue:
+            Bundle(for: TrackingManager.self).infoDictionary?["CFBundleShortVersionString"] as? String ?? "Unknown"
+    ]
     /// :nodoc
     // Set to true to filter out events which should not be reported to TACS Framework since it tracks them on its own
     public var usedByTACSSDK: Bool = false
@@ -60,6 +75,10 @@ public class TrackingManager {
             // Prefer default parameter, in case the caller wants to overwrite it (e.g. group or message)
             var trackingParameter = event.defaultParameters.merging(parameters) { (defaultParameter, _) -> Any in
                 defaultParameter
+            }
+            // Prefer system parameter to not allow overwriting them
+            trackingParameter.merge(systemParameters) { (_, systemParameter) -> Any in
+                systemParameter
             }
             trackingParameter[ParameterKey.timestamp.rawValue] = dateFormatter.string(from: systemClock.now())
 

@@ -11,17 +11,18 @@ import Quick
 @testable import SecureAccessBLE
 import XCTest
 
-class CustomTracker: EventTracker {
-    var receivedEvent: String?
-    var receivedParameters: [String: Any]?
-
-    func trackEvent(_ event: String, parameters: [String: Any], loglevel _: LogLevel) {
-        receivedEvent = event
-        receivedParameters = parameters
-    }
-}
-
+// swiftlint:disable function_body_length
 class TrackingManagerTests: QuickSpec {
+    class CustomTracker: EventTracker {
+        var receivedEvent: String?
+        var receivedParameters: [String: Any]?
+
+        func trackEvent(_ event: String, parameters: [String: Any], loglevel _: LogLevel) {
+            receivedEvent = event
+            receivedParameters = parameters
+        }
+    }
+
     override func spec() {
         var sut: TrackingManager!
         var customTracker: CustomTracker!
@@ -54,6 +55,15 @@ class TrackingManagerTests: QuickSpec {
                 it("has sorciD") {
                     let expectedSorcID = UUID(uuidString: "82f6ed49-b70d-4c9e-afa1-4b0377d0de5f")
                     expect(customTracker.receivedParameters!["sorcID"]! as? UUID) == expectedSorcID
+                }
+                it("has all default system parameters") {
+                    expect(customTracker.receivedParameters!.keys).to(contain(
+                        [
+                            ParameterKey.os.rawValue,
+                            ParameterKey.osVersion.rawValue,
+                            ParameterKey.phoneModel.rawValue,
+                            ParameterKey.secureAccessFrameworkVersion.rawValue
+                        ]))
                 }
             }
             context("usage by TACS") {
