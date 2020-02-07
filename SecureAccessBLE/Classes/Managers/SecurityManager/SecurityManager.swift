@@ -175,9 +175,9 @@ class SecurityManager: SecurityManagerType {
         if let payload = LTBlobPayload(blobData: blobData) {
             let message = SorcMessage(id: .ltBlob, payload: payload)
             sendMessageInternal(message)
-            HSMTrack(SAEvent.connectionTransferringBLOB,
-                       parameters: [ParameterKey.sorcID.rawValue: sorcID],
-                       loglevel: .info)
+            HSMTrack(.connectionTransferringBLOB,
+                     parameters: [ParameterKey.sorcID.rawValue: sorcID],
+                     loglevel: .info)
         } else {
             disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
         }

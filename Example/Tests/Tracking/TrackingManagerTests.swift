@@ -33,25 +33,42 @@ class TrackingManagerTests: QuickSpec {
                 systemClock = SystemClockMock(currentNow: date)
                 sut = TrackingManager(systemClock: systemClock!)
                 customTracker = CustomTracker()
-                sut.tracker = customTracker
-
-                let parameter: [String: Any] = [ParameterKey.sorcID.rawValue: UUID(uuidString: "82f6ed49-b70d-4c9e-afa1-4b0377d0de5f")!]
-                sut.track(SAEvent.discoveryStartedByApp, parameters: parameter, loglevel: .info)
+                sut.registerTracker(customTracker, logLevel: .info)
             }
-            it("tracks event") {
-                let expectedEvent = "discoveryStartedByApp"
-                expect(customTracker.receivedEvent) == expectedEvent
+            context("usage by external customer") {
+                beforeEach {
+                    let parameter: [String: Any] = [ParameterKey.sorcID.rawValue: UUID(uuidString: "82f6ed49-b70d-4c9e-afa1-4b0377d0de5f")!]
+                    sut.track(.discoveryStartedByApp, parameters: parameter, loglevel: .info)
+                }
+                it("tracks event") {
+                    let expectedEvent = "discoveryStartedByApp"
+                    expect(customTracker.receivedEvent) == expectedEvent
+                }
+                it("has appropriate group") {
+                    expect(customTracker.receivedParameters!["group"]! as? String) == "Discovery"
+                }
+                it("has timestamp") {
+                    let expectedDate = Date(timeIntervalSince1970: 0)
+                    expect(customTracker.receivedParameters!["timestamp"] as? Date) == expectedDate
+                }
+                it("has sorciD") {
+                    let expectedSorcID = UUID(uuidString: "82f6ed49-b70d-4c9e-afa1-4b0377d0de5f")
+                    expect(customTracker.receivedParameters!["sorcID"]! as? UUID) == expectedSorcID
+                }
             }
-            it("has appropriate group") {
-                expect(customTracker.receivedParameters!["group"]! as? String) == "Discovery"
-            }
-            it("has timestamp") {
-                let expectedDate = Date(timeIntervalSince1970: 0)
-                expect(customTracker.receivedParameters!["timestamp"] as? Date) == expectedDate
-            }
-            it("has sorciD") {
-                let expectedSorcID = UUID(uuidString: "82f6ed49-b70d-4c9e-afa1-4b0377d0de5f")
-                expect(customTracker.receivedParameters!["sorcID"]! as? UUID) == expectedSorcID
+            context("usage by TACS") {
+                beforeEach {
+                    sut.usedByTACSSDK = true
+                }
+                it("tracks events of interest") {
+                    sut.track(.connectionTransferringBLOB, loglevel: .info)
+                    let expectedEvent = "connectionTransferringBLOB"
+                    expect(customTracker.receivedEvent) == expectedEvent
+                }
+                it("does not track events of no interest") {
+                    sut.track(.discoveryStarted, loglevel: .info)
+                    expect(customTracker.receivedEvent).to(beNil())
+                }
             }
         }
     }

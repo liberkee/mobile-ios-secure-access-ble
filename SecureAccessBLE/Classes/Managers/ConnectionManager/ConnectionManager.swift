@@ -223,9 +223,9 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
                 centralManager.cancelPeripheralConnection(peripheral)
             }
             discoveredSorcs[sorcID] = nil
-            HSMTrack(SAEvent.connectionDisconnected,
-                       parameters: [ParameterKey.sorcID.rawValue: sorcID],
-                       loglevel: .info)
+            HSMTrack(.connectionDisconnected,
+                     parameters: [ParameterKey.sorcID.rawValue: sorcID],
+                     loglevel: .info)
             updateDiscoveryChange(action: .disconnect(sorcID: sorcID))
             updateConnectionChangeToDisconnected(action: action ?? .disconnect(sorcID: sorcID))
         case .disconnected: break
@@ -249,9 +249,9 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
             for sorcID in outdatedSorcIDs {
                 discoveredSorcs[sorcID] = nil
             }
-            HSMTrack(SAEvent.discoveryLost,
-                       parameters: [ParameterKey.sorcID.rawValue: outdatedSorcIDs],
-                       loglevel: .error)
+            HSMTrack(.discoveryLost,
+                     parameters: [ParameterKey.sorcID.rawValue: outdatedSorcIDs],
+                     loglevel: .error)
             updateDiscoveryChange(action: .lost(sorcIDs: Set(outdatedSorcIDs)))
         }
     }
@@ -265,9 +265,9 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
             .rediscovered(sorcID: sorc.sorcID) : .discovered(sorcID: sorc.sorcID)
         switch action {
         case .discovered(sorcID: _):
-            HSMTrack(SAEvent.discoverySuccessfull,
-                       parameters: [ParameterKey.sorcID.rawValue: sorc.sorcID],
-                       loglevel: .info)
+            HSMTrack(.discoverySuccessfull,
+                     parameters: [ParameterKey.sorcID.rawValue: sorc.sorcID],
+                     loglevel: .info)
         default:
             break
         }
@@ -285,18 +285,18 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
         switch action {
         case .startDiscovery:
             guard !state.discoveryIsEnabled else { return }
-            HSMTrack(SAEvent.discoveryStarted,
-                       parameters: [ParameterKey.sorcID.rawValue: state.discoveredSorcs.sorcIDs],
-                       loglevel: .info)
+            HSMTrack(.discoveryStarted,
+                     parameters: [ParameterKey.sorcID.rawValue: state.discoveredSorcs.sorcIDs],
+                     loglevel: .info)
             discoveryChange.onNext(.init(
                 state: state.withDiscoveryIsEnabled(true),
                 action: action
             ))
         case .stopDiscovery:
             guard state.discoveryIsEnabled else { return }
-            HSMTrack(SAEvent.discoveryStopped,
-                       parameters: [ParameterKey.sorcID.rawValue: state.discoveredSorcs.sorcIDs],
-                       loglevel: .info)
+            HSMTrack(.discoveryStopped,
+                     parameters: [ParameterKey.sorcID.rawValue: state.discoveredSorcs.sorcIDs],
+                     loglevel: .info)
             discoveryChange.onNext(.init(
                 state: state.withDiscoveryIsEnabled(false),
                 action: action
@@ -481,9 +481,9 @@ extension ConnectionManager {
 
         if writeCharacteristic != nil, notifyCharacteristic != nil {
             let mtuSize = peripheral.maximumWriteValueLength(for: .withoutResponse)
-            HSMTrack(SAEvent.connectionEstablished,
-                       parameters: [ParameterKey.sorcID.rawValue: sorcID],
-                       loglevel: .info)
+            HSMTrack(.connectionEstablished,
+                     parameters: [ParameterKey.sorcID.rawValue: sorcID],
+                     loglevel: .info)
             connectionChange.onNext(.init(state: .connected(sorcID: sorcID),
                                           action: .connectionEstablished(sorcID: sorcID, mtuSize: mtuSize)))
         }

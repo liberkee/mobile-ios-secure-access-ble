@@ -8,24 +8,7 @@
 
 import Foundation
 
-public protocol TrackEventType: CustomStringConvertible {
-    func groupID() -> String
-    func messageOfEvent() -> String
-}
-
-internal enum SAEvent: String, TrackEventType {
-    var description: String {
-        return rawValue
-    }
-
-    func groupID() -> String {
-        return group
-    }
-
-    func messageOfEvent() -> String {
-        return message
-    }
-
+internal enum TrackingEvent: String {
     case discoveryStartedByApp
     case discoveryStarted
     case discoveryCancelledbyApp
@@ -40,7 +23,7 @@ internal enum SAEvent: String, TrackEventType {
     case connectionCancelledByApp
     case connectionDisconnected
 
-    var group: String {
+    private var group: String {
         switch self {
         case .discoveryStartedByApp,
              .discoveryStarted,
@@ -59,7 +42,7 @@ internal enum SAEvent: String, TrackEventType {
         }
     }
 
-    var message: String {
+    private var message: String {
         switch self {
         case .discoveryStartedByApp:
             return "Discovery was started by App"
@@ -86,5 +69,16 @@ internal enum SAEvent: String, TrackEventType {
         case .connectionDisconnected:
             return "Connection is disconnected"
         }
+    }
+
+    var shouldBeReportedToTacs: Bool {
+        return [TrackingEvent.connectionTransferringBLOB].contains(self)
+    }
+
+    var defaultParameters: [String: Any] {
+        return [
+            ParameterKey.group.rawValue: group,
+            ParameterKey.message.rawValue: message
+        ]
     }
 }

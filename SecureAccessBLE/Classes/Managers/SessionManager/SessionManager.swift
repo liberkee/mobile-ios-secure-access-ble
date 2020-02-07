@@ -66,9 +66,9 @@ class SessionManager: SessionManagerType {
     }
 
     func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob) {
-        HSMTrack(SAEvent.connectionStarted,
-                   parameters: [ParameterKey.sorcID.rawValue: leaseToken.sorcID],
-                   loglevel: .info)
+        HSMTrack(.connectionStarted,
+                 parameters: [ParameterKey.sorcID.rawValue: leaseToken.sorcID],
+                 loglevel: .info)
 
         guard connectionChange.state == .disconnected
             || connectionChange.state == .connecting(sorcID: leaseToken.sorcID, state: .physical)
@@ -123,7 +123,6 @@ class SessionManager: SessionManagerType {
         case .connecting, .connected: break
         default: return
         }
-//        HSMTracker(forEvent: .connection, withMessage: "\(action)", level: .error)
         actionLeadingToDisconnect = action
         securityManager.disconnect()
     }
@@ -187,10 +186,10 @@ class SessionManager: SessionManagerType {
                 state: .disconnected,
                 action: .connectingFailed(sorcID: sorcID, error: error)
             ))
-            HSMTrack(SAEvent.connectionDisconnected,
-                       parameters: [ParameterKey.sorcID.rawValue: sorcID,
-                                    ParameterKey.error.rawValue: error],
-                       loglevel: .error)
+            HSMTrack(.connectionDisconnected,
+                     parameters: [ParameterKey.sorcID.rawValue: sorcID,
+                                  ParameterKey.error.rawValue: String(describing: error)],
+                     loglevel: .error)
         case .disconnect:
             connectionChange.onNext(.init(
                 state: .disconnected,
@@ -202,9 +201,9 @@ class SessionManager: SessionManagerType {
                 state: .disconnected,
                 action: .connectionLost(error: error)
             ))
-            HSMTrack(SAEvent.connectionDisconnected,
-                       parameters: [ParameterKey.error.rawValue: error],
-                       loglevel: .error)
+            HSMTrack(.connectionDisconnected,
+                     parameters: [ParameterKey.error.rawValue: String(describing: error)],
+                     loglevel: .error)
 
         default: break
         }
@@ -309,7 +308,6 @@ class SessionManager: SessionManagerType {
             sendHeartbeat()
             let state = ServiceGrantChange.State(requestingServiceGrantIDs: [])
             serviceGrantChange.onNext(.init(state: state, action: .requestFailed(error)))
-//            HSMTracker(forEvent: .request, withMessage: error.description, level: .error)
         }
     }
 

@@ -28,28 +28,41 @@ public enum ParameterKey: String {
 }
 
 public class TrackingManager {
-    public var tracker: EventTracker?
+    private var tracker: EventTracker?
 
-    public var logLevel: LogLevel = .info
-    public static var shared = TrackingManager()
+    private var logLevel: LogLevel = .info
     private let systemClock: SystemClockType
+    public static var shared = TrackingManager()
+
+    /// :nodoc
+    // Set to true to filter out events which should not be reported to TACS Framework since it tracks them on its own
+    public var usedByTACSSDK: Bool = false
+
+    public func registerTracker(_ tracker: EventTracker, logLevel: LogLevel) {
+        self.tracker = tracker
+        self.logLevel = logLevel
+    }
 
     internal init(systemClock: SystemClockType = SystemClock()) {
         self.systemClock = systemClock
     }
 
-    internal func track(_ event: TrackEventType, parameters: [String: Any], loglevel: LogLevel) {
+    internal func track(_ event: TrackingEvent, parameters: [String: Any] = [:], loglevel: LogLevel) {
+        if usedByTACSSDK, !event.shouldBeReportedToTacs {
+            return
+        }
         if loglevel.rawValue <= logLevel.rawValue {
-            var trackingParameter = parameters
-            trackingParameter[ParameterKey.group.rawValue] = event.groupID()
+            // Prefer default parameter, in case the caller wants to overwrite it (e.g. group or message)
+            var trackingParameter = event.defaultParameters.merging(parameters) { (defaultParameter, _) -> Any in
+                defaultParameter
+            }
             trackingParameter[ParameterKey.timestamp.rawValue] = systemClock.now()
-            trackingParameter[ParameterKey.message.rawValue] = event.messageOfEvent()
 
             tracker?.trackEvent(String(describing: event), parameters: trackingParameter, loglevel: loglevel)
         }
     }
 }
 
-public func HSMTrack(_ event: TrackEventType, parameters: [String: Any], loglevel: LogLevel) {
+internal func HSMTrack(_ event: TrackingEvent, parameters: [String: Any] = [:], loglevel: LogLevel) {
     TrackingManager.shared.track(event, parameters: parameters, loglevel: loglevel)
 }

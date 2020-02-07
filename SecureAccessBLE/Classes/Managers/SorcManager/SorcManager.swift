@@ -24,18 +24,16 @@ public class SorcManager: SorcManagerType {
 
     /// Starts discovery of SORCs
     public func startDiscovery() {
-        HSMTrack(SAEvent.discoveryStartedByApp,
-                   parameters: [ParameterKey.sorcID.rawValue: scanner.discoveryChange.state.discoveredSorcs.sorcIDs],
-                   loglevel: .info)
+        HSMTrack(.discoveryStartedByApp,
+                 loglevel: .info)
         HSMLog(message: "BLE - Scanner started discovery", level: .verbose)
         scanner.startDiscovery()
     }
 
     /// Stops discovery of SORCs
     public func stopDiscovery() {
-        HSMTrack(SAEvent.discoveryCancelledbyApp,
-                   parameters: [ParameterKey.sorcID.rawValue: scanner.discoveryChange.state.discoveredSorcs.sorcIDs],
-                   loglevel: .info)
+        HSMTrack(.discoveryCancelledbyApp,
+                 loglevel: .info)
         HSMLog(message: "BLE - Scanner stopped discovery", level: .verbose)
         scanner.stopDiscovery()
     }
@@ -58,9 +56,9 @@ public class SorcManager: SorcManagerType {
     ///   - leaseToken: The lease token for the SORC
     ///   - leaseTokenBlob: The blob for the SORC
     public func connectToSorc(leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob) {
-        HSMTrack(SAEvent.connectionStartedByApp,
-                   parameters: [ParameterKey.sorcID.rawValue: leaseToken.sorcID],
-                   loglevel: .info)
+        HSMTrack(.connectionStartedByApp,
+                 parameters: [ParameterKey.sorcID.rawValue: leaseToken.sorcID],
+                 loglevel: .info)
         HSMLog(message: "BLE - Connected to SORC", level: .verbose)
         sessionManager.connectToSorc(leaseToken: leaseToken, leaseTokenBlob: leaseTokenBlob)
     }
@@ -70,9 +68,8 @@ public class SorcManager: SorcManagerType {
      */
     public func disconnect() {
         HSMLog(message: "BLE - Disconnected", level: .verbose)
-        HSMTrack(SAEvent.connectionCancelledByApp,
-                   parameters: [:],
-                   loglevel: .info)
+        HSMTrack(.connectionCancelledByApp,
+                 loglevel: .info)
         sessionManager.disconnect()
     }
 
