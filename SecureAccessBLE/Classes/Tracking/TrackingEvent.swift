@@ -24,6 +24,7 @@ internal enum TrackingEvent: String {
     case connectionEstablished
     case connectionCancelledByApp
     case connectionDisconnected
+    case connectionFailed
 
     private var group: String {
         switch self {
@@ -39,7 +40,8 @@ internal enum TrackingEvent: String {
              .connectionTransferringBLOB,
              .connectionEstablished,
              .connectionCancelledByApp,
-             .connectionDisconnected:
+             .connectionDisconnected,
+             .connectionFailed:
             return "Connection"
         }
     }
@@ -70,6 +72,8 @@ internal enum TrackingEvent: String {
             return "Connection is cancelled by App"
         case .connectionDisconnected:
             return "Connection is disconnected"
+        case .connectionFailed:
+            return "Connection failed"
         }
     }
 
