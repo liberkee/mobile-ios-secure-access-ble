@@ -173,6 +173,7 @@ extension SorcManager {
             scanner: connectionManager,
             sessionManager: sessionManager
         )
+        HSMTrack(.interfaceInitialized, loglevel: .info)
     }
 }
 

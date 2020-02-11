@@ -85,12 +85,15 @@ public class SATrackingManager {
             var trackingParameter = event.defaultParameters.merging(parameters) { (defaultParameter, _) -> Any in
                 defaultParameter
             }
-            // Prefer system parameter to not allow overwriting them
-            trackingParameter.merge(systemParameters) { (_, systemParameter) -> Any in
-                systemParameter
+            if event == .interfaceInitialized {
+                // Prefer system parameter to not allow overwriting them
+                trackingParameter.merge(systemParameters) { (_, systemParameter) -> Any in
+                    systemParameter
+                }
             }
+            
             trackingParameter[ParameterKey.timestamp.rawValue] = dateFormatter.string(from: systemClock.now())
-
+            
             tracker?.trackEvent(String(describing: event), parameters: trackingParameter, loglevel: loglevel)
         }
     }
