@@ -187,12 +187,12 @@ extension SorcManager {
                          parameters: [ParameterKey.sorcID.rawValue: sorcId],
                          loglevel: .info)
             case let .connectingFailed(sorcID: sorcId, error: error):
-                HSMTrack(.connectionDisconnected,
+                HSMTrack(.connectionFailed,
                          parameters: [ParameterKey.sorcID.rawValue: sorcId,
                                       ParameterKey.error.rawValue: String(describing: error)],
                          loglevel: .error)
             case let .connectionLost(error: error):
-                HSMTrack(.connectionDisconnected,
+                HSMTrack(.connectionFailed,
                          parameters: [ParameterKey.error.rawValue: String(describing: error)],
                          loglevel: .error)
             case let .connectionEstablished(sorcID: sorcId):
