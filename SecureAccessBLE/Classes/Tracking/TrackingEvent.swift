@@ -34,7 +34,7 @@ internal enum TrackingEvent: String {
     private var group: String {
         switch self {
         case .interfaceInitialized:
-            return "Library Setup"
+            return "Setup"
         case .discoveryStartedByApp,
              .discoveryStarted,
              .discoveryCancelledbyApp,
@@ -59,7 +59,7 @@ internal enum TrackingEvent: String {
     private var message: String {
         switch self {
         case .interfaceInitialized:
-            return "Information regarding initialization interface"
+            return "Interface initialized"
         case .discoveryStartedByApp:
             return "Discovery was started by App"
         case .discoveryStarted:
