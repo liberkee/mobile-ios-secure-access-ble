@@ -26,6 +26,7 @@ internal enum TrackingEvent: String {
     case connectionEstablished
     case connectionCancelledByApp
     case connectionDisconnected
+    case connectionFailed
 
     case serviceGrantRequested
     case serviceGrantRequestFailed
@@ -47,7 +48,8 @@ internal enum TrackingEvent: String {
              .connectionTransferringBLOB,
              .connectionEstablished,
              .connectionCancelledByApp,
-             .connectionDisconnected:
+             .connectionDisconnected,
+             .connectionFailed:
             return "Connection"
         case .serviceGrantRequested,
              .serviceGrantRequestFailed,
@@ -84,6 +86,8 @@ internal enum TrackingEvent: String {
             return "Connection is cancelled by App"
         case .connectionDisconnected:
             return "Connection is disconnected"
+        case .connectionFailed:
+            return "Connection failed"
         case .serviceGrantRequested:
             return "Service grant is requested"
         case .serviceGrantRequestFailed:
