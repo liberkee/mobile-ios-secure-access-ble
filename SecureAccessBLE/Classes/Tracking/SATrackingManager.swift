@@ -22,6 +22,7 @@ internal enum ParameterKey: String {
     // additional data
     case sorcID
     case sorcIDs
+    case grantID
     case error
 
     // generic payload data
@@ -40,7 +41,7 @@ public class SATrackingManager {
 
     private var logLevel: LogLevel = .info
     private let systemClock: SystemClockType
-    
+
     /// Static (singleton) instance of the `SATrackingManager`
     public static var shared = SATrackingManager()
 
@@ -62,7 +63,6 @@ public class SATrackingManager {
     // Set to true to filter out events which should not be reported to TACS Framework since it tracks them on its own
     public var usedByTACSSDK: Bool = false
 
-    
     /// Registers tracker which will be used to pass events.
     /// - Parameters:
     ///   - tracker: the tracker
@@ -91,9 +91,9 @@ public class SATrackingManager {
                     systemParameter
                 }
             }
-            
+
             trackingParameter[ParameterKey.timestamp.rawValue] = dateFormatter.string(from: systemClock.now())
-            
+
             tracker?.trackEvent(String(describing: event), parameters: trackingParameter, loglevel: loglevel)
         }
     }

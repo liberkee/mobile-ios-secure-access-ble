@@ -103,6 +103,9 @@ public class SorcManager: SorcManagerType {
      - Parameter serviceGrantID: The ID the of the service grant
      */
     public func requestServiceGrant(_ serviceGrantID: ServiceGrantID) {
+        HSMTrack(.serviceGrantRequested,
+                 parameters: [ParameterKey.grantID.rawValue: String(describing: serviceGrantID)],
+                 loglevel: .info)
         HSMLog(message: "BLE - Request service grant", level: .verbose)
         sessionManager.requestServiceGrant(serviceGrantID)
     }
@@ -181,6 +184,13 @@ extension SorcManager {
 
 extension SorcManager {
     fileprivate func setUpTracking() {
+        trackConnectionChange()
+        trackDiscoveryChange()
+        trackServiceGrantChange()
+    }
+    
+    private func trackConnectionChange() {
+        
         connectionChange.subscribe { change in
             switch change.action {
             case let .connect(sorcID: sorcId):
@@ -200,7 +210,7 @@ extension SorcManager {
                 HSMTrack(.connectionEstablished,
                          parameters: [ParameterKey.sorcID.rawValue: sorcId],
                          loglevel: .info)
-
+                
             case .initial:
                 break
             case .physicalConnectionEstablished:
@@ -211,7 +221,10 @@ extension SorcManager {
                 break
             }
         }.disposed(by: disposeBag)
-
+    }
+    
+    private func trackDiscoveryChange() {
+        
         discoveryChange.subscribe { change in
             switch change.action {
             case .startDiscovery:
@@ -230,6 +243,46 @@ extension SorcManager {
                          parameters: [ParameterKey.sorcID.rawValue: sorcId],
                          loglevel: .info)
             case .initial, .rediscovered, .reset, .disconnect:
+                break
+            }
+        }.disposed(by: disposeBag)
+    }
+    
+    private func trackServiceGrantChange() {
+        serviceGrantChange.subscribe { change in
+            switch change.action {
+            case let .requestServiceGrant(id, accepted):
+                if !accepted {
+                    HSMTrack(.serviceGrantRequestFailed,
+                             parameters: [ParameterKey.grantID.rawValue: String(describing: id),
+                                          ParameterKey.error.rawValue: "Queue is full"],
+                             loglevel: .error)
+                }
+            case let .responseReceived(response):
+                switch response.status {
+                case .success:
+                    HSMTrack(.serviceGrantResponseReceived,
+                             parameters: [ParameterKey.sorcID.rawValue: String(describing: response.sorcID),
+                                          ParameterKey.grantID.rawValue: String(describing: response.serviceGrantID),
+                                          ParameterKey.data.rawValue: response.responseData],
+                             loglevel: .info)
+                case .pending:
+                    // TODO: Shouldn't we track that?
+                    break
+                case .failure,
+                     .invalidTimeFrame,
+                     .notAllowed:
+                    HSMTrack(.serviceGrantRequestFailed,
+                             parameters: [ParameterKey.error.rawValue: String(describing: change.action)],
+                             loglevel: .error)
+                }
+            case let .requestFailed(error):
+                HSMTrack(.serviceGrantRequestFailed,
+                         parameters: [ParameterKey.error.rawValue: error.description],
+                         loglevel: .error)
+            case .reset:
+                break
+            default:
                 break
             }
         }.disposed(by: disposeBag)

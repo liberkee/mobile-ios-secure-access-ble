@@ -27,6 +27,10 @@ internal enum TrackingEvent: String {
     case connectionCancelledByApp
     case connectionDisconnected
 
+    case serviceGrantRequested
+    case serviceGrantRequestFailed
+    case serviceGrantResponseReceived
+
     private var group: String {
         switch self {
         case .interfaceInitialized:
@@ -45,6 +49,10 @@ internal enum TrackingEvent: String {
              .connectionCancelledByApp,
              .connectionDisconnected:
             return "Connection"
+        case .serviceGrantRequested,
+             .serviceGrantRequestFailed,
+             .serviceGrantResponseReceived:
+            return "ServiceGrant"
         }
     }
 
@@ -76,6 +84,12 @@ internal enum TrackingEvent: String {
             return "Connection is cancelled by App"
         case .connectionDisconnected:
             return "Connection is disconnected"
+        case .serviceGrantRequested:
+            return "Service grant is requested"
+        case .serviceGrantRequestFailed:
+            return "Failure in requesting service grant"
+        case .serviceGrantResponseReceived:
+            return "Service grant response is received"
         }
     }
 
