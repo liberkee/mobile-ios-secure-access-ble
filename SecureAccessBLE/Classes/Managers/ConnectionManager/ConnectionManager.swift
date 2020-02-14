@@ -246,7 +246,10 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
             for sorcID in outdatedSorcIDs {
                 discoveredSorcs[sorcID] = nil
             }
-            updateDiscoveryChange(action: .lost(sorcIDs: Set(outdatedSorcIDs)))
+            // notify the lost change only if the discovery is still on
+            if discoveryChange.state.discoveryIsEnabled {
+                updateDiscoveryChange(action: .lost(sorcIDs: Set(outdatedSorcIDs)))
+            }
         }
     }
 
