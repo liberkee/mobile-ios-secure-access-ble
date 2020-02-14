@@ -103,8 +103,12 @@ public class SorcManager: SorcManagerType {
      - Parameter serviceGrantID: The ID the of the service grant
      */
     public func requestServiceGrant(_ serviceGrantID: ServiceGrantID) {
+        var trackingParameters = [ParameterKey.grantID.rawValue: String(describing: serviceGrantID)]
+        if case let .connected(sorcID: sorcID) = connectionChange.state {
+            trackingParameters[ParameterKey.sorcID.rawValue] = sorcID.uuidString
+        }
         HSMTrack(.serviceGrantRequested,
-                 parameters: [ParameterKey.grantID.rawValue: String(describing: serviceGrantID)],
+                 parameters: trackingParameters,
                  loglevel: .info)
         HSMLog(message: "BLE - Request service grant", level: .verbose)
         sessionManager.requestServiceGrant(serviceGrantID)
@@ -188,9 +192,8 @@ extension SorcManager {
         trackDiscoveryChange()
         trackServiceGrantChange()
     }
-    
+
     private func trackConnectionChange() {
-        
         connectionChange.subscribe { change in
             switch change.action {
             case let .connect(sorcID: sorcId):
@@ -210,7 +213,7 @@ extension SorcManager {
                 HSMTrack(.connectionEstablished,
                          parameters: [ParameterKey.sorcID.rawValue: sorcId],
                          loglevel: .info)
-                
+
             case .initial:
                 break
             case .physicalConnectionEstablished:
@@ -222,9 +225,8 @@ extension SorcManager {
             }
         }.disposed(by: disposeBag)
     }
-    
+
     private func trackDiscoveryChange() {
-        
         discoveryChange.subscribe { change in
             switch change.action {
             case .startDiscovery:
@@ -247,7 +249,7 @@ extension SorcManager {
             }
         }.disposed(by: disposeBag)
     }
-    
+
     private func trackServiceGrantChange() {
         serviceGrantChange.subscribe { change in
             switch change.action {
@@ -267,13 +269,12 @@ extension SorcManager {
                                           ParameterKey.data.rawValue: response.responseData],
                              loglevel: .info)
                 case .pending:
-                    // TODO: Shouldn't we track that?
                     break
                 case .failure,
                      .invalidTimeFrame,
                      .notAllowed:
                     HSMTrack(.serviceGrantRequestFailed,
-                             parameters: [ParameterKey.error.rawValue: String(describing: change.action)],
+                             parameters: [ParameterKey.error.rawValue: String(describing: response.status)],
                              loglevel: .error)
                 }
             case let .requestFailed(error):

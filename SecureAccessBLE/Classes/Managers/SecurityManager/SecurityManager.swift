@@ -177,7 +177,7 @@ class SecurityManager: SecurityManagerType {
             sendMessageInternal(message)
             HSMTrack(.connectionTransferringBLOB,
                      parameters: [ParameterKey.sorcID.rawValue: sorcID],
-                     loglevel: .info)
+                     loglevel: .debug)
         } else {
             disconnect(withAction: .connectingFailed(sorcID: sorcID, error: .challengeFailed))
         }
