@@ -251,12 +251,17 @@ extension SorcManager {
     }
 
     private func trackServiceGrantChange() {
+        var connectedSorcId = ""
+        if case let .connected(sorcID: sorcID) = connectionChange.state {
+            connectedSorcId = sorcID.uuidString
+        }
         serviceGrantChange.subscribe { change in
             switch change.action {
             case let .requestServiceGrant(id, accepted):
                 if !accepted {
                     HSMTrack(.serviceGrantRequestFailed,
-                             parameters: [ParameterKey.grantID.rawValue: String(describing: id),
+                             parameters: [ParameterKey.sorcID.rawValue: connectedSorcId,
+                                          ParameterKey.grantID.rawValue: String(describing: id),
                                           ParameterKey.error.rawValue: "Queue is full"],
                              loglevel: .error)
                 }
@@ -274,12 +279,14 @@ extension SorcManager {
                      .invalidTimeFrame,
                      .notAllowed:
                     HSMTrack(.serviceGrantRequestFailed,
-                             parameters: [ParameterKey.error.rawValue: String(describing: response.status)],
+                             parameters: [ParameterKey.sorcID.rawValue: connectedSorcId,
+                                          ParameterKey.error.rawValue: String(describing: response.status)],
                              loglevel: .error)
                 }
             case let .requestFailed(error):
                 HSMTrack(.serviceGrantRequestFailed,
-                         parameters: [ParameterKey.error.rawValue: error.description],
+                         parameters: [ParameterKey.error.rawValue: error.description,
+                                      ParameterKey.sorcID.rawValue: connectedSorcId],
                          loglevel: .error)
             case .reset:
                 break
