@@ -8,7 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - 2020-02-07 : (PLB2B-721)  : Add Event tracking to the SDK
 ### Changed
 ### Fixed
-- 2020-02-07 : (PLB2B-721)  : The library does send .lost discovery changes if the discovery was stopped
+- 2020-02-07 : (PLB2B-721)  : The library doesn't send .lost discovery changes if the discovery was stopped
 ### Removed
 
 ## [3.8.1] - 2020-01-24 
