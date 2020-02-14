@@ -103,6 +103,13 @@ public class SorcManager: SorcManagerType {
      - Parameter serviceGrantID: The ID the of the service grant
      */
     public func requestServiceGrant(_ serviceGrantID: ServiceGrantID) {
+        var trackingParameters = [ParameterKey.grantID.rawValue: String(describing: serviceGrantID)]
+        if case let .connected(sorcID: sorcID) = connectionChange.state {
+            trackingParameters[ParameterKey.sorcID.rawValue] = sorcID.uuidString
+        }
+        HSMTrack(.serviceGrantRequested,
+                 parameters: trackingParameters,
+                 loglevel: .info)
         HSMLog(message: "BLE - Request service grant", level: .verbose)
         sessionManager.requestServiceGrant(serviceGrantID)
     }
@@ -173,6 +180,7 @@ extension SorcManager {
             scanner: connectionManager,
             sessionManager: sessionManager
         )
+        HSMTrack(.interfaceInitialized, loglevel: .info)
     }
 }
 
@@ -180,6 +188,12 @@ extension SorcManager {
 
 extension SorcManager {
     fileprivate func setUpTracking() {
+        trackConnectionChange()
+        trackDiscoveryChange()
+        trackServiceGrantChange()
+    }
+
+    private func trackConnectionChange() {
         connectionChange.subscribe { change in
             switch change.action {
             case let .connect(sorcID: sorcId):
@@ -210,7 +224,9 @@ extension SorcManager {
                 break
             }
         }.disposed(by: disposeBag)
+    }
 
+    private func trackDiscoveryChange() {
         discoveryChange.subscribe { change in
             switch change.action {
             case .startDiscovery:
@@ -229,6 +245,52 @@ extension SorcManager {
                          parameters: [ParameterKey.sorcID.rawValue: sorcId],
                          loglevel: .info)
             case .initial, .rediscovered, .reset, .disconnect:
+                break
+            }
+        }.disposed(by: disposeBag)
+    }
+
+    private func trackServiceGrantChange() {
+        var connectedSorcId = ""
+        if case let .connected(sorcID: sorcID) = connectionChange.state {
+            connectedSorcId = sorcID.uuidString
+        }
+        serviceGrantChange.subscribe { change in
+            switch change.action {
+            case let .requestServiceGrant(id, accepted):
+                if !accepted {
+                    HSMTrack(.serviceGrantRequestFailed,
+                             parameters: [ParameterKey.sorcID.rawValue: connectedSorcId,
+                                          ParameterKey.grantID.rawValue: String(describing: id),
+                                          ParameterKey.error.rawValue: "Queue is full"],
+                             loglevel: .error)
+                }
+            case let .responseReceived(response):
+                switch response.status {
+                case .success:
+                    HSMTrack(.serviceGrantResponseReceived,
+                             parameters: [ParameterKey.sorcID.rawValue: String(describing: response.sorcID),
+                                          ParameterKey.grantID.rawValue: String(describing: response.serviceGrantID),
+                                          ParameterKey.data.rawValue: response.responseData],
+                             loglevel: .info)
+                case .pending:
+                    break
+                case .failure,
+                     .invalidTimeFrame,
+                     .notAllowed:
+                    HSMTrack(.serviceGrantRequestFailed,
+                             parameters: [ParameterKey.sorcID.rawValue: connectedSorcId,
+                                          ParameterKey.error.rawValue: String(describing: response.status)],
+                             loglevel: .error)
+                }
+            case let .requestFailed(error):
+                HSMTrack(.serviceGrantRequestFailed,
+                         parameters: [ParameterKey.error.rawValue: error.description,
+                                      ParameterKey.sorcID.rawValue: connectedSorcId],
+                         loglevel: .error)
+            case .reset:
+                break
+            default:
                 break
             }
         }.disposed(by: disposeBag)

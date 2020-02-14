@@ -9,6 +9,8 @@
 import Foundation
 
 internal enum TrackingEvent: String {
+    case interfaceInitialized
+
     case discoveryStartedByApp
     case discoveryStarted
     case discoveryCancelledbyApp
@@ -26,8 +28,14 @@ internal enum TrackingEvent: String {
     case connectionDisconnected
     case connectionFailed
 
+    case serviceGrantRequested
+    case serviceGrantRequestFailed
+    case serviceGrantResponseReceived
+
     private var group: String {
         switch self {
+        case .interfaceInitialized:
+            return "Setup"
         case .discoveryStartedByApp,
              .discoveryStarted,
              .discoveryCancelledbyApp,
@@ -43,11 +51,17 @@ internal enum TrackingEvent: String {
              .connectionDisconnected,
              .connectionFailed:
             return "Connection"
+        case .serviceGrantRequested,
+             .serviceGrantRequestFailed,
+             .serviceGrantResponseReceived:
+            return "ServiceGrant"
         }
     }
 
     private var message: String {
         switch self {
+        case .interfaceInitialized:
+            return "Interface initialized"
         case .discoveryStartedByApp:
             return "Discovery was started by App"
         case .discoveryStarted:
@@ -74,6 +88,12 @@ internal enum TrackingEvent: String {
             return "Connection is disconnected"
         case .connectionFailed:
             return "Connection failed"
+        case .serviceGrantRequested:
+            return "Service grant is requested"
+        case .serviceGrantRequestFailed:
+            return "Failure in requesting service grant"
+        case .serviceGrantResponseReceived:
+            return "Service grant response is received"
         }
     }
 

@@ -56,8 +56,21 @@ class SATrackingManagerTests: QuickSpec {
                     let expectedSorcID = UUID(uuidString: "82f6ed49-b70d-4c9e-afa1-4b0377d0de5f")
                     expect(customTracker.receivedParameters!["sorcID"]! as? UUID) == expectedSorcID
                 }
-                it("has all default system parameters") {
+            }
+            context("default system parameters") {
+                it("are present in interfaceInitialized event") {
+                    sut.track(.interfaceInitialized, loglevel: .info)
                     expect(customTracker.receivedParameters!.keys).to(contain(
+                        [
+                            ParameterKey.os.rawValue,
+                            ParameterKey.osVersion.rawValue,
+                            ParameterKey.phoneModel.rawValue,
+                            ParameterKey.secureAccessFrameworkVersion.rawValue
+                        ]))
+                }
+                it("are NOT present if event is not interfaceInitialized") {
+                    sut.track(.discoveryStarted, loglevel: .info)
+                    expect(customTracker.receivedParameters!.keys).toNot(contain(
                         [
                             ParameterKey.os.rawValue,
                             ParameterKey.osVersion.rawValue,
