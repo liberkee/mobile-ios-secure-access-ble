@@ -1,3 +1,8 @@
+# [3.9.0] - 2020-02-17
+
+- Added Event tracking to the SDK
+- The library doesn't send `.lost` discovery changes if the discovery was stopped
+
 # [3.8.1] - 2020-01-24
 
 - Added support for Xcode 11.3
