@@ -210,7 +210,7 @@ extension SorcManager {
             }
         }.disposed(by: disposeBag)
     }
-    
+
     private func trackConnectionChange() {
         connectionChange.subscribe { change in
             switch change.action {

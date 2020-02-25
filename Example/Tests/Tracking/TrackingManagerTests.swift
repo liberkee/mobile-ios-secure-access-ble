@@ -88,6 +88,11 @@ class SATrackingManagerTests: QuickSpec {
                     let expectedEvent = "connectionTransferringBLOB"
                     expect(customTracker.receivedEvent) == expectedEvent
                 }
+                it("tracks events of bluetooth state") {
+                    sut.track(.bluetoothPoweredON, loglevel: .info)
+                    let expectedEvent = "bluetoothPoweredON"
+                    expect(customTracker.receivedEvent) == expectedEvent
+                }
                 it("does not track events of no interest") {
                     sut.track(.discoveryStarted, loglevel: .info)
                     expect(customTracker.receivedEvent).to(beNil())

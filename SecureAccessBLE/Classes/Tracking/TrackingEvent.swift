@@ -15,7 +15,7 @@ internal enum TrackingEvent: String {
     case bluetoothPoweredOFF
     case bluetoothUnauthorized
     case bluetoothUnsupported
-    
+
     case discoveryStartedByApp
     case discoveryStarted
     case discoveryCancelledbyApp
@@ -116,7 +116,11 @@ internal enum TrackingEvent: String {
     }
 
     var shouldBeReportedToTacs: Bool {
-        return [TrackingEvent.connectionTransferringBLOB].contains(self)
+        return [TrackingEvent.connectionTransferringBLOB,
+                TrackingEvent.bluetoothPoweredOFF,
+                TrackingEvent.bluetoothPoweredON,
+                TrackingEvent.bluetoothUnauthorized,
+                TrackingEvent.bluetoothUnsupported].contains(self)
     }
 
     var defaultParameters: [String: Any] {
