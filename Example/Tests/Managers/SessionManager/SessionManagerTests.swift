@@ -312,7 +312,16 @@ class SessionManagerTests: XCTestCase {
         XCTAssertEqual(receivedServiceGrantChange, expectedServiceGrantChange)
     }
 
-    func test_requestServiceGrant_ifNotConnected_itDoesNothing() {
+    func test_requestServiceGrant_ifNotConnected_itDoesNotSendMessage() {
+        // Given
+        // When
+        sessionManager.requestServiceGrant(serviceGrantIDA)
+
+        // Then
+        XCTAssertNil(securityManager.sendMessageCalledWithMessage)
+    }
+
+    func test_requestServiceGrant_ifNotConnected_itNotifiesNotConnectedError() {
         // Given
         var receivedServiceGrantChange: ServiceGrantChange!
         _ = sessionManager.serviceGrantChange.subscribeNext { change in
@@ -323,11 +332,9 @@ class SessionManagerTests: XCTestCase {
         sessionManager.requestServiceGrant(serviceGrantIDA)
 
         // Then
-        XCTAssertNil(securityManager.sendMessageCalledWithMessage)
-
         let expectedServiceGrantChange = ServiceGrantChange(
             state: .init(requestingServiceGrantIDs: []),
-            action: .initial
+            action: .requestFailed(.notConnected)
         )
         XCTAssertEqual(receivedServiceGrantChange!, expectedServiceGrantChange)
     }
