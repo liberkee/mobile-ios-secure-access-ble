@@ -11,6 +11,11 @@ import Foundation
 internal enum TrackingEvent: String {
     case interfaceInitialized
 
+    case bluetoothPoweredON
+    case bluetoothPoweredOFF
+    case bluetoothUnauthorized
+    case bluetoothUnsupported
+    
     case discoveryStartedByApp
     case discoveryStarted
     case discoveryCancelledbyApp
@@ -55,6 +60,11 @@ internal enum TrackingEvent: String {
              .serviceGrantRequestFailed,
              .serviceGrantResponseReceived:
             return "ServiceGrant"
+        case .bluetoothPoweredON,
+             .bluetoothPoweredOFF,
+             .bluetoothUnsupported,
+             .bluetoothUnauthorized:
+            return "Bluetooth"
         }
     }
 
@@ -94,6 +104,14 @@ internal enum TrackingEvent: String {
             return "Failure in requesting service grant"
         case .serviceGrantResponseReceived:
             return "Service grant response is received"
+        case .bluetoothPoweredON:
+            return "Bluetooth is powered on"
+        case .bluetoothPoweredOFF:
+            return "Bluetooth is powered off"
+        case .bluetoothUnauthorized:
+            return "Bluetooth is unauthorized"
+        case .bluetoothUnsupported:
+            return "Bluetooth is unsupported"
         }
     }
 
