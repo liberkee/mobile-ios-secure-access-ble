@@ -6,6 +6,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 - 2020-02-25 : (PLB2B-1045)  : Added  `notConnected` error case for scenario where a service grant is requested in not connected state
+- 2020-02-25 : (PLB2B-1024)  : Added  bluetooth state events to tracking
+
 ### Changed
 ### Fixed
 ### Removed

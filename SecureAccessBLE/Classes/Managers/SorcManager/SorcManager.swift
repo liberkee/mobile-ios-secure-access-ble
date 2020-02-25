@@ -191,6 +191,24 @@ extension SorcManager {
         trackConnectionChange()
         trackDiscoveryChange()
         trackServiceGrantChange()
+        trackBluetoothStateChange()
+    }
+
+    private func trackBluetoothStateChange() {
+        bluetoothState.subscribe { change in
+            switch change {
+            case .poweredOff:
+                HSMTrack(.bluetoothPoweredOFF, loglevel: .info)
+            case .poweredOn:
+                HSMTrack(.bluetoothPoweredON, loglevel: .info)
+            case .unknown:
+                break
+            case .unsupported:
+                HSMTrack(.bluetoothUnsupported, loglevel: .error)
+            case .unauthorized:
+                HSMTrack(.bluetoothUnauthorized, loglevel: .error)
+            }
+        }.disposed(by: disposeBag)
     }
 
     private func trackConnectionChange() {
