@@ -1,3 +1,8 @@
+# [3.10.0] - 2020-02-25
+
+- Added `notConnected` error case for scenario where a service grant is requested in not connected state
+- Added bluetooth state events to tracking
+
 # [3.9.0] - 2020-02-17
 
 - Added Event tracking to the SDK
