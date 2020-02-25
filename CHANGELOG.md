@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 ### Added
+- 2020-02-25 : (PLB2B-1045)  : Added  `notConnected` error case for scenario where a service grant is requested in not connected state
 ### Changed
 ### Fixed
 ### Removed

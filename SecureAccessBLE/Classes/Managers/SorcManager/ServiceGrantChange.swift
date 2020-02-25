@@ -66,6 +66,9 @@ extension ServiceGrantChange {
         /// Received data is invalid
         case receivedInvalidData
 
+        /// Request failed due to missing connection
+        case notConnected
+
         /// Description of the error
         public var description: String {
             switch self {
@@ -73,6 +76,8 @@ extension ServiceGrantChange {
                 return "Sending failed."
             case .receivedInvalidData:
                 return "Invalid data was received."
+            case .notConnected:
+                return "Not connected to the SORC"
             }
         }
     }
