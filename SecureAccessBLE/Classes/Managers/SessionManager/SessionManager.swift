@@ -85,7 +85,10 @@ class SessionManager: SessionManagerType {
     }
 
     func requestServiceGrant(_ serviceGrantID: ServiceGrantID) {
-        guard case .connected = connectionChange.state else { return }
+        guard case .connected = connectionChange.state else {
+            applyServiceGrantChangeAction(.requestFailed(.notConnected))
+            return
+        }
 
         let message = SorcMessage(
             id: SorcMessageID.serviceGrant,
@@ -290,13 +293,12 @@ class SessionManager: SessionManagerType {
     }
 
     private func applyServiceGrantRequestFailed(error: ServiceGrantChange.Error) {
-        switch error {
-        case .sendingFailed, .receivedInvalidData:
-            messageQueue.clear()
+        messageQueue.clear()
+        if [.sendingFailed, .receivedInvalidData].contains(error) {
             sendHeartbeat()
-            let state = ServiceGrantChange.State(requestingServiceGrantIDs: [])
-            serviceGrantChange.onNext(.init(state: state, action: .requestFailed(error)))
         }
+        let state = ServiceGrantChange.State(requestingServiceGrantIDs: [])
+        serviceGrantChange.onNext(.init(state: state, action: .requestFailed(error)))
     }
 
     // MARK: - Heartbeat handling
