@@ -229,6 +229,54 @@ class ConnectionManagerTests: XCTestCase {
         XCTAssertEqual(centralManager.scanForPeripheralsCalledWithArguments!.serviceUUIDs!, [CBUUID(string: "0x180A")])
     }
 
+    func test_startDiscoveryForSpecificSorc_ifCentralManagerIsPoweredOn_scanForPeripheralsIsCalledAndDiscoveryIsEnabled() {
+        // Given
+        centralManager.state = .poweredOn
+        let appActivityStatusProvider = AppActivityStatusProviderMock()
+        let connectionManager = ConnectionManager(
+            centralManager: centralManager,
+            appActivityStatusProvider: appActivityStatusProvider
+        )
+        appActivityStatusProvider.appDidBecomeActiveSubject.onNext(false)
+
+        // When
+        let sorcID = UUID(uuidString: "82f6ed49-b70d-4c9e-afa1-4b0377d0de5f")!
+        connectionManager.startDiscovery(sorcID: sorcID)
+
+        // Then
+        let arguments = centralManager.scanForPeripheralsCalledWithArguments!
+        XCTAssertEqual(arguments.serviceUUIDs!, [CBUUID(string: "0x180A")])
+        XCTAssertTrue(arguments.options![CBCentralManagerScanOptionAllowDuplicatesKey] as! Int == 1)
+        XCTAssertTrue(connectionManager.discoveryChange.state.discoveryIsEnabled)
+    }
+
+    func test_startDiscoveryForSpecificSorc_ifCentralManagerIsPoweredOn_notifiesChange() {
+        // Given
+        centralManager.state = .poweredOn
+        let appActivityStatusProvider = AppActivityStatusProviderMock()
+        let connectionManager = ConnectionManager(
+            centralManager: centralManager,
+            appActivityStatusProvider: appActivityStatusProvider
+        )
+        var receivedDiscoveryChange: DiscoveryChange?
+        _ = connectionManager.discoveryChange.subscribeNext { change in
+            receivedDiscoveryChange = change
+        }
+
+        appActivityStatusProvider.appDidBecomeActiveSubject.onNext(false)
+
+        // When
+        let sorcID = UUID(uuidString: "82f6ed49-b70d-4c9e-afa1-4b0377d0de5f")!
+        connectionManager.startDiscovery(sorcID: sorcID)
+
+        // Then
+        let expectedChange = DiscoveryChange(
+            state: .init(discoveredSorcs: SorcInfos(), discoveryIsEnabled: true),
+            action: .discoveryStarted(sorcID: sorcID)
+        )
+        XCTAssertEqual(expectedChange, receivedDiscoveryChange)
+    }
+
     func test_stopDiscovery_stopsScanOnCentralAndDiscoveryIsNotEnabled() {
         // Given discovery is enabled
         let connectionManager = ConnectionManager(centralManager: centralManager)
