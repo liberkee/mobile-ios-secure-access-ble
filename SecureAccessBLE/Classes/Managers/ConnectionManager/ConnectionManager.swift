@@ -113,7 +113,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     /// 2. automatically on `startDiscovery` call if it was not determined before
     fileprivate var applicationIsActive: Bool?
 
-    fileprivate var requestedSorID: SorcID?
+    fileprivate var requestedSorcID: SorcID?
 
     fileprivate var connectedSorc: DiscoveredSorc? {
         if case let .connected(sorcID) = connectionState {
@@ -265,7 +265,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     }
 
     fileprivate func updateDiscoveredSorcsWithNewSorc(_ sorc: DiscoveredSorc) {
-        if let sorcID = requestedSorID, sorcID != sorc.sorcID {
+        if let sorcID = requestedSorcID, sorcID != sorc.sorcID {
             return
         }
         if let connectedSorc = connectedSorc, sorc.sorcID == connectedSorc.sorcID {
@@ -294,7 +294,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
             ))
         case let .discoveryStarted(sorcID: sorcID):
             guard !state.discoveryIsEnabled else { return }
-            requestedSorID = sorcID
+            requestedSorcID = sorcID
             discoveryChange.onNext(.init(
                 state: state.withDiscoveryIsEnabled(true),
                 action: action
