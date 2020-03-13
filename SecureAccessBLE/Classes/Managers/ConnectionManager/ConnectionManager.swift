@@ -100,6 +100,9 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     /// Timer to remove outdated discovered SORCs
     fileprivate var filterTimer: RepeatingBackgroundTimer?
 
+    /// Discovery timeout timer
+    fileprivate var timeoutTimer: RepeatingBackgroundTimer?
+
     private let appActivityStatusProvider: AppActivityStatusProviderType
 
     /// The SORCs that were discovered and were not removed by the filterTimer
@@ -127,7 +130,8 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     required init(
         centralManager: CBCentralManagerType,
         systemClock: SystemClockType,
-        createTimer: CreateTimer,
+        filterTimerProvider: CreateTimer,
+        timeoutTimerProvider: CreateTimer,
         appActivityStatusProvider: AppActivityStatusProviderType,
         configuration: Configuration = Configuration()
     ) {
@@ -140,7 +144,8 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
         self.centralManager = centralManager
         centralManager.delegate = self
 
-        filterTimer = createTimer(removeOutdatedSorcs)
+        filterTimer = filterTimerProvider(removeOutdatedSorcs)
+        timeoutTimer = timeoutTimerProvider(onDiscoveryTimeout)
 
         _ = appActivityStatusProvider.appDidBecomeActive.subscribe { [weak self] applicationIsActive in
             self?.applicationIsActive = applicationIsActive
@@ -349,6 +354,8 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
             return nil
         }
     }
+
+    private func onDiscoveryTimeout() {}
 }
 
 extension ConnectionManager {
@@ -359,8 +366,13 @@ extension ConnectionManager {
 
         let systemClock = SystemClock()
 
-        let createTimer: CreateTimer = { block in
+        let filterTimerProvider: CreateTimer = { block in
             RepeatingBackgroundTimer.scheduledTimer(timeInterval: configuration.removeOutdatedSorcsInterval,
+                                                    queue: queue,
+                                                    handler: block)
+        }
+        let timeoutTimerProvider: CreateTimer = { block in
+            RepeatingBackgroundTimer.scheduledTimer(timeInterval: configuration.discoveryTimeoutInterval,
                                                     queue: queue,
                                                     handler: block)
         }
@@ -370,7 +382,8 @@ extension ConnectionManager {
         self.init(
             centralManager: centralManager,
             systemClock: systemClock,
-            createTimer: createTimer,
+            filterTimerProvider: filterTimerProvider,
+            timeoutTimerProvider: timeoutTimerProvider,
             appActivityStatusProvider: appActivityStatusProvider,
             configuration: configuration
         )
