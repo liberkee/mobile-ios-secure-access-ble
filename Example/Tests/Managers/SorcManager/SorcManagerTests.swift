@@ -29,6 +29,10 @@ private class MockScanner: ScannerType {
         startDiscoveryCalled = true
     }
 
+    func startDiscovery(sorcID _: SorcID) {
+        startDiscoveryCalled = true
+    }
+
     var stopDiscoveryCalled = false
     func stopDiscovery() {
         stopDiscoveryCalled = true

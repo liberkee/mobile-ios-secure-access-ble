@@ -270,8 +270,13 @@ class ConnectionManagerTests: XCTestCase {
         connectionManager.startDiscovery(sorcID: sorcID)
 
         // Then
+        let state = DiscoveryChange.State(
+            discoveredSorcs: SorcInfos(),
+            discoveryIsEnabled: true,
+            requestedSorc: sorcID
+        )
         let expectedChange = DiscoveryChange(
-            state: .init(discoveredSorcs: SorcInfos(), discoveryIsEnabled: true),
+            state: state,
             action: .discoveryStarted(sorcID: sorcID)
         )
         XCTAssertEqual(expectedChange, receivedDiscoveryChange)

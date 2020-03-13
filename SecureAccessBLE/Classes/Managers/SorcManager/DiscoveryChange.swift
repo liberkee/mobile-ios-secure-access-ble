@@ -37,13 +37,16 @@ extension DiscoveryChange {
         /// A flag thats indicates whether discovery is enabled or not
         public let discoveryIsEnabled: Bool
 
+        public let requestedSorc: SorcID?
+
         func withDiscoveryIsEnabled(_ enabled: Bool) -> State {
             return State(discoveredSorcs: discoveredSorcs, discoveryIsEnabled: enabled)
         }
 
-        public init(discoveredSorcs: SorcInfos, discoveryIsEnabled: Bool) {
+        public init(discoveredSorcs: SorcInfos, discoveryIsEnabled: Bool, requestedSorc: SorcID? = nil) {
             self.discoveredSorcs = discoveredSorcs
             self.discoveryIsEnabled = discoveryIsEnabled
+            self.requestedSorc = requestedSorc
         }
     }
 }
