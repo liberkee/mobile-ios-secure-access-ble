@@ -159,11 +159,23 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
 
     /// Starts discovery if the central manager state is `poweredOn`.
     /// The method will determine the `UIApplicationState` asynchronously if it is not known and start discovery after that.
-    func startDiscovery(sorcID: SorcID) {
-        self.sorcID = sorcID
+    func startDiscovery() {
         updateDiscoveryChange(action: .startDiscovery)
         guard centralManager.state == .poweredOn else { return }
 
+        if let state = applicationIsActive {
+            startDiscovery(applicationIsActive: state)
+        } else {
+            DispatchQueue.main.async {
+                let state = UIApplication.shared.applicationState == .active
+                self.applicationIsActive = state
+                self.startDiscovery(applicationIsActive: state)
+            }
+        }
+    }
+
+    func startDiscovery(sorcID: SorcID) {
+        updateDiscoveryChange(action: .discoveryStarted(sorcID: sorcID))
         if let state = applicationIsActive {
             startDiscovery(applicationIsActive: state)
         } else {
@@ -234,7 +246,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
 
     private func handleAppDidChangeActiveState() {
         if discoveryChange.state.discoveryIsEnabled {
-            startDiscovery(sorcID: sorcID!)
+            startDiscovery()
         }
     }
 
@@ -274,8 +286,15 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
 
     fileprivate func updateDiscoveryChange(action: DiscoveryChange.Action) {
         let state = discoveryChange.state
+        print(action)
         switch action {
         case .startDiscovery:
+            guard !state.discoveryIsEnabled else { return }
+            discoveryChange.onNext(.init(
+                state: state.withDiscoveryIsEnabled(true),
+                action: action
+            ))
+        case .discoveryStarted(sorcID: _):
             guard !state.discoveryIsEnabled else { return }
             discoveryChange.onNext(.init(
                 state: state.withDiscoveryIsEnabled(true),
@@ -287,7 +306,6 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
                 state: state.withDiscoveryIsEnabled(false),
                 action: action
             ))
-        // TODO: stop discovery on discovery
         default:
             var sorcInfos = SorcInfos()
             for sorc in discoveredSorcs.values {
@@ -366,7 +384,7 @@ extension ConnectionManager {
 
         if central.state == .poweredOn {
             if discoveryChange.state.discoveryIsEnabled {
-                startDiscovery(sorcID: sorcID!)
+                startDiscovery()
             }
         } else {
             resetDiscoveredSorcs()

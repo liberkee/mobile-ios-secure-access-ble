@@ -23,11 +23,11 @@ public class SorcManager: SorcManagerType {
     // MARK: - Discovery
 
     /// Starts discovery of SORCs
-    public func startDiscovery(sorcID: SorcID) {
+    public func startDiscovery() {
         HSMTrack(.discoveryStartedByApp,
                  loglevel: .info)
         HSMLog(message: "BLE - Scanner started discovery", level: .verbose)
-        scanner.startDiscovery(sorcID: sorcID)
+        scanner.startDiscovery()
     }
 
     /// Stops discovery of SORCs

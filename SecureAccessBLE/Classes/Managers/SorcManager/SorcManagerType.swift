@@ -22,7 +22,7 @@ public protocol SorcManagerType {
     var discoveryChange: ChangeSignal<DiscoveryChange> { get }
 
     /// Starts discovery of SORCs
-    func startDiscovery(sorcID: SorcID)
+    func startDiscovery()
 
     /// Stops discovery of SORCs
     func stopDiscovery()

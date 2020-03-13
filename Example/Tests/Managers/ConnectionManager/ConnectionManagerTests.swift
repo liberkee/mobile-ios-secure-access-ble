@@ -173,8 +173,7 @@ class ConnectionManagerTests: XCTestCase {
         appActivityStatusProvider.appDidBecomeActiveSubject.onNext(false)
 
         // When
-        let sorcID = UUID(uuidString: "82f6ed49-b70d-4c9e-afa1-4b0377d0de5f")!
-        connectionManager.startDiscovery(sorcID: sorcID)
+        connectionManager.startDiscovery()
 
         // Then
         let arguments = centralManager.scanForPeripheralsCalledWithArguments!
@@ -189,8 +188,7 @@ class ConnectionManagerTests: XCTestCase {
         let connectionManager = ConnectionManager(centralManager: centralManager)
 
         // When
-        let sorcID = UUID(uuidString: "82f6ed49-b70d-4c9e-afa1-4b0377d0de5f")!
-        connectionManager.startDiscovery(sorcID: sorcID)
+        connectionManager.startDiscovery()
 
         // Then
         XCTAssertNil(centralManager.scanForPeripheralsCalledWithArguments)
@@ -208,8 +206,7 @@ class ConnectionManagerTests: XCTestCase {
         appActivityStatusProvider.appDidBecomeActiveSubject.onNext(true)
 
         // When
-        let sorcID = UUID(uuidString: "82f6ed49-b70d-4c9e-afa1-4b0377d0de5f")!
-        connectionManager.startDiscovery(sorcID: sorcID)
+        connectionManager.startDiscovery()
 
         // Then
         XCTAssertNil(centralManager.scanForPeripheralsCalledWithArguments!.serviceUUIDs)
@@ -226,8 +223,7 @@ class ConnectionManagerTests: XCTestCase {
         appActivityStatusProvider.appDidBecomeActiveSubject.onNext(false)
 
         // When
-        let sorcID = UUID(uuidString: "82f6ed49-b70d-4c9e-afa1-4b0377d0de5f")!
-        connectionManager.startDiscovery(sorcID: sorcID)
+        connectionManager.startDiscovery()
 
         // Then
         XCTAssertEqual(centralManager.scanForPeripheralsCalledWithArguments!.serviceUUIDs!, [CBUUID(string: "0x180A")])
@@ -722,8 +718,7 @@ class ConnectionManagerTests: XCTestCase {
         // Given
         centralManager.state = .poweredOn
         let connectionManager = ConnectionManager(centralManager: centralManager)
-        let sorcID = UUID(uuidString: "82f6ed49-b70d-4c9e-afa1-4b0377d0de5f")!
-        connectionManager.startDiscovery(sorcID: sorcID)
+        connectionManager.startDiscovery()
 
         let peripheral = CBPeripheralMock()
         let advertisementData = [String: Any]()
@@ -1184,8 +1179,7 @@ class ConnectionManagerTests: XCTestCase {
 
     private func startDiscovery(connectionManager: ConnectionManager, centralManager: CBCentralManagerMock) {
         centralManager.state = .poweredOn
-        let sorcID = UUID(uuidString: "82f6ed49-b70d-4c9e-afa1-4b0377d0de5f")!
-        connectionManager.startDiscovery(sorcID: sorcID)
+        connectionManager.startDiscovery()
         centralManager.scanForPeripheralsCalledWithArguments = nil
     }
 
