@@ -113,7 +113,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     /// 2. automatically on `startDiscovery` call if it was not determined before
     fileprivate var applicationIsActive: Bool?
 
-    fileprivate var sorcID: SorcID?
+    fileprivate var requestedSorID: SorcID?
 
     fileprivate var connectedSorc: DiscoveredSorc? {
         if case let .connected(sorcID) = connectionState {
@@ -161,21 +161,17 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     /// The method will determine the `UIApplicationState` asynchronously if it is not known and start discovery after that.
     func startDiscovery() {
         updateDiscoveryChange(action: .startDiscovery)
-        guard centralManager.state == .poweredOn else { return }
-
-        if let state = applicationIsActive {
-            startDiscovery(applicationIsActive: state)
-        } else {
-            DispatchQueue.main.async {
-                let state = UIApplication.shared.applicationState == .active
-                self.applicationIsActive = state
-                self.startDiscovery(applicationIsActive: state)
-            }
-        }
+        startDiscoveryAsPerApplicationState()
     }
 
     func startDiscovery(sorcID: SorcID) {
         updateDiscoveryChange(action: .discoveryStarted(sorcID: sorcID))
+        startDiscoveryAsPerApplicationState()
+    }
+
+    private func startDiscoveryAsPerApplicationState() {
+        guard centralManager.state == .poweredOn else { return }
+
         if let state = applicationIsActive {
             startDiscovery(applicationIsActive: state)
         } else {
@@ -269,6 +265,9 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     }
 
     fileprivate func updateDiscoveredSorcsWithNewSorc(_ sorc: DiscoveredSorc) {
+        if let sorcID = requestedSorID, sorcID != sorc.sorcID {
+            return
+        }
         if let connectedSorc = connectedSorc, sorc.sorcID == connectedSorc.sorcID {
             sorc.peripheral = connectedSorc.peripheral
         }
@@ -286,7 +285,6 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
 
     fileprivate func updateDiscoveryChange(action: DiscoveryChange.Action) {
         let state = discoveryChange.state
-        print(action)
         switch action {
         case .startDiscovery:
             guard !state.discoveryIsEnabled else { return }
@@ -294,8 +292,9 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
                 state: state.withDiscoveryIsEnabled(true),
                 action: action
             ))
-        case .discoveryStarted(sorcID: _):
+        case let .discoveryStarted(sorcID: sorcID):
             guard !state.discoveryIsEnabled else { return }
+            requestedSorID = sorcID
             discoveryChange.onNext(.init(
                 state: state.withDiscoveryIsEnabled(true),
                 action: action
