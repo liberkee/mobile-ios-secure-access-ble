@@ -54,6 +54,8 @@ extension DiscoveryChange {
         /// Initial action (sent automatically on `subscribe`)
         case initial
 
+        case discoveryStarted(sorcID: SorcID)
+
         /// The SORC was discovered
         case discovered(sorcID: SorcID)
 

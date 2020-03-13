@@ -113,6 +113,8 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     /// 2. automatically on `startDiscovery` call if it was not determined before
     fileprivate var applicationIsActive: Bool?
 
+    fileprivate var sorcID: SorcID?
+
     fileprivate var connectedSorc: DiscoveredSorc? {
         if case let .connected(sorcID) = connectionState {
             return discoveredSorcs[sorcID]
@@ -157,7 +159,8 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
 
     /// Starts discovery if the central manager state is `poweredOn`.
     /// The method will determine the `UIApplicationState` asynchronously if it is not known and start discovery after that.
-    func startDiscovery() {
+    func startDiscovery(sorcID: SorcID) {
+        self.sorcID = sorcID
         updateDiscoveryChange(action: .startDiscovery)
         guard centralManager.state == .poweredOn else { return }
 
@@ -231,7 +234,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
 
     private func handleAppDidChangeActiveState() {
         if discoveryChange.state.discoveryIsEnabled {
-            startDiscovery()
+            startDiscovery(sorcID: sorcID!)
         }
     }
 
@@ -284,6 +287,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
                 state: state.withDiscoveryIsEnabled(false),
                 action: action
             ))
+        // TODO: stop discovery on discovery
         default:
             var sorcInfos = SorcInfos()
             for sorc in discoveredSorcs.values {
@@ -362,7 +366,7 @@ extension ConnectionManager {
 
         if central.state == .poweredOn {
             if discoveryChange.state.discoveryIsEnabled {
-                startDiscovery()
+                startDiscovery(sorcID: sorcID!)
             }
         } else {
             resetDiscoveredSorcs()

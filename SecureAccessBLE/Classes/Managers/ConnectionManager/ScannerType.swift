@@ -11,6 +11,6 @@ import Foundation
 protocol ScannerType {
     var discoveryChange: ChangeSubject<DiscoveryChange> { get }
 
-    func startDiscovery()
+    func startDiscovery(sorcID: SorcID)
     func stopDiscovery()
 }

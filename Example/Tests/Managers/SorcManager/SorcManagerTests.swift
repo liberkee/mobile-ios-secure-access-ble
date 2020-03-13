@@ -25,7 +25,7 @@ private class MockScanner: ScannerType {
     ))
 
     var startDiscoveryCalled = false
-    func startDiscovery() {
+    func startDiscovery(sorcID _: SorcID) {
         startDiscoveryCalled = true
     }
 
@@ -125,7 +125,8 @@ class SorcManagerTests: XCTestCase {
 
     func test_startDiscovery_delegatesCallToScanner() {
         // When
-        sorcManager.startDiscovery()
+        let sorcID = UUID(uuidString: "82f6ed49-b70d-4c9e-afa1-4b0377d0de5f")!
+        sorcManager.startDiscovery(sorcID: sorcID)
 
         // Then
         XCTAssertTrue(scanner.startDiscoveryCalled)
