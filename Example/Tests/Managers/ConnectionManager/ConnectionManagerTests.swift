@@ -272,30 +272,31 @@ class ConnectionManagerTests: XCTestCase {
         var timeoutFireTimer: (() -> Void)!
         let createTimer: CreateTimer = { block in
             timeoutFireTimer = block
-            return RepeatingBackgroundTimer(timeInterval: 1000, queue: DispatchQueue.main)
+            return RepeatingBackgroundTimer(timeInterval: 0, queue: DispatchQueue.main)
         }
+
+        let appActivityStatusProvider = AppActivityStatusProviderMock()
 
         let connectionManager = ConnectionManager(
             centralManager: centralManager,
             systemClock: systemClock,
             timeoutTimerProvider: createTimer,
-            appActivityStatusProvider: AppActivityStatusProvider(notificationCenter: NotificationCenter.default)
+            appActivityStatusProvider: appActivityStatusProvider
         )
         var receivedDiscoveryChange: DiscoveryChange!
         _ = connectionManager.discoveryChange.subscribeNext { change in
             receivedDiscoveryChange = change
         }
 
-        prepareDiscoveredKnownSorc(sorcID1, peripheral: CBPeripheralMock(), connectionManager: connectionManager, centralManager: centralManager)
+        connectionManager.startDiscovery(sorcID: sorcID1)
 
-        // Moving system time forward 6 seconds, sorcOutdatedDuration == 5
-        systemClock.currentNow = Date(timeIntervalSince1970: 6)
+        // Moving system time forward 4 seconds, timeout == 2
+        systemClock.currentNow = Date(timeIntervalSince1970: 4)
 
         // When
         timeoutFireTimer()
 
         // Then
-        XCTAssert(receivedDiscoveryChange.state.discoveredSorcs.contains(sorcID1))
         XCTAssertEqual(receivedDiscoveryChange.action, .discoveryFailed)
     }
 
