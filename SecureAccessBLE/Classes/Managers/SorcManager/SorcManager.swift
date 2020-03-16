@@ -262,6 +262,9 @@ extension SorcManager {
                 HSMTrack(.connectionDisconnected,
                          parameters: [ParameterKey.sorcID.rawValue: sorcId],
                          loglevel: .info)
+            case .discoveryFailed:
+                // TODO: create a event for it
+                break
             case .initial, .rediscovered, .reset, .disconnect:
                 break
             }

@@ -15,7 +15,7 @@ extension ConnectionManager {
         static let defaultWriteCharacteristicID = "c8e58f23-9417-41c6-97a8-70f6b2c8cab9"
         static let defaultSorcOutdatedDuration = TimeInterval(5)
         static let defaultRemoveOutdatedSorcsInterval = TimeInterval(2)
-        static let defaultDiscoveryTimeoutInterval = TimeInterval(2)
+        static let defaultDiscoveryTimeoutInterval = TimeInterval(5)
 
         let serviceID: String
         let notifyCharacteristicID: String

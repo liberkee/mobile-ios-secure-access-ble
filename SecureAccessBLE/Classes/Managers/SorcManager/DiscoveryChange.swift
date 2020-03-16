@@ -59,6 +59,8 @@ extension DiscoveryChange {
 
         case discoveryStarted(sorcID: SorcID)
 
+        case discoveryFailed
+
         /// The SORC was discovered
         case discovered(sorcID: SorcID)
 

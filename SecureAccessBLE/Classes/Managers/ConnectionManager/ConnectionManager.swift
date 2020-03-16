@@ -158,6 +158,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     deinit {
         disconnect()
         filterTimer?.suspend()
+        timeoutTimer?.suspend()
     }
 
     /// Starts discovery if the central manager state is `poweredOn`.
@@ -312,6 +313,12 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
                 state: state.withDiscoveryIsEnabled(false),
                 action: action
             ))
+        case let .discoveryFailed:
+            guard state.discoveryIsEnabled else { return }
+            discoveryChange.onNext(.init(
+                state: state.withDiscoveryIsEnabled(false),
+                action: action
+            ))
         default:
             var sorcInfos = SorcInfos()
             for sorc in discoveredSorcs.values {
@@ -355,7 +362,24 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
         }
     }
 
-    private func onDiscoveryTimeout() {}
+    private func onDiscoveryTimeout() {
+        let outdatedSorcs = Array(discoveredSorcs.values).filter { (sorc) -> Bool in
+            let discoveredAgoInterval = systemClock.timeIntervalSinceNow(for: sorc.discoveryDate)
+            let outdated = discoveredAgoInterval < -configuration.discoveryTimeoutInterval
+            return outdated
+        }
+        let outdatedSorcIDs = outdatedSorcs.map { $0.sorcID }
+        if outdatedSorcIDs.count > 0 {
+            for sorcID in outdatedSorcIDs {
+                discoveredSorcs[sorcID] = nil
+            }
+            // notify the failure only if the discovery is still on
+            if discoveryChange.state.discoveryIsEnabled {
+                // TODO: centralManager.stopScan(), should we need it here?
+                updateDiscoveryChange(action: .discoveryFailed)
+            }
+        }
+    }
 }
 
 extension ConnectionManager {
