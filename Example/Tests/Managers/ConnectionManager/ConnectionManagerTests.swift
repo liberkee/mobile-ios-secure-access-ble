@@ -267,19 +267,16 @@ class ConnectionManagerTests: XCTestCase {
 
     func test_timeoutTimerFired_stopsDiscoveryWithTimeout() {
         // Given
-        let systemClock = SystemClockMock(currentNow: Date(timeIntervalSince1970: 0))
-
-        var timeoutFireTimer: (() -> Void)!
+        var fireTimeoutEvent: (() -> Void)!
         let createTimer: CreateTimer = { block in
-            timeoutFireTimer = block
-            return RepeatingBackgroundTimer(timeInterval: 0, queue: DispatchQueue.main)
+            fireTimeoutEvent = block
+            return RepeatingBackgroundTimer(timeInterval: 2, queue: DispatchQueue.main)
         }
 
         let appActivityStatusProvider = AppActivityStatusProviderMock()
 
         let connectionManager = ConnectionManager(
             centralManager: centralManager,
-            systemClock: systemClock,
             timeoutTimerProvider: createTimer,
             appActivityStatusProvider: appActivityStatusProvider
         )
@@ -290,14 +287,38 @@ class ConnectionManagerTests: XCTestCase {
 
         connectionManager.startDiscovery(sorcID: sorcID1)
 
-        // Moving system time forward 4 seconds, timeout == 2
-        systemClock.currentNow = Date(timeIntervalSince1970: 4)
-
         // When
-        timeoutFireTimer()
+        fireTimeoutEvent()
 
         // Then
         XCTAssertEqual(receivedDiscoveryChange.action, .discoveryFailed)
+    }
+
+    func test_discoveredSorc_doesnotThrowDiscoveryFailureTimeout() {
+        var fireTimeoutEvent: (() -> Void)!
+        let createTimer: CreateTimer = { block in
+            fireTimeoutEvent = block
+            return RepeatingBackgroundTimer(timeInterval: 2, queue: DispatchQueue.main)
+        }
+
+        let connectionManager = ConnectionManager(
+            centralManager: centralManager,
+            filterTimerProvider: createTimer,
+            appActivityStatusProvider: AppActivityStatusProvider(notificationCenter: NotificationCenter.default)
+        )
+        var receivedDiscoveryChange: DiscoveryChange!
+        _ = connectionManager.discoveryChange.subscribeNext { change in
+            receivedDiscoveryChange = change
+        }
+
+        prepareDiscoveredKnownSorc(sorcID1, peripheral: CBPeripheralMock(), connectionManager: connectionManager, centralManager: centralManager)
+
+        // When
+        fireTimeoutEvent()
+
+        // Then
+        XCTAssert(receivedDiscoveryChange.state.discoveredSorcs.contains(sorcID1))
+        XCTAssertNotEqual(receivedDiscoveryChange.action, .discoveryFailed)
     }
 
     func test_stopDiscovery_stopsScanOnCentralAndDiscoveryIsNotEnabled() {

@@ -164,6 +164,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     /// Starts discovery if the central manager state is `poweredOn`.
     /// The method will determine the `UIApplicationState` asynchronously if it is not known and start discovery after that.
     func startDiscovery() {
+        timeoutTimer?.resume()
         updateDiscoveryChange(action: .startDiscovery)
         startDiscoveryAsPerApplicationState()
     }
@@ -309,12 +310,14 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
             ))
         case .stopDiscovery:
             guard state.discoveryIsEnabled else { return }
+            timeoutTimer?.suspend()
             discoveryChange.onNext(.init(
                 state: state.withDiscoveryIsEnabled(false),
                 action: action
             ))
         case .discoveryFailed:
             guard state.discoveryIsEnabled else { return }
+            timeoutTimer?.suspend()
             discoveryChange.onNext(.init(
                 state: state.withDiscoveryIsEnabled(false),
                 action: action
@@ -325,6 +328,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
                 let sorcInfo = SorcInfo(discoveredSorc: sorc)
                 sorcInfos[sorcInfo.sorcID] = sorcInfo
             }
+            timeoutTimer?.suspend()
             discoveryChange.onNext(.init(
                 state: .init(discoveredSorcs: sorcInfos, discoveryIsEnabled: state.discoveryIsEnabled),
                 action: action
@@ -363,22 +367,10 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     }
 
     private func onDiscoveryTimeout() {
-        updateDiscoveryChange(action: .discoveryFailed)
-
-//        let outdatedSorcs = Array(discoveredSorcs.values).filter { (sorc) -> Bool in
-//            let discoveredAgoInterval = systemClock.timeIntervalSinceNow(for: sorc.discoveryDate)
-//            let outdated = discoveredAgoInterval < -configuration.discoveryTimeoutInterval
-//            return outdated
-//        }
-
-//        let outdatedSorcIDs = outdatedSorcs.map { $0.sorcID }
-//        if outdatedSorcIDs.count > 0 {
-//            // notify the failure only if the discovery is still on
-//            if discoveryChange.state.discoveryIsEnabled {
-//                // TODO: centralManager.stopScan(), should we need it here?
-//                updateDiscoveryChange(action: .discoveryFailed)
-//            }
-//        }
+        if discoveryChange.state.discoveryIsEnabled {
+            updateDiscoveryChange(action: .discoveryFailed)
+            centralManager.stopScan()
+        }
     }
 }
 
