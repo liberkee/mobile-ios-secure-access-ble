@@ -22,6 +22,11 @@ public class SorcManager: SorcManagerType {
 
     // MARK: - Discovery
 
+    public func startDiscovery(sorcID: SorcID) {
+        // TODO: Track Event
+        scanner.startDiscovery(sorcID: sorcID)
+    }
+
     /// Starts discovery of SORCs
     public func startDiscovery() {
         HSMTrack(.discoveryStartedByApp,

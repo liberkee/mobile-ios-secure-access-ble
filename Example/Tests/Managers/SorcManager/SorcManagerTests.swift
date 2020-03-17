@@ -29,8 +29,9 @@ private class MockScanner: ScannerType {
         startDiscoveryCalled = true
     }
 
+    var startDiscoveryKnownSorcCalled = false
     func startDiscovery(sorcID _: SorcID) {
-        startDiscoveryCalled = true
+        startDiscoveryKnownSorcCalled = true
     }
 
     var stopDiscoveryCalled = false
@@ -133,6 +134,15 @@ class SorcManagerTests: XCTestCase {
 
         // Then
         XCTAssertTrue(scanner.startDiscoveryCalled)
+    }
+
+    func test_startDiscoveryWithSpecific_delegatesCallToScanner() {
+        // When
+        let sorcID = UUID(uuidString: "82f6ed49-b70d-4c9e-afa1-4b0377d0de5f")!
+        sorcManager.startDiscovery(sorcID: sorcID)
+
+        // Then
+        XCTAssertTrue(scanner.startDiscoveryKnownSorcCalled)
     }
 
     func test_stopDiscovery_delegatesCallToScanner() {

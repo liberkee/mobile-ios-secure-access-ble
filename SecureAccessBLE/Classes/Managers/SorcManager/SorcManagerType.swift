@@ -21,6 +21,9 @@ public protocol SorcManagerType {
     /// The state of SORC discovery with the action that led to this state
     var discoveryChange: ChangeSignal<DiscoveryChange> { get }
 
+    /// Starts discovery for specific SORC
+    func startDiscovery(sorcID: SorcID)
+
     /// Starts discovery of SORCs
     func startDiscovery()
 
