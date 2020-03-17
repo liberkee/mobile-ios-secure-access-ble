@@ -7,3 +7,5 @@
 import Foundation
 
 typealias CreateTimer = (@escaping () -> Void) -> RepeatingBackgroundTimer
+
+typealias CreateRestartableTimer = (@escaping () -> Void) -> BackgroundTimer

@@ -30,11 +30,6 @@ public class RepeatingBackgroundTimer {
         self.queue = queue
     }
 
-    func start() {
-        suspend()
-        resume()
-    }
-
     func restart(timeInterval: TimeInterval) {
         suspend()
         self.timeInterval = timeInterval

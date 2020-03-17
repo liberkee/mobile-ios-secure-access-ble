@@ -101,7 +101,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     fileprivate var filterTimer: RepeatingBackgroundTimer?
 
     /// Discovery timeout timer
-    fileprivate var timeoutTimer: RepeatingBackgroundTimer?
+    fileprivate var timeoutTimer: BackgroundTimer?
 
     private let appActivityStatusProvider: AppActivityStatusProviderType
 
@@ -131,7 +131,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
         centralManager: CBCentralManagerType,
         systemClock: SystemClockType,
         filterTimerProvider: CreateTimer,
-        timeoutTimerProvider: CreateTimer,
+        timeoutTimerProvider: CreateRestartableTimer,
         appActivityStatusProvider: AppActivityStatusProviderType,
         configuration: Configuration = Configuration()
     ) {
@@ -158,7 +158,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     deinit {
         disconnect()
         filterTimer?.suspend()
-        timeoutTimer?.suspend()
+        timeoutTimer?.stop()
     }
 
     /// Starts discovery if the central manager state is `poweredOn`.
@@ -292,7 +292,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
         let state = discoveryChange.state
         switch action {
         case .startDiscovery:
-            timeoutTimer?.suspend()
+            timeoutTimer?.stop()
             guard !state.discoveryIsEnabled else { return }
             discoveryChange.onNext(.init(
                 state: state.withDiscoveryIsEnabled(true),
@@ -311,14 +311,14 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
             ))
         case .stopDiscovery:
             guard state.discoveryIsEnabled else { return }
-            timeoutTimer?.suspend()
+            timeoutTimer?.stop()
             discoveryChange.onNext(.init(
                 state: state.withDiscoveryIsEnabled(false),
                 action: action
             ))
         case .discoveryFailed:
             guard state.discoveryIsEnabled else { return }
-            timeoutTimer?.suspend()
+            timeoutTimer?.stop()
             discoveryChange.onNext(.init(
                 state: state.withDiscoveryIsEnabled(false),
                 action: action
@@ -329,7 +329,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
                 let sorcInfo = SorcInfo(discoveredSorc: sorc)
                 sorcInfos[sorcInfo.sorcID] = sorcInfo
             }
-            timeoutTimer?.suspend()
+            timeoutTimer?.stop()
             discoveryChange.onNext(.init(
                 state: .init(discoveredSorcs: sorcInfos, discoveryIsEnabled: state.discoveryIsEnabled),
                 action: action
@@ -388,10 +388,11 @@ extension ConnectionManager {
                                                     queue: queue,
                                                     handler: block)
         }
-        let timeoutTimerProvider: CreateTimer = { block in
-            RepeatingBackgroundTimer.scheduledTimer(timeInterval: configuration.discoveryTimeoutInterval,
-                                                    queue: queue,
-                                                    handler: block)
+        let timeoutTimerProvider: CreateRestartableTimer = { block in
+            let timer = BackgroundTimer(timeInterval: configuration.discoveryTimeoutInterval,
+                                        queue: queue)
+            timer.eventHandler = block
+            return timer
         }
 
         let appActivityStatusProvider = AppActivityStatusProvider(notificationCenter: NotificationCenter.default)
