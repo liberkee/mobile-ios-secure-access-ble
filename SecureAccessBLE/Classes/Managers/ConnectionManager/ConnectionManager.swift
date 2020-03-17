@@ -164,12 +164,12 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     /// Starts discovery if the central manager state is `poweredOn`.
     /// The method will determine the `UIApplicationState` asynchronously if it is not known and start discovery after that.
     func startDiscovery() {
-        timeoutTimer?.resume()
         updateDiscoveryChange(action: .startDiscovery)
         startDiscoveryAsPerApplicationState()
     }
 
     func startDiscovery(sorcID: SorcID) {
+        timeoutTimer?.start()
         updateDiscoveryChange(action: .discoveryStarted(sorcID: sorcID))
         startDiscoveryAsPerApplicationState()
     }
@@ -292,6 +292,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
         let state = discoveryChange.state
         switch action {
         case .startDiscovery:
+            timeoutTimer?.suspend()
             guard !state.discoveryIsEnabled else { return }
             discoveryChange.onNext(.init(
                 state: state.withDiscoveryIsEnabled(true),
