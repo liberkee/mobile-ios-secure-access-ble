@@ -9,12 +9,10 @@
 import Foundation
 
 public class BackgroundTimer {
-    private var timeInterval: TimeInterval
     private let queue: DispatchQueue
     private var timer: DispatchSourceTimer?
 
-    init(timeInterval: TimeInterval, queue: DispatchQueue) {
-        self.timeInterval = timeInterval
+    init(queue: DispatchQueue) {
         self.queue = queue
     }
 
@@ -29,7 +27,7 @@ public class BackgroundTimer {
     deinit {}
 
     /// :nodoc:
-    public func start() {
+    public func start(timeInterval: TimeInterval) {
         if state == .running {
             return
         }

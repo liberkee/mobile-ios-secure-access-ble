@@ -30,8 +30,10 @@ private class MockScanner: ScannerType {
     }
 
     var startDiscoveryKnownSorcCalled = false
-    func startDiscovery(sorcID _: SorcID) {
+    var startDiscoveryTimeout: TimeInterval?
+    func startDiscovery(sorcID _: SorcID, timeout: TimeInterval?) {
         startDiscoveryKnownSorcCalled = true
+        startDiscoveryTimeout = timeout
     }
 
     var stopDiscoveryCalled = false
@@ -136,13 +138,14 @@ class SorcManagerTests: XCTestCase {
         XCTAssertTrue(scanner.startDiscoveryCalled)
     }
 
-    func test_startDiscoveryWithSpecific_delegatesCallToScanner() {
+    func test_startDiscoveryWithSpecificSorc_delegatesCallToScanner() {
         // When
         let sorcID = UUID(uuidString: "82f6ed49-b70d-4c9e-afa1-4b0377d0de5f")!
-        sorcManager.startDiscovery(sorcID: sorcID)
+        sorcManager.startDiscovery(sorcID: sorcID, timeout: 22)
 
         // Then
         XCTAssertTrue(scanner.startDiscoveryKnownSorcCalled)
+        XCTAssertEqual(scanner.startDiscoveryTimeout, 22)
     }
 
     func test_stopDiscovery_delegatesCallToScanner() {
