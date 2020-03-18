@@ -336,18 +336,6 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
         }
     }
 
-    private func foo(action: DiscoveryChange.Action, currentState: DiscoveryChange.State) {
-        var sorcInfos = SorcInfos()
-        for sorc in discoveredSorcs.values {
-            let sorcInfo = SorcInfo(discoveredSorc: sorc)
-            sorcInfos[sorcInfo.sorcID] = sorcInfo
-        }
-        discoveryChange.onNext(.init(
-            state: .init(discoveredSorcs: sorcInfos, discoveryIsEnabled: currentState.discoveryIsEnabled),
-            action: action
-        ))
-    }
-
     fileprivate func updateConnectionChangeToDisconnected(action: PhysicalConnectionChange.Action) {
         if case .disconnected = connectionChange.state { return }
         writeCharacteristic = nil
