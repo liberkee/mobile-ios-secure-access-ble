@@ -23,7 +23,8 @@ public class SorcManager: SorcManagerType {
     // MARK: - Discovery
 
     public func startDiscovery(sorcID: SorcID) {
-        // TODO: Track Event
+        let param = [ParameterKey.sorcID.rawValue: sorcID]
+        HSMTrack(.discoveryStartedByApp, parameters: param, loglevel: .info)
         scanner.startDiscovery(sorcID: sorcID)
     }
 
@@ -252,8 +253,11 @@ extension SorcManager {
     private func trackDiscoveryChange() {
         discoveryChange.subscribe { change in
             switch change.action {
-            case .startDiscovery, .discoveryStarted(sorcID: _):
+            case .startDiscovery:
                 HSMTrack(.discoveryStarted, loglevel: .info)
+            case let .discoveryStarted(sorcID: sorcID):
+                let params = [ParameterKey.sorcID.rawValue: sorcID]
+                HSMTrack(.discoveryStarted, parameters: params, loglevel: .info)
             case .stopDiscovery:
                 HSMTrack(.discoveryStopped, loglevel: .info)
             case let .lost(sorcIDs: sorcIDs):

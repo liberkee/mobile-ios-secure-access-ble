@@ -11,18 +11,7 @@ import Foundation
 public class BackgroundTimer {
     private var timeInterval: TimeInterval
     private let queue: DispatchQueue
-    private var _timer: DispatchSourceTimer?
-    private var timer: DispatchSourceTimer {
-        if _timer == nil {
-            let timer = DispatchSource.makeTimerSource(queue: queue)
-            timer.schedule(deadline: .now() + timeInterval)
-            timer.setEventHandler(handler: { [weak self] in
-                self?.eventHandler?()
-            })
-            _timer = timer
-        }
-        return _timer!
-    }
+    private var timer: DispatchSourceTimer?
 
     init(timeInterval: TimeInterval, queue: DispatchQueue) {
         self.timeInterval = timeInterval
@@ -37,10 +26,7 @@ public class BackgroundTimer {
 
     private var state: State = .stopped
 
-    deinit {
-//        timer.setEventHandler {}
-//        timer.cancel()
-    }
+    deinit {}
 
     /// :nodoc:
     public func start() {
@@ -48,7 +34,14 @@ public class BackgroundTimer {
             return
         }
         state = .running
-        timer.resume()
+
+        timer = DispatchSource.makeTimerSource(queue: queue)
+        timer?.schedule(deadline: .now() + timeInterval)
+        timer?.setEventHandler(handler: { [weak self] in
+            self?.eventHandler?()
+        })
+
+        timer?.resume()
     }
 
     /// :nodoc:
@@ -57,6 +50,6 @@ public class BackgroundTimer {
             return
         }
         state = .stopped
-        timer.cancel()
+        timer?.cancel()
     }
 }
