@@ -750,7 +750,7 @@ class ConnectionManagerTests: XCTestCase {
         XCTAssertEqual(secondLastChange.action, .discovered(sorcID: sorcID1))
     }
 
-    func test_centralManagerDidDiscoverPeripheral_ifScanningForSpecificSorcAndSorcDoesMatches_doesNotUpdateDiscoveredSorcs() {
+    func test_centralManagerDidDiscoverPeripheral_ifScanningForSpecificSorcAndSorcMatches_doesNotUpdateDiscoveredSorcs() {
         let now = Date(timeIntervalSince1970: 0)
         let systemClock = SystemClockMock(currentNow: now)
         let connectionManager = ConnectionManager(centralManager: centralManager, systemClock: systemClock)

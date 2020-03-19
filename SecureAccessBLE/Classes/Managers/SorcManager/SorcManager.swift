@@ -283,7 +283,7 @@ extension SorcManager {
                          parameters: [ParameterKey.sorcID.rawValue: sorcId],
                          loglevel: .info)
             case .discoveryFailed:
-                HSMTrack(.discoveryFailed, loglevel: .error)
+                HSMTrack(.discoveryFailed, loglevel: .info)
             case .initial, .rediscovered, .reset, .disconnect:
                 break
             }

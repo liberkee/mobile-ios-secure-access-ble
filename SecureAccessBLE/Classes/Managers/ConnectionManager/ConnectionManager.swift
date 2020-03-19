@@ -285,11 +285,17 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
 
         updateDiscoveryChange(action: action)
         if let sorcID = requestedSorcId, sorcID == sorc.sorcID {
+            trackEventDiscoverySuccessful(for: sorcID)
             timeoutTimer?.stop()
             stopDiscovery()
         }
     }
 
+    private func trackEventDiscoverySuccessful(for sorcID: SorcID) {
+        let param = [ParameterKey.sorcID.rawValue: sorcID]
+        HSMTrack(.discoverySuccessful, parameters: param, loglevel: .info)
+    }
+    
     // will be called if the bluetooth adapter state changes, e.g. to `poweredOff`
     fileprivate func resetDiscoveredSorcs() {
         discoveredSorcs = [:]
