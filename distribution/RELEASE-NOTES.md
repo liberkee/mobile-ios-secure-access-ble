@@ -1,3 +1,7 @@
+# [3.11.0] - 2020-03-20
+
+- Added timeout handling for discovery
+
 # [3.10.0] - 2020-02-25
 
 - Added `notConnected` error case for scenario where a service grant is requested in not connected state
