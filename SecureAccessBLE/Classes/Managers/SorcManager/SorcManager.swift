@@ -22,7 +22,24 @@ public class SorcManager: SorcManagerType {
 
     // MARK: - Discovery
 
-    /// Starts discovery of SORCs
+    /// Starts discovery for specific SORC with optional timeout. If timeout is not provided, default timeout will be used.
+    /// The manager will finish either with `discovered(sorcID: SorcID)` followed by `stopDiscovery` action in success case
+    /// or with a `discoveryFailed` if the SORC won't be found within timeout.
+    /// - Parameters:
+    ///   - sorcID: sorcID of interest
+    ///   - timeout: timeout for discovery
+    public func startDiscovery(sorcID: SorcID, timeout: TimeInterval?) {
+        let param = [ParameterKey.sorcID.rawValue: sorcID]
+        HSMTrack(.discoveryStartedByApp, parameters: param, loglevel: .info)
+        scanner.startDiscovery(sorcID: sorcID, timeout: timeout)
+    }
+
+    /// Starts discovery without specifying the `SorcID`.
+    /// The manager will notify `discovered(sorcID: SorcID)`, `rediscovered(sorcID: SorcID)` or `lost(sorcIDs: Set<SorcID>)`
+    /// actions for every scanned device until the discovery is stopped manually.
+    ///
+    /// Note: It is recommended to use `startDiscovery(sorcID:timeout:)` to
+    /// search for specific `SorcID`.
     public func startDiscovery() {
         HSMTrack(.discoveryStartedByApp,
                  loglevel: .info)
@@ -249,6 +266,9 @@ extension SorcManager {
             switch change.action {
             case .startDiscovery:
                 HSMTrack(.discoveryStarted, loglevel: .info)
+            case let .discoveryStarted(sorcID: sorcID):
+                let params = [ParameterKey.sorcID.rawValue: sorcID]
+                HSMTrack(.discoveryStarted, parameters: params, loglevel: .info)
             case .stopDiscovery:
                 HSMTrack(.discoveryStopped, loglevel: .info)
             case let .lost(sorcIDs: sorcIDs):
@@ -262,6 +282,8 @@ extension SorcManager {
                 HSMTrack(.connectionDisconnected,
                          parameters: [ParameterKey.sorcID.rawValue: sorcId],
                          loglevel: .info)
+            case .discoveryFailed:
+                HSMTrack(.discoveryFailed, loglevel: .info)
             case .initial, .rediscovered, .reset, .disconnect:
                 break
             }

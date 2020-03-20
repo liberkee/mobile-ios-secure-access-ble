@@ -104,41 +104,26 @@ class AppActivityStatusProviderMock: AppActivityStatusProviderType {
 }
 
 extension ConnectionManager {
-    convenience init(centralManager: CBCentralManagerType, createTimer: CreateTimer? = nil) {
-        let createTimer: CreateTimer = createTimer ?? { _ in
+    convenience init(centralManager: CBCentralManagerType,
+                     systemClock: SystemClockType = SystemClock(),
+                     filterTimerProvider: CreateTimer? = nil,
+                     timeoutTimerProvider: CreateRestartableTimer? = nil,
+                     appActivityStatusProvider: AppActivityStatusProviderType? = nil,
+                     configuration: Configuration? = nil) {
+        let filterTimerProvider: CreateTimer = filterTimerProvider ?? { _ in
             RepeatingBackgroundTimer(timeInterval: 1000, queue: DispatchQueue.main)
         }
-        let appActivityStatusProvider = AppActivityStatusProvider(notificationCenter: NotificationCenter.default)
-        self.init(
-            centralManager: centralManager,
-            systemClock: SystemClock(),
-            createTimer: createTimer,
-            appActivityStatusProvider: appActivityStatusProvider
-        )
-    }
-
-    convenience init(centralManager: CBCentralManagerType, systemClock: SystemClockType) {
-        let createTimer: CreateTimer = { _ in
-            RepeatingBackgroundTimer(timeInterval: 1000, queue: DispatchQueue.main)
+        let timeoutTimerProvider: CreateRestartableTimer = timeoutTimerProvider ?? { _ in
+            BackgroundTimer(queue: DispatchQueue.main)
         }
-        let appActivityStatusProvider = AppActivityStatusProvider(notificationCenter: NotificationCenter.default)
+        let appActivityStatusProvider = appActivityStatusProvider ?? AppActivityStatusProvider(notificationCenter: NotificationCenter.default)
         self.init(
             centralManager: centralManager,
             systemClock: systemClock,
-            createTimer: createTimer,
-            appActivityStatusProvider: appActivityStatusProvider
-        )
-    }
-
-    convenience init(centralManager: CBCentralManagerType, appActivityStatusProvider: AppActivityStatusProviderType) {
-        let createTimer: CreateTimer = { _ in
-            RepeatingBackgroundTimer(timeInterval: 1000, queue: DispatchQueue.main)
-        }
-        self.init(
-            centralManager: centralManager,
-            systemClock: SystemClock(),
-            createTimer: createTimer,
-            appActivityStatusProvider: appActivityStatusProvider
+            filterTimerProvider: filterTimerProvider,
+            timeoutTimerProvider: timeoutTimerProvider,
+            appActivityStatusProvider: appActivityStatusProvider,
+            configuration: configuration ?? Configuration()
         )
     }
 }
@@ -227,6 +212,163 @@ class ConnectionManagerTests: XCTestCase {
 
         // Then
         XCTAssertEqual(centralManager.scanForPeripheralsCalledWithArguments!.serviceUUIDs!, [CBUUID(string: "0x180A")])
+    }
+
+    func test_startDiscoveryForSpecificSorc_ifCentralManagerIsPoweredOn_scanForPeripheralsIsCalledAndDiscoveryIsEnabled() {
+        // Given
+        centralManager.state = .poweredOn
+        let appActivityStatusProvider = AppActivityStatusProviderMock()
+        let connectionManager = ConnectionManager(
+            centralManager: centralManager,
+            appActivityStatusProvider: appActivityStatusProvider
+        )
+        appActivityStatusProvider.appDidBecomeActiveSubject.onNext(false)
+
+        // When
+        let sorcID = UUID(uuidString: "82f6ed49-b70d-4c9e-afa1-4b0377d0de5f")!
+        connectionManager.startDiscovery(sorcID: sorcID, timeout: nil)
+
+        // Then
+        let arguments = centralManager.scanForPeripheralsCalledWithArguments!
+        XCTAssertEqual(arguments.serviceUUIDs!, [CBUUID(string: "0x180A")])
+        XCTAssertTrue(arguments.options![CBCentralManagerScanOptionAllowDuplicatesKey] as! Int == 1)
+        XCTAssertTrue(connectionManager.discoveryChange.state.discoveryIsEnabled)
+    }
+
+    func test_startDiscoveryForSpecificSorc_ifCentralManagerIsPoweredOn_notifiesChange() {
+        // Given
+        centralManager.state = .poweredOn
+        let appActivityStatusProvider = AppActivityStatusProviderMock()
+        let connectionManager = ConnectionManager(
+            centralManager: centralManager,
+            appActivityStatusProvider: appActivityStatusProvider
+        )
+        var receivedDiscoveryChange: DiscoveryChange?
+        _ = connectionManager.discoveryChange.subscribeNext { change in
+            receivedDiscoveryChange = change
+        }
+
+        appActivityStatusProvider.appDidBecomeActiveSubject.onNext(false)
+
+        // When
+        let sorcID = UUID(uuidString: "82f6ed49-b70d-4c9e-afa1-4b0377d0de5f")!
+        connectionManager.startDiscovery(sorcID: sorcID, timeout: nil)
+
+        // Then
+        let state = DiscoveryChange.State(
+            discoveredSorcs: SorcInfos(),
+            discoveryIsEnabled: true,
+            requestedSorc: sorcID
+        )
+        let expectedChange = DiscoveryChange(
+            state: state,
+            action: .discoveryStarted(sorcID: sorcID)
+        )
+        XCTAssertEqual(expectedChange, receivedDiscoveryChange)
+    }
+
+    func test_timeoutTimerFired_stopsDiscoveryWithTimeout() {
+        // Create an expectation
+        let expectation = self.expectation(description: "Discovery Failed")
+
+        // Given
+        let timeOutTimerProvider: CreateRestartableTimer = { block in
+
+            let backgroundTimer = BackgroundTimer(queue: DispatchQueue.main)
+            backgroundTimer.eventHandler = block
+
+            return backgroundTimer
+        }
+
+        let connectionManager = ConnectionManager(
+            centralManager: centralManager,
+            timeoutTimerProvider: timeOutTimerProvider,
+            appActivityStatusProvider: AppActivityStatusProviderMock()
+        )
+
+        _ = connectionManager.discoveryChange.subscribeNext { change in
+            if change.action == .discoveryFailed {
+                // Then
+                expectation.fulfill()
+            }
+        }
+
+        // When
+        connectionManager.startDiscovery(sorcID: sorcID1, timeout: 0.1)
+        wait(for: [expectation], timeout: 0.15)
+    }
+
+    func test_discoveryStartedWithoutSpecificSorc_DoesnotFireTimeoutTimer() {
+        // Create an expectation
+        let noTimeoutExpectation = expectation(description: "No Timeout")
+        noTimeoutExpectation.isInverted = true
+
+        let startDiscoveredExpectation = expectation(description: "Start Discovery")
+
+        // Given
+        let timeOutTimerProvider: CreateRestartableTimer = { block in
+
+            let backgroundTimer = BackgroundTimer(queue: DispatchQueue.main)
+            backgroundTimer.eventHandler = block
+
+            return backgroundTimer
+        }
+
+        let configuration = ConnectionManager.Configuration(discoveryTimeoutInterval: 0.1)
+        let connectionManager = ConnectionManager(
+            centralManager: centralManager,
+            timeoutTimerProvider: timeOutTimerProvider,
+            appActivityStatusProvider: AppActivityStatusProviderMock(),
+            configuration: configuration
+        )
+
+        _ = connectionManager.discoveryChange.subscribeNext { change in
+            // Then
+            if change.action == .discoveryFailed {
+                noTimeoutExpectation.fulfill()
+            } else if case .startDiscovery = change.action {
+                startDiscoveredExpectation.fulfill()
+            }
+        }
+
+        // When
+        connectionManager.startDiscovery()
+        wait(for: [noTimeoutExpectation, startDiscoveredExpectation], timeout: 0.2)
+    }
+
+    func test_discoveredSorc_doesnotThrowDiscoveryFailureTimeout() {
+        // Create an expectation
+        let noTimeoutExpectation = expectation(description: "No Timeout")
+        noTimeoutExpectation.isInverted = true
+        let discoveredExpectation = expectation(description: "Sorc Discovered")
+
+        // Given
+        let timeOutTimerProvider: CreateRestartableTimer = { block in
+
+            let backgroundTimer = BackgroundTimer(queue: DispatchQueue.main)
+            backgroundTimer.eventHandler = block
+
+            return backgroundTimer
+        }
+
+        let configuration = ConnectionManager.Configuration(discoveryTimeoutInterval: 0.1)
+        let connectionManager = ConnectionManager(
+            centralManager: centralManager,
+            timeoutTimerProvider: timeOutTimerProvider,
+            appActivityStatusProvider: AppActivityStatusProviderMock(),
+            configuration: configuration
+        )
+        _ = connectionManager.discoveryChange.subscribeNext { change in
+            // Then
+            if change.action == .discoveryFailed {
+                noTimeoutExpectation.fulfill()
+            } else if case let .discovered(sorcID: sorcID) = change.action, sorcID == self.sorcID1 {
+                discoveredExpectation.fulfill()
+            }
+        }
+        // When
+        prepareDiscoveredKnownSorc(sorcID1, peripheral: CBPeripheralMock(), connectionManager: connectionManager, centralManager: centralManager)
+        wait(for: [noTimeoutExpectation, discoveredExpectation], timeout: 0.2)
     }
 
     func test_stopDiscovery_stopsScanOnCentralAndDiscoveryIsNotEnabled() {
@@ -575,6 +717,62 @@ class ConnectionManagerTests: XCTestCase {
         XCTAssert(receivedDiscoveryChange.state.discoveredSorcs.contains(sorcID1))
         XCTAssertEqual(receivedDiscoveryChange.state.discoveredSorcs[sorcID1]!, SorcInfo(sorcID: sorcID1, discoveryDate: now, rssi: 60))
         XCTAssertEqual(receivedDiscoveryChange.action, .discovered(sorcID: sorcID1))
+    }
+
+    func test_centralManagerDidDiscoverPeripheral_ifScanningForSpecificSorcAndSorcMatches_notifiesDiscoveredSorcAndStopsDiscovery() {
+        let now = Date(timeIntervalSince1970: 0)
+        let systemClock = SystemClockMock(currentNow: now)
+        let connectionManager = ConnectionManager(centralManager: centralManager, systemClock: systemClock)
+        startDiscovery(connectionManager: connectionManager, centralManager: centralManager, sorcID: sorcID1)
+
+        let peripheral = CBPeripheralMock()
+
+        let strippedSorcID = strippedUUIDString(sorcID1).dataFromHexadecimalString()!
+        let advertisementData: [String: Any] = [
+            CBAdvertisementDataManufacturerDataKey: strippedSorcID
+        ]
+
+        var receivedDiscoveryChanges = [DiscoveryChange]()
+        _ = connectionManager.discoveryChange.subscribeNext { change in
+            receivedDiscoveryChanges.append(change)
+        }
+
+        // When
+        connectionManager.centralManager_(centralManager, didDiscover: peripheral, advertisementData: advertisementData, rssi: 60)
+
+        // Then
+        let lastChange = receivedDiscoveryChanges.popLast()!
+        XCTAssertEqual(lastChange.action, .stopDiscovery)
+
+        let secondLastChange = receivedDiscoveryChanges.popLast()!
+        XCTAssert(secondLastChange.state.discoveredSorcs.contains(sorcID1))
+        XCTAssertEqual(secondLastChange.state.discoveredSorcs[sorcID1]!, SorcInfo(sorcID: sorcID1, discoveryDate: now, rssi: 60))
+        XCTAssertEqual(secondLastChange.action, .discovered(sorcID: sorcID1))
+    }
+
+    func test_centralManagerDidDiscoverPeripheral_ifScanningForSpecificSorcAndSorcMatches_doesNotUpdateDiscoveredSorcs() {
+        let now = Date(timeIntervalSince1970: 0)
+        let systemClock = SystemClockMock(currentNow: now)
+        let connectionManager = ConnectionManager(centralManager: centralManager, systemClock: systemClock)
+        startDiscovery(connectionManager: connectionManager, centralManager: centralManager, sorcID: sorcID1)
+
+        let peripheral = CBPeripheralMock()
+
+        let strippedSorcID = strippedUUIDString(sorcID2).dataFromHexadecimalString()!
+        let advertisementData: [String: Any] = [
+            CBAdvertisementDataManufacturerDataKey: strippedSorcID
+        ]
+
+        var receivedDiscoveryChange: DiscoveryChange!
+        _ = connectionManager.discoveryChange.subscribeNext { change in
+            receivedDiscoveryChange = change
+        }
+
+        // When
+        connectionManager.centralManager_(centralManager, didDiscover: peripheral, advertisementData: advertisementData, rssi: 60)
+
+        // Then
+        XCTAssert(receivedDiscoveryChange.state.discoveredSorcs.isEmpty)
     }
 
     func test_centralManagerDidDiscoverPeripheral_ifManufacturerDataKeyIsSet_valueIsShorterThan16Bytes_doesNotUpdateDiscoveredSorcs() {
@@ -1050,7 +1248,7 @@ class ConnectionManagerTests: XCTestCase {
         let connectionManager = ConnectionManager(
             centralManager: centralManager,
             systemClock: systemClock,
-            createTimer: createTimer,
+            filterTimerProvider: createTimer,
             appActivityStatusProvider: AppActivityStatusProvider(notificationCenter: NotificationCenter.default)
         )
 
@@ -1079,7 +1277,7 @@ class ConnectionManagerTests: XCTestCase {
         let connectionManager = ConnectionManager(
             centralManager: centralManager,
             systemClock: systemClock,
-            createTimer: createTimer,
+            filterTimerProvider: createTimer,
             appActivityStatusProvider: AppActivityStatusProvider(notificationCenter: NotificationCenter.default)
         )
 
@@ -1133,6 +1331,23 @@ class ConnectionManagerTests: XCTestCase {
         centralManager.state = .poweredOn
         connectionManager.startDiscovery()
         centralManager.scanForPeripheralsCalledWithArguments = nil
+    }
+
+    private func startDiscovery(connectionManager: ConnectionManager, centralManager: CBCentralManagerMock, sorcID: SorcID) {
+        centralManager.state = .poweredOn
+        connectionManager.startDiscovery(sorcID: sorcID, timeout: nil)
+        centralManager.scanForPeripheralsCalledWithArguments = nil
+    }
+
+    private func prepareDiscoveredKnownSorc(_ sorcID: SorcID, peripheral: CBPeripheralType,
+                                            connectionManager: ConnectionManager, centralManager: CBCentralManagerMock,
+                                            rssi: Int = 0) {
+        startDiscovery(connectionManager: connectionManager, centralManager: centralManager, sorcID: sorcID)
+        let strippedSorcID = strippedUUIDString(sorcID).dataFromHexadecimalString()!
+        let advertisementData: [String: Any] = [
+            CBAdvertisementDataManufacturerDataKey: strippedSorcID
+        ]
+        connectionManager.centralManager_(centralManager, didDiscover: peripheral, advertisementData: advertisementData, rssi: NSNumber(value: rssi))
     }
 
     private func prepareDiscoveredSorc(_ sorcID: SorcID, peripheral: CBPeripheralType,

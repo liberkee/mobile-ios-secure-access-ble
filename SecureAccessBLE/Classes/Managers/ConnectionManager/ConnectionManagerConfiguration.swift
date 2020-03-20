@@ -15,25 +15,29 @@ extension ConnectionManager {
         static let defaultWriteCharacteristicID = "c8e58f23-9417-41c6-97a8-70f6b2c8cab9"
         static let defaultSorcOutdatedDuration = TimeInterval(5)
         static let defaultRemoveOutdatedSorcsInterval = TimeInterval(2)
+        static let defaultDiscoveryTimeoutInterval = TimeInterval(10)
 
         let serviceID: String
         let notifyCharacteristicID: String
         let writeCharacteristicID: String
         let sorcOutdatedDuration: TimeInterval
         let removeOutdatedSorcsInterval: TimeInterval
+        let discoveryTimeoutInterval: TimeInterval
 
         init(
             serviceID: String? = nil,
             notifyCharacteristicID: String? = nil,
             writeCharacteristicID: String? = nil,
             sorcOutdatedDuration: TimeInterval? = nil,
-            removeOutdatedSorcsInterval: TimeInterval? = nil
+            removeOutdatedSorcsInterval: TimeInterval? = nil,
+            discoveryTimeoutInterval: TimeInterval? = nil
         ) {
             self.serviceID = serviceID ?? Configuration.defaultServiceID
             self.notifyCharacteristicID = notifyCharacteristicID ?? Configuration.defaultNotifyCharacteristicID
             self.writeCharacteristicID = writeCharacteristicID ?? Configuration.defaultWriteCharacteristicID
             self.sorcOutdatedDuration = sorcOutdatedDuration ?? Configuration.defaultSorcOutdatedDuration
             self.removeOutdatedSorcsInterval = removeOutdatedSorcsInterval ?? Configuration.defaultRemoveOutdatedSorcsInterval
+            self.discoveryTimeoutInterval = discoveryTimeoutInterval ?? Configuration.defaultDiscoveryTimeoutInterval
         }
     }
 }

@@ -100,6 +100,9 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     /// Timer to remove outdated discovered SORCs
     fileprivate var filterTimer: RepeatingBackgroundTimer?
 
+    /// Discovery timeout timer
+    fileprivate var timeoutTimer: BackgroundTimer?
+
     private let appActivityStatusProvider: AppActivityStatusProviderType
 
     /// The SORCs that were discovered and were not removed by the filterTimer
@@ -127,7 +130,8 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     required init(
         centralManager: CBCentralManagerType,
         systemClock: SystemClockType,
-        createTimer: CreateTimer,
+        filterTimerProvider: CreateTimer,
+        timeoutTimerProvider: CreateRestartableTimer,
         appActivityStatusProvider: AppActivityStatusProviderType,
         configuration: Configuration = Configuration()
     ) {
@@ -140,7 +144,8 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
         self.centralManager = centralManager
         centralManager.delegate = self
 
-        filterTimer = createTimer(removeOutdatedSorcs)
+        filterTimer = filterTimerProvider(removeOutdatedSorcs)
+        timeoutTimer = timeoutTimerProvider(onDiscoveryTimeout)
 
         _ = appActivityStatusProvider.appDidBecomeActive.subscribe { [weak self] applicationIsActive in
             self?.applicationIsActive = applicationIsActive
@@ -153,12 +158,24 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     deinit {
         disconnect()
         filterTimer?.suspend()
+        timeoutTimer?.stop()
     }
 
     /// Starts discovery if the central manager state is `poweredOn`.
     /// The method will determine the `UIApplicationState` asynchronously if it is not known and start discovery after that.
     func startDiscovery() {
         updateDiscoveryChange(action: .startDiscovery)
+        startDiscoveryAsPerApplicationState()
+    }
+
+    func startDiscovery(sorcID: SorcID, timeout: TimeInterval?) {
+        let timeoutInterval = timeout ?? configuration.discoveryTimeoutInterval
+        timeoutTimer?.start(timeInterval: timeoutInterval)
+        updateDiscoveryChange(action: .discoveryStarted(sorcID: sorcID))
+        startDiscoveryAsPerApplicationState()
+    }
+
+    private func startDiscoveryAsPerApplicationState() {
         guard centralManager.state == .poweredOn else { return }
 
         if let state = applicationIsActive {
@@ -173,6 +190,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     }
 
     func stopDiscovery() {
+        timeoutTimer?.stop()
         centralManager.stopScan()
         updateDiscoveryChange(action: .stopDiscovery)
     }
@@ -254,6 +272,10 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     }
 
     fileprivate func updateDiscoveredSorcsWithNewSorc(_ sorc: DiscoveredSorc) {
+        let requestedSorcId = discoveryChange.state.requestedSorc
+        if let sorcID = requestedSorcId, sorcID != sorc.sorcID {
+            return
+        }
         if let connectedSorc = connectedSorc, sorc.sorcID == connectedSorc.sorcID {
             sorc.peripheral = connectedSorc.peripheral
         }
@@ -262,8 +284,19 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
             .rediscovered(sorcID: sorc.sorcID) : .discovered(sorcID: sorc.sorcID)
 
         updateDiscoveryChange(action: action)
+        if let sorcID = requestedSorcId, sorcID == sorc.sorcID {
+            trackEventDiscoverySuccessful(for: sorcID)
+            timeoutTimer?.stop()
+            stopDiscovery()
+        }
     }
 
+    private func trackEventDiscoverySuccessful(for sorcID: SorcID) {
+        let param = [ParameterKey.sorcID.rawValue: sorcID]
+        HSMTrack(.discoverySuccessful, parameters: param, loglevel: .info)
+    }
+    
+    // will be called if the bluetooth adapter state changes, e.g. to `poweredOff`
     fileprivate func resetDiscoveredSorcs() {
         discoveredSorcs = [:]
         updateDiscoveryChange(action: .reset)
@@ -278,12 +311,24 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
                 state: state.withDiscoveryIsEnabled(true),
                 action: action
             ))
-        case .stopDiscovery:
+        case let .discoveryStarted(sorcID: sorcID):
+            guard !state.discoveryIsEnabled else { return }
+            let state = DiscoveryChange.State(
+                discoveredSorcs: SorcInfos(),
+                discoveryIsEnabled: true,
+                requestedSorc: sorcID
+            )
+            discoveryChange.onNext(.init(
+                state: state,
+                action: action
+            ))
+        case .stopDiscovery, .discoveryFailed:
             guard state.discoveryIsEnabled else { return }
             discoveryChange.onNext(.init(
                 state: state.withDiscoveryIsEnabled(false),
                 action: action
             ))
+
         default:
             var sorcInfos = SorcInfos()
             for sorc in discoveredSorcs.values {
@@ -326,6 +371,14 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
             return nil
         }
     }
+
+    private func onDiscoveryTimeout() {
+        if discoveryChange.state.discoveryIsEnabled {
+            timeoutTimer?.stop()
+            updateDiscoveryChange(action: .discoveryFailed)
+            centralManager.stopScan()
+        }
+    }
 }
 
 extension ConnectionManager {
@@ -336,10 +389,15 @@ extension ConnectionManager {
 
         let systemClock = SystemClock()
 
-        let createTimer: CreateTimer = { block in
+        let filterTimerProvider: CreateTimer = { block in
             RepeatingBackgroundTimer.scheduledTimer(timeInterval: configuration.removeOutdatedSorcsInterval,
                                                     queue: queue,
                                                     handler: block)
+        }
+        let timeoutTimerProvider: CreateRestartableTimer = { block in
+            let timer = BackgroundTimer(queue: queue)
+            timer.eventHandler = block
+            return timer
         }
 
         let appActivityStatusProvider = AppActivityStatusProvider(notificationCenter: NotificationCenter.default)
@@ -347,7 +405,8 @@ extension ConnectionManager {
         self.init(
             centralManager: centralManager,
             systemClock: systemClock,
-            createTimer: createTimer,
+            filterTimerProvider: filterTimerProvider,
+            timeoutTimerProvider: timeoutTimerProvider,
             appActivityStatusProvider: appActivityStatusProvider,
             configuration: configuration
         )

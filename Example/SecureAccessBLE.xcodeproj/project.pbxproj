@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01E093BD2421226200E92FCA /* BackgroundTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01E093BB242120BF00E92FCA /* BackgroundTimer.swift */; };
 		46B760911DA26C40003ADDB1 /* BLEManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760901DA26C40003ADDB1 /* BLEManagerTests.swift */; };
 		46B760971DA26C8C003ADDB1 /* BLECryptorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760961DA26C8C003ADDB1 /* BLECryptorTests.swift */; };
 		5BD4F475ACC4A5E1B97B3F5B /* Pods_SecureAccessBLE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BBD4A7868F38CDDFDA78FE2 /* Pods_SecureAccessBLE.framework */; };
@@ -95,6 +96,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		01E093BB242120BF00E92FCA /* BackgroundTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTimer.swift; sourceTree = "<group>"; };
 		0C1609E7E18BCF626ECF8A8C /* Pods-SecureAccessBLE_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		46B7607C1DA2637D003ADDB1 /* PhoneToSorcChallenge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = PhoneToSorcChallenge.swift; sourceTree = "<group>"; };
 		46B7607D1DA2637D003ADDB1 /* PhoneToSorcResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = PhoneToSorcResponse.swift; sourceTree = "<group>"; };
@@ -253,6 +255,7 @@
 				E5E8F8EF1F5EAF2800B629A5 /* AppActivityStatusProvider.swift */,
 				99F19B252292FBC9003D9956 /* RepeatingBackgroundTimer.swift */,
 				998F67D722D8A9DB0032CEDD /* CreateTimer.swift */,
+				01E093BB242120BF00E92FCA /* BackgroundTimer.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -896,6 +899,7 @@
 				99B9BC30226F344300517BCB /* SorcInterceptor.swift in Sources */,
 				9917E9FD1FBAF804002D5CE3 /* SorcMessage.swift in Sources */,
 				9917E9F81FBAF7FE002D5CE3 /* PhoneToSorcChallenge.swift in Sources */,
+				01E093BD2421226200E92FCA /* BackgroundTimer.swift in Sources */,
 				9917E9E31FBAF7D5002D5CE3 /* SecurityManagerType.swift in Sources */,
 				9917EA011FBAF80F002D5CE3 /* DataFrame.swift in Sources */,
 				9913240F20D94CAC001D83FC /* EventSignal.swift in Sources */,
