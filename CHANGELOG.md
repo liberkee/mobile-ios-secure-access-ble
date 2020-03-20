@@ -9,7 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 ### Removed
 
-## [3.11.0] - Unreleased
+## [3.11.0] - 2020-03-20
 
 ### Added
 - 2020-03-19 : (PLB2B-1062)  : Added timeout handling for discovery
