@@ -38,7 +38,7 @@ public class SorcManager: SorcManagerType {
     /// The manager will notify `discovered(sorcID: SorcID)`, `rediscovered(sorcID: SorcID)` or `lost(sorcIDs: Set<SorcID>)`
     /// actions for every scanned device until the discovery is stopped manually.
     ///
-    /// Note: It is recommended to use `startDiscovery(sorcID: SorcID, timeout: TimeInterval?)` to
+    /// Note: It is recommended to use `startDiscovery(sorcID:timeout:)` to
     /// search for specific `SorcID`.
     public func startDiscovery() {
         HSMTrack(.discoveryStartedByApp,
