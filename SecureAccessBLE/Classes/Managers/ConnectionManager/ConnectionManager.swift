@@ -295,7 +295,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
         let param = [ParameterKey.sorcID.rawValue: sorcID]
         HSMTrack(.discoverySuccessful, parameters: param, loglevel: .info)
     }
-    
+
     // will be called if the bluetooth adapter state changes, e.g. to `poweredOff`
     fileprivate func resetDiscoveredSorcs() {
         discoveredSorcs = [:]

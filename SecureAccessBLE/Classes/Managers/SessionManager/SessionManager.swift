@@ -313,7 +313,7 @@ class SessionManager: SessionManagerType {
         let message = SorcMessage(id: SorcMessageID.heartBeatRequest, payload: DefaultMessage())
         do {
             try enqueueMessage(message)
-            HSMLog(message: "Enqueued heartbeat message", level: .debug)
+            HSMLog(message: "Enqueued heartbeat message", level: .verbose)
         } catch {
             HSMLog(message: "Could not enqueue heartbeat message", level: .warning)
         }

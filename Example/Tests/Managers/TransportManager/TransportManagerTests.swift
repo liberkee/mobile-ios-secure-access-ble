@@ -42,7 +42,8 @@ class TransportManagerTests: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        transportManager = TransportManager(connectionManager: connectionManager)
+        let sendingQueue = TransportManager.ThrottledQueue(interval: 0, queue: DispatchQueue.main)
+        transportManager = TransportManager(connectionManager: connectionManager, sendingQueue: sendingQueue)
     }
 
     // MARK: - Tests
