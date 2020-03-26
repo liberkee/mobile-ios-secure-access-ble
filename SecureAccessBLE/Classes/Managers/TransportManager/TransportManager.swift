@@ -8,6 +8,32 @@
 
 /// Sends and receives data by sending separate frames based on the current MTU size.
 class TransportManager: TransportManagerType {
+    class ThrottledQueue {
+        private let interval: TimeInterval
+        private let queue: DispatchQueue
+        private var lastScheduledExecutionDate: Date
+        private let systemClock: SystemClockType
+
+        init(interval: TimeInterval, queue: DispatchQueue, systemClock: SystemClockType = SystemClock()) {
+            self.interval = interval
+            self.queue = queue
+            self.systemClock = systemClock
+            lastScheduledExecutionDate = systemClock.now()
+        }
+
+        func enqueue(_ block: @escaping () -> Void) {
+            let now = systemClock.now()
+            if interval == 0 || now.timeIntervalSince(lastScheduledExecutionDate) > interval {
+                block()
+            } else {
+                let timeToExecute = lastScheduledExecutionDate.addingTimeInterval(interval)
+                let dispatchTime = DispatchTime.now() + systemClock.timeIntervalSinceNow(for: timeToExecute)
+                queue.asyncAfter(deadline: dispatchTime, execute: block)
+                lastScheduledExecutionDate = timeToExecute
+            }
+        }
+    }
+
     let connectionChange = ChangeSubject<TransportConnectionChange>(state: .disconnected)
 
     let dataSent = PublishSubject<Result<Data>>()
@@ -32,8 +58,11 @@ class TransportManager: TransportManagerType {
     /// Used to know what action we need to send out after disconnect on lower layers happened
     private var actionLeadingToDisconnect: TransportConnectionChange.Action?
 
-    init(connectionManager: ConnectionManagerType) {
+    private let sendingQueue: ThrottledQueue
+
+    init(connectionManager: ConnectionManagerType, sendingQueue: ThrottledQueue) {
         mtuSize = defaultMTUSize
+        self.sendingQueue = sendingQueue
 
         self.connectionManager = connectionManager
 
@@ -163,7 +192,9 @@ class TransportManager: TransportManagerType {
     }
 
     private func sendFrame(_ frame: DataFrame) {
-        connectionManager.sendData(frame.data)
+        sendingQueue.enqueue { [weak self] in
+            self?.connectionManager.sendData(frame.data)
+        }
     }
 
     private func handleSentData(error: Error?) {

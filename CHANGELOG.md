@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 ### Added
+- 2020-03-26 : (PRGDA-27)  : Added throttling sending queue for data frames on transport layer to support tiny devices 
+
 ### Changed
 ### Fixed
 ### Removed
