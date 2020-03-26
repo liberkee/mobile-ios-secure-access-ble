@@ -166,7 +166,8 @@ extension SorcManager {
         )
 
         let connectionManager = ConnectionManager(configuration: connectionConfiguration, queue: queue)
-        let transportManager = TransportManager(connectionManager: connectionManager)
+        let sendingQueue = TransportManager.ThrottledQueue(interval: configuration.dataFrameMessagesInterval ?? 0, queue: queue)
+        let transportManager = TransportManager(connectionManager: connectionManager, sendingQueue: sendingQueue)
         let securityManager = SecurityManager(transportManager: transportManager)
 
         let sessionConfiguration = SessionManager.Configuration(
