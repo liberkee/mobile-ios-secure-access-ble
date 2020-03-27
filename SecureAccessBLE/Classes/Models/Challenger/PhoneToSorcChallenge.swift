@@ -68,7 +68,7 @@ struct PhoneToSorcChallenge: SorcMessagePayload {
 
      */
     init(leaseID: String, sorcID: SorcID, leaseTokenID: String, challenge: [UInt8]) {
-        let data = NSMutableData()
+        var data = Data()
 
         if let stringData = leaseID.data(using: .utf8) {
             data.append(stringData)
@@ -81,7 +81,7 @@ struct PhoneToSorcChallenge: SorcMessagePayload {
         if let stringData = lowerCaseTokenID.data(using: .utf8) {
             data.append(stringData)
         }
-        data.append(challenge, length: challenge.count)
+        data.append(challenge, count: challenge.count)
         self.data = data as Data
     }
 }

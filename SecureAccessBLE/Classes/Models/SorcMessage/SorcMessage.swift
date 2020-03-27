@@ -85,9 +85,8 @@ struct SorcMessage: Equatable {
      */
     init(id: SorcMessageID, payload: SorcMessagePayload) {
         let payloadData = payload.data
-        let frameData = NSMutableData()
-        var idByte = id.rawValue
-        frameData.append(&idByte, length: 1)
+        var frameData = Data()
+        frameData.append(id.rawValue)
         frameData.append(payloadData as Data)
         data = frameData as Data
     }

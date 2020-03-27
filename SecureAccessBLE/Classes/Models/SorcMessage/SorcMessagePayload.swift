@@ -24,7 +24,7 @@ extension SorcMessagePayload {}
  *  Message payload with empty bytes
  */
 struct EmptyPayload: SorcMessagePayload {
-    /// start value as NSData
+    /// start value as Data
     var data: Data
     /**
      Initialization point

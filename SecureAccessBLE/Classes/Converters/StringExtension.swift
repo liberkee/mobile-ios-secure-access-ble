@@ -10,8 +10,8 @@ import Foundation
 
 extension String {
     /**
-     Extension String to ensure Creating NSData from hexadecimal string representation, This takes a hexadecimal representation
-     and creates a NSData object.
+     Extension String to ensure Creating Data from hexadecimal string representation, This takes a hexadecimal representation
+     and creates a Data object.
      Note, if the string has any spaces, those are removed. Also if the string started with a '<' or ended with a '>', those are removed, too.
      This does no validation of the string to ensure it's a valid hexadecimal string
 

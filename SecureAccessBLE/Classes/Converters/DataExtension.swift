@@ -31,3 +31,23 @@ extension Data {
         return output
     }
 }
+
+extension UInt8 {
+    var data: Data {
+        var int = self
+        return Data(bytes: &int, count: MemoryLayout<UInt8>.size)
+    }
+}
+
+extension UInt16 {
+    var data: Data {
+        var int = self
+        return Data(bytes: &int, count: MemoryLayout<UInt16>.size)
+    }
+}
+
+extension Array where Element == UInt8 {
+    var data: Data {
+        return Data(bytes: UnsafePointer<UInt8>(self), count: count)
+    }
+}

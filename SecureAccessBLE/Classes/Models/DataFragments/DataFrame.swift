@@ -86,7 +86,7 @@ struct DataFrame {
         return msg
     }
 
-    /// Start data as NSData
+    /// Start data as Data
     let data: Data
 
     /**
@@ -111,20 +111,20 @@ struct DataFrame {
      - returns: self object as Transport layer message fragments
      */
     init(message: Data, type: DataFrameType, sequenceNumber: UInt8, completeMessageLength: UInt16) {
-        let frameData = NSMutableData()
-        var typeByte = type.rawValue << 4
-        var sequence = sequenceNumber
-        var messageLength: UInt16!
+        var frameData = Data()
+        let typeByte = type.rawValue << 4
+        let sequence = sequenceNumber
+        let messageLength: UInt16
         if type == .sop {
             messageLength = UInt16(completeMessageLength)
         } else {
             messageLength = UInt16(message.count)
         }
 
-        frameData.append(&typeByte, length: 1)
-        frameData.append(&sequence, length: 1)
-        frameData.append(&messageLength, length: 2)
+        frameData.append(typeByte.data)
+        frameData.append(sequence.data)
+        frameData.append(messageLength.data)
         frameData.append(message)
-        data = frameData as Data
+        data = frameData
     }
 }
