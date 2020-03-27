@@ -10,7 +10,7 @@
  *  SORC message payload for second step Challenge responses to SORC
  */
 struct PhoneToSorcResponse: SorcMessagePayload {
-    /// Initialized Payload as NSData
+    /// Initialized Payload as Data
     var data: Data
     /// challenge bytes
     var challenge: [UInt8] {
@@ -23,7 +23,7 @@ struct PhoneToSorcResponse: SorcMessagePayload {
 
      - parameter response: response bytes
 
-     - returns: payload object to SORC as NSData
+     - returns: payload object to SORC as Data
      */
     init(response: [UInt8]) {
         data = Data(response) // Data.withBytes(response)

@@ -12,7 +12,7 @@ import Foundation
  *  Defines message payload from mobile to SORC
  */
 struct Handshake: SorcMessagePayload {
-    /// start value as NSData
+    /// start value as Data
     var data: Data
     /**
      Initialization point for handshake
@@ -24,13 +24,14 @@ struct Handshake: SorcMessagePayload {
      - returns: Hand shake object as SORC message payload
      */
     init(deviceID: String, sorcID: SorcID, leaseID: String) {
-        let frameData = NSMutableData()
+        var frameData = Data()
         frameData.append(deviceID.data(using: String.Encoding.ascii)!)
         frameData.append(sorcID.lowercasedUUIDString.data(using: String.Encoding.ascii)!)
 
         frameData.append(leaseID.data(using: String.Encoding.ascii)!)
         let challenge = [UInt8](repeating: 0x0, count: 16)
-        frameData.append(Data(bytes: UnsafePointer<UInt8>(challenge), count: challenge.count))
-        data = frameData as Data
+
+        frameData.append(challenge.data)
+        data = frameData
     }
 }

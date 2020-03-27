@@ -45,13 +45,13 @@ struct AesCbcCryptoManager: CryptoManager {
             let paddingLength = 16 - mod
             let encData = try createEncData(data, paddingLength: paddingLength)
             let mac = createShortMac(encData, iv: encIV)
-            let encDataWithMac = NSMutableData()
+            var encDataWithMac = Data()
             encDataWithMac.append(encData)
             encDataWithMac.append(Data(mac))
             let ivData = encData.subdata(in: encData.count - 16 ..< encData.count)
             encIV = [UInt8](ivData)
 
-            return encDataWithMac as Data
+            return encDataWithMac
 
         } catch {
             HSMLog(message: "BLE - Can not encrypt SorcMessage", level: .error)
@@ -93,17 +93,16 @@ struct AesCbcCryptoManager: CryptoManager {
 
      - throws: nothing
 
-     - returns: encrypted message data as NSData object
+     - returns: encrypted message data as Data object
      */
     func createEncData(_ data: Data, paddingLength: Int) throws -> Data {
         let paddingData = Data([UInt8](repeating: 0x0, count: paddingLength))
         let header = CryptoHeader(direction: .toSorc, padding: UInt8(paddingLength))
-        let dataWithPadding = NSMutableData()
+        var dataWithPadding = Data()
         dataWithPadding.append(header.data)
         dataWithPadding.append(data)
         dataWithPadding.append(paddingData)
-        let theData: Data = dataWithPadding as Data
-        let bytes = try AES(key: key, blockMode: CBC(iv: encIV), padding: Padding.noPadding).encrypt(theData.bytes)
+        let bytes = try AES(key: key, blockMode: CBC(iv: encIV), padding: Padding.noPadding).encrypt(dataWithPadding.bytes)
         let encData = Data(bytes)
         return encData
     }
@@ -169,7 +168,7 @@ struct CryptoHeader {
         case noDirection = 0xFF
     }
 
-    /// Header object as NSData
+    /// Header object as Data
     fileprivate var data = Data()
 
     /// Padding as UInt8
@@ -197,7 +196,7 @@ struct CryptoHeader {
      - parameter direction: Message direction
      - parameter padding:   padding to a certaily data length
 
-     - returns: Header object as NSData
+     - returns: Header object as Data
      */
     init(direction: CryptoMessageDirection, padding: UInt8) {
         let paddingBits = padding << 4
@@ -212,7 +211,7 @@ struct CryptoHeader {
 
      - parameter rawData: raw data for header
 
-     - returns: Header as NSData object
+     - returns: Header as Data object
      */
     init(rawData: Data) {
         data = rawData

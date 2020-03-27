@@ -40,13 +40,22 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      shouldUseLaunchSchemeArgsEnv = "YES"
       codeCoverageEnabled = "YES"
-      onlyGenerateCoverageForSpecifiedTargets = "YES"
-      shouldUseLaunchSchemeArgsEnv = "YES">
+      onlyGenerateCoverageForSpecifiedTargets = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "607FACCF1AFB9204008FA782"
+            BuildableName = "SecureAccessBLE_Example.app"
+            BlueprintName = "SecureAccessBLE_Example"
+            ReferencedContainer = "container:SecureAccessBLE.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <CodeCoverageTargets>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "BBE79A255C815D2383F53230E58E27D3"
+            BlueprintIdentifier = "EADAF4F53159BC5D18102AB6950F2DE0"
             BuildableName = "SecureAccessBLE.framework"
             BlueprintName = "SecureAccessBLE"
             ReferencedContainer = "container:Pods/Pods.xcodeproj">
@@ -64,17 +73,6 @@
             </BuildableReference>
          </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "607FACCF1AFB9204008FA782"
-            BuildableName = "SecureAccessBLE_Example.app"
-            BlueprintName = "SecureAccessBLE_Example"
-            ReferencedContainer = "container:SecureAccessBLE.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -96,8 +94,6 @@
             ReferencedContainer = "container:SecureAccessBLE.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"

@@ -12,7 +12,7 @@ import Foundation
  *  SORC message containing raw data
  */
 struct DefaultMessage: SorcMessagePayload {
-    /// start value as NSData
+    /// start value as Data
     var data = Data()
 
     /**

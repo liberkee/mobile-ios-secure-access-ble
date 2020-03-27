@@ -55,11 +55,11 @@ struct AesCbcTestCryptoManager: CryptoManager {
     }
 
     /**
-     All sending message will be encrypted to NSData object for Data transfer
+     All sending message will be encrypted to Data object for Data transfer
 
      - parameter message: comming SORC message object to encrypt
 
-     - returns: encrypted out put NSData object
+     - returns: encrypted out put Data object
      */
     func encryptRawMessage(_ message: Data) -> Data {
         do {
@@ -92,11 +92,11 @@ struct AesCbcTestCryptoManager: CryptoManager {
     }
 
     /**
-     Only for tests used function to decrypt NSData object to NSData
+     Only for tests used function to decrypt Data object to Data
 
-     - parameter data: comming NSData object will be decrypted
+     - parameter data: comming Data object will be decrypted
 
-     - returns: decrypted NSData object as out put
+     - returns: decrypted Data object as out put
      */
     func decryptRawData(_ data: Data) -> Data {
         do {

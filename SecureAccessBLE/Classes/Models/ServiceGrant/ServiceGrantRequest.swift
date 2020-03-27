@@ -33,11 +33,9 @@ protocol ServiceGrant: SorcMessagePayload {
 
 extension ServiceGrant {
     init(serviceGrantID: ServiceGrantID) {
-        let frameData = NSMutableData()
-        var grantIDValue = serviceGrantID
-        frameData.append(&grantIDValue, length: 2)
         self.init()
-        data = frameData as Data
+        var grantIDValue = serviceGrantID
+        data = Data(bytes: &grantIDValue, count: MemoryLayout<ServiceGrantID>.size)
     }
 
     /**
@@ -62,7 +60,7 @@ extension ServiceGrant {
 /// The service grant request is forwarded by SORC to the secured object endpoint where the
 /// corresponding action is executed
 struct ServiceGrantRequest: ServiceGrant {
-    /// start value as NSData
+    /// start value as Data
     var data: Data
 
     /**

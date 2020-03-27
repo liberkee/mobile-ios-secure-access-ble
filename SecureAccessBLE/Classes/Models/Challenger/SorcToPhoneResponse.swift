@@ -10,7 +10,7 @@
  *  To build Message payload for Response from SORC at first step of challenge
  */
 struct SorcToPhoneResponse: SorcMessagePayload {
-    /// Initialized Payload as NSData
+    /// Initialized Payload as Data
     var data: Data
     /// First bytes to challenge
     var b1: [UInt8] {
