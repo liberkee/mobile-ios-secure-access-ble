@@ -62,7 +62,7 @@ struct SorcMessage: Equatable {
     }
 
     /// Start value of SORC message as Data
-    var data: Data = UInt8(0x00).data
+    let data: Data
 
     /**
      Initialization point of SORC message instance

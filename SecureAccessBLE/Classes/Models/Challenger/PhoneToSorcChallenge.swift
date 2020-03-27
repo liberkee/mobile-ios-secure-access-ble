@@ -13,7 +13,7 @@
  */
 struct PhoneToSorcChallenge: SorcMessagePayload {
     /// The initialized data object
-    var data: Data = Data()
+    let data: Data
 
     /**
      The Device ID as a string.

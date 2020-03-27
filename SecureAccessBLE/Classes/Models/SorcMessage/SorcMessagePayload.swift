@@ -13,7 +13,7 @@ import Foundation
  */
 protocol SorcMessagePayload {
     /// message payload defined as Data
-    var data: Data { get set }
+    var data: Data { get }
 }
 
 // MARK: - Extension end point
@@ -25,7 +25,7 @@ extension SorcMessagePayload {}
  */
 struct EmptyPayload: SorcMessagePayload {
     /// start value as Data
-    var data: Data
+    let data: Data
     /**
      Initialization point
 

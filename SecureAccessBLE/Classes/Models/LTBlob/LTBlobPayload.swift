@@ -11,7 +11,7 @@
  */
 struct LTBlobPayload: SorcMessagePayload {
     /// start Payload as Data
-    var data: Data
+    let data: Data
     /**
      Initialization point for Lease token blob payload
 

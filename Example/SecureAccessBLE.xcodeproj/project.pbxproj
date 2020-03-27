@@ -64,7 +64,6 @@
 		9917E9F81FBAF7FE002D5CE3 /* PhoneToSorcChallenge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B7607C1DA2637D003ADDB1 /* PhoneToSorcChallenge.swift */; };
 		9917E9F91FBAF7FE002D5CE3 /* PhoneToSorcResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B7607D1DA2637D003ADDB1 /* PhoneToSorcResponse.swift */; };
 		9917E9FA1FBAF7FE002D5CE3 /* SorcToPhoneResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B7607E1DA2637D003ADDB1 /* SorcToPhoneResponse.swift */; };
-		9917E9FB1FBAF804002D5CE3 /* Handshake.swift in Sources */ = {isa = PBXBuildFile; fileRef = E55E6CDB1F4200E900C5934B /* Handshake.swift */; };
 		9917E9FC1FBAF804002D5CE3 /* DefaultMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E55E6CDC1F4200E900C5934B /* DefaultMessage.swift */; };
 		9917E9FD1FBAF804002D5CE3 /* SorcMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = E55E6CDD1F4200E900C5934B /* SorcMessage.swift */; };
 		9917E9FE1FBAF804002D5CE3 /* SorcMessagePayload.swift in Sources */ = {isa = PBXBuildFile; fileRef = E55E6CDE1F4200E900C5934B /* SorcMessagePayload.swift */; };
@@ -170,7 +169,6 @@
 		E50C4E911F5F3F380081B619 /* SorcManagerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SorcManagerConfiguration.swift; sourceTree = "<group>"; };
 		E50C4E921F5FDC8B0081B619 /* SessionManagerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionManagerConfiguration.swift; sourceTree = "<group>"; };
 		E50C4E931F5FDDDF0081B619 /* ConnectionManagerConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectionManagerConfiguration.swift; sourceTree = "<group>"; };
-		E55E6CDB1F4200E900C5934B /* Handshake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Handshake.swift; sourceTree = "<group>"; };
 		E55E6CDC1F4200E900C5934B /* DefaultMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultMessage.swift; sourceTree = "<group>"; };
 		E55E6CDD1F4200E900C5934B /* SorcMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SorcMessage.swift; sourceTree = "<group>"; };
 		E55E6CDE1F4200E900C5934B /* SorcMessagePayload.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SorcMessagePayload.swift; sourceTree = "<group>"; };
@@ -575,7 +573,6 @@
 		E55E6CDA1F4200E900C5934B /* SorcMessage */ = {
 			isa = PBXGroup;
 			children = (
-				E55E6CDB1F4200E900C5934B /* Handshake.swift */,
 				E55E6CDC1F4200E900C5934B /* DefaultMessage.swift */,
 				E55E6CDD1F4200E900C5934B /* SorcMessage.swift */,
 				E55E6CDE1F4200E900C5934B /* SorcMessagePayload.swift */,
@@ -915,7 +912,6 @@
 				9917E9E01FBAF7CE002D5CE3 /* SessionManagerType.swift in Sources */,
 				9917E9E91FBAF7DB002D5CE3 /* CryptoManager.swift in Sources */,
 				9917E9E41FBAF7D5002D5CE3 /* SecureConnectionChange.swift in Sources */,
-				9917E9FB1FBAF804002D5CE3 /* Handshake.swift in Sources */,
 				9917E9EA1FBAF7DB002D5CE3 /* ZeroSecurityManager.swift in Sources */,
 				9917E9DD1FBAF7C8002D5CE3 /* ConnectionChange.swift in Sources */,
 				9917E9F31FBAF7E7002D5CE3 /* ConnectionManagerConfiguration.swift in Sources */,
