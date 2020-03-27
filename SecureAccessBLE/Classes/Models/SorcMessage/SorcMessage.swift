@@ -48,7 +48,7 @@ enum SorcMessageID: UInt8 {
 struct SorcMessage: Equatable {
     var id: SorcMessageID {
         var byteArray = [UInt8](repeating: 0x0, count: 1)
-        (data as Data).copyBytes(to: &byteArray, count: 1)
+        data.copyBytes(to: &byteArray, count: 1)
         if let validValue = SorcMessageID(rawValue: byteArray[0]) {
             return validValue
         } else {
@@ -62,7 +62,7 @@ struct SorcMessage: Equatable {
     }
 
     /// Start value of SORC message as Data
-    var data: Data = Data(bytes: UnsafePointer<UInt8>([0x00] as [UInt8]), count: 1)
+    var data: Data = UInt8(0x00).data
 
     /**
      Initialization point of SORC message instance
@@ -88,6 +88,6 @@ struct SorcMessage: Equatable {
         var frameData = Data()
         frameData.append(id.rawValue)
         frameData.append(payloadData as Data)
-        data = frameData as Data
+        data = frameData
     }
 }

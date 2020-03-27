@@ -31,7 +31,7 @@ struct Handshake: SorcMessagePayload {
         frameData.append(leaseID.data(using: String.Encoding.ascii)!)
         let challenge = [UInt8](repeating: 0x0, count: 16)
 
-        frameData.append(challenge.data)
+        frameData.append(Data(challenge))
         data = frameData
     }
 }
