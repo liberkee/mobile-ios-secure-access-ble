@@ -174,7 +174,7 @@ struct CryptoHeader {
     /// Padding as UInt8
     var padding: UInt8 {
         var byteArray = [UInt8](repeating: 0x0, count: 1)
-        (data as Data).copyBytes(to: &byteArray, count: 1)
+        data.copyBytes(to: &byteArray, count: 1)
         let padding = byteArray[0] >> 4
         return padding
     }
@@ -182,7 +182,7 @@ struct CryptoHeader {
     /// See above definition CryptoMessageDirection
     var direction: CryptoMessageDirection {
         var byteArray = [UInt8](repeating: 0x0, count: 1)
-        (data as Data).copyBytes(to: &byteArray, from: 1 ..< 2)
+        data.copyBytes(to: &byteArray, from: 1 ..< 2)
         if let validValue = CryptoMessageDirection(rawValue: byteArray[0]) {
             return validValue
         } else {

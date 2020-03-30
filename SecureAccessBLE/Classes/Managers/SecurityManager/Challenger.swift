@@ -130,7 +130,7 @@ class Challenger {
         leaseTokenID = leaseToken.id
         sorcAccessKey = leaseToken.sorcAccessKey
 
-        guard let sharedKey = self.sorcAccessKey.dataFromHexadecimalString() else {
+        guard let sharedKey = sorcAccessKey.dataFromHexadecimalString() else {
             return nil
         }
 

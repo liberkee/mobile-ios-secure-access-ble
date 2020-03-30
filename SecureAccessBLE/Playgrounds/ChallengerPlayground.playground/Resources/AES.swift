@@ -17,7 +17,7 @@ public final class AES {
         case aes128 = 1, aes192, aes256
 
         var Nk: Int { // Nk words
-            return [4, 6, 8][self.rawValue - 1]
+            return [4, 6, 8][rawValue - 1]
         }
 
         var Nb: Int { // Nb words

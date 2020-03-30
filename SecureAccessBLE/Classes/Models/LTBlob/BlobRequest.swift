@@ -16,15 +16,7 @@ struct BlobRequest: SorcMessagePayload {
         case invalidSize
     }
 
-    var data: Data {
-        get {
-            return backingData
-        }
-        set {}
-    }
-
-    // private property holding data since we don't want it to be mutated after creation
-    private let backingData: Data
+    let data: Data
 
     /// blob message counter
     var blobMessageCounter: Int {
@@ -45,6 +37,6 @@ struct BlobRequest: SorcMessagePayload {
         guard rawData.count == 5 else {
             throw Error.invalidSize
         }
-        backingData = rawData
+        data = rawData
     }
 }

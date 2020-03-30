@@ -65,14 +65,14 @@ class ChallengerTests: XCTestCase {
         ///  the real SORC response message from device
         let b1 = [0xB9, 0x6A, 0xF1, 0x31, 0xB9, 0x69, 0x06, 0xDC, 0x68, 0x61, 0x99, 0x2C, 0xF4, 0x2E, 0x36, 0x03] as [UInt8]
         let b2 = [0x8B, 0x30, 0x4E, 0xDE, 0x05, 0x9B, 0xFB, 0xB4, 0x52, 0x92, 0x51, 0x53, 0xE0, 0xAE, 0x8B, 0x87] as [UInt8]
-        let b2data = Data(bytes: UnsafePointer<UInt8>(b2), count: b2.count)
+        let b2data = Data(b2)
 
-        let b2decData = crypto.decryptRawData(b2data as Data) as Data
+        let b2decData = crypto.decryptRawData(b2data)
         let r3 = xor(b1, b: b2decData.bytes)
         ///  app calculation results
         let permutatedR3 = rotate(r3, inverse: true)
-        let ncData = Data(bytes: UnsafePointer<UInt8>(nc), count: nc.count)
-        let b0Data = crypto.encryptRawMessage(ncData as Data) as Data
+        let ncData = Data(nc)
+        let b0Data = crypto.encryptRawMessage(ncData)
 
         /// the calculation from app functions
         let b0 = b0Data.bytes
@@ -81,7 +81,7 @@ class ChallengerTests: XCTestCase {
         XCTAssertEqual(checkB0, b0, "Tests with encrypting SorcMessage failed")
 
         let checkB0Data = Data(checkB0)
-        let checkNc = crypto.decryptRawData(checkB0Data) as Data
+        let checkNc = crypto.decryptRawData(checkB0Data)
 
         ///  check decrypted message from web tool identical with original message
         XCTAssertEqual(checkNc.bytes, nc, "Tests with decrypting SorcMessage failed")

@@ -26,7 +26,7 @@ enum TestMessageType: UInt8 {
  */
 struct TestMessage: SorcMessagePayload {
     ///  start value defined as Data
-    var data: Data
+    let data: Data
 
     /**
      Initialization point for test message

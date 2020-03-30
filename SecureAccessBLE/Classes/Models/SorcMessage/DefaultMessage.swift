@@ -13,14 +13,16 @@ import Foundation
  */
 struct DefaultMessage: SorcMessagePayload {
     /// start value as Data
-    var data = Data()
+    let data: Data
 
     /**
      Initialization point
 
      - returns: DefaultMessage instance as SORC messag payload
      */
-    init() {}
+    init() {
+        data = Data()
+    }
 
     /**
      optional initialization point
@@ -30,7 +32,6 @@ struct DefaultMessage: SorcMessagePayload {
      - returns: DefaultMessage(request message to SORC) instance as SORC message payload
      */
     init(rawData: Data) {
-        self.init()
         data = rawData
     }
 }

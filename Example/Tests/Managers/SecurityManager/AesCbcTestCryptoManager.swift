@@ -45,7 +45,7 @@ struct AesCbcTestCryptoManager: CryptoManager {
      */
     func encryptMessage(_ message: SorcMessage) -> Data {
         do {
-            let bytes: [UInt8] = try AES(key: key, blockMode: CBC(iv: iv), padding: Padding.noPadding).encrypt((message.data as Data).bytes)
+            let bytes: [UInt8] = try AES(key: key, blockMode: CBC(iv: iv), padding: Padding.noPadding).encrypt(message.data.bytes)
             let data = Data(bytes)
             return data
         } catch {
@@ -63,7 +63,7 @@ struct AesCbcTestCryptoManager: CryptoManager {
      */
     func encryptRawMessage(_ message: Data) -> Data {
         do {
-            let bytes: [UInt8] = try AES(key: key, blockMode: CBC(iv: iv), padding: Padding.noPadding).encrypt((message as Data).bytes)
+            let bytes: [UInt8] = try AES(key: key, blockMode: CBC(iv: iv), padding: Padding.noPadding).encrypt(message.bytes)
             let data = Data(bytes)
             return data
         } catch {
@@ -81,7 +81,7 @@ struct AesCbcTestCryptoManager: CryptoManager {
      */
     func decryptData(_ data: Data) -> SorcMessage {
         do {
-            let bytes: [UInt8] = try AES(key: key, blockMode: CBC(iv: iv), padding: Padding.noPadding).decrypt((data as Data).bytes)
+            let bytes: [UInt8] = try AES(key: key, blockMode: CBC(iv: iv), padding: Padding.noPadding).decrypt(data.bytes)
             let data = Data(bytes)
             let message = SorcMessage(rawData: data)
             return message
@@ -100,7 +100,7 @@ struct AesCbcTestCryptoManager: CryptoManager {
      */
     func decryptRawData(_ data: Data) -> Data {
         do {
-            let bytes: [UInt8] = try AES(key: key, blockMode: CBC(iv: iv), padding: Padding.noPadding).decrypt((data as Data).bytes)
+            let bytes: [UInt8] = try AES(key: key, blockMode: CBC(iv: iv), padding: Padding.noPadding).decrypt(data.bytes)
             let data = Data(bytes)
             return data
         } catch {

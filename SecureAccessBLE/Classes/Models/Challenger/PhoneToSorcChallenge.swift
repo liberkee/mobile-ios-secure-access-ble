@@ -13,7 +13,7 @@
  */
 struct PhoneToSorcChallenge: SorcMessagePayload {
     /// The initialized data object
-    var data: Data = Data()
+    let data: Data
 
     /**
      The Device ID as a string.
@@ -82,6 +82,6 @@ struct PhoneToSorcChallenge: SorcMessagePayload {
             data.append(stringData)
         }
         data.append(challenge, count: challenge.count)
-        self.data = data as Data
+        self.data = data
     }
 }

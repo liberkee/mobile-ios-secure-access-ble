@@ -15,14 +15,14 @@ struct SorcToPhoneResponse: SorcMessagePayload {
     /// First bytes to challenge
     var b1: [UInt8] {
         let part = data.subdata(in: 0 ..< 16) // NSMakeRange(0, 16))
-        let challenge = (part as Data).bytes
+        let challenge = part.bytes
         return challenge
     }
 
     /// Another bytes to challenge
     var b2: [UInt8] {
         let part = data.subdata(in: 16 ..< 32) // NSMakeRange(16, 16))
-        let challenge = (part as Data).bytes
+        let challenge = part.bytes
         return challenge
     }
 

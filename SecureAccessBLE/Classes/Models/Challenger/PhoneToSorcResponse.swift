@@ -11,10 +11,10 @@
  */
 struct PhoneToSorcResponse: SorcMessagePayload {
     /// Initialized Payload as Data
-    var data: Data
+    let data: Data
     /// challenge bytes
     var challenge: [UInt8] {
-        let challenge = data.bytes // arrayOfBytes()
+        let challenge = data.bytes
         return challenge
     }
 
@@ -26,6 +26,6 @@ struct PhoneToSorcResponse: SorcMessagePayload {
      - returns: payload object to SORC as Data
      */
     init(response: [UInt8]) {
-        data = Data(response) // Data.withBytes(response)
+        data = Data(response)
     }
 }

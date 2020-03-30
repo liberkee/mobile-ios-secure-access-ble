@@ -45,9 +45,3 @@ extension UInt16 {
         return Data(bytes: &int, count: MemoryLayout<UInt16>.size)
     }
 }
-
-extension Array where Element == UInt8 {
-    var data: Data {
-        return Data(bytes: UnsafePointer<UInt8>(self), count: count)
-    }
-}
