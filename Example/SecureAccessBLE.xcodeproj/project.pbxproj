@@ -17,6 +17,8 @@
 		5BD4F475ACC4A5E1B97B3F5B /* Pods_SecureAccessBLE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BBD4A7868F38CDDFDA78FE2 /* Pods_SecureAccessBLE.framework */; };
 		7B054B1F895284FFC83B8030 /* AesCbcTestCryptoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B054736D9EB7B3AA766E37F /* AesCbcTestCryptoManager.swift */; };
 		99001E6E243216F7008169F3 /* PhoneToSorcChallengeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99001E6D243216F7008169F3 /* PhoneToSorcChallengeTests.swift */; };
+		99001E742432209F008169F3 /* BulkTransmitMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99001E732432209F008169F3 /* BulkTransmitMessageTests.swift */; };
+		99001E75243220DA008169F3 /* BulkTransmitMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99001E712432208F008169F3 /* BulkTransmitMessage.swift */; };
 		9913240420D94C81001D83FC /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9913240320D94C81001D83FC /* Result.swift */; };
 		9913240520D94C8F001D83FC /* ArrayExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991323F120D94C29001D83FC /* ArrayExtensions.swift */; };
 		9913240620D94C9A001D83FC /* UUIDExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991323E220D94C29001D83FC /* UUIDExtension.swift */; };
@@ -124,6 +126,8 @@
 		6BBD4A7868F38CDDFDA78FE2 /* Pods_SecureAccessBLE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SecureAccessBLE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B054736D9EB7B3AA766E37F /* AesCbcTestCryptoManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AesCbcTestCryptoManager.swift; sourceTree = "<group>"; };
 		99001E6D243216F7008169F3 /* PhoneToSorcChallengeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneToSorcChallengeTests.swift; sourceTree = "<group>"; };
+		99001E712432208F008169F3 /* BulkTransmitMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BulkTransmitMessage.swift; sourceTree = "<group>"; };
+		99001E732432209F008169F3 /* BulkTransmitMessageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BulkTransmitMessageTests.swift; sourceTree = "<group>"; };
 		991323DE20D94C28001D83FC /* ChangeSignal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangeSignal.swift; sourceTree = "<group>"; };
 		991323DF20D94C28001D83FC /* StateSignal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateSignal.swift; sourceTree = "<group>"; };
 		991323E020D94C28001D83FC /* EventSignal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventSignal.swift; sourceTree = "<group>"; };
@@ -227,6 +231,7 @@
 		01AF0A0C242CDD720052DD9C /* Bulk */ = {
 			isa = PBXGroup;
 			children = (
+				99001E712432208F008169F3 /* BulkTransmitMessage.swift */,
 				01AF0A0D242CDE440052DD9C /* BulkMessage.swift */,
 				01AF0A0F242DF2690052DD9C /* MobileBulk.swift */,
 			);
@@ -444,6 +449,7 @@
 		9916ABFF21BA75DB00BEC5F0 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				99001E732432209F008169F3 /* BulkTransmitMessageTests.swift */,
 				99001E6D243216F7008169F3 /* PhoneToSorcChallengeTests.swift */,
 				9916AC0021BA75F700BEC5F0 /* SorcMessageTests.swift */,
 				01AF0A11242E26770052DD9C /* BulkTransferTests.swift */,
@@ -879,6 +885,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				99001E742432209F008169F3 /* BulkTransmitMessageTests.swift in Sources */,
 				E50403221F55C0010008DF02 /* TransportManagerTests.swift in Sources */,
 				E504031F1F55BFD50008DF02 /* SessionManagerTests.swift in Sources */,
 				E5CF3ADE1F56FDBC009C95A0 /* BoundedQueueTests.swift in Sources */,
@@ -951,6 +958,7 @@
 				9917E9D91FBAF7C8002D5CE3 /* SorcManager.swift in Sources */,
 				9913240A20D94CA1001D83FC /* DefaultLogger.swift in Sources */,
 				9917EA091FBAF81F002D5CE3 /* AppActivityStatusProvider.swift in Sources */,
+				99001E75243220DA008169F3 /* BulkTransmitMessage.swift in Sources */,
 				9917E9F61FBAF7F8002D5CE3 /* LeaseToken.swift in Sources */,
 				9917E9DA1FBAF7C8002D5CE3 /* SorcManagerConfiguration.swift in Sources */,
 				9917E9F01FBAF7E7002D5CE3 /* ConnectionManagerType.swift in Sources */,

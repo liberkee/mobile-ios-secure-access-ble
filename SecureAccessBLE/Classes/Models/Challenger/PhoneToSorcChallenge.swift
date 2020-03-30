@@ -43,7 +43,7 @@ struct PhoneToSorcChallenge: SorcMessagePayload {
      */
     var leaseTokenID: String {
         let part = data.subdata(in: 72 ..< 108) // 36 chars
-        if let sorcID = NSString(data: part, encoding: String.Encoding.utf8.rawValue) {
+        if let sorcID = String(data: part, encoding: .utf8) {
             return sorcID as String
         } else {
             return ""
@@ -81,7 +81,7 @@ struct PhoneToSorcChallenge: SorcMessagePayload {
         if let stringData = lowerCaseTokenID.data(using: .utf8) {
             data.append(stringData)
         }
-        data.append(challenge, count: challenge.count)
+        data.append(contentsOf: challenge)
         self.data = data
     }
 }
