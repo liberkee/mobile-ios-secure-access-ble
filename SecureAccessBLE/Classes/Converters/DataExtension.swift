@@ -45,3 +45,10 @@ extension UInt16 {
         return Data(bytes: &int, count: MemoryLayout<UInt16>.size)
     }
 }
+
+extension UInt32 {
+    var data: Data {
+        var int = self
+        return Data(bytes: &int, count: MemoryLayout<UInt32>.size)
+    }
+}
