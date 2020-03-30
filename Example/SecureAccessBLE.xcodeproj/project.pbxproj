@@ -7,14 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		01AF0A0E242CDE440052DD9C /* BulkMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0A0D242CDE440052DD9C /* BulkMessage.swift */; };
+		01AF0A10242DF2690052DD9C /* MobileBulk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0A0F242DF2690052DD9C /* MobileBulk.swift */; };
+		01AF0A12242E26770052DD9C /* BulkTransferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0A11242E26770052DD9C /* BulkTransferTests.swift */; };
+		01AF0A14242E5EF20052DD9C /* config_bulk.json in Resources */ = {isa = PBXBuildFile; fileRef = 01AF0A13242E5EF20052DD9C /* config_bulk.json */; };
 		01E093BD2421226200E92FCA /* BackgroundTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01E093BB242120BF00E92FCA /* BackgroundTimer.swift */; };
 		46B760911DA26C40003ADDB1 /* BLEManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760901DA26C40003ADDB1 /* BLEManagerTests.swift */; };
 		46B760971DA26C8C003ADDB1 /* BLECryptorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760961DA26C8C003ADDB1 /* BLECryptorTests.swift */; };
 		5BD4F475ACC4A5E1B97B3F5B /* Pods_SecureAccessBLE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BBD4A7868F38CDDFDA78FE2 /* Pods_SecureAccessBLE.framework */; };
 		7B054B1F895284FFC83B8030 /* AesCbcTestCryptoManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B054736D9EB7B3AA766E37F /* AesCbcTestCryptoManager.swift */; };
-		99001E66242E38C1008169F3 /* PhoneToSorcChallengeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99001E65242E38C1008169F3 /* PhoneToSorcChallengeTests.swift */; };
-		99001E6A242E4EFB008169F3 /* BulkTransmitMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99001E68242E4EEF008169F3 /* BulkTransmitMessage.swift */; };
-		99001E6C242E4FFF008169F3 /* BulkTransmitMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99001E6B242E4FFF008169F3 /* BulkTransmitMessageTests.swift */; };
+		99001E6E243216F7008169F3 /* PhoneToSorcChallengeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99001E6D243216F7008169F3 /* PhoneToSorcChallengeTests.swift */; };
+		99001E742432209F008169F3 /* BulkTransmitMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99001E732432209F008169F3 /* BulkTransmitMessageTests.swift */; };
+		99001E75243220DA008169F3 /* BulkTransmitMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99001E712432208F008169F3 /* BulkTransmitMessage.swift */; };
 		9913240420D94C81001D83FC /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9913240320D94C81001D83FC /* Result.swift */; };
 		9913240520D94C8F001D83FC /* ArrayExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991323F120D94C29001D83FC /* ArrayExtensions.swift */; };
 		9913240620D94C9A001D83FC /* UUIDExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991323E220D94C29001D83FC /* UUIDExtension.swift */; };
@@ -98,6 +102,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		01AF0A0D242CDE440052DD9C /* BulkMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkMessage.swift; sourceTree = "<group>"; };
+		01AF0A0F242DF2690052DD9C /* MobileBulk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileBulk.swift; sourceTree = "<group>"; };
+		01AF0A11242E26770052DD9C /* BulkTransferTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkTransferTests.swift; sourceTree = "<group>"; };
+		01AF0A13242E5EF20052DD9C /* config_bulk.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config_bulk.json; sourceTree = "<group>"; };
 		01E093BB242120BF00E92FCA /* BackgroundTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTimer.swift; sourceTree = "<group>"; };
 		0C1609E7E18BCF626ECF8A8C /* Pods-SecureAccessBLE_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		46B7607C1DA2637D003ADDB1 /* PhoneToSorcChallenge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = PhoneToSorcChallenge.swift; sourceTree = "<group>"; };
@@ -117,9 +125,9 @@
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6BBD4A7868F38CDDFDA78FE2 /* Pods_SecureAccessBLE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SecureAccessBLE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B054736D9EB7B3AA766E37F /* AesCbcTestCryptoManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AesCbcTestCryptoManager.swift; sourceTree = "<group>"; };
-		99001E65242E38C1008169F3 /* PhoneToSorcChallengeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneToSorcChallengeTests.swift; sourceTree = "<group>"; };
-		99001E68242E4EEF008169F3 /* BulkTransmitMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkTransmitMessage.swift; sourceTree = "<group>"; };
-		99001E6B242E4FFF008169F3 /* BulkTransmitMessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkTransmitMessageTests.swift; sourceTree = "<group>"; };
+		99001E6D243216F7008169F3 /* PhoneToSorcChallengeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhoneToSorcChallengeTests.swift; sourceTree = "<group>"; };
+		99001E712432208F008169F3 /* BulkTransmitMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BulkTransmitMessage.swift; sourceTree = "<group>"; };
+		99001E732432209F008169F3 /* BulkTransmitMessageTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BulkTransmitMessageTests.swift; sourceTree = "<group>"; };
 		991323DE20D94C28001D83FC /* ChangeSignal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangeSignal.swift; sourceTree = "<group>"; };
 		991323DF20D94C28001D83FC /* StateSignal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateSignal.swift; sourceTree = "<group>"; };
 		991323E020D94C28001D83FC /* EventSignal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventSignal.swift; sourceTree = "<group>"; };
@@ -220,6 +228,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		01AF0A0C242CDD720052DD9C /* Bulk */ = {
+			isa = PBXGroup;
+			children = (
+				99001E712432208F008169F3 /* BulkTransmitMessage.swift */,
+				01AF0A0D242CDE440052DD9C /* BulkMessage.swift */,
+				01AF0A0F242DF2690052DD9C /* MobileBulk.swift */,
+			);
+			path = Bulk;
+			sourceTree = "<group>";
+		};
 		1480A5DE759168E871AC7257 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -267,7 +285,7 @@
 		46B7607A1DA2637D003ADDB1 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				99001E67242E4ED1008169F3 /* ConfigBulks */,
+				01AF0A0C242CDD720052DD9C /* Bulk */,
 				E573A7911EDC2B860093ABA8 /* Lease */,
 				46B7607B1DA2637D003ADDB1 /* Challenger */,
 				E55E6CDA1F4200E900C5934B /* SorcMessage */,
@@ -369,14 +387,6 @@
 			name = "Podspec Metadata";
 			sourceTree = "<group>";
 		};
-		99001E67242E4ED1008169F3 /* ConfigBulks */ = {
-			isa = PBXGroup;
-			children = (
-				99001E68242E4EEF008169F3 /* BulkTransmitMessage.swift */,
-			);
-			path = ConfigBulks;
-			sourceTree = "<group>";
-		};
 		991323DD20D94C28001D83FC /* Signals */ = {
 			isa = PBXGroup;
 			children = (
@@ -439,9 +449,11 @@
 		9916ABFF21BA75DB00BEC5F0 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				99001E732432209F008169F3 /* BulkTransmitMessageTests.swift */,
+				99001E6D243216F7008169F3 /* PhoneToSorcChallengeTests.swift */,
 				9916AC0021BA75F700BEC5F0 /* SorcMessageTests.swift */,
-				99001E65242E38C1008169F3 /* PhoneToSorcChallengeTests.swift */,
-				99001E6B242E4FFF008169F3 /* BulkTransmitMessageTests.swift */,
+				01AF0A11242E26770052DD9C /* BulkTransferTests.swift */,
+				01AF0A13242E5EF20052DD9C /* config_bulk.json */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -757,6 +769,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				01AF0A14242E5EF20052DD9C /* config_bulk.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -872,19 +885,20 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				99001E742432209F008169F3 /* BulkTransmitMessageTests.swift in Sources */,
 				E50403221F55C0010008DF02 /* TransportManagerTests.swift in Sources */,
 				E504031F1F55BFD50008DF02 /* SessionManagerTests.swift in Sources */,
 				E5CF3ADE1F56FDBC009C95A0 /* BoundedQueueTests.swift in Sources */,
 				46B760971DA26C8C003ADDB1 /* BLECryptorTests.swift in Sources */,
 				E5CF3AE61F586EF4009C95A0 /* SecurityManagerTests.swift in Sources */,
 				E5CF3AE31F586EB7009C95A0 /* ConnectionManagerTests.swift in Sources */,
+				01AF0A12242E26770052DD9C /* BulkTransferTests.swift in Sources */,
 				C5422BDD23E97A8D005C21A4 /* TrackingManagerTests.swift in Sources */,
-				99001E6C242E4FFF008169F3 /* BulkTransmitMessageTests.swift in Sources */,
-				99001E66242E38C1008169F3 /* PhoneToSorcChallengeTests.swift in Sources */,
 				E50403201F55BFD50008DF02 /* SorcManagerTests.swift in Sources */,
 				9916AC0121BA75F700BEC5F0 /* SorcMessageTests.swift in Sources */,
 				E5CF3AF01F587164009C95A0 /* ChallengerTests.swift in Sources */,
 				46B760911DA26C40003ADDB1 /* BLEManagerTests.swift in Sources */,
+				99001E6E243216F7008169F3 /* PhoneToSorcChallengeTests.swift in Sources */,
 				7B054B1F895284FFC83B8030 /* AesCbcTestCryptoManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -924,6 +938,7 @@
 				9917E9E61FBAF7D5002D5CE3 /* Challenger.swift in Sources */,
 				9917E9DF1FBAF7C8002D5CE3 /* ServiceGrantResponse.swift in Sources */,
 				9913241320D94CB3001D83FC /* Disposing.swift in Sources */,
+				01AF0A0E242CDE440052DD9C /* BulkMessage.swift in Sources */,
 				9917EA051FBAF819002D5CE3 /* ServiceGrantRequest.swift in Sources */,
 				9917E9FA1FBAF7FE002D5CE3 /* SorcToPhoneResponse.swift in Sources */,
 				9917E9FC1FBAF804002D5CE3 /* DefaultMessage.swift in Sources */,
@@ -934,7 +949,6 @@
 				9917E9EA1FBAF7DB002D5CE3 /* ZeroSecurityManager.swift in Sources */,
 				9917E9DD1FBAF7C8002D5CE3 /* ConnectionChange.swift in Sources */,
 				9917E9F31FBAF7E7002D5CE3 /* ConnectionManagerConfiguration.swift in Sources */,
-				99001E6A242E4EFB008169F3 /* BulkTransmitMessage.swift in Sources */,
 				9917E9DE1FBAF7C8002D5CE3 /* ServiceGrantChange.swift in Sources */,
 				9913240C20D94CA1001D83FC /* HSMLogging.swift in Sources */,
 				9917E9E21FBAF7CE002D5CE3 /* SessionManagerConfiguration.swift in Sources */,
@@ -944,6 +958,7 @@
 				9917E9D91FBAF7C8002D5CE3 /* SorcManager.swift in Sources */,
 				9913240A20D94CA1001D83FC /* DefaultLogger.swift in Sources */,
 				9917EA091FBAF81F002D5CE3 /* AppActivityStatusProvider.swift in Sources */,
+				99001E75243220DA008169F3 /* BulkTransmitMessage.swift in Sources */,
 				9917E9F61FBAF7F8002D5CE3 /* LeaseToken.swift in Sources */,
 				9917E9DA1FBAF7C8002D5CE3 /* SorcManagerConfiguration.swift in Sources */,
 				9917E9F01FBAF7E7002D5CE3 /* ConnectionManagerType.swift in Sources */,
@@ -963,6 +978,7 @@
 				9917EA041FBAF814002D5CE3 /* LTBlobPayload.swift in Sources */,
 				9913240420D94C81001D83FC /* Result.swift in Sources */,
 				9917E9E51FBAF7D5002D5CE3 /* SecurityManager.swift in Sources */,
+				01AF0A10242DF2690052DD9C /* MobileBulk.swift in Sources */,
 				9917E9EB1FBAF7E2002D5CE3 /* TransportManagerType.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
