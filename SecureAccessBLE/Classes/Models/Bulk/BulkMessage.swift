@@ -9,7 +9,7 @@
 import Foundation
 
 enum BulkMessageID: UInt8 {
-    case unknownBulk = -1
+//    case unknownBulk = -1
     //    UNKNOWN_BULK_RESPONSE_CODE(-1),
     case anchorUnmatchConfig = 0x64
 

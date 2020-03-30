@@ -10,6 +10,7 @@
 		01AF0A0E242CDE440052DD9C /* BulkMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0A0D242CDE440052DD9C /* BulkMessage.swift */; };
 		01AF0A10242DF2690052DD9C /* MobileBulk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0A0F242DF2690052DD9C /* MobileBulk.swift */; };
 		01AF0A12242E26770052DD9C /* BulkTransferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0A11242E26770052DD9C /* BulkTransferTests.swift */; };
+		01AF0A14242E5EF20052DD9C /* config_bulk.json in Resources */ = {isa = PBXBuildFile; fileRef = 01AF0A13242E5EF20052DD9C /* config_bulk.json */; };
 		01E093BD2421226200E92FCA /* BackgroundTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01E093BB242120BF00E92FCA /* BackgroundTimer.swift */; };
 		46B760911DA26C40003ADDB1 /* BLEManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760901DA26C40003ADDB1 /* BLEManagerTests.swift */; };
 		46B760971DA26C8C003ADDB1 /* BLECryptorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46B760961DA26C8C003ADDB1 /* BLECryptorTests.swift */; };
@@ -102,6 +103,7 @@
 		01AF0A0D242CDE440052DD9C /* BulkMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkMessage.swift; sourceTree = "<group>"; };
 		01AF0A0F242DF2690052DD9C /* MobileBulk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileBulk.swift; sourceTree = "<group>"; };
 		01AF0A11242E26770052DD9C /* BulkTransferTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkTransferTests.swift; sourceTree = "<group>"; };
+		01AF0A13242E5EF20052DD9C /* config_bulk.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config_bulk.json; sourceTree = "<group>"; };
 		01E093BB242120BF00E92FCA /* BackgroundTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTimer.swift; sourceTree = "<group>"; };
 		0C1609E7E18BCF626ECF8A8C /* Pods-SecureAccessBLE_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SecureAccessBLE_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SecureAccessBLE_Tests/Pods-SecureAccessBLE_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		46B7607C1DA2637D003ADDB1 /* PhoneToSorcChallenge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = PhoneToSorcChallenge.swift; sourceTree = "<group>"; };
@@ -444,6 +446,7 @@
 			children = (
 				9916AC0021BA75F700BEC5F0 /* SorcMessageTests.swift */,
 				01AF0A11242E26770052DD9C /* BulkTransferTests.swift */,
+				01AF0A13242E5EF20052DD9C /* config_bulk.json */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -760,6 +763,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				01AF0A14242E5EF20052DD9C /* config_bulk.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
