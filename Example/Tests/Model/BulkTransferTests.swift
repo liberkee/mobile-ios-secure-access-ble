@@ -53,43 +53,61 @@ class BulkTransferTests: QuickSpec {
             }
             context("parse config bulks") {
                 var configMetadata: String = ""
-                var configContext: [UInt8]?
                 beforeEach {
                     let encoder = JSONEncoder()
                     encoder.outputFormatting = .prettyPrinted
                     let data = try! encoder.encode(configBulk!.configBulkMetadata)
                     configMetadata = String(data: data, encoding: String.Encoding.utf8)!
-                    configContext = configBulk.content.bytes
                 }
                 it("should map") {
-                    let sut = try? MobileBulk(bulkID: configBulk!.bulkID,
+                    let sut = try? MobileBulk(bulkID: UUID(uuidString: configBulk.bulkID)!,
                                               type: .configBulk,
                                               metadata: configMetadata,
-                                              content: configContext!)
+                                              content: configBulk.content)
                     expect(sut).toNot(beNil())
                 }
-                it("does contain deviceID") {
+                it("does contain bulkID") {
                     let bulkID = "686e61e2-2967-4cfa-bd35-3eb3df4ed13e"
-                    let mobileBulk = try? MobileBulk(bulkID: configBulk!.bulkID,
+                    let mobileBulk = try? MobileBulk(bulkID: UUID(uuidString: configBulk.bulkID)!,
                                                      type: .configBulk,
                                                      metadata: configMetadata,
-                                                     content: configContext!)
-                    let receivedbulkID = String(bytes: mobileBulk!.bulkId, encoding: .utf8)
-                    expect(bulkID) == receivedbulkID
+                                                     content: configBulk.content)
+                    let receivedbulkID = UUID(uuidString: bulkID)!
+                    expect(mobileBulk?.bulkId) == receivedbulkID
                 }
-                it("does contain metadata") {
-                    let mobileBulk = try? MobileBulk(bulkID: configBulk!.bulkID,
+                it("does contain ascii encoded metadata") {
+                    let mobileBulk = try? MobileBulk(bulkID: UUID(uuidString: configBulk.bulkID)!,
                                                      type: .configBulk,
                                                      metadata: configMetadata,
-                                                     content: configContext!)
-                    expect(mobileBulk?.metadata).notTo(beNil())
+                                                     content: configBulk.content)
+                    expect(String(data: mobileBulk!.metadata, encoding: .ascii)) == configMetadata
                 }
-                it("does contain content") {
-                    let mobileBulk = try? MobileBulk(bulkID: configBulk!.bulkID,
+                it("does contain content as base64 encoded data") {
+                    let mobileBulk = try? MobileBulk(bulkID: UUID(uuidString: configBulk.bulkID)!,
                                                      type: .configBulk,
                                                      metadata: configMetadata,
-                                                     content: configContext!)
-                    expect(mobileBulk?.content).notTo(beNil())
+                                                     content: configBulk.content)
+                    expect(mobileBulk?.content.base64EncodedString()) == configBulk.content
+                }
+                it("throws if content is in bad format") {
+                    func createBulkWithBrokenContent() throws {
+                        _ = try MobileBulk(bulkID: UUID(uuidString: configBulk.bulkID)!,
+                                           type: .configBulk,
+                                           metadata: configMetadata,
+                                           content: "A_A_A_A_")
+                    }
+
+                    expect { try createBulkWithBrokenContent() }.to(throwError(MobileBulk.Error.contentFormat))
+                }
+                it("throws if metadata is in bad format") {
+                    func createBulkWithBrokenContent() throws {
+                        _ = try MobileBulk(bulkID: UUID(uuidString: configBulk.bulkID)!,
+                                           type: .configBulk,
+                                           metadata: "Ä",
+                                           content: configBulk.content)
+                    }
+
+                    expect { try createBulkWithBrokenContent() }.to(throwError(MobileBulk.Error.metadataFormat))
                 }
             }
         }

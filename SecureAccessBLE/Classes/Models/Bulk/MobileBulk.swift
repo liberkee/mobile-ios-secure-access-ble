@@ -10,33 +10,32 @@ import Foundation
 
 public struct MobileBulk {
     enum Error: Swift.Error {
-        case metadataFormatError
+        case metadataFormat
+        case contentFormat
     }
 
-    public enum BulkType: Int {
+    public enum BulkType: UInt32 {
         case configBulk = 10
         case applyBulk = 20
     }
 
-    public let bulkId: [UInt8]
-    public let type: Int
-    public let metadata: [UInt8]
-    public let content: [UInt8]
+    public let bulkId: UUID
+    public let type: BulkType
+    public let metadata: Data
+    public let content: Data
 
-    public init(bulkID: String, type: BulkType, metadata: String, content: [UInt8]) throws {
+    public init(bulkID: UUID, type: BulkType, metadata: String, content: String) throws {
         guard let asciiMetadata = metadata.data(using: .ascii) else {
-            throw Error.metadataFormatError
+            throw Error.metadataFormat
         }
 
-        bulkId = bulkID.utf8Array
-        self.type = type.rawValue
-        self.metadata = asciiMetadata.bytes
-        self.content = content
-    }
-}
+        guard let contentData = Data(base64Encoded: content) else {
+            throw Error.contentFormat
+        }
 
-extension String {
-    var utf8Array: [UInt8] {
-        return Array(utf8)
+        bulkId = bulkID
+        self.type = type
+        self.metadata = asciiMetadata
+        self.content = contentData
     }
 }
