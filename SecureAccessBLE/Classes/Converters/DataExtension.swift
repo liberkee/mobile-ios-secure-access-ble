@@ -30,6 +30,12 @@ extension Data {
 
         return output
     }
+
+    var uint8: UInt8 {
+        var number: UInt8 = 0
+        copyBytes(to: &number, count: MemoryLayout<UInt8>.size)
+        return number
+    }
 }
 
 extension UInt8 {

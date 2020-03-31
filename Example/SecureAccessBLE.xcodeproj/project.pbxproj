@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		015EED572432514C0093443B /* BulkResponseMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015EED562432514C0093443B /* BulkResponseMessage.swift */; };
+		015EED5B24334F0C0093443B /* BulkResponseMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015EED5A24334F0C0093443B /* BulkResponseMessageTests.swift */; };
 		01AF0A0E242CDE440052DD9C /* BulkMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0A0D242CDE440052DD9C /* BulkMessage.swift */; };
 		01AF0A10242DF2690052DD9C /* MobileBulk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0A0F242DF2690052DD9C /* MobileBulk.swift */; };
 		01AF0A12242E26770052DD9C /* BulkTransferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0A11242E26770052DD9C /* BulkTransferTests.swift */; };
@@ -102,6 +104,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		015EED562432514C0093443B /* BulkResponseMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkResponseMessage.swift; sourceTree = "<group>"; };
+		015EED5A24334F0C0093443B /* BulkResponseMessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkResponseMessageTests.swift; sourceTree = "<group>"; };
 		01AF0A0D242CDE440052DD9C /* BulkMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkMessage.swift; sourceTree = "<group>"; };
 		01AF0A0F242DF2690052DD9C /* MobileBulk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileBulk.swift; sourceTree = "<group>"; };
 		01AF0A11242E26770052DD9C /* BulkTransferTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkTransferTests.swift; sourceTree = "<group>"; };
@@ -234,6 +238,7 @@
 				99001E712432208F008169F3 /* BulkTransmitMessage.swift */,
 				01AF0A0D242CDE440052DD9C /* BulkMessage.swift */,
 				01AF0A0F242DF2690052DD9C /* MobileBulk.swift */,
+				015EED562432514C0093443B /* BulkResponseMessage.swift */,
 			);
 			path = Bulk;
 			sourceTree = "<group>";
@@ -454,6 +459,7 @@
 				9916AC0021BA75F700BEC5F0 /* SorcMessageTests.swift */,
 				01AF0A11242E26770052DD9C /* BulkTransferTests.swift */,
 				01AF0A13242E5EF20052DD9C /* config_bulk.json */,
+				015EED5A24334F0C0093443B /* BulkResponseMessageTests.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -899,6 +905,7 @@
 				E5CF3AF01F587164009C95A0 /* ChallengerTests.swift in Sources */,
 				46B760911DA26C40003ADDB1 /* BLEManagerTests.swift in Sources */,
 				99001E6E243216F7008169F3 /* PhoneToSorcChallengeTests.swift in Sources */,
+				015EED5B24334F0C0093443B /* BulkResponseMessageTests.swift in Sources */,
 				7B054B1F895284FFC83B8030 /* AesCbcTestCryptoManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -931,6 +938,7 @@
 				9917E9F81FBAF7FE002D5CE3 /* PhoneToSorcChallenge.swift in Sources */,
 				01E093BD2421226200E92FCA /* BackgroundTimer.swift in Sources */,
 				9917E9E31FBAF7D5002D5CE3 /* SecurityManagerType.swift in Sources */,
+				015EED572432514C0093443B /* BulkResponseMessage.swift in Sources */,
 				9917EA011FBAF80F002D5CE3 /* DataFrame.swift in Sources */,
 				9913240F20D94CAC001D83FC /* EventSignal.swift in Sources */,
 				9913241020D94CB3001D83FC /* BehaviorSubject.swift in Sources */,
