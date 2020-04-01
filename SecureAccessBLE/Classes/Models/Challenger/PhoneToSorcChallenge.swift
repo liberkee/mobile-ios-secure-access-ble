@@ -21,7 +21,7 @@ struct PhoneToSorcChallenge: SorcMessagePayload {
      */
     var leaseID: String {
         let part = data.subdata(in: 0 ..< 36) // 36 chars
-        if let deviceID = NSString(data: part, encoding: String.Encoding.utf8.rawValue) {
+        if let deviceID = String(data: part, encoding: .utf8) {
             return deviceID as String
         } else {
             return ""

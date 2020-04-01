@@ -11,7 +11,7 @@
  */
 struct SorcToPhoneResponse: SorcMessagePayload {
     /// Initialized Payload as Data
-    var data: Data
+    let data: Data
     /// First bytes to challenge
     var b1: [UInt8] {
         let part = data.subdata(in: 0 ..< 16) // NSMakeRange(0, 16))
