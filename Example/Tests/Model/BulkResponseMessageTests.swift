@@ -50,7 +50,7 @@ class BulkResponseMessageTests: QuickSpec {
             context("parse inappropriate protocol version") {
                 it("does throw error") {
                     let data = Data([
-                        0x06, // protocol version
+                        0x06, // inappropriate protocol version
                         0x61, // message id
                         0x02, // version id
                         0x01, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xFF, // bulk id
@@ -61,6 +61,38 @@ class BulkResponseMessageTests: QuickSpec {
                         0x01, 0x00, 0x00, 0x00 // message, uint32
                     ])
                     expect { try BulkResponseMessage(rawData: data) }.to(throwError(BulkResponseMessage.Error.unsupportedBulkProtocolVersion))
+                }
+            }
+            context("parse inappropriate anchor") {
+                it("does throw error") {
+                    let data = Data([
+                        0x02, // protocol version
+                        0x61, // message id
+                        0x02, // version id
+                        0x01, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xFF, // bulk id
+                        0x0A, 0x04, 0x00, 0x00, 0x00, // inappropriate anchor length, little endian uint32
+                        0xAA, 0xBB, 0xAA, 0xBB, // anchor
+                        0x05, 0x00, 0x00, 0x00, // revision length, little endian uint32
+                        0xAA, 0xBB, 0xCC, 0xDD, 0xEE, // revision
+                        0x01, 0x00, 0x00, 0x00 // message, uint32
+                    ])
+                    expect { try BulkResponseMessage(rawData: data) }.to(throwError(BulkResponseMessage.Error.unsupportedAnchor))
+                }
+            }
+            context("parse inappropriate revision") {
+                it("does throw error") {
+                    let data = Data([
+                        0x02, // protocol version
+                        0x61, // message id
+                        0x02, // version id
+                        0x01, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xFF, // bulk id
+                        0x04, 0x00, 0x00, 0x00, // anchor length, little endian uint32
+                        0xAA, 0xBB, 0xAA, 0xBB, // anchor
+                        0x0A, 0x05, 0x00, 0x00, 0x00, // inappropriate revision length, little endian uint32
+                        0xAA, 0xBB, 0xCC, 0xDD, 0xEE, // revision
+                        0x01, 0x00, 0x00, 0x00 // message, uint32
+                    ])
+                    expect { try BulkResponseMessage(rawData: data) }.to(throwError(BulkResponseMessage.Error.unsupportedRevision))
                 }
             }
         }
