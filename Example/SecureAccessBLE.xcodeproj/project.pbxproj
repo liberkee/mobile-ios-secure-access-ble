@@ -9,7 +9,8 @@
 /* Begin PBXBuildFile section */
 		015EED572432514C0093443B /* BulkResponseMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015EED562432514C0093443B /* BulkResponseMessage.swift */; };
 		015EED5B24334F0C0093443B /* BulkResponseMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015EED5A24334F0C0093443B /* BulkResponseMessageTests.swift */; };
-		01AF0A0E242CDE440052DD9C /* BulkMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0A0D242CDE440052DD9C /* BulkMessage.swift */; };
+		015EED8D2434BB4E0093443B /* MobileBulkResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015EED8C2434BB4E0093443B /* MobileBulkResponseTests.swift */; };
+		01AF0A0E242CDE440052DD9C /* MobileBulkResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0A0D242CDE440052DD9C /* MobileBulkResponse.swift */; };
 		01AF0A10242DF2690052DD9C /* MobileBulk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0A0F242DF2690052DD9C /* MobileBulk.swift */; };
 		01AF0A12242E26770052DD9C /* BulkTransferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0A11242E26770052DD9C /* BulkTransferTests.swift */; };
 		01AF0A14242E5EF20052DD9C /* config_bulk.json in Resources */ = {isa = PBXBuildFile; fileRef = 01AF0A13242E5EF20052DD9C /* config_bulk.json */; };
@@ -106,7 +107,8 @@
 /* Begin PBXFileReference section */
 		015EED562432514C0093443B /* BulkResponseMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkResponseMessage.swift; sourceTree = "<group>"; };
 		015EED5A24334F0C0093443B /* BulkResponseMessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkResponseMessageTests.swift; sourceTree = "<group>"; };
-		01AF0A0D242CDE440052DD9C /* BulkMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkMessage.swift; sourceTree = "<group>"; };
+		015EED8C2434BB4E0093443B /* MobileBulkResponseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileBulkResponseTests.swift; sourceTree = "<group>"; };
+		01AF0A0D242CDE440052DD9C /* MobileBulkResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileBulkResponse.swift; sourceTree = "<group>"; };
 		01AF0A0F242DF2690052DD9C /* MobileBulk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileBulk.swift; sourceTree = "<group>"; };
 		01AF0A11242E26770052DD9C /* BulkTransferTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkTransferTests.swift; sourceTree = "<group>"; };
 		01AF0A13242E5EF20052DD9C /* config_bulk.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = config_bulk.json; sourceTree = "<group>"; };
@@ -236,7 +238,7 @@
 			isa = PBXGroup;
 			children = (
 				99001E712432208F008169F3 /* BulkTransmitMessage.swift */,
-				01AF0A0D242CDE440052DD9C /* BulkMessage.swift */,
+				01AF0A0D242CDE440052DD9C /* MobileBulkResponse.swift */,
 				01AF0A0F242DF2690052DD9C /* MobileBulk.swift */,
 				015EED562432514C0093443B /* BulkResponseMessage.swift */,
 			);
@@ -460,6 +462,7 @@
 				01AF0A11242E26770052DD9C /* BulkTransferTests.swift */,
 				01AF0A13242E5EF20052DD9C /* config_bulk.json */,
 				015EED5A24334F0C0093443B /* BulkResponseMessageTests.swift */,
+				015EED8C2434BB4E0093443B /* MobileBulkResponseTests.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -892,6 +895,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				99001E742432209F008169F3 /* BulkTransmitMessageTests.swift in Sources */,
+				015EED8D2434BB4E0093443B /* MobileBulkResponseTests.swift in Sources */,
 				E50403221F55C0010008DF02 /* TransportManagerTests.swift in Sources */,
 				E504031F1F55BFD50008DF02 /* SessionManagerTests.swift in Sources */,
 				E5CF3ADE1F56FDBC009C95A0 /* BoundedQueueTests.swift in Sources */,
@@ -946,7 +950,7 @@
 				9917E9E61FBAF7D5002D5CE3 /* Challenger.swift in Sources */,
 				9917E9DF1FBAF7C8002D5CE3 /* ServiceGrantResponse.swift in Sources */,
 				9913241320D94CB3001D83FC /* Disposing.swift in Sources */,
-				01AF0A0E242CDE440052DD9C /* BulkMessage.swift in Sources */,
+				01AF0A0E242CDE440052DD9C /* MobileBulkResponse.swift in Sources */,
 				9917EA051FBAF819002D5CE3 /* ServiceGrantRequest.swift in Sources */,
 				9917E9FA1FBAF7FE002D5CE3 /* SorcToPhoneResponse.swift in Sources */,
 				9917E9FC1FBAF804002D5CE3 /* DefaultMessage.swift in Sources */,
