@@ -13,60 +13,72 @@ struct BulkResponseMessage: SorcMessagePayload {
 
     enum Error: Swift.Error {
         case unsupportedBulkProtocolVersion
-        case unsupportedAnchor
-        case unsupportedRevision
+        case badFormat
     }
 
     private let bulkTransferProtocolVersionII = 2
     private let rawUUIDbytesSize = 16
+    private let protocolSize = 1
+    private let dynamicLengthSize = 4 // UInt32
 
     let bulkID: [UInt8]
     let anchor: [UInt8]
     let revision: [UInt8]
     let message: Int
 
-    init(rawData: Data) throws {
-        let protocolVersion = rawData.subdata(in: 0 ..< 1).uint8
+    // This is how the message is composed:
+    // protocolVersion(1) + bulkID(16) + anchorSize(4) + dynamicAnchor(anchorSize) +
+    // revisionSize(4) + dynamicRevision(revisionSize) + message(4)
 
-        guard protocolVersion == bulkTransferProtocolVersionII else {
+    init(rawData: Data) throws {
+        var rawBytes = rawData.bytes
+        let protocolVersion = try BulkResponseMessage.readValue(from: &rawBytes, size: protocolSize)
+        guard Int(protocolVersion.first!) == bulkTransferProtocolVersionII else {
             throw Error.unsupportedBulkProtocolVersion
         }
+
         data = rawData
+        bulkID = try BulkResponseMessage.readValue(from: &rawBytes, size: rawUUIDbytesSize)
+        anchor = try BulkResponseMessage.readDynamicValue(from: &rawBytes)
+        revision = try BulkResponseMessage.readDynamicValue(from: &rawBytes)
+        message = Int(try rawBytes.readLittleEndianInt32())
+    }
 
-        // protocolVersion(1) + idLength(1) + versionLength(1) + bulkIdLength(16) = total(19)
-        bulkID = rawData.subdata(in: 3 ..< 19).bytes
+    /// Reads a UInt32 value describing size of the actual value. After that reads the actual value. The bytes array will be reduced by the values read by this function
+    /// - Parameter bytes: bytes array passed by reference, read values will be removed
+    /// - Throws: `Error.badFormat` if bytes size doesn't fulfill the requirement
+    /// - Returns: value
+    private static func readDynamicValue(from bytes: inout [UInt8]) throws -> [UInt8] {
+        let size = try bytes.readLittleEndianInt32()
+        let valueSize = Int(size)
+        bytes.removeFirst(MemoryLayout<UInt32>.size)
+        return try readValue(from: &bytes, size: valueSize)
+    }
 
-        // anchor
-        var anchorLength = 4
-
-        let _dynAnchorLen: UInt32? = rawData.subdata(in: 19 ..< (19 + anchorLength)).withUnsafeBytes { UInt32(littleEndian: $0.load(as: UInt32.self)) }
-        let dynAnchorLen = Int(_dynAnchorLen!)
-
-        guard dynAnchorLen < rawData.bytes.count else {
-            throw Error.unsupportedAnchor
+    /// Read a value of specified size from array.
+    /// - Parameters:
+    ///   - bytes: bytes array passed by reference, read values will be removed
+    ///   - size: size of value that should be read
+    /// - Throws: `Error.badFormat` if bytes size doesn't fulfill the requirement
+    /// - Returns: value
+    private static func readValue(from bytes: inout [UInt8], size: Int) throws -> [UInt8] {
+        guard size <= bytes.count else {
+            throw Error.badFormat
         }
+        let result = Array(bytes.prefix(size))
+        bytes.removeFirst(size)
+        return result
+    }
+}
 
-        anchor = rawData.subdata(in: (19 + anchorLength) ..< (19 + anchorLength + dynAnchorLen)).bytes
-
-        anchorLength = anchorLength + dynAnchorLen
-
-        // revision
-        var revisionLength = 4
-        let _dynRevisionLen: UInt32 = rawData.subdata(in: (19 + anchorLength) ..< (19 + anchorLength + revisionLength)).withUnsafeBytes { UInt32(littleEndian: $0.load(as: UInt32.self)) }
-
-        let dynRevisionLen = Int(_dynRevisionLen)
-
-        guard dynRevisionLen < rawData.bytes.count else {
-            throw Error.unsupportedRevision
+private extension Array where Element == UInt8 {
+    func readLittleEndianInt32() throws -> UInt32 {
+        let int32Size = MemoryLayout<UInt32>.size // 4 bytes
+        guard count >= int32Size else {
+            throw BulkResponseMessage.Error.badFormat
         }
-
-        revision = rawData.subdata(in: (19 + anchorLength + revisionLength) ..< (19 + anchorLength + revisionLength + dynRevisionLen)).bytes
-
-        revisionLength = revisionLength + dynRevisionLen
-
-        // message
-        let messageLength: UInt32 = rawData.subdata(in: (19 + anchorLength + revisionLength) ..< rawData.bytes.count).withUnsafeBytes { UInt32(littleEndian: $0.load(as: UInt32.self)) }
-
-        message = Int(messageLength)
+        return prefix(int32Size).withUnsafeBytes {
+            UInt32(littleEndian: $0.load(as: UInt32.self))
+        }
     }
 }
