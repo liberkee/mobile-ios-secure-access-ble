@@ -40,7 +40,7 @@ enum BulkMessageID: UInt8 {
     case alreadyInStorageApply = 0x8C
 }
 
-class MobileBulkResponse {
+public struct MobileBulkResponse: Equatable {
     let bulkID: UUID
     let anchor: String
     let revision: String

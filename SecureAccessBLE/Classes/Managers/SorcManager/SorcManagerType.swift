@@ -63,7 +63,7 @@ public protocol SorcManagerType {
     var serviceGrantChange: ChangeSignal<ServiceGrantChange> { get }
 
     /// The state of bulk service requesting with the action that led to this state
-    var bulkServiceChange: ChangeSignal<BulkServiceChange> { get }
+    var mobileBulkChange: ChangeSignal<MobileBulkChange> { get }
 
     /**
      Requests a service grant from the connected SORC

@@ -43,7 +43,7 @@ private class MockScanner: ScannerType {
 }
 
 private class MockSessionManager: SessionManagerType {
-    let bulkServiceChange = ChangeSubject<BulkServiceChange>(state: false)
+    let mobileBulkChange = ChangeSubject<MobileBulkChange>(state: .init(requestingBulkIDs: []))
 
     let connectionChange = ChangeSubject<ConnectionChange>(state: .disconnected)
 
@@ -276,15 +276,19 @@ class SorcManagerTests: XCTestCase {
         XCTAssertEqual(sessionManager.requestBulk, mobileBulk)
     }
 
-    func test_bulkResponseChange_ifSessionManagerIsRequesting_itIsRequestingBulkMessage() {
+    func test_mobileBulkChange_ifSessionManagerIsRequesting_itIsRequestingBulkMessage() {
         // Given
-        sessionManager.bulkServiceChange.onNext(.init(state: true, action: .requestBulk))
+        sessionManager.mobileBulkChange.onNext(.init(
+            state: .init(requestingBulkIDs: [sorcIDB, sorcIDA]),
+            action: .requestMobileBulk(bulkID: sorcIDA, accepted: true)
+        )
+        )
 
         // When
-        let state = sorcManager.bulkServiceChange.state
+        let state = sorcManager.mobileBulkChange.state
 
         // Then
-        XCTAssertEqual(state, true)
+        XCTAssertEqual(state, .init(requestingBulkIDs: [sorcIDB, sorcIDA]))
     }
 
     func test_serviceGrantChange_ifSessionManagerIsRequestingServiceGrants_itIsRequestingServiceGrants() {
@@ -301,16 +305,37 @@ class SorcManagerTests: XCTestCase {
         XCTAssertEqual(state, .init(requestingServiceGrantIDs: [1, 2, 3]))
     }
 
-    func test_bulkResponseChange_ifSessionManagerChangesBulkResponseState_itNotifiesBulkMessageChange() {
+    func test_mobileBulkChange_ifSessionManagerChangesMobileBulkState_itNotifiesBulkMessageChange() {
         // Given
-        var receivedChange: BulkServiceChange?
-        _ = sorcManager.bulkServiceChange.subscribe { change in
+        var receivedChange: MobileBulkChange?
+        _ = sorcManager.mobileBulkChange.subscribe { change in
             receivedChange = change
         }
 
         // When
-        let change = BulkServiceChange(state: true, action: .requestBulk)
-        sessionManager.bulkServiceChange.onNext(change)
+        let change = MobileBulkChange(
+            state: .init(requestingBulkIDs: [sorcIDB]),
+            action: .requestMobileBulk(bulkID: sorcIDB, accepted: true)
+        )
+        sessionManager.mobileBulkChange.onNext(change)
+
+        // Then
+        XCTAssertEqual(receivedChange, change)
+    }
+
+    func test_mobileBulkChange_ifMobileBulkResponseFailed_itNotifiesBulkMessageChange() {
+        // Given
+        var receivedChange: MobileBulkChange?
+        _ = sorcManager.mobileBulkChange.subscribe { change in
+            receivedChange = change
+        }
+
+        // When
+        let change = MobileBulkChange(
+            state: .init(requestingBulkIDs: []),
+            action: .responseDataFailed(error: .unsupportedBulkProtocolVersion)
+        )
+        sessionManager.mobileBulkChange.onNext(change)
 
         // Then
         XCTAssertEqual(receivedChange, change)

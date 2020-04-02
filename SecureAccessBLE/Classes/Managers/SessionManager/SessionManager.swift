@@ -10,7 +10,7 @@ import Foundation
 
 /// Sends and receives service messages. Manages heartbeats.
 class SessionManager: SessionManagerType {
-    let bulkServiceChange: ChangeSubject<BulkServiceChange> = ChangeSubject<BulkServiceChange>(state: false)
+    let mobileBulkChange: ChangeSubject<MobileBulkChange> = ChangeSubject<MobileBulkChange>(state: .init(requestingBulkIDs: []))
 
     let connectionChange = ChangeSubject<ConnectionChange>(state: .disconnected)
 
@@ -108,49 +108,65 @@ class SessionManager: SessionManagerType {
 
     func requestBulk(_ bulk: MobileBulk) {
         guard case .connected = connectionChange.state else {
-            applyBulkChangeAction(.requestFailed)
+            applyMobileBulkChangeAction(.requestFailed(bulkID: bulk.bulkId, error: .notConnected))
             return
         }
         do {
             let bulkTransmitMessage = try BulkTransmitMessage(mobileBulk: bulk)
             let message = SorcMessage(
-                id: .bulkTranferRequest,
+                id: .bulkTransferRequest,
                 payload: bulkTransmitMessage
             )
             do {
                 try enqueueMessage(message)
-                applyBulkChangeAction(.requestBulk)
+                applyMobileBulkChangeAction(.requestMobileBulk(bulkID: bulk.bulkId, accepted: true))
             } catch {
-                applyBulkChangeAction(.requestFailed)
+                applyMobileBulkChangeAction(.requestMobileBulk(bulkID: bulk.bulkId, accepted: false))
             }
         } catch {
-            applyBulkChangeAction(.requestFailed)
+            applyMobileBulkChangeAction(.requestFailed(bulkID: bulk.bulkId, error: .receivedInvalidData))
         }
     }
 
     // MARK: - Private methods -
 
-    private func applyBulkChangeAction(_ action: BulkServiceChange.Action) {
+    private func applyMobileBulkChangeAction(_ action: MobileBulkChange.Action) {
         switch action {
         case .initial:
             return
-        case .requestBulk:
-            bulkServiceChange.onNext(.init(
-                state: true,
-                action: .requestBulk
+        case let .requestMobileBulk(bulkID: uuid, accepted: accepted):
+            var ids = mobileBulkChange.state.requestingBulkIDs
+            if accepted {
+                ids.append(uuid)
+            }
+            let state = MobileBulkChange.State(requestingBulkIDs: ids)
+            mobileBulkChange.onNext(.init(
+                state: state,
+                action: .requestMobileBulk(bulkID: uuid, accepted: accepted)
             ))
         case let .responseReceived(bulkResponseMessage):
-            bulkServiceChange.onNext(.init(
-                state: false,
+
+            var ids = mobileBulkChange.state.requestingBulkIDs
+            ids.remove(at: 0)
+            let state = MobileBulkChange.State(requestingBulkIDs: ids)
+            mobileBulkChange.onNext(.init(
+                state: state,
                 action: .responseReceived(bulkResponseMessage)
-            )
-            )
-        case .requestFailed:
-            bulkServiceChange.onNext(.init(
-                state: false,
-                action: .requestFailed
-            )
-            )
+            ))
+        case let .requestFailed(bulkID: uuid, error: error):
+            messageQueue.clear()
+            let state = MobileBulkChange.State(requestingBulkIDs: [])
+            mobileBulkChange.onNext(.init(
+                state: state,
+                action: .requestFailed(bulkID: uuid, error: error)
+            ))
+        case let .responseDataFailed(error: error):
+            messageQueue.clear()
+            let state = MobileBulkChange.State(requestingBulkIDs: [])
+            mobileBulkChange.onNext(.init(
+                state: state,
+                action: .responseDataFailed(error: error)
+            ))
         }
     }
 
@@ -301,17 +317,44 @@ class SessionManager: SessionManagerType {
             }
             resetLastHeartBeatResponseDate()
             applyServiceGrantChangeAction(.responseReceived(response))
-        case .bulkTranferResponse:
-            guard let bulkResponseMessage = try? BulkResponseMessage(rawData: message.data) else {
-                applyBulkChangeAction(.requestFailed)
-                return
-            }
-            applyBulkChangeAction(.responseReceived(bulkResponseMessage))
+        case .bulkTransferResponse:
+            mobileBulkTransferResponse(for: message.data)
         default:
             return
         }
-
         sendNextMessageIfPossible()
+    }
+
+    private func mobileBulkTransferResponse(for data: Data) {
+        do {
+            let bulkResponseMessage = try BulkResponseMessage(rawData: data)
+            do {
+                let mobileBulkResponse = try MobileBulkResponse(bulkResponseMessage: bulkResponseMessage)
+                applyMobileBulkChangeAction(.responseReceived(mobileBulkResponse))
+            } catch {
+                applyMobileBulkResponseFailed(error: error)
+            }
+        } catch {
+            applyBulkResponseMessageFailed(error: error)
+        }
+    }
+
+    private func applyBulkResponseMessageFailed(error: Error) {
+        if case BulkResponseMessage.Error.unsupportedBulkProtocolVersion = error {
+            applyMobileBulkChangeAction(.responseDataFailed(error: .unsupportedBulkProtocolVersion))
+        } else if case BulkResponseMessage.Error.badFormat = error {
+            applyMobileBulkChangeAction(.responseDataFailed(error: .receivedInvalidAnchor))
+        }
+    }
+
+    private func applyMobileBulkResponseFailed(error: Error) {
+        if case MobileBulkResponse.Error.badAnchorFormat = error {
+            applyMobileBulkChangeAction(.responseDataFailed(error: .receivedInvalidAnchor))
+        } else if case MobileBulkResponse.Error.badBulkIDFormat = error {
+            applyMobileBulkChangeAction(.responseDataFailed(error: .receivedInvalidBulkID))
+        } else if case MobileBulkResponse.Error.badRevisionFormat = error {
+            applyMobileBulkChangeAction(.responseDataFailed(error: .receivedInvalidRevision))
+        }
     }
 
     private func applyServiceGrantChangeAction(_ action: ServiceGrantChange.Action) {

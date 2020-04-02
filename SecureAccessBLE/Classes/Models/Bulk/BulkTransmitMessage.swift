@@ -25,7 +25,7 @@ struct BulkTransmitMessage: SorcMessagePayload {
         self.metadata = metadata
         self.content = content
         var data = Data()
-        data.append(SorcMessageID.bulkTranferRequest.rawValue)
+        data.append(SorcMessageID.bulkTransferRequest.rawValue)
         data.append(0x02) // protocol
         data.append(contentsOf: bulkID)
         data.append(type.data)

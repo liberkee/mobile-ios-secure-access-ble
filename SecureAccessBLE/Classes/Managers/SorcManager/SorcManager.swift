@@ -100,15 +100,15 @@ public class SorcManager: SorcManagerType {
     private var serviceGrantChangeSubject = ChangeSubject<ServiceGrantChange>(state: .init(requestingServiceGrantIDs: []))
     fileprivate let disposeBag = DisposeBag()
 
-    private var bulkServiceChangeSubject = ChangeSubject<BulkServiceChange>(state: false)
-    public var bulkServiceChange: ChangeSignal<BulkServiceChange> {
-        return bulkServiceChangeSubject.asSignal()
+    private var mobilebulkChangeSubject = ChangeSubject<MobileBulkChange>(state: .init(requestingBulkIDs: []))
+    public var mobileBulkChange: ChangeSignal<MobileBulkChange> {
+        return mobilebulkChangeSubject.asSignal()
     }
 
-    private func subscribeToBulkResponseChange() {
-        sessionManager.bulkServiceChange.subscribeNext { [weak self] change in
+    private func subscribeToMobileBulkChange() {
+        sessionManager.mobileBulkChange.subscribeNext { [weak self] change in
             guard let strongSelf = self else { return }
-            strongSelf.bulkServiceChangeSubject.onNext(change)
+            strongSelf.mobilebulkChangeSubject.onNext(change)
         }.disposed(by: disposeBag)
     }
 
@@ -161,7 +161,7 @@ public class SorcManager: SorcManagerType {
         self.scanner = scanner
         self.sessionManager = sessionManager
         subscribeToServiceGrantChange()
-        subscribeToBulkResponseChange()
+        subscribeToMobileBulkChange()
         setUpTracking()
     }
 
