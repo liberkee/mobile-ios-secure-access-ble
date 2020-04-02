@@ -1,3 +1,7 @@
+# [3.12.0] - 2020-04-02
+
+- Added support for Xcode 11.4
+
 # [3.11.0] - 2020-03-20
 
 - Added timeout handling for discovery

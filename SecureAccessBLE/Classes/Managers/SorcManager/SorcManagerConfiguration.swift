@@ -34,10 +34,10 @@ extension SorcManager {
 
         /// The interval a timer is triggered to remove outdated discovered SORCs
         public let removeOutdatedSorcsInterval: TimeInterval?
-        
+
         /// The interval for throttling message frame sending on the transportation layer. Only useful if the hardware devices has issues processing the data frames.
         public let dataFrameMessagesInterval: TimeInterval?
-        
+
         /// :nodoc:
         public init(
             heartbeatInterval: TimeInterval? = nil,

@@ -5,11 +5,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 ### Added
-- 2020-03-26 : (PRGDA-27)  : Added throttling sending queue for data frames on transport layer to support tiny devices 
-
 ### Changed
 ### Fixed
 ### Removed
+
+## [3.12.0] - 2020-04-02
+
+### Added
+- 2020-03-26 : (PRGDA-27)  : Added throttling sending queue for data frames on transport layer to support tiny devices 
+- 2020-04-02 : (PLB2B-1070)  : Build with Xcode 11.4
 
 ## [3.11.0] - 2020-03-20
 
