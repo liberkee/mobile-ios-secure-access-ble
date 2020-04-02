@@ -18,7 +18,7 @@ class MobileBulkResponseTests: QuickSpec {
             beforeEach {
                 let data = Data([
                     0x02, // protocol version
-                    0x37, 0x41, 0x35, 0x31, 0x41, 0x42, 0x30, 0x31, 0x36, 0x30, 0x46, 0x35, 0x34, 0x33, 0x37, 0x38, // bulk id
+                    0x7A, 0x51, 0xAB, 0x01, 0x60, 0xF5, 0x43, 0x78, 0x8C, 0x72, 0x37, 0x6B, 0x63, 0x0D, 0xF5, 0x17, // bulk id
                     0x04, 0x00, 0x00, 0x00, // anchor length, little endian uint32
                     0x4F, 0x4D, 0x47, 0x21, // anchor
                     0x05, 0x00, 0x00, 0x00, // revision length, little endian uint32
@@ -36,7 +36,7 @@ class MobileBulkResponseTests: QuickSpec {
                     expect(sut).toNot(beNil())
                 }
                 it("does contain bulkID") {
-                    let bulkID = "7A51AB0160F54378"
+                    let bulkID = UUID(uuidString: "7A51AB01-60F5-4378-8C72-376B630DF517")
                     expect(sut?.bulkID) == bulkID
                 }
                 it("does contain anchor") {
@@ -50,25 +50,6 @@ class MobileBulkResponseTests: QuickSpec {
                 it("does contain message") {
                     let message = 1
                     expect(sut?.message) == message
-                }
-                context("does not contain proper bulkID") {
-                    beforeEach {
-                        let data = Data([
-                            0x02, // protocol version
-                            0x37, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xBA, 0xFF, // bulk id
-                            0x04, 0x00, 0x00, 0x00, // anchor length, little endian uint32
-                            0x4F, 0x4D, 0x47, 0x21, // anchor
-                            0x05, 0x00, 0x00, 0x00, // revision length, little endian uint32
-                            0x48, 0x65, 0x6C, 0x6C, 0x6F, // revision
-                            0x01, 0x00, 0x00, 0x00 // message, uint32
-                        ])
-                        bulkResponseMessage = try? BulkResponseMessage(rawData: data)
-                    }
-                    it("throw bulkid error") {
-                        expect {
-                            try MobileBulkResponse(bulkResponseMessage: bulkResponseMessage)
-                        }.to(throwError(MobileBulkResponse.Error.badBulkIDFormat))
-                    }
                 }
             }
         }
