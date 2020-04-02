@@ -53,7 +53,7 @@ class MobileBulkResponse {
     }
 
     init(bulkResponseMessage: BulkResponseMessage) throws {
-        guard let bulkID = UUID(data: bulkResponseMessage.bulkID.data) else { throw Error.badBulkIDFormat }
+        guard let bulkID = UUID(data: Data(bulkResponseMessage.bulkID)) else { throw Error.badBulkIDFormat }
         self.bulkID = bulkID
 
         guard let anchor = String(bytes: bulkResponseMessage.anchor, encoding: .ascii) else { throw Error.badAnchorFormat }
@@ -63,11 +63,5 @@ class MobileBulkResponse {
         self.revision = revision
 
         message = bulkResponseMessage.message
-    }
-}
-
-extension Array where Element == UInt8 {
-    var data: Data {
-        return Data(self)
     }
 }
