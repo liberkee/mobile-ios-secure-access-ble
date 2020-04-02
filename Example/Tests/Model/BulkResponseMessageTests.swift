@@ -10,6 +10,7 @@ import Nimble
 import Quick
 @testable import SecureAccessBLE
 
+// swiftlint:disable line_length
 class BulkResponseMessageTests: QuickSpec {
     override func spec() {
         describe("init from data") {
