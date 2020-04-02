@@ -10,6 +10,7 @@
 		015EED572432514C0093443B /* BulkResponseMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015EED562432514C0093443B /* BulkResponseMessage.swift */; };
 		015EED5B24334F0C0093443B /* BulkResponseMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015EED5A24334F0C0093443B /* BulkResponseMessageTests.swift */; };
 		015EED8D2434BB4E0093443B /* MobileBulkResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015EED8C2434BB4E0093443B /* MobileBulkResponseTests.swift */; };
+		015EED8F2435EC820093443B /* BulkServiceChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015EED8E2435EC820093443B /* BulkServiceChange.swift */; };
 		01AF0A0E242CDE440052DD9C /* MobileBulkResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0A0D242CDE440052DD9C /* MobileBulkResponse.swift */; };
 		01AF0A10242DF2690052DD9C /* MobileBulk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0A0F242DF2690052DD9C /* MobileBulk.swift */; };
 		01AF0A12242E26770052DD9C /* BulkTransferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0A11242E26770052DD9C /* BulkTransferTests.swift */; };
@@ -108,6 +109,7 @@
 		015EED562432514C0093443B /* BulkResponseMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkResponseMessage.swift; sourceTree = "<group>"; };
 		015EED5A24334F0C0093443B /* BulkResponseMessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkResponseMessageTests.swift; sourceTree = "<group>"; };
 		015EED8C2434BB4E0093443B /* MobileBulkResponseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileBulkResponseTests.swift; sourceTree = "<group>"; };
+		015EED8E2435EC820093443B /* BulkServiceChange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkServiceChange.swift; sourceTree = "<group>"; };
 		01AF0A0D242CDE440052DD9C /* MobileBulkResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileBulkResponse.swift; sourceTree = "<group>"; };
 		01AF0A0F242DF2690052DD9C /* MobileBulk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileBulk.swift; sourceTree = "<group>"; };
 		01AF0A11242E26770052DD9C /* BulkTransferTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkTransferTests.swift; sourceTree = "<group>"; };
@@ -241,6 +243,7 @@
 				01AF0A0D242CDE440052DD9C /* MobileBulkResponse.swift */,
 				01AF0A0F242DF2690052DD9C /* MobileBulk.swift */,
 				015EED562432514C0093443B /* BulkResponseMessage.swift */,
+				015EED8E2435EC820093443B /* BulkServiceChange.swift */,
 			);
 			path = Bulk;
 			sourceTree = "<group>";
@@ -962,6 +965,7 @@
 				9917E9DD1FBAF7C8002D5CE3 /* ConnectionChange.swift in Sources */,
 				9917E9F31FBAF7E7002D5CE3 /* ConnectionManagerConfiguration.swift in Sources */,
 				9917E9DE1FBAF7C8002D5CE3 /* ServiceGrantChange.swift in Sources */,
+				015EED8F2435EC820093443B /* BulkServiceChange.swift in Sources */,
 				9913240C20D94CA1001D83FC /* HSMLogging.swift in Sources */,
 				9917E9E21FBAF7CE002D5CE3 /* SessionManagerConfiguration.swift in Sources */,
 				9917E9EC1FBAF7E2002D5CE3 /* TransportConnectionChange.swift in Sources */,

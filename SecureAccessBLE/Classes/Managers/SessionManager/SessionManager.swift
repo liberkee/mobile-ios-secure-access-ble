@@ -10,6 +10,8 @@ import Foundation
 
 /// Sends and receives service messages. Manages heartbeats.
 class SessionManager: SessionManagerType {
+    let bulkServiceChange: ChangeSubject<BulkServiceChange> = ChangeSubject<BulkServiceChange>(state: false)
+
     let connectionChange = ChangeSubject<ConnectionChange>(state: .disconnected)
 
     let serviceGrantChange = ChangeSubject<ServiceGrantChange>(state: .init(requestingServiceGrantIDs: []))
@@ -104,7 +106,53 @@ class SessionManager: SessionManagerType {
         applyServiceGrantChangeAction(.requestServiceGrant(id: serviceGrantID, accepted: accepted))
     }
 
+    func requestBulk(_ bulk: MobileBulk) {
+        guard case .connected = connectionChange.state else {
+            applyBulkChangeAction(.requestFailed)
+            return
+        }
+        do {
+            let bulkTransmitMessage = try BulkTransmitMessage(mobileBulk: bulk)
+            let message = SorcMessage(
+                id: .bulkTranferRequest,
+                payload: bulkTransmitMessage
+            )
+            do {
+                try enqueueMessage(message)
+                applyBulkChangeAction(.requestBulk)
+            } catch {
+                applyBulkChangeAction(.requestFailed)
+            }
+        } catch {
+            applyBulkChangeAction(.requestFailed)
+        }
+    }
+
     // MARK: - Private methods -
+
+    private func applyBulkChangeAction(_ action: BulkServiceChange.Action) {
+        switch action {
+        case .initial:
+            return
+        case .requestBulk:
+            bulkServiceChange.onNext(.init(
+                state: true,
+                action: .requestBulk
+            ))
+        case let .responseReceived(bulkResponseMessage):
+            bulkServiceChange.onNext(.init(
+                state: false,
+                action: .responseReceived(bulkResponseMessage)
+            )
+            )
+        case .requestFailed:
+            bulkServiceChange.onNext(.init(
+                state: false,
+                action: .requestFailed
+            )
+            )
+        }
+    }
 
     private func reset() {
         stopSendingHeartbeat()
@@ -253,6 +301,12 @@ class SessionManager: SessionManagerType {
             }
             resetLastHeartBeatResponseDate()
             applyServiceGrantChangeAction(.responseReceived(response))
+        case .bulkTranferResponse:
+            guard let bulkResponseMessage = try? BulkResponseMessage(rawData: message.data) else {
+                applyBulkChangeAction(.requestFailed)
+                return
+            }
+            applyBulkChangeAction(.responseReceived(bulkResponseMessage))
         default:
             return
         }

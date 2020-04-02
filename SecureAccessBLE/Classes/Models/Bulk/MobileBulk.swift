@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct MobileBulk {
+public struct MobileBulk: Equatable {
     enum Error: Swift.Error {
         case metadataFormat
         case contentFormat

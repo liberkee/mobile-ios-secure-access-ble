@@ -100,6 +100,18 @@ public class SorcManager: SorcManagerType {
     private var serviceGrantChangeSubject = ChangeSubject<ServiceGrantChange>(state: .init(requestingServiceGrantIDs: []))
     fileprivate let disposeBag = DisposeBag()
 
+    private var bulkServiceChangeSubject = ChangeSubject<BulkServiceChange>(state: false)
+    public var bulkServiceChange: ChangeSignal<BulkServiceChange> {
+        return bulkServiceChangeSubject.asSignal()
+    }
+
+    private func subscribeToBulkResponseChange() {
+        sessionManager.bulkServiceChange.subscribeNext { [weak self] change in
+            guard let strongSelf = self else { return }
+            strongSelf.bulkServiceChangeSubject.onNext(change)
+        }.disposed(by: disposeBag)
+    }
+
     private func subscribeToServiceGrantChange() {
         sessionManager.serviceGrantChange.subscribeNext { [weak self] change in
             guard let strongSelf = self else { return }
@@ -131,6 +143,15 @@ public class SorcManager: SorcManagerType {
         sessionManager.requestServiceGrant(serviceGrantID)
     }
 
+    /**
+     Requests a bulk data for transmission to the remote SORC
+
+     - Parameter bulk: The bulk data to be transferred
+     */
+    public func requestBulk(_ bulk: MobileBulk) {
+        sessionManager.requestBulk(bulk)
+    }
+
     init(
         bluetoothStatusProvider: BluetoothStatusProviderType,
         scanner: ScannerType,
@@ -140,6 +161,7 @@ public class SorcManager: SorcManagerType {
         self.scanner = scanner
         self.sessionManager = sessionManager
         subscribeToServiceGrantChange()
+        subscribeToBulkResponseChange()
         setUpTracking()
     }
 

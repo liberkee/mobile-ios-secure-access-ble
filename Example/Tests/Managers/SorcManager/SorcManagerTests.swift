@@ -43,6 +43,8 @@ private class MockScanner: ScannerType {
 }
 
 private class MockSessionManager: SessionManagerType {
+    let bulkServiceChange = ChangeSubject<BulkServiceChange>(state: false)
+
     let connectionChange = ChangeSubject<ConnectionChange>(state: .disconnected)
 
     var connectToSorcCalledWithArguments: (leaseToken: LeaseToken, leaseTokenBlob: LeaseTokenBlob)?
@@ -60,6 +62,11 @@ private class MockSessionManager: SessionManagerType {
     var requestServiceGrantCalledWithID: ServiceGrantID?
     func requestServiceGrant(_ serviceGrantID: ServiceGrantID) {
         requestServiceGrantCalledWithID = serviceGrantID
+    }
+
+    var requestBulk: MobileBulk?
+    func requestBulk(_ bulk: MobileBulk) {
+        requestBulk = bulk
     }
 }
 
@@ -251,6 +258,35 @@ class SorcManagerTests: XCTestCase {
         XCTAssertEqual(sessionManager.requestServiceGrantCalledWithID!, serviceGrantIDA)
     }
 
+    func test_requestBulk_itDeledatesTheCallToSessionManager() {
+        let metadata =
+            """
+            {\"revision\" : \"58fbf1b56958d47dd08987cba89554c430f2c8ca#000000\",
+            \"anchor\" : \"Tugen2Config\",
+            \"signature\" : \"MD4CHQCTDQjGXFF0ar2tVR2Og3Tc7sTQPrJTd3T\\/T\\/kMAh0AiKEE6SWqVl+zhATQsitq05wgqPlAo\\/G\\/KEb0YQ==\",
+            \"deviceId\" : \"00000000-0000-0000-0000-000000000000\",
+            \"firmwareVersion\" : \"0.8.69RC4\"}
+            """
+        let content = "AAAAAAUAAAAAAAAAAgACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+        let mobileBulk = try? MobileBulk(bulkID: sorcIDA, type: .configBulk, metadata: metadata, content: content)
+        // When
+        sorcManager.requestBulk(mobileBulk!)
+
+        // Then
+        XCTAssertEqual(sessionManager.requestBulk, mobileBulk)
+    }
+
+    func test_bulkResponseChange_ifSessionManagerIsRequesting_itIsRequestingBulkMessage() {
+        // Given
+        sessionManager.bulkServiceChange.onNext(.init(state: true, action: .requestBulk))
+
+        // When
+        let state = sorcManager.bulkServiceChange.state
+
+        // Then
+        XCTAssertEqual(state, true)
+    }
+
     func test_serviceGrantChange_ifSessionManagerIsRequestingServiceGrants_itIsRequestingServiceGrants() {
         // Given
         sessionManager.serviceGrantChange.onNext(.init(
@@ -263,6 +299,21 @@ class SorcManagerTests: XCTestCase {
 
         // Then
         XCTAssertEqual(state, .init(requestingServiceGrantIDs: [1, 2, 3]))
+    }
+
+    func test_bulkResponseChange_ifSessionManagerChangesBulkResponseState_itNotifiesBulkMessageChange() {
+        // Given
+        var receivedChange: BulkServiceChange?
+        _ = sorcManager.bulkServiceChange.subscribe { change in
+            receivedChange = change
+        }
+
+        // When
+        let change = BulkServiceChange(state: true, action: .requestBulk)
+        sessionManager.bulkServiceChange.onNext(change)
+
+        // Then
+        XCTAssertEqual(receivedChange, change)
     }
 
     func test_serviceGrantChange_ifSessionManagerChangesServiceGrantState_itNotifiesServiceGrantChange() {

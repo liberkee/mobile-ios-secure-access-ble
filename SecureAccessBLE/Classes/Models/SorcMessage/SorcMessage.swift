@@ -38,10 +38,10 @@ enum SorcMessageID: UInt8 {
     case serviceGrant = 0x20
     /// Service grant trigger message
     case serviceGrantTrigger = 0x30
-    /// Response message for bulk transfer from mobile to SORC
-    case bulkTranferPhoneResponse = 0x60
+    /// Request message for bulk transfer from mobile to SORC
+    case bulkTranferRequest = 0x60
     /// Response message for bulk transfer from SORC to mobile
-    case bulkTranferSorcResponse = 0x61
+    case bulkTranferResponse = 0x61
     /// Not valid
     case notValid = 0xC8
 }

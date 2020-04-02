@@ -62,12 +62,22 @@ public protocol SorcManagerType {
     /// The state of service grant requesting with the action that led to this state
     var serviceGrantChange: ChangeSignal<ServiceGrantChange> { get }
 
+    /// The state of bulk service requesting with the action that led to this state
+    var bulkServiceChange: ChangeSignal<BulkServiceChange> { get }
+
     /**
      Requests a service grant from the connected SORC
 
      - Parameter serviceGrantID: The ID the of the service grant
      */
     func requestServiceGrant(_ serviceGrantID: ServiceGrantID)
+
+    /**
+     Requests a bulk data for transmission to the remote SORC
+
+     - Parameter bulk: The bulk data to be transferred
+     */
+    func requestBulk(_ bulk: MobileBulk)
 
     /// :nodoc:
     func registerInterceptor(_ interceptor: SorcInterceptor)

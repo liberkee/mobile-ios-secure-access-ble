@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct BulkResponseMessage: SorcMessagePayload {
+public struct BulkResponseMessage: SorcMessagePayload, Equatable {
     var data: Data
 
     enum Error: Swift.Error {
