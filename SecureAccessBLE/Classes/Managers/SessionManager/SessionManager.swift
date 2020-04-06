@@ -124,7 +124,7 @@ class SessionManager: SessionManagerType {
                 applyMobileBulkChangeAction(.requestMobileBulk(bulkID: bulk.bulkId, accepted: false))
             }
         } catch {
-            applyMobileBulkChangeAction(.requestFailed(bulkID: bulk.bulkId, error: .receivedInvalidData))
+            applyMobileBulkChangeAction(.requestFailed(bulkID: bulk.bulkId, error: .invalidBulkFormat))
         }
     }
 
@@ -302,6 +302,8 @@ class SessionManager: SessionManagerType {
         guard case let .success(message) = result else {
             if lastMessageSent?.id == .serviceGrant {
                 applyServiceGrantChangeAction(.requestFailed(.receivedInvalidData))
+            } else if lastMessageSent?.id == .bulkTransferResponse {
+                applyMobileBulkChangeAction(.responseDataFailed(error: .receivedInvalidData))
             }
             lastMessageSent = nil
             return
@@ -318,21 +320,21 @@ class SessionManager: SessionManagerType {
             resetLastHeartBeatResponseDate()
             applyServiceGrantChangeAction(.responseReceived(response))
         case .bulkTransferResponse:
-            mobileBulkTransferResponse(for: message.data)
+            applyMobileBulkTransferResponse(for: message.message)
         default:
             return
         }
         sendNextMessageIfPossible()
     }
 
-    private func mobileBulkTransferResponse(for data: Data) {
+    private func applyMobileBulkTransferResponse(for data: Data) {
         do {
             let bulkResponseMessage = try BulkResponseMessage(rawData: data)
             do {
                 let mobileBulkResponse = try MobileBulkResponse(bulkResponseMessage: bulkResponseMessage)
                 applyMobileBulkChangeAction(.responseReceived(mobileBulkResponse))
             } catch {
-                applyMobileBulkResponseFailed(error: error)
+                applyMobileBulkChangeAction(.responseDataFailed(error: .receivedInvalidData))
             }
         } catch {
             applyBulkResponseMessageFailed(error: error)
@@ -343,17 +345,7 @@ class SessionManager: SessionManagerType {
         if case BulkResponseMessage.Error.unsupportedBulkProtocolVersion = error {
             applyMobileBulkChangeAction(.responseDataFailed(error: .unsupportedBulkProtocolVersion))
         } else if case BulkResponseMessage.Error.badFormat = error {
-            applyMobileBulkChangeAction(.responseDataFailed(error: .receivedInvalidAnchor))
-        }
-    }
-
-    private func applyMobileBulkResponseFailed(error: Error) {
-        if case MobileBulkResponse.Error.badAnchorFormat = error {
-            applyMobileBulkChangeAction(.responseDataFailed(error: .receivedInvalidAnchor))
-        } else if case MobileBulkResponse.Error.badBulkIDFormat = error {
-            applyMobileBulkChangeAction(.responseDataFailed(error: .receivedInvalidBulkID))
-        } else if case MobileBulkResponse.Error.badRevisionFormat = error {
-            applyMobileBulkChangeAction(.responseDataFailed(error: .receivedInvalidRevision))
+            applyMobileBulkChangeAction(.responseDataFailed(error: .receivedInvalidData))
         }
     }
 

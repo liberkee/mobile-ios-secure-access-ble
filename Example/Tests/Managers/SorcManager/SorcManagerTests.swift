@@ -276,6 +276,34 @@ class SorcManagerTests: XCTestCase {
         XCTAssertEqual(sessionManager.requestBulk, mobileBulk)
     }
 
+    func test_mobileBulkChange_ifSessionManagerIsRequesting_itIsRequestingBulkMessage() {
+        // Given
+        sessionManager.mobileBulkChange.onNext(.init(
+            state: .init(requestingBulkIDs: [sorcIDB, sorcIDA]),
+            action: .requestMobileBulk(bulkID: sorcIDA, accepted: true)
+        ))
+
+        // When
+        let state = sorcManager.mobileBulkChange.state
+
+        // Then
+        XCTAssertEqual(state, .init(requestingBulkIDs: [sorcIDB, sorcIDA]))
+    }
+
+    func test_serviceGrantChange_ifSessionManagerIsRequestingServiceGrants_itIsRequestingServiceGrants() {
+        // Given
+        sessionManager.serviceGrantChange.onNext(.init(
+            state: .init(requestingServiceGrantIDs: [1, 2, 3]),
+            action: .requestServiceGrant(id: 2, accepted: true)
+        ))
+
+        // When
+        let state = sorcManager.serviceGrantChange.state
+
+        // Then
+        XCTAssertEqual(state, .init(requestingServiceGrantIDs: [1, 2, 3]))
+    }
+
     func test_mobileBulkChange_ifSessionManagerChangesMobileBulkState_itNotifiesBulkMessageChange() {
         // Given
         var receivedChange: MobileBulkChange?
@@ -287,6 +315,24 @@ class SorcManagerTests: XCTestCase {
         let change = MobileBulkChange(
             state: .init(requestingBulkIDs: [sorcIDB]),
             action: .requestMobileBulk(bulkID: sorcIDB, accepted: true)
+        )
+        sessionManager.mobileBulkChange.onNext(change)
+
+        // Then
+        XCTAssertEqual(receivedChange, change)
+    }
+
+    func test_mobileBulkChange_ifMobileBulkResponseFailed_itNotifiesBulkMessageChange() {
+        // Given
+        var receivedChange: MobileBulkChange?
+        _ = sorcManager.mobileBulkChange.subscribe { change in
+            receivedChange = change
+        }
+
+        // When
+        let change = MobileBulkChange(
+            state: .init(requestingBulkIDs: []),
+            action: .responseDataFailed(error: .unsupportedBulkProtocolVersion)
         )
         sessionManager.mobileBulkChange.onNext(change)
 

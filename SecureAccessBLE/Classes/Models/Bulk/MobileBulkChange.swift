@@ -53,13 +53,13 @@ extension MobileBulkChange {
     public enum MobileBulkRequestFailedError: Swift.Error, CustomStringConvertible {
         case notConnected
 
-        case receivedInvalidData
+        case invalidBulkFormat
 
         /// Description of the error
         public var description: String {
             switch self {
-            case .receivedInvalidData:
-                return "Invalid data was received."
+            case .invalidBulkFormat:
+                return "Invalid data format."
             case .notConnected:
                 return "Not connected to the SORC"
             }
@@ -68,12 +68,6 @@ extension MobileBulkChange {
 
     public enum MobileBulkDataReceivedError: Swift.Error, CustomStringConvertible {
         case unsupportedBulkProtocolVersion
-
-        case receivedInvalidBulkID
-
-        case receivedInvalidAnchor
-
-        case receivedInvalidRevision
 
         case receivedInvalidData
 
@@ -84,12 +78,6 @@ extension MobileBulkChange {
                 return "Invalid data was received."
             case .unsupportedBulkProtocolVersion:
                 return "Invalid Bulk protocol version was received"
-            case .receivedInvalidBulkID:
-                return "Invalid bulkid was received."
-            case .receivedInvalidAnchor:
-                return "Invalid Anchor was received."
-            case .receivedInvalidRevision:
-                return "Invalid revision was received."
             }
         }
     }
