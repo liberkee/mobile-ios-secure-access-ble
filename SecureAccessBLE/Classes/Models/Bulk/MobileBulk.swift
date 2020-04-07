@@ -14,7 +14,7 @@ public struct MobileBulk: Equatable {
         case contentFormat
     }
 
-    public enum BulkType: UInt32 {
+    public enum BulkType: Int {
         case configBulk = 10
         case applyBulk = 20
     }

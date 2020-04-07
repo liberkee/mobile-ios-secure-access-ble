@@ -145,7 +145,6 @@ class SessionManager: SessionManagerType {
                 action: .requestMobileBulk(bulkID: uuid, accepted: accepted)
             ))
         case let .responseReceived(bulkResponseMessage):
-
             var ids = mobileBulkChange.state.requestingBulkIDs
             ids.remove(at: 0)
             let state = MobileBulkChange.State(requestingBulkIDs: ids)
