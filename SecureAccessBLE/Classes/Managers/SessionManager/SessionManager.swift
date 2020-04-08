@@ -143,7 +143,7 @@ class SessionManager: SessionManagerType {
             mobileBulkChange.onNext(.init(
                 state: state,
                 action: .requestMobileBulk(bulkID: uuid, accepted: accepted)
-                ))
+            ))
         case let .responseReceived(bulkResponseMessage):
             var ids = mobileBulkChange.state.requestingBulkIDs
             if ids.count > 0 {
@@ -153,21 +153,21 @@ class SessionManager: SessionManagerType {
             mobileBulkChange.onNext(.init(
                 state: state,
                 action: .responseReceived(bulkResponseMessage)
-                ))
+            ))
         case let .requestFailed(bulkID: uuid, error: error):
             messageQueue.clear()
             let state = MobileBulkChange.State(requestingBulkIDs: [])
             mobileBulkChange.onNext(.init(
                 state: state,
                 action: .requestFailed(bulkID: uuid, error: error)
-                ))
+            ))
         case let .responseDataFailed(error: error):
             messageQueue.clear()
             let state = MobileBulkChange.State(requestingBulkIDs: [])
             mobileBulkChange.onNext(.init(
                 state: state,
                 action: .responseDataFailed(error: error)
-                ))
+            ))
         }
     }
 
