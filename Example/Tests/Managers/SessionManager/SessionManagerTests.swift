@@ -21,6 +21,16 @@ private let serviceGrantAResponseMessage = SorcMessage(rawData: Data([
     UInt8(serviceGrantIDAResponse), 0x00,
     ServiceGrantResponse.Status.pending.rawValue
 ]))
+private let mobileBulkResponseMessage = SorcMessage(rawData: Data([
+    0x61, // message id
+    0x02, // protocol version
+    0xBE, 0x2F, 0xEC, 0xAF, 0x73, 0x4B, 0x42, 0x52, 0x83, 0x12, 0x59, 0xD4, 0x77, 0x20, 0x0A, 0x20, // bulk id
+    0x0C, 0x00, 0x00, 0x00, // anchor length, little endian uint32
+    0x54, 0x75, 0x67, 0x65, 0x6E, 0x32, 0x43, 0x6F, 0x6E, 0x66, 0x69, 0x67, // anchor
+    0x05, 0x00, 0x00, 0x00, // revision length, little endian uint32
+    0x48, 0x65, 0x6C, 0x6C, 0x6F, // revision
+    0x8C, 0x00, 0x00, 0x00 // message, uint32
+]))
 
 private class MockSecurityManager: SecurityManagerType {
     let connectionChange = ChangeSubject<SecureConnectionChange>(state: .disconnected)
@@ -205,6 +215,30 @@ class SessionManagerTests: XCTestCase {
         XCTAssertEqual(receivedServiceGrantChange, expectedServiceGrantChange)
     }
 
+    func test_requestBulk_ifConnectedAndQueueIsNotFullAndNotWaitingForResponse_itSendsMessageToSecurityManager() {
+        // Given
+        prepareConnected()
+
+        var receivedMobileBulkChange: MobileBulkChange!
+        _ = sessionManager.mobileBulkChange.subscribeNext { change in
+            receivedMobileBulkChange = change
+        }
+
+        // When
+        sessionManager.requestBulk(mobileBulk1!)
+
+        // Then
+        let bulkTransmitMessage = try? BulkTransmitMessage(mobileBulk: mobileBulk1!)
+        let expectedMessage = SorcMessage(id: .bulkTransferRequest, payload: bulkTransmitMessage!)
+        XCTAssertEqual(securityManager.sendMessageCalledWithMessage!, expectedMessage)
+
+        let expectedMobilebulkChange = MobileBulkChange(
+            state: .init(requestingBulkIDs: [sorcIDA]),
+            action: .requestMobileBulk(bulkID: sorcIDA, accepted: true)
+        )
+        XCTAssertEqual(receivedMobileBulkChange, expectedMobilebulkChange)
+    }
+
     func test_requestServiceGrant_ifConnectedAndQueueIsNotFullAndWaitingForResponse_itEnqueuesMessage() {
         // Given
         prepareConnected()
@@ -232,6 +266,34 @@ class SessionManagerTests: XCTestCase {
             action: .requestServiceGrant(id: serviceGrantIDB, accepted: true)
         )
         XCTAssertEqual(receivedServiceGrantChange, expectedServiceGrantChange)
+    }
+
+    func test_requestMobileBulk_ifConnectedAndQueueIsNotFullAndWaitingForResponse_itEnqueuesMessage() {
+        // Given
+        prepareConnected()
+
+        sessionManager.requestBulk(mobileBulk1!)
+
+        var receivedMobileBulkChange: MobileBulkChange!
+        _ = sessionManager.mobileBulkChange.subscribeNext { change in
+            receivedMobileBulkChange = change
+        }
+
+        // When
+        sessionManager.requestBulk(mobileBulk2!)
+
+        // Then
+        let bulkTransmitMessage = try? BulkTransmitMessage(mobileBulk: mobileBulk1!)
+        let expectedMessage = SorcMessage(id: .bulkTransferRequest, payload: bulkTransmitMessage!)
+
+        // did not receive mobilebulk2
+        XCTAssertEqual(securityManager.sendMessageCalledWithMessage!, expectedMessage)
+
+        let expectedMobilebulkChange = MobileBulkChange(
+            state: .init(requestingBulkIDs: [sorcIDA, sorcIDA]),
+            action: .requestMobileBulk(bulkID: sorcIDA, accepted: true)
+        )
+        XCTAssertEqual(receivedMobileBulkChange, expectedMobilebulkChange)
     }
 
     func test_requestServiceGrant_ifConnectedAndMessageIsEnqueuedAndReceivedServiceGrantResponse_itNotfifiesResponseAndItSendsEnqueuedMessage() {
@@ -264,6 +326,72 @@ class SessionManagerTests: XCTestCase {
         let expectedMessage = SorcMessage(
             id: SorcMessageID.serviceGrant,
             payload: ServiceGrantRequest(serviceGrantID: serviceGrantIDB)
+        )
+        XCTAssertEqual(securityManager.sendMessageCalledWithMessage!, expectedMessage)
+    }
+
+    func test_requestMobilebulk_ifConnectedAndMessageIsEnqueuedAndReceivedError_itNotfifiesError() {
+        // Given
+        prepareConnected()
+
+        sessionManager.requestBulk(mobileBulk1!)
+
+        var receivedMobileBulk: MobileBulkChange!
+        _ = sessionManager.mobileBulkChange.subscribeNext { change in
+            receivedMobileBulk = change
+        }
+
+        // When
+        let error = MobileBulkResponse.Error.badRevisionFormat
+        securityManager.messageReceived.onNext(.failure(error))
+
+        // Then
+        let expectedMobileBulkChange = MobileBulkChange(
+            state: .init(requestingBulkIDs: []),
+            action: .responseDataFailed(error: .receivedInvalidData)
+        )
+
+        XCTAssertEqual(expectedMobileBulkChange, receivedMobileBulk)
+    }
+
+    func test_requestMobilebulk_ifConnectedAndMessageIsEnqueuedAndReceivedMobilebulkResponse_itNotifiesResponseAndItSendsEnqueuedMessage() {
+        // Given
+        prepareConnected()
+
+        sessionManager.requestBulk(mobileBulk1!)
+        sessionManager.requestBulk(mobileBulk2!)
+
+        var receivedMobileBulk: MobileBulkChange!
+        _ = sessionManager.mobileBulkChange.subscribeNext { change in
+            receivedMobileBulk = change
+        }
+
+        // When
+        securityManager.messageReceived.onNext(.success(mobileBulkResponseMessage))
+
+        // Then
+        let bulkResponseMessage = try? BulkResponseMessage(rawData: Data([
+            0x02, // protocol version
+            0xBE, 0x2F, 0xEC, 0xAF, 0x73, 0x4B, 0x42, 0x52, 0x83, 0x12, 0x59, 0xD4, 0x77, 0x20, 0x0A, 0x20, // bulk id
+            0x0C, 0x00, 0x00, 0x00, // anchor length, little endian uint32
+            0x54, 0x75, 0x67, 0x65, 0x6E, 0x32, 0x43, 0x6F, 0x6E, 0x66, 0x69, 0x67, // anchor
+            0x05, 0x00, 0x00, 0x00, // revision length, little endian uint32
+            0x48, 0x65, 0x6C, 0x6C, 0x6F, // revision
+            0x8C, 0x00, 0x00, 0x00 // message, uint32
+        ]))
+        let mobileBulkResponse = try? MobileBulkResponse(bulkResponseMessage: bulkResponseMessage!)
+
+        let expectedMobileBulkChange = MobileBulkChange(
+            state: .init(requestingBulkIDs: [sorcIDA]),
+            action: .responseReceived(mobileBulkResponse!)
+        )
+
+        XCTAssertEqual(receivedMobileBulk!, expectedMobileBulkChange)
+
+        let bulkTransmitMessage = try? BulkTransmitMessage(mobileBulk: mobileBulk2!)
+        let expectedMessage = SorcMessage(
+            id: SorcMessageID.bulkTransferRequest,
+            payload: bulkTransmitMessage!
         )
         XCTAssertEqual(securityManager.sendMessageCalledWithMessage!, expectedMessage)
     }
@@ -312,10 +440,64 @@ class SessionManagerTests: XCTestCase {
         XCTAssertEqual(receivedServiceGrantChange, expectedServiceGrantChange)
     }
 
+    func test_requestMobile_ifConnectedAndQueueIsFull_itDoesNotSendMessageAndItNotifiesNotAccepted() {
+        // Given
+        let configuration = SessionManager.Configuration(maximumEnqueuedMessages: 2)
+
+        let sendHeartBeatsTimer: CreateTimer = { _ in self.defaultTimer() }
+
+        let checkHeartbeatsResponseTimer: CreateTimer = { _ in self.defaultTimer() }
+
+        sessionManager = SessionManager(securityManager: securityManager,
+                                        configuration: configuration,
+                                        sendHeartbeatsTimer: sendHeartBeatsTimer,
+                                        checkHeartbeatsResponseTimer: checkHeartbeatsResponseTimer)
+        prepareConnected()
+
+        // added and instantly removed from queue
+        sessionManager.requestBulk(mobileBulk2!)
+        // enqueued and staying in queue
+        sessionManager.requestBulk(mobileBulk1!)
+        sessionManager.requestBulk(mobileBulk1!)
+        // not accepted, queue is full
+        sessionManager.requestBulk(mobileBulk2!)
+
+        var receivedMobileBulkChange: MobileBulkChange!
+        _ = sessionManager.mobileBulkChange.subscribeNext { change in
+            receivedMobileBulkChange = change
+        }
+
+        // When
+        sessionManager.requestBulk(mobileBulk1!)
+
+        // Then
+        let bulkTransmitMessage = try? BulkTransmitMessage(mobileBulk: mobileBulk1!)
+        let unexpectedMessage = SorcMessage(
+            id: SorcMessageID.bulkTransferRequest,
+            payload: bulkTransmitMessage!
+        )
+        XCTAssertNotEqual(securityManager.sendMessageCalledWithMessage!, unexpectedMessage)
+
+        let expectedMobieBulkChange = MobileBulkChange(
+            state: .init(requestingBulkIDs: [sorcIDA, sorcIDA, sorcIDA]),
+            action: .requestMobileBulk(bulkID: sorcIDA, accepted: false)
+        )
+        XCTAssertEqual(receivedMobileBulkChange, expectedMobieBulkChange)
+    }
+
     func test_requestServiceGrant_ifNotConnected_itDoesNotSendMessage() {
         // Given
         // When
         sessionManager.requestServiceGrant(serviceGrantIDA)
+
+        // Then
+        XCTAssertNil(securityManager.sendMessageCalledWithMessage)
+    }
+
+    func test_requestMobileBulk_ifNotConnected_itDoesNotSendMessage() {
+        // Given
+        // When
+        sessionManager.requestBulk(mobileBulk1!)
 
         // Then
         XCTAssertNil(securityManager.sendMessageCalledWithMessage)
@@ -337,6 +519,24 @@ class SessionManagerTests: XCTestCase {
             action: .requestFailed(.notConnected)
         )
         XCTAssertEqual(receivedServiceGrantChange!, expectedServiceGrantChange)
+    }
+
+    func test_requestMobileBulk_ifNotConnected_itNotifiesNotConnectedError() {
+        // Given
+        var receivedMobileBulk: MobileBulkChange!
+        _ = sessionManager.mobileBulkChange.subscribeNext { change in
+            receivedMobileBulk = change
+        }
+
+        // When
+        sessionManager.requestBulk(mobileBulk1!)
+
+        // Then
+        let expectedMobileBulkChange = MobileBulkChange(
+            state: .init(requestingBulkIDs: []),
+            action: .requestFailed(bulkID: sorcIDA, error: .notConnected)
+        )
+        XCTAssertEqual(receivedMobileBulk!, expectedMobileBulkChange)
     }
 
     // MARK: Heart beat handling
@@ -526,4 +726,32 @@ class SessionManagerTests: XCTestCase {
     private func defaultTimer() -> RepeatingBackgroundTimer {
         return RepeatingBackgroundTimer(timeInterval: 1000, queue: .main)
     }
+
+    private var mobileBulk1: MobileBulk? = {
+        let metadata =
+            """
+            {\"revision\" : \"Hello\",
+            \"anchor\" : \"Tugen2Config\",
+            \"signature\" : \"MD4CHQCTDQjGXFF0ar2tVR2Og3Tc7sTQPrJTd3T\\/T\\/kMAh0AiKEE6SWqVl+zhATQsitq05wgqPlAo\\/G\\/KEb0YQ==\",
+            \"deviceId\" : \"00000000-0000-0000-0000-000000000000\",
+            \"firmwareVersion\" : \"0.8.69RC4\"}
+            """
+        let content = "AAAAAAUAAAAAAAAAAgACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+
+        return try? MobileBulk(bulkID: sorcIDA, type: .configBulk, metadata: metadata, content: content)
+    }()
+
+    private var mobileBulk2: MobileBulk? = {
+        let metadata =
+            """
+            {\"revision\" : \"58fbf1b56958d47dd08987cba89554c430f2c8ca#000000\",
+            \"anchor\" : \"KeyControlConfig\",
+            \"signature\" : \"MD0CHQChf1SHoffCTG0a542RasrxCJLWW9MtroDfMocDAhx7DN3D82f6lVYxXCTJL5TUaseBtJTlC9abKQEC\",
+            \"deviceId\" : \"00000000-0000-0000-0000-000000000000\",
+            \"firmwareVersion\" : \"0.8.69RC4\"}
+            """
+        let content = "AAAAAAQAAAAAAAAAAQABAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAA=="
+
+        return try? MobileBulk(bulkID: sorcIDA, type: .configBulk, metadata: metadata, content: content)
+    }()
 }

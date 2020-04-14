@@ -10,8 +10,8 @@
  *  Message payload with blob data
  */
 struct LTBlobPayload: SorcMessagePayload {
-    /// start Payload as NSData
-    var data: Data
+    /// start Payload as Data
+    let data: Data
     /**
      Initialization point for Lease token blob payload
 

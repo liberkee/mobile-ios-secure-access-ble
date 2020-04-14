@@ -24,12 +24,12 @@ class DataFramePackage: NSObject {
 
     /// The message data the SorcMessage contains
     var message: Data {
-        let data = NSMutableData()
+        var data = Data()
 
         for frame in frames {
             data.append(frame.message)
         }
-        return data as Data
+        return data
     }
 
     /**

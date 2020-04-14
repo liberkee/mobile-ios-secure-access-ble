@@ -45,7 +45,7 @@ struct AesCbcTestCryptoManager: CryptoManager {
      */
     func encryptMessage(_ message: SorcMessage) -> Data {
         do {
-            let bytes: [UInt8] = try AES(key: key, blockMode: CBC(iv: iv), padding: Padding.noPadding).encrypt((message.data as Data).bytes)
+            let bytes: [UInt8] = try AES(key: key, blockMode: CBC(iv: iv), padding: Padding.noPadding).encrypt(message.data.bytes)
             let data = Data(bytes)
             return data
         } catch {
@@ -55,15 +55,15 @@ struct AesCbcTestCryptoManager: CryptoManager {
     }
 
     /**
-     All sending message will be encrypted to NSData object for Data transfer
+     All sending message will be encrypted to Data object for Data transfer
 
      - parameter message: comming SORC message object to encrypt
 
-     - returns: encrypted out put NSData object
+     - returns: encrypted out put Data object
      */
     func encryptRawMessage(_ message: Data) -> Data {
         do {
-            let bytes: [UInt8] = try AES(key: key, blockMode: CBC(iv: iv), padding: Padding.noPadding).encrypt((message as Data).bytes)
+            let bytes: [UInt8] = try AES(key: key, blockMode: CBC(iv: iv), padding: Padding.noPadding).encrypt(message.bytes)
             let data = Data(bytes)
             return data
         } catch {
@@ -81,7 +81,7 @@ struct AesCbcTestCryptoManager: CryptoManager {
      */
     func decryptData(_ data: Data) -> SorcMessage {
         do {
-            let bytes: [UInt8] = try AES(key: key, blockMode: CBC(iv: iv), padding: Padding.noPadding).decrypt((data as Data).bytes)
+            let bytes: [UInt8] = try AES(key: key, blockMode: CBC(iv: iv), padding: Padding.noPadding).decrypt(data.bytes)
             let data = Data(bytes)
             let message = SorcMessage(rawData: data)
             return message
@@ -92,15 +92,15 @@ struct AesCbcTestCryptoManager: CryptoManager {
     }
 
     /**
-     Only for tests used function to decrypt NSData object to NSData
+     Only for tests used function to decrypt Data object to Data
 
-     - parameter data: comming NSData object will be decrypted
+     - parameter data: comming Data object will be decrypted
 
-     - returns: decrypted NSData object as out put
+     - returns: decrypted Data object as out put
      */
     func decryptRawData(_ data: Data) -> Data {
         do {
-            let bytes: [UInt8] = try AES(key: key, blockMode: CBC(iv: iv), padding: Padding.noPadding).decrypt((data as Data).bytes)
+            let bytes: [UInt8] = try AES(key: key, blockMode: CBC(iv: iv), padding: Padding.noPadding).decrypt(data.bytes)
             let data = Data(bytes)
             return data
         } catch {

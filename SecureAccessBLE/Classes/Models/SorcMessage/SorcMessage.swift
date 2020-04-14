@@ -38,6 +38,10 @@ enum SorcMessageID: UInt8 {
     case serviceGrant = 0x20
     /// Service grant trigger message
     case serviceGrantTrigger = 0x30
+    /// Request message for bulk transfer from mobile to SORC
+    case bulkTransferRequest = 0x60
+    /// Response message for bulk transfer from SORC to mobile
+    case bulkTransferResponse = 0x61
     /// Not valid
     case notValid = 0xC8
 }
@@ -48,7 +52,7 @@ enum SorcMessageID: UInt8 {
 struct SorcMessage: Equatable {
     var id: SorcMessageID {
         var byteArray = [UInt8](repeating: 0x0, count: 1)
-        (data as Data).copyBytes(to: &byteArray, count: 1)
+        data.copyBytes(to: &byteArray, count: 1)
         if let validValue = SorcMessageID(rawValue: byteArray[0]) {
             return validValue
         } else {
@@ -62,7 +66,7 @@ struct SorcMessage: Equatable {
     }
 
     /// Start value of SORC message as Data
-    var data: Data = Data(bytes: UnsafePointer<UInt8>([0x00] as [UInt8]), count: 1)
+    let data: Data
 
     /**
      Initialization point of SORC message instance
@@ -85,10 +89,9 @@ struct SorcMessage: Equatable {
      */
     init(id: SorcMessageID, payload: SorcMessagePayload) {
         let payloadData = payload.data
-        let frameData = NSMutableData()
-        var idByte = id.rawValue
-        frameData.append(&idByte, length: 1)
+        var frameData = Data()
+        frameData.append(id.rawValue)
         frameData.append(payloadData as Data)
-        data = frameData as Data
+        data = frameData
     }
 }

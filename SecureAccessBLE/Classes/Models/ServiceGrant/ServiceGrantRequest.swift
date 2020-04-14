@@ -8,36 +8,21 @@
 
 import Foundation
 
-/**
- *  SORC messagepayload with service grant id
- */
-protocol ServiceGrant: SorcMessagePayload {
-    /**
-     Initilization point
-
-     - returns: Service grant object
-     */
-    init()
+/// The service grant request is forwarded by SORC to the secured object endpoint where the
+/// corresponding action is executed
+struct ServiceGrantRequest: SorcMessagePayload {
+    /// start value as Data
+    let data: Data
 
     /**
-     optional init with data
+     Initialization point
 
-     - parameter rawData: raw data the service grant contains
-
-     - returns: new service grant object
+     - returns: Service grant object for service grant request
+     - Parameter serviceGrantID: id of the service grant
      */
-    init(rawData: Data)
-}
-
-// MARK: - extension endpoint
-
-extension ServiceGrant {
     init(serviceGrantID: ServiceGrantID) {
-        let frameData = NSMutableData()
         var grantIDValue = serviceGrantID
-        frameData.append(&grantIDValue, length: 2)
-        self.init()
-        data = frameData as Data
+        data = Data(bytes: &grantIDValue, count: MemoryLayout<ServiceGrantID>.size)
     }
 
     /**
@@ -48,7 +33,6 @@ extension ServiceGrant {
      - returns: Service grant object
      */
     init(rawData: Data) {
-        self.init()
         data = rawData
     }
 
@@ -56,21 +40,5 @@ extension ServiceGrant {
         var byteArray = [UInt8](repeating: 0x0, count: 2)
         data.copyBytes(to: &byteArray, from: 0 ..< 2)
         return UInt16(byteArray[0])
-    }
-}
-
-/// The service grant request is forwarded by SORC to the secured object endpoint where the
-/// corresponding action is executed
-struct ServiceGrantRequest: ServiceGrant {
-    /// start value as NSData
-    var data: Data
-
-    /**
-     Initialization point
-
-     - returns: Service grant object for service grant request
-     */
-    init() {
-        data = Data()
     }
 }

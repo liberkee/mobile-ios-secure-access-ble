@@ -183,7 +183,7 @@ class TransportManager: TransportManagerType {
             HSMLog(message: "BLE - Sending/Receiving in progress", level: .debug)
         } else {
             sendingPackage = DataFramePackage(messageData: data, frameSize: messageFrameSize)
-            if let currentFrame = self.sendingPackage?.currentFrame {
+            if let currentFrame = sendingPackage?.currentFrame {
                 sendFrame(currentFrame)
             } else {
                 HSMLog(message: "BLE - Data frame package has no frames to send", level: .error)
@@ -232,7 +232,7 @@ class TransportManager: TransportManagerType {
         receivingPackage?.frames.append(frame)
 
         guard frame.type == .single || frame.type == .eop,
-            let package = self.receivingPackage else { return }
+            let package = receivingPackage else { return }
 
         resetReceivingPackage()
         let messageData = package.message

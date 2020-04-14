@@ -25,25 +25,25 @@ enum TestMessageType: UInt8 {
  *  The SORC message payload only for testing
  */
 struct TestMessage: SorcMessagePayload {
-    ///  start value defined as NSData
-    var data: Data
+    ///  start value defined as Data
+    let data: Data
 
     /**
      Initialization point for test message
 
-     - parameter message:     the message data defined as NSData
+     - parameter message:     the message data defined as Data
      - parameter commandType: message type for testing, see definition for TestMessageType above
 
      - returns: new Test message instance as SORC messag payload
      */
     init(message: Data, commandType: TestMessageType) {
-        let frameData = NSMutableData()
-        var commandType = commandType.rawValue
-        var messageLength = UInt16(message.count)
-        frameData.append(&commandType, length: 1)
-        frameData.append(&messageLength, length: 2)
+        var frameData = Data()
+        let commandType = commandType.rawValue
+        let messageLength = UInt16(message.count)
+        frameData.append(commandType.data)
+        frameData.append(messageLength.data)
         frameData.append(message)
-        data = frameData as Data
+        data = frameData
     }
 
     /**

@@ -36,7 +36,7 @@ struct DataFrame {
     /// Data frame type, see definition obove
     var type: DataFrameType {
         var byteArray = [UInt8](repeating: 0x0, count: 1)
-        (data as Data).copyBytes(to: &byteArray, count: 1)
+        data.copyBytes(to: &byteArray, count: 1)
         if let validValue = DataFrameType(rawValue: byteArray[0] >> 4) {
             return validValue
         } else {
@@ -48,7 +48,7 @@ struct DataFrame {
     var ackNeeded: Bool {
         let ackFlag: UInt8 = 0x01 << 1
         var byteArray = [UInt8](repeating: 0x0, count: 1)
-        (data as Data).copyBytes(to: &byteArray, count: 1)
+        data.copyBytes(to: &byteArray, count: 1)
         guard let flag = byteArray.first else {
             return false
         }
@@ -63,18 +63,16 @@ struct DataFrame {
     /// SN will be limited to 1 byte so that it will wrap around after 255 back to 0
     var sequenceNumber: UInt8 {
         var byteArray = [UInt8](repeating: 0x0, count: 1)
-        (data as Data).copyBytes(to: &byteArray, from: 1 ..< 2)
+        data.copyBytes(to: &byteArray, from: 1 ..< 2)
         return byteArray[0]
     }
 
     /// The length as UInt16
     var length: UInt16 {
         var byteArray = [UInt8](repeating: 0x0, count: 1)
-        (data as Data).copyBytes(to: &byteArray, from: 2 ..< 4)
-        let u16 = UnsafePointer(byteArray).withMemoryRebound(to: UInt16.self, capacity: 1) {
-            $0.pointee
-        }
-        return u16 // (UnsafePointer<UInt16>(byteArray)).pointee
+        data.copyBytes(to: &byteArray, from: 2 ..< 4)
+        let u16 = byteArray.withUnsafeBytes { $0.load(as: UInt16.self) }
+        return u16
     }
 
     /// Message data that will be ranported through TL-frame
@@ -86,7 +84,7 @@ struct DataFrame {
         return msg
     }
 
-    /// Start data as NSData
+    /// Start data as Data
     let data: Data
 
     /**
@@ -111,20 +109,20 @@ struct DataFrame {
      - returns: self object as Transport layer message fragments
      */
     init(message: Data, type: DataFrameType, sequenceNumber: UInt8, completeMessageLength: UInt16) {
-        let frameData = NSMutableData()
-        var typeByte = type.rawValue << 4
-        var sequence = sequenceNumber
-        var messageLength: UInt16!
+        var frameData = Data()
+        let typeByte = type.rawValue << 4
+        let sequence = sequenceNumber
+        let messageLength: UInt16
         if type == .sop {
             messageLength = UInt16(completeMessageLength)
         } else {
             messageLength = UInt16(message.count)
         }
 
-        frameData.append(&typeByte, length: 1)
-        frameData.append(&sequence, length: 1)
-        frameData.append(&messageLength, length: 2)
+        frameData.append(typeByte.data)
+        frameData.append(sequence.data)
+        frameData.append(messageLength.data)
         frameData.append(message)
-        data = frameData as Data
+        data = frameData
     }
 }
