@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// :nodoc:
 public enum BulkMessageID: Int {
     case unknownBulk = -1
     case anchorUnmatchConfig = 100
@@ -39,6 +40,7 @@ public enum BulkMessageID: Int {
     case alreadyInStorageApply = 140
 }
 
+/// :nodoc:
 public struct MobileBulkResponse: Equatable {
     public let bulkID: UUID
     public let anchor: String

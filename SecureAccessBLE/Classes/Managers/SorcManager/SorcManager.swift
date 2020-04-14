@@ -100,6 +100,7 @@ public class SorcManager: SorcManagerType {
     private var serviceGrantChangeSubject = ChangeSubject<ServiceGrantChange>(state: .init(requestingServiceGrantIDs: []))
     fileprivate let disposeBag = DisposeBag()
 
+    /// The state of bulk service requesting with the action that led to this state
     public var mobileBulkChange: ChangeSignal<MobileBulkChange> {
         sessionManager.mobileBulkChange.asSignal()
     }

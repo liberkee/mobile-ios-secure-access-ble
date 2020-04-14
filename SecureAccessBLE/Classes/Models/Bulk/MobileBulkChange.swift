@@ -6,7 +6,7 @@
 //  Copyright © 2020 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-/// Describes a change of mobile bulk requesting
+/// :nodoc:
 public struct MobileBulkChange: ChangeType, Equatable {
     public let state: State
 
@@ -16,26 +16,25 @@ public struct MobileBulkChange: ChangeType, Equatable {
         return MobileBulkChange(state: state, action: .initial)
     }
 
-    /// :nodoc:
     public init(state: State, action: Action) {
         self.state = state
         self.action = action
     }
 }
 
+/// :nodoc:
 extension MobileBulkChange {
-    /// The state the service grant request can be in
     public struct State: Equatable {
-        /// Currently requested service grant IDs
+        // Currently requested service grant IDs
         public let requestingBulkIDs: [UUID]
 
-        /// :nodoc:
         public init(requestingBulkIDs: [UUID]) {
             self.requestingBulkIDs = requestingBulkIDs
         }
     }
 }
 
+/// :nodoc:
 extension MobileBulkChange {
     public enum Action: Equatable {
         case initial
@@ -49,7 +48,7 @@ extension MobileBulkChange {
         case responseDataFailed(error: MobileBulkDataReceivedError)
     }
 
-    /// Error which can occur on `requestFailed` case
+    // Error which can occur on `requestFailed` case
     public enum MobileBulkRequestFailedError: Swift.Error, CustomStringConvertible {
         case notConnected
 
@@ -71,7 +70,7 @@ extension MobileBulkChange {
 
         case receivedInvalidData
 
-        /// Description of the error
+        // Description of the error
         public var description: String {
             switch self {
             case .receivedInvalidData:
