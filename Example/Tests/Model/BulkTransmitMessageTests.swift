@@ -50,6 +50,7 @@ class BulkTransmitMessageTests: QuickSpec {
 
                 let sut = try! BulkTransmitMessage(mobileBulk: mobileBulk)
 
+                expect(Data(sut.bulkID).uuidString) == uuidString
                 expect(sut.bulkID.count) == 16
                 expect(String(data: Data(sut.metadata), encoding: .ascii)) == metaData
                 expect(String(data: Data(sut.content), encoding: .utf8)) == "HUF"

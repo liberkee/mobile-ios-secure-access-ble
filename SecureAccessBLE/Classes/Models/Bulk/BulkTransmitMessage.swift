@@ -10,7 +10,7 @@ import Foundation
 
 struct BulkTransmitMessage: SorcMessagePayload {
     let bulkID: [UInt8]
-    let type: Int
+    let type: UInt32
     let metadata: [UInt8]
     let content: [UInt8]
     let data: Data
@@ -19,7 +19,7 @@ struct BulkTransmitMessage: SorcMessagePayload {
         case bulkIDFormat
     }
 
-    init(bulkID: [UInt8], type: Int, metadata: [UInt8], content: [UInt8]) {
+    init(bulkID: [UInt8], type: UInt32, metadata: [UInt8], content: [UInt8]) {
         self.bulkID = bulkID
         self.type = type
         self.metadata = metadata
@@ -27,7 +27,7 @@ struct BulkTransmitMessage: SorcMessagePayload {
         var data = Data()
         data.append(0x02) // protocol
         data.append(contentsOf: bulkID)
-        data.append(UInt32(type).data)
+        data.append(type.data)
         data.append(UInt32(metadata.count).data)
         data.append(contentsOf: metadata)
         data.append(UInt32(content.count).data)
@@ -40,7 +40,7 @@ struct BulkTransmitMessage: SorcMessagePayload {
             throw Error.bulkIDFormat
         }
         self.init(bulkID: bulkIDData,
-                  type: mobileBulk.type.rawValue,
+                  type: UInt32(mobileBulk.type.rawValue),
                   metadata: mobileBulk.metadata.bytes,
                   content: mobileBulk.content.bytes)
     }

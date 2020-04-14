@@ -352,7 +352,7 @@ class SessionManagerTests: XCTestCase {
         )
     }
 
-    func test_requestMobilebulk_ifConnectedAndMessageIsEnqueuedAndReceivedMobilebulktResponse_itNotfifiesResponseAndItSendsEnqueuedMessage() {
+    func test_requestMobilebulk_ifConnectedAndMessageIsEnqueuedAndReceivedMobilebulkResponse_itNotifiesResponseAndItSendsEnqueuedMessage() {
         // Given
         prepareConnected()
 
