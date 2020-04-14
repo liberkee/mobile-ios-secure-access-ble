@@ -8,13 +8,13 @@
 
 import Foundation
 
-public struct MobileBulk {
+public struct MobileBulk: Equatable {
     enum Error: Swift.Error {
         case metadataFormat
         case contentFormat
     }
 
-    public enum BulkType: UInt32 {
+    public enum BulkType: Int {
         case configBulk = 10
         case applyBulk = 20
     }

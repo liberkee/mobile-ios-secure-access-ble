@@ -100,6 +100,10 @@ public class SorcManager: SorcManagerType {
     private var serviceGrantChangeSubject = ChangeSubject<ServiceGrantChange>(state: .init(requestingServiceGrantIDs: []))
     fileprivate let disposeBag = DisposeBag()
 
+    public var mobileBulkChange: ChangeSignal<MobileBulkChange> {
+        sessionManager.mobileBulkChange.asSignal()
+    }
+
     private func subscribeToServiceGrantChange() {
         sessionManager.serviceGrantChange.subscribeNext { [weak self] change in
             guard let strongSelf = self else { return }
@@ -129,6 +133,15 @@ public class SorcManager: SorcManagerType {
                  loglevel: .info)
         HSMLog(message: "BLE - Request service grant", level: .verbose)
         sessionManager.requestServiceGrant(serviceGrantID)
+    }
+
+    /**
+     Requests a bulk data for transmission to the remote SORC
+
+     - Parameter bulk: The bulk data to be transferred
+     */
+    public func requestBulk(_ bulk: MobileBulk) {
+        sessionManager.requestBulk(bulk)
     }
 
     init(

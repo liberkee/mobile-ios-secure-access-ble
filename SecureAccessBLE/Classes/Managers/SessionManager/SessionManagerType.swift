@@ -14,5 +14,9 @@ protocol SessionManagerType {
 
     var serviceGrantChange: ChangeSubject<ServiceGrantChange> { get }
 
+    var mobileBulkChange: ChangeSubject<MobileBulkChange> { get }
+
     func requestServiceGrant(_ serviceGrantID: ServiceGrantID)
+
+    func requestBulk(_ bulk: MobileBulk)
 }

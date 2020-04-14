@@ -23,7 +23,7 @@ class MobileBulkResponseTests: QuickSpec {
                     0x4F, 0x4D, 0x47, 0x21, // anchor
                     0x05, 0x00, 0x00, 0x00, // revision length, little endian uint32
                     0x48, 0x65, 0x6C, 0x6C, 0x6F, // revision
-                    0x01, 0x00, 0x00, 0x00 // message, uint32
+                    0x8C, 0x00, 0x00, 0x00 // message, uint32
                 ])
                 bulkResponseMessage = try! BulkResponseMessage(rawData: data)
             }
@@ -48,8 +48,8 @@ class MobileBulkResponseTests: QuickSpec {
                     expect(sut?.revision) == revision
                 }
                 it("does contain message") {
-                    let message = 1
-                    expect(sut?.message) == message
+                    let message = 140
+                    expect(sut?.message.rawValue) == message
                 }
             }
         }

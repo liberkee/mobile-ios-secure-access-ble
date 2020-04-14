@@ -25,7 +25,6 @@ struct BulkTransmitMessage: SorcMessagePayload {
         self.metadata = metadata
         self.content = content
         var data = Data()
-        data.append(SorcMessageID.bulkTranferPhoneResponse.rawValue)
         data.append(0x02) // protocol
         data.append(contentsOf: bulkID)
         data.append(type.data)
@@ -37,12 +36,19 @@ struct BulkTransmitMessage: SorcMessagePayload {
     }
 
     init(mobileBulk: MobileBulk) throws {
-        guard let bulkIDData = mobileBulk.bulkId.lowercasedUUIDString.data(using: .utf8) else {
+        guard let bulkIDData = mobileBulk.bulkId.asUInt8Array() else {
             throw Error.bulkIDFormat
         }
-        self.init(bulkID: bulkIDData.bytes,
-                  type: mobileBulk.type.rawValue,
+        self.init(bulkID: bulkIDData,
+                  type: UInt32(mobileBulk.type.rawValue),
                   metadata: mobileBulk.metadata.bytes,
                   content: mobileBulk.content.bytes)
+    }
+}
+
+extension UUID {
+    public func asUInt8Array() -> [UInt8]? {
+        let (u1, u2, u3, u4, u5, u6, u7, u8, u9, u10, u11, u12, u13, u14, u15, u16) = uuid
+        return [u1, u2, u3, u4, u5, u6, u7, u8, u9, u10, u11, u12, u13, u14, u15, u16]
     }
 }

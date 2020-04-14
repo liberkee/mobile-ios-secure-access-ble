@@ -10,6 +10,7 @@
 		015EED572432514C0093443B /* BulkResponseMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015EED562432514C0093443B /* BulkResponseMessage.swift */; };
 		015EED5B24334F0C0093443B /* BulkResponseMessageTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015EED5A24334F0C0093443B /* BulkResponseMessageTests.swift */; };
 		015EED8D2434BB4E0093443B /* MobileBulkResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015EED8C2434BB4E0093443B /* MobileBulkResponseTests.swift */; };
+		015EED9224361FD80093443B /* MobileBulkChange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 015EED9024361D680093443B /* MobileBulkChange.swift */; };
 		01AF0A0E242CDE440052DD9C /* MobileBulkResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0A0D242CDE440052DD9C /* MobileBulkResponse.swift */; };
 		01AF0A10242DF2690052DD9C /* MobileBulk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0A0F242DF2690052DD9C /* MobileBulk.swift */; };
 		01AF0A12242E26770052DD9C /* BulkTransferTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AF0A11242E26770052DD9C /* BulkTransferTests.swift */; };
@@ -108,6 +109,7 @@
 		015EED562432514C0093443B /* BulkResponseMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkResponseMessage.swift; sourceTree = "<group>"; };
 		015EED5A24334F0C0093443B /* BulkResponseMessageTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkResponseMessageTests.swift; sourceTree = "<group>"; };
 		015EED8C2434BB4E0093443B /* MobileBulkResponseTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileBulkResponseTests.swift; sourceTree = "<group>"; };
+		015EED9024361D680093443B /* MobileBulkChange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MobileBulkChange.swift; sourceTree = "<group>"; };
 		01AF0A0D242CDE440052DD9C /* MobileBulkResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileBulkResponse.swift; sourceTree = "<group>"; };
 		01AF0A0F242DF2690052DD9C /* MobileBulk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MobileBulk.swift; sourceTree = "<group>"; };
 		01AF0A11242E26770052DD9C /* BulkTransferTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkTransferTests.swift; sourceTree = "<group>"; };
@@ -241,6 +243,7 @@
 				01AF0A0D242CDE440052DD9C /* MobileBulkResponse.swift */,
 				01AF0A0F242DF2690052DD9C /* MobileBulk.swift */,
 				015EED562432514C0093443B /* BulkResponseMessage.swift */,
+				015EED9024361D680093443B /* MobileBulkChange.swift */,
 			);
 			path = Bulk;
 			sourceTree = "<group>";
@@ -953,6 +956,7 @@
 				01AF0A0E242CDE440052DD9C /* MobileBulkResponse.swift in Sources */,
 				9917EA051FBAF819002D5CE3 /* ServiceGrantRequest.swift in Sources */,
 				9917E9FA1FBAF7FE002D5CE3 /* SorcToPhoneResponse.swift in Sources */,
+				015EED9224361FD80093443B /* MobileBulkChange.swift in Sources */,
 				9917E9FC1FBAF804002D5CE3 /* DefaultMessage.swift in Sources */,
 				C580EE0823EC1BA9002F0A26 /* TrackingEvent.swift in Sources */,
 				9917E9E01FBAF7CE002D5CE3 /* SessionManagerType.swift in Sources */,
@@ -1161,7 +1165,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = mh_dylib;
-				MARKETING_VERSION = 3.11.0;
+				MARKETING_VERSION = 3.12.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1202,7 +1206,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MACH_O_TYPE = mh_dylib;
-				MARKETING_VERSION = 3.11.0;
+				MARKETING_VERSION = 3.12.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
