@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## [Unreleased]
 
 ### Added
+- 2020-04-14 : (PLCII-952)  : Added bulk message transfer
+
 ### Changed
 ### Fixed
 ### Removed
