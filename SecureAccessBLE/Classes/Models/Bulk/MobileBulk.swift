@@ -18,7 +18,7 @@ public struct MobileBulk: Equatable {
         // content not in a correct format
         case contentFormat
     }
-    
+
     // Type of the bulk
     public enum BulkType: Int {
         // config bulk
@@ -26,7 +26,7 @@ public struct MobileBulk: Equatable {
         // apply bulk
         case applyBulk = 20
     }
-    
+
     // bulk id
     public let bulkId: UUID
     // bulk type

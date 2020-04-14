@@ -1,3 +1,7 @@
+# [3.13.0] - 2020-04-14
+
+- Added bulk message transfer
+
 # [3.12.0] - 2020-04-02
 
 - Added support for Xcode 11.4
