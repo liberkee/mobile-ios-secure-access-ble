@@ -303,7 +303,7 @@ class SessionManager: SessionManagerType {
         guard case let .success(message) = result else {
             if lastMessageSent?.id == .serviceGrant {
                 applyServiceGrantChangeAction(.requestFailed(.receivedInvalidData))
-            } else if lastMessageSent?.id == .bulkTransferResponse {
+            } else if lastMessageSent?.id == .bulkTransferRequest {
                 applyMobileBulkChangeAction(.responseDataFailed(error: .receivedInvalidData))
             }
             lastMessageSent = nil

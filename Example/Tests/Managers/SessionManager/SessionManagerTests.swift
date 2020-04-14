@@ -347,9 +347,11 @@ class SessionManagerTests: XCTestCase {
 
         // Then
         let expectedMobileBulkChange = MobileBulkChange(
-            state: .init(requestingBulkIDs: [sorcIDA]),
+            state: .init(requestingBulkIDs: []),
             action: .responseDataFailed(error: .receivedInvalidData)
         )
+
+        XCTAssertEqual(expectedMobileBulkChange, receivedMobileBulk)
     }
 
     func test_requestMobilebulk_ifConnectedAndMessageIsEnqueuedAndReceivedMobilebulkResponse_itNotifiesResponseAndItSendsEnqueuedMessage() {
