@@ -44,11 +44,9 @@ jobs:
     - name: Create Coverage Report
       run: |
         make coverage
-    - name: Build
-      run: |
-        make build
     - uses: actions/upload-artifact@v2
       name: Upload Test and Coverage Reports
       with:
         name: test_reports
         path: test_reports/
+        
