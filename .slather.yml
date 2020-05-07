@@ -2,7 +2,7 @@ coverage_service: cobertura_xml
 xcodeproj: Example/SecureAccessBLE.xcodeproj
 workspace: Example/SecureAccessBLE.xcworkspace
 scheme: SecureAccessBLE-Example
-output_directory: ./test-reports
+output_directory: ./test_reports
 source_directory: SecureAccessBLE/Classes
 binary_basename: SecureAccessBLE
 ignore:
