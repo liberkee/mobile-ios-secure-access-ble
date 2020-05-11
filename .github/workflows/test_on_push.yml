@@ -1,0 +1,52 @@
+
+name: Test on Push
+
+on: 
+  push:
+    branches:
+      - develop
+      - feature/*
+
+jobs:
+  test:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        os: [ macos-latest ]
+        xcode: ['/Applications/Xcode_11.4.app/Contents/Developer']
+        ruby: [ '2.6' ]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.6
+    - name: Cache Gems
+      uses: actions/cache@v1
+      with:
+        path: vendor/bundle
+        key: bundle-use-ruby-${{ matrix.os }}-${{ matrix.ruby }}-${{ hashFiles('**/Gemfile.lock') }}
+        restore-keys: |
+          bundle-use-ruby-${{ matrix.os }}-${{ matrix.ruby }}-
+    - name: Setup
+      run: |
+        make setup
+    - name: Run Linter
+      run: |
+        make lint
+    - uses: actions/upload-artifact@v2
+      name: Upload Lint Report
+      with:
+        name: lint_reports
+        path: lint_reports/
+    - name: Run Tests
+      run: |
+        make test
+    - name: Create Coverage Report
+      run: |
+        make coverage
+    - uses: actions/upload-artifact@v2
+      name: Upload Test and Coverage Reports
+      with:
+        name: test_reports
+        path: test_reports/
+        

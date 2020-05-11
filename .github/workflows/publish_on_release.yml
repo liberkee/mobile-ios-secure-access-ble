@@ -1,0 +1,65 @@
+
+name: Publish on Release
+
+on: 
+  release:
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        os: [ macos-latest ]
+        xcode: ['/Applications/Xcode_11.4.app/Contents/Developer']
+        ruby: [ '2.6' ]
+    steps:
+    - uses: actions/checkout@v2
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.6
+    - name: Cache Gems
+      uses: actions/cache@v1
+      with:
+        path: vendor/bundle
+        key: bundle-use-ruby-${{ matrix.os }}-${{ matrix.ruby }}-${{ hashFiles('**/Gemfile.lock') }}
+        restore-keys: |
+          bundle-use-ruby-${{ matrix.os }}-${{ matrix.ruby }}-
+    - name: Setup
+      run: |
+        make setup
+    - name: Get Version
+      id: get_version
+      run: |
+        echo "::set-env name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)"
+    - name: Add Watermark
+      run: |
+        make watermark.add
+      env:
+        WATERMARK: ${{ secrets.WATERMARK }}
+    - name: Update Version
+      run: |
+        make version.update
+      env:
+        VERSION: ${{ env.VERSION }}
+    - name: Generate Documentation
+      run: |
+        make documentation.generate.distribution
+    - name: Build
+      run: |
+        make build
+      env:
+        VERSION: ${{ env.VERSION }}
+        STATIC_BUILD: false
+    - name: Create Archive
+      run: |
+        make archive
+    - name: Upload Release Assets
+      uses: svenstaro/upload-release-action@v1-release
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: ./SecureAccessBLE.zip
+        asset_name: SecureAccessBLE.zip
+        tag: ${{ env.VERSION }}
+        overwrite: true
+        
