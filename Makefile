@@ -28,18 +28,29 @@ coverage:
 documentation.generate:
 	bundle exec jazzy
 
+documentation.generate.distribution:
+	bundle exec jazzy --min-acl public --config .jazzy-dist.yaml
+
 version:
 	@bundle exec pod ipc spec ${LIBRARY_NAME}.podspec | jq -r '.version'
 
-#build: @ 📦 Builds the library
+clean:
+	rm -rf Libs Docs BUILD Example/Carthage
+
+#build: @ ⚙️  Builds the library
 build:
-	cd Example && \
-	xcodebuild -workspace "${LIBRARY_NAME}.xcworkspace" \
-	-scheme "${LIBRARY_NAME}" \
-    -configuration "Release" \
-    -destination generic/platform=iOS \
-    ONLY_ACTIVE_ARCH=NO \
-    ENABLE_BITCODE=YES \
-    OTHER_CFLAGS="-fembed-bitcode" \
-    BITCODE_GENERATION_MODE=bitcode \
-    clean build
+	sh scripts/build.sh
+
+watermark.add:
+	sh scripts/add_watermark.sh
+
+#version.update: @ ⬆️  Updates the version inside the library's plist
+version.update:
+	/usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString ${VERSION}" Example/${LIBRARY_NAME}/Info.plist
+
+#archive: @ 📦 Archives the build for distribution
+archive:
+	rm -f "Libs/Dynamic/README.md" "Libs/Dynamic/RELEASE-NOTES.md"
+	rm -f "Libs/Static/README.md" "Libs/Static/RELEASE-NOTES.md"
+	rm -f "Libs/README.md" "Libs/RELEASE-NOTES.md"
+	zip -r ${LIBRARY_NAME}.zip Docs Libs
