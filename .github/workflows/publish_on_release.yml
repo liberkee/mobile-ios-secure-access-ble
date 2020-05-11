@@ -1,5 +1,5 @@
 
-name: Test on Push
+name: Publish on Release
 
 on: 
   release:
@@ -28,6 +28,10 @@ jobs:
     - name: Setup
       run: |
         make setup
+    - name: Get Version
+      id: get_version
+      run: |
+        echo "::set-env name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)"
     - name: Add Watermark
       run: |
         make watermark.add
@@ -37,7 +41,7 @@ jobs:
       run: |
         make version.update
       env:
-        VERSION: ${{ env.GITHUB_REF }}
+        VERSION: ${{ env.VERSION }}
     - name: Generate Documentation
       run: |
         make documentation.generate.distribution
@@ -45,7 +49,7 @@ jobs:
       run: |
         make build
       env:
-        VERSION: ${{ env.GITHUB_REF }}
+        VERSION: ${{ env.VERSION }}
         STATIC_BUILD: false
     - name: Create Archive
       run: |
@@ -56,6 +60,6 @@ jobs:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: ./SecureAccessBLE.zip
         asset_name: SecureAccessBLE.zip
-        tag: ${{ env.GITHUB_REF }}
+        tag: ${{ env.VERSION }}
         overwrite: true
         
