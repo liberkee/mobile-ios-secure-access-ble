@@ -85,6 +85,9 @@ jobs:
         key: bundle-use-ruby-${{ matrix.os }}-${{ matrix.ruby }}-${{ hashFiles('**/Gemfile.lock') }}
         restore-keys: |
           bundle-use-ruby-${{ matrix.os }}-${{ matrix.ruby }}-
+    - name: Setup Xcode
+      run: |
+        xcode-select --switch /Applications/Xcode_11.3.app/Contents/Developer
     - name: Setup
       run: |
         make setup
