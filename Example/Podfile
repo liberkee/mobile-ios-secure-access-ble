@@ -7,10 +7,9 @@ target 'SecureAccessBLE_Tests' do
   pod 'SwiftLint', '0.28.0'
 
   pod 'SecureAccessBLE', :path => '../'
-  #pod 'SecureAccessBLE', :git => 'https://github.com/hufsm/mobile-ios-ble.git', :branch => 'migrate_to_swift_4'
   
-  pod 'Quick', '~> 2.0.0'
-  pod 'Nimble', '~> 8.0.1'
+  pod 'Quick', '~> 3.1'
+  pod 'Nimble', '~> 9.0'
   
 end
 

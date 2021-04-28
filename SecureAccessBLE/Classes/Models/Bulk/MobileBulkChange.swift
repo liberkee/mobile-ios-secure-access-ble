@@ -23,8 +23,8 @@ public struct MobileBulkChange: ChangeType, Equatable {
 }
 
 /// :nodoc:
-extension MobileBulkChange {
-    public struct State: Equatable {
+public extension MobileBulkChange {
+    struct State: Equatable {
         // Currently requested service grant IDs
         public let requestingBulkIDs: [UUID]
 
@@ -35,8 +35,8 @@ extension MobileBulkChange {
 }
 
 /// :nodoc:
-extension MobileBulkChange {
-    public enum Action: Equatable {
+public extension MobileBulkChange {
+    enum Action: Equatable {
         case initial
 
         case requestMobileBulk(bulkID: UUID, accepted: Bool)
@@ -49,7 +49,7 @@ extension MobileBulkChange {
     }
 
     // Error which can occur on `requestFailed` case
-    public enum MobileBulkRequestFailedError: Swift.Error, CustomStringConvertible {
+    enum MobileBulkRequestFailedError: Swift.Error, CustomStringConvertible {
         case notConnected
 
         case invalidBulkFormat
@@ -65,7 +65,7 @@ extension MobileBulkChange {
         }
     }
 
-    public enum MobileBulkDataReceivedError: Swift.Error, CustomStringConvertible {
+    enum MobileBulkDataReceivedError: Swift.Error, CustomStringConvertible {
         case unsupportedBulkProtocolVersion
 
         case receivedInvalidData

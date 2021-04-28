@@ -26,9 +26,9 @@ public struct ConnectionChange: ChangeType, Equatable {
     }
 }
 
-extension ConnectionChange {
+public extension ConnectionChange {
     /// The state the connection can be in
-    public enum State: Equatable {
+    enum State: Equatable {
         /// Disconnected
         case disconnected
 
@@ -49,9 +49,9 @@ extension ConnectionChange {
     }
 }
 
-extension ConnectionChange {
+public extension ConnectionChange {
     /// The action that led to the state
-    public enum Action: Equatable {
+    enum Action: Equatable {
         /// The initial action which is sent on `subscribe`
         case initial
 

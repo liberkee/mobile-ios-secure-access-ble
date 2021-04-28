@@ -8,7 +8,7 @@
 
 import Foundation
 
-extension String {
+public extension String {
     /**
      Extension String to ensure Creating Data from hexadecimal string representation, This takes a hexadecimal representation
      and creates a Data object.
@@ -19,7 +19,7 @@ extension String {
 
      - returns: Data represented by this hexadecimal string. Returns nil if string contains characters outside the 0-9 and a-f range.
      */
-    public func dataFromHexadecimalString() -> Data? {
+    func dataFromHexadecimalString() -> Data? {
         let trimmedString = trimmingCharacters(in: CharacterSet(charactersIn: "<> "))
             .replacingOccurrences(of: " ", with: "")
         // make sure the cleaned up string consists solely of hex digits, and that we have even number of them
@@ -40,7 +40,8 @@ extension String {
         // everything ok, so now let's build NSData
         let data = NSMutableData(capacity: trimmedString.count / 2)
         for index in stride(from: 0, to: trimmedString
-            .distance(from: trimmedString.startIndex, to: trimmedString.endIndex), by: 2) {
+            .distance(from: trimmedString.startIndex, to: trimmedString.endIndex), by: 2)
+        {
             let subStringRange = trimmedString.index(trimmedString.startIndex, offsetBy: index)
                 ..< trimmedString.index(trimmedString.startIndex, offsetBy: index + 2)
             let byteString = trimmedString[subStringRange]

@@ -226,8 +226,8 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
 
     func sendData(_ data: Data) {
         guard case let .connected(sorcID) = connectionState,
-            let characteristic = writeCharacteristic,
-            let peripheral = peripheralMatchingSorcID(sorcID) else { return }
+              let characteristic = writeCharacteristic,
+              let peripheral = peripheralMatchingSorcID(sorcID) else { return }
 
         peripheral.writeValue(data, for: characteristic, type: CBCharacteristicWriteType.withResponse)
     }
@@ -254,7 +254,7 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
     }
 
     private func removeOutdatedSorcs() {
-        let outdatedSorcs = Array(discoveredSorcs.values).filter { (sorc) -> Bool in
+        let outdatedSorcs = Array(discoveredSorcs.values).filter { sorc -> Bool in
             let discoveredAgoInterval = systemClock.timeIntervalSinceNow(for: sorc.discoveryDate)
             let outdated = discoveredAgoInterval < -configuration.sorcOutdatedDuration
             return outdated && sorc.sorcID != self.connectedSorc?.sorcID
@@ -383,7 +383,8 @@ class ConnectionManager: NSObject, ConnectionManagerType, BluetoothStatusProvide
 
 extension ConnectionManager {
     convenience init(configuration: ConnectionManager.Configuration = Configuration(),
-                     queue: DispatchQueue = DispatchQueue.main) {
+                     queue: DispatchQueue = DispatchQueue.main)
+    {
         let centralManager = CBCentralManager(delegate: nil, queue: queue,
                                               options: [CBPeripheralManagerOptionShowPowerAlertKey: 0])
 
@@ -437,9 +438,10 @@ extension ConnectionManager {
     }
 
     func centralManager_(_: CBCentralManagerType, didDiscover peripheral: CBPeripheralType,
-                         advertisementData: [String: Any], rssi RSSI: NSNumber) {
+                         advertisementData: [String: Any], rssi RSSI: NSNumber)
+    {
         guard discoveryChange.state.discoveryIsEnabled,
-            let manufacturerData = advertisementData[CBAdvertisementDataManufacturerDataKey] as? Data else { return }
+              let manufacturerData = advertisementData[CBAdvertisementDataManufacturerDataKey] as? Data else { return }
 
         guard let sorcID = extractSorcID(from: manufacturerData) else { return }
 
@@ -451,7 +453,7 @@ extension ConnectionManager {
         HSMLog(message: "BLE - Central connected to peripheral with UUID: \(peripheral.identifier.uuidString)", level: .debug)
 
         guard case let .connecting(sorcID) = connectionState,
-            peripheralMatchingSorcID(sorcID)?.identifier == peripheral.identifier else { return }
+              peripheralMatchingSorcID(sorcID)?.identifier == peripheral.identifier else { return }
 
         peripheral.delegate = self
         peripheral.discoverServices([CBUUID(string: configuration.serviceID)])
@@ -461,13 +463,14 @@ extension ConnectionManager {
         HSMLog(message: "BLE - Central failed connecting to peripheral with UUID: \(peripheral.identifier.uuidString). Error: \(error?.localizedDescription ?? "Unknown error")", level: .error)
 
         guard case let .connecting(sorcID) = connectionState,
-            peripheralMatchingSorcID(sorcID)?.identifier == peripheral.identifier else { return }
+              peripheralMatchingSorcID(sorcID)?.identifier == peripheral.identifier else { return }
 
         updateConnectionChangeToDisconnected(action: .connectingFailed(sorcID: sorcID))
     }
 
     func centralManager_(_: CBCentralManagerType, didDisconnectPeripheral peripheral: CBPeripheralType,
-                         error: Error?) {
+                         error: Error?)
+    {
         if error != nil {
             HSMLog(message: "BLE - Central disconnected from peripheral with UUID: \(peripheral.identifier.uuidString). Error: \(error?.localizedDescription ?? "Unknown error")", level: .error)
         } else {
@@ -491,7 +494,7 @@ extension ConnectionManager {
 extension ConnectionManager {
     func peripheral_(_ peripheral: CBPeripheralType, didDiscoverServices error: Error?) {
         guard case let .connecting(sorcID) = connectionState,
-            peripheralMatchingSorcID(sorcID)?.identifier == peripheral.identifier else { return }
+              peripheralMatchingSorcID(sorcID)?.identifier == peripheral.identifier else { return }
 
         if error != nil {
             disconnect(withAction: .connectingFailed(sorcID: sorcID))
@@ -504,9 +507,10 @@ extension ConnectionManager {
     }
 
     func peripheral_(_ peripheral: CBPeripheralType, didDiscoverCharacteristicsFor service: CBServiceType,
-                     error: Error?) {
+                     error: Error?)
+    {
         guard case let .connecting(sorcID) = connectionState,
-            peripheralMatchingSorcID(sorcID)?.identifier == peripheral.identifier else { return }
+              peripheralMatchingSorcID(sorcID)?.identifier == peripheral.identifier else { return }
 
         if error != nil {
             disconnect(withAction: .connectingFailed(sorcID: sorcID))

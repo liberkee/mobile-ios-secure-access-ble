@@ -6,11 +6,11 @@
 //  Copyright © 2018 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-extension SorcManager {
+public extension SorcManager {
     // MARK: - Configuration
 
     /// The configuration for the `SorcManager`
-    public struct Configuration {
+    struct Configuration {
         /// The time interval a heartbeat is sent to the SORC
         public let heartbeatInterval: TimeInterval?
 

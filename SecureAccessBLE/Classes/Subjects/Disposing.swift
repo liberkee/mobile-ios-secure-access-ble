@@ -9,7 +9,7 @@
 import Foundation
 
 /// Declares the methods every `Disposable` needs to implement
-public protocol Disposable: class {
+public protocol Disposable: AnyObject {
     /// Ends the current subscription
     func dispose()
 }
