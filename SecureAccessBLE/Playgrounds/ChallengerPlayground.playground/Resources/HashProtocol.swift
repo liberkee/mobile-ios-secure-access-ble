@@ -17,7 +17,7 @@ internal protocol HashProtocol {
 
 extension HashProtocol {
     func prepare(len: Int) -> NSMutableData {
-        let tmpMessage: NSMutableData = NSMutableData(data: message)
+        let tmpMessage = NSMutableData(data: message)
 
         // Step 1. Append Padding Bits
         tmpMessage.appendBytes([0x80]) // append one bit (UInt8 with one bit) to message

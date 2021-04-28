@@ -249,7 +249,7 @@ class SecurityManager: SecurityManagerType {
             }
         case .ltBlobRequest:
             guard let messageCounter = leaseTokenBlob?.messageCounter,
-                let blobRequestPayload = try? BlobRequest(rawData: message.message) else { return }
+                  let blobRequestPayload = try? BlobRequest(rawData: message.message) else { return }
             let blobRequestCounter = blobRequestPayload.blobMessageCounter
             handleBlobRequestDependingOnCounter(counterFromSorc: blobRequestCounter, localCounter: messageCounter, sorcId: sorcID)
         default: break

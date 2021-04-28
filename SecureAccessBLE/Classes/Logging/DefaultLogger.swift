@@ -17,7 +17,8 @@ class DefaultLogger: HSMLogging {
     }
 
     func log(message: @autoclosure () -> String, file: String = #file, function: StaticString = #function, line: UInt = #line,
-             level: LogLevel) {
+             level: LogLevel)
+    {
         let formatter = LoggingManager.shared.dateFormatter
         let date = formatter.string(from: systemClock.now())
         let truncatedFileName = file.components(separatedBy: "/").last ?? ""

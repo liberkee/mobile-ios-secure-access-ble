@@ -24,18 +24,18 @@ extension Int {
 }
 
 /* array of bytes */
-extension Int {
+public extension Int {
     /** Array of bytes with optional padding (little-endian) */
-    public func bytes(totalBytes: Int = sizeof(Int)) -> [UInt8] {
+    func bytes(totalBytes: Int = sizeof(Int)) -> [UInt8] {
         return arrayOfBytes(self, length: totalBytes)
     }
 
-    public static func withBytes(bytes: ArraySlice<UInt8>) -> Int {
+    static func withBytes(bytes: ArraySlice<UInt8>) -> Int {
         return Int.withBytes(Array(bytes))
     }
 
     /** Int with array bytes (little-endian) */
-    public static func withBytes(bytes: [UInt8]) -> Int {
+    static func withBytes(bytes: [UInt8]) -> Int {
         return integerWithBytes(bytes)
     }
 }

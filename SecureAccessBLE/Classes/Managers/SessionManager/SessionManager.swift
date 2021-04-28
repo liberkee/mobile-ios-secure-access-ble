@@ -10,7 +10,7 @@ import Foundation
 
 /// Sends and receives service messages. Manages heartbeats.
 class SessionManager: SessionManagerType {
-    let mobileBulkChange: ChangeSubject<MobileBulkChange> = ChangeSubject<MobileBulkChange>(state: .init(requestingBulkIDs: []))
+    let mobileBulkChange = ChangeSubject<MobileBulkChange>(state: .init(requestingBulkIDs: []))
 
     let connectionChange = ChangeSubject<ConnectionChange>(state: .disconnected)
 
@@ -43,7 +43,8 @@ class SessionManager: SessionManagerType {
          configuration: Configuration = Configuration(),
          sendHeartbeatsTimer: CreateTimer,
          checkHeartbeatsResponseTimer: CreateTimer,
-         systemClock: SystemClockType = SystemClock()) {
+         systemClock: SystemClockType = SystemClock())
+    {
         self.securityManager = securityManager
         self.configuration = configuration
         self.systemClock = systemClock
@@ -283,8 +284,8 @@ class SessionManager: SessionManagerType {
     // TODO: Not called as described in comments on `messageSent` property in SecurityManager
     private func handleMessageSent(result: Result<SorcMessage>) {
         guard case .connected = connectionChange.state,
-            case .failure = result,
-            waitingForResponse else { return }
+              case .failure = result,
+              waitingForResponse else { return }
 
         waitingForResponse = false
 
@@ -296,7 +297,7 @@ class SessionManager: SessionManagerType {
 
     private func handleMessageReceived(result: Result<SorcMessage>) {
         guard case let .connected(sorcID) = connectionChange.state,
-            waitingForResponse else { return }
+              waitingForResponse else { return }
 
         waitingForResponse = false
 

@@ -10,13 +10,13 @@ import Foundation
 
 extension NSMutableData {
     /** Convenient way to append bytes */
-    internal func appendBytes(arrayOfBytes: [UInt8]) {
+    func appendBytes(arrayOfBytes: [UInt8]) {
         appendBytes(arrayOfBytes, length: arrayOfBytes.count)
     }
 }
 
-extension NSData {
-    public func checksum() -> UInt16 {
+public extension NSData {
+    func checksum() -> UInt16 {
         var s: UInt32 = 0
 
         var bytesArray = arrayOfBytes()
@@ -29,45 +29,45 @@ extension NSData {
         return UInt16(s)
     }
 
-    @nonobjc public func md5() -> NSData? {
+    @nonobjc func md5() -> NSData? {
         return Hash.md5(self).calculate()
     }
 
-    public func sha1() -> NSData? {
+    func sha1() -> NSData? {
         return Hash.sha1(self).calculate()
     }
 
-    public func sha224() -> NSData? {
+    func sha224() -> NSData? {
         return Hash.sha224(self).calculate()
     }
 
-    public func sha256() -> NSData? {
+    func sha256() -> NSData? {
         return Hash.sha256(self).calculate()
     }
 
-    public func sha384() -> NSData? {
+    func sha384() -> NSData? {
         return Hash.sha384(self).calculate()
     }
 
-    public func sha512() -> NSData? {
+    func sha512() -> NSData? {
         return Hash.sha512(self).calculate()
     }
 
-    public func crc32() -> NSData? {
+    func crc32() -> NSData? {
         return Hash.crc32(self).calculate()
     }
 
-    public func encrypt(cipher: Cipher) throws -> NSData? {
+    func encrypt(cipher: Cipher) throws -> NSData? {
         let encrypted = try cipher.encrypt(arrayOfBytes())
         return NSData.withBytes(encrypted)
     }
 
-    public func decrypt(cipher: Cipher) throws -> NSData? {
+    func decrypt(cipher: Cipher) throws -> NSData? {
         let decrypted = try cipher.decrypt(arrayOfBytes())
         return NSData.withBytes(decrypted)
     }
 
-    public func authenticate(authenticator: Authenticator) -> NSData? {
+    func authenticate(authenticator: Authenticator) -> NSData? {
         if let result = authenticator.authenticate(arrayOfBytes()) {
             return NSData.withBytes(result)
         }
@@ -75,8 +75,8 @@ extension NSData {
     }
 }
 
-extension NSData {
-    public func toHexString() -> String {
+public extension NSData {
+    func toHexString() -> String {
         let count = length / sizeof(UInt8)
         var bytesArray = [UInt8](count: count, repeatedValue: 0)
         getBytes(&bytesArray, length: count * sizeof(UInt8))
@@ -88,14 +88,14 @@ extension NSData {
         return s
     }
 
-    public func arrayOfBytes() -> [UInt8] {
+    func arrayOfBytes() -> [UInt8] {
         let count = length / sizeof(UInt8)
         var bytesArray = [UInt8](count: count, repeatedValue: 0)
         getBytes(&bytesArray, length: count * sizeof(UInt8))
         return bytesArray
     }
 
-    public class func withBytes(bytes: [UInt8]) -> NSData {
+    class func withBytes(bytes: [UInt8]) -> NSData {
         return NSData(bytes: bytes, length: bytes.count)
     }
 }

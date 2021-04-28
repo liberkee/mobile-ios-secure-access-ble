@@ -9,6 +9,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 ### Removed
 
+## [3.13.2] - 2021-04-28
+
+### Changed
+- Updated CryptoSwift version to `~> 1.4`
+- Fixed deprecations
+
+## [3.13.1] - 2020-05-13
 
 ## [3.13.0] - 2020-04-14
 

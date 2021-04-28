@@ -32,7 +32,7 @@ enum ChallengeError: Error {
 /**
  *  All delegate functions, the BLE-Challenger offers
  */
-protocol ChallengerDelegate: class {
+protocol ChallengerDelegate: AnyObject {
     /**
      Challenger reports need to send message
 

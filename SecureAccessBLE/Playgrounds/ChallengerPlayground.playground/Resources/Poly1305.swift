@@ -238,7 +238,7 @@ public final class Poly1305 {
         }
 
         let minusp: [UInt8] = [0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFC]
-        var horig: [UInt8] = [UInt8](count: 17, repeatedValue: 0)
+        var horig = [UInt8](count: 17, repeatedValue: 0)
 
         /* compute h + -p */
         for i in 0 ..< 17 {
@@ -249,7 +249,7 @@ public final class Poly1305 {
 
         /* select h if h < p, or h + -p if h >= p */
         let bits: [Bit] = (context.h[16] >> 7).bits()
-        let invertedBits = bits.map { (bit) -> Bit in
+        let invertedBits = bits.map { bit -> Bit in
             bit.inverted()
         }
 
@@ -267,9 +267,9 @@ public final class Poly1305 {
         var mPos = startPos
 
         while bytes >= Int(blockSize) {
-            var hr: [UInt32] = [UInt32](count: 17, repeatedValue: 0)
+            var hr = [UInt32](count: 17, repeatedValue: 0)
             var u: UInt32 = 0
-            var c: [UInt8] = [UInt8](count: 17, repeatedValue: 0)
+            var c = [UInt8](count: 17, repeatedValue: 0)
 
             /* h += m */
             for i in 0 ..< 16 {
@@ -286,7 +286,7 @@ public final class Poly1305 {
                     u = u + UInt32(UInt16(context.h[j])) * UInt32(context.r[i - j]) // u += (unsigned short)st->h[j] * st->r[i - j];
                 }
                 for j in (i + 1) ..< 17 {
-                    var v: UInt32 = UInt32(UInt16(context.h[j])) * UInt32(context.r[i + 17 - j]) // unsigned long v = (unsigned short)st->h[j] * st->r[i + 17 - j];
+                    var v = UInt32(UInt16(context.h[j])) * UInt32(context.r[i + 17 - j]) // unsigned long v = (unsigned short)st->h[j] * st->r[i + 17 - j];
                     v = ((v << 8) &+ (v << 6))
                     u = u &+ v
                 }

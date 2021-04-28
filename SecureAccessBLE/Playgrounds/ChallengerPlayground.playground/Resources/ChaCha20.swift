@@ -18,7 +18,7 @@ public final class ChaCha20 {
     private var context: Context?
 
     private final class Context {
-        var input: [UInt32] = [UInt32](count: 16, repeatedValue: 0)
+        var input = [UInt32](count: 16, repeatedValue: 0)
 
         deinit {
             for var i = 0; i < input.count; i++ {
@@ -143,7 +143,7 @@ public final class ChaCha20 {
             throw Error.MissingContext
         }
 
-        var c: [UInt8] = [UInt8](count: message.count, repeatedValue: 0)
+        var c = [UInt8](count: message.count, repeatedValue: 0)
 
         var cPos: Int = 0
         var mPos: Int = 0

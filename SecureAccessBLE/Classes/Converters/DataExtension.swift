@@ -6,9 +6,9 @@
 //  Copyright © 2018 Huf Secure Mobile GmbH. All rights reserved.
 //
 
-extension Data {
+public extension Data {
     /// Converts the data to a UUID string in lowercased format with hyphens if possible. Otherwise it returns nil.
-    public var uuidString: String? {
+    var uuidString: String? {
         guard count == 16 else { return nil }
 
         // taken from: https://gist.github.com/DonaldHays/e5dc53c89e5abfe866f0

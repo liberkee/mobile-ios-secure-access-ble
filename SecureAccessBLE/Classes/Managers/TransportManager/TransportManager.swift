@@ -130,7 +130,7 @@ class TransportManager: TransportManagerType {
         case .connecting: break
         case let .connected(dataSorcID):
             guard case let .connecting(sorcID) = connectionChange.state,
-                sorcID == dataSorcID else { return }
+                  sorcID == dataSorcID else { return }
 
             guard case let .connectionEstablished(sorcID: _, mtuSize: mtuSize) = change.action else {
                 return
@@ -232,7 +232,7 @@ class TransportManager: TransportManagerType {
         receivingPackage?.frames.append(frame)
 
         guard frame.type == .single || frame.type == .eop,
-            let package = receivingPackage else { return }
+              let package = receivingPackage else { return }
 
         resetReceivingPackage()
         let messageData = package.message

@@ -79,7 +79,7 @@ public enum Cipher {
     }
 
     public static func randomIV(blockSize: Int) -> [UInt8] {
-        var randomIV: [UInt8] = [UInt8]()
+        var randomIV = [UInt8]()
         for var i = 0; i < blockSize; i++ {
             randomIV.append(UInt8(truncatingBitPattern: arc4random_uniform(256)))
         }

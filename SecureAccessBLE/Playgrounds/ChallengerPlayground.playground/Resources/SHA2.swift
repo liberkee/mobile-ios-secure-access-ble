@@ -121,7 +121,7 @@ final class SHA2: HashProtocol {
 
         // hash values
         var hh = [UInt32]()
-        variant.h.forEach { (h) -> Void in
+        variant.h.forEach { h -> Void in
             hh.append(UInt32(h))
         }
 
@@ -133,7 +133,7 @@ final class SHA2: HashProtocol {
         for chunk in NSDataSequence(chunkSize: chunkSizeBytes, data: tmpMessage) {
             // break chunk into sixteen 32-bit words M[j], 0 ≤ j ≤ 15, big-endian
             // Extend the sixteen 32-bit words into sixty-four 32-bit words:
-            var M: [UInt32] = [UInt32](count: variant.k.count, repeatedValue: 0)
+            var M = [UInt32](count: variant.k.count, repeatedValue: 0)
             for x in 0 ..< M.count {
                 switch x {
                 case 0 ... 15:
@@ -186,9 +186,9 @@ final class SHA2: HashProtocol {
         }
 
         // Produce the final hash value (big-endian) as a 160 bit number:
-        let buf: NSMutableData = NSMutableData()
-        variant.resultingArray(hh).forEach { (item) -> Void in
-            var i: UInt32 = UInt32(item.bigEndian)
+        let buf = NSMutableData()
+        variant.resultingArray(hh).forEach { item -> Void in
+            var i = UInt32(item.bigEndian)
             buf.appendBytes(&i, length: sizeofValue(i))
         }
 
@@ -200,7 +200,7 @@ final class SHA2: HashProtocol {
 
         // hash values
         var hh = [UInt64]()
-        variant.h.forEach { (h) -> Void in
+        variant.h.forEach { h -> Void in
             hh.append(h)
         }
 
@@ -267,9 +267,9 @@ final class SHA2: HashProtocol {
         }
 
         // Produce the final hash value (big-endian)
-        let buf: NSMutableData = NSMutableData()
+        let buf = NSMutableData()
 
-        variant.resultingArray(hh).forEach { (item) -> Void in
+        variant.resultingArray(hh).forEach { item -> Void in
             var i = item.bigEndian
             buf.appendBytes(&i, length: sizeofValue(i))
         }

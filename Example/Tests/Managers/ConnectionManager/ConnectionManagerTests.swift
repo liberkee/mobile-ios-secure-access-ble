@@ -91,7 +91,7 @@ class CBServiceMock: CBServiceType {
 }
 
 class CBCharacteristicMock: CBCharacteristicType {
-    var uuid: CBUUID = CBUUID()
+    var uuid = CBUUID()
     var value: Data?
 }
 
@@ -109,7 +109,8 @@ extension ConnectionManager {
                      filterTimerProvider: CreateTimer? = nil,
                      timeoutTimerProvider: CreateRestartableTimer? = nil,
                      appActivityStatusProvider: AppActivityStatusProviderType? = nil,
-                     configuration: Configuration? = nil) {
+                     configuration: Configuration? = nil)
+    {
         let filterTimerProvider: CreateTimer = filterTimerProvider ?? { _ in
             RepeatingBackgroundTimer(timeInterval: 1000, queue: DispatchQueue.main)
         }
@@ -1341,7 +1342,8 @@ class ConnectionManagerTests: XCTestCase {
 
     private func prepareDiscoveredKnownSorc(_ sorcID: SorcID, peripheral: CBPeripheralType,
                                             connectionManager: ConnectionManager, centralManager: CBCentralManagerMock,
-                                            rssi: Int = 0) {
+                                            rssi: Int = 0)
+    {
         startDiscovery(connectionManager: connectionManager, centralManager: centralManager, sorcID: sorcID)
         let strippedSorcID = strippedUUIDString(sorcID).dataFromHexadecimalString()!
         let advertisementData: [String: Any] = [
@@ -1352,7 +1354,8 @@ class ConnectionManagerTests: XCTestCase {
 
     private func prepareDiscoveredSorc(_ sorcID: SorcID, peripheral: CBPeripheralType,
                                        connectionManager: ConnectionManager, centralManager: CBCentralManagerMock,
-                                       rssi: Int = 0) {
+                                       rssi: Int = 0)
+    {
         startDiscovery(connectionManager: connectionManager, centralManager: centralManager)
         let strippedSorcID = strippedUUIDString(sorcID).dataFromHexadecimalString()!
         let advertisementData: [String: Any] = [
@@ -1362,7 +1365,8 @@ class ConnectionManagerTests: XCTestCase {
     }
 
     private func prepareConnectingSorc(_ sorcID: SorcID, peripheral: CBPeripheralType,
-                                       connectionManager: ConnectionManager, centralManager: CBCentralManagerMock) {
+                                       connectionManager: ConnectionManager, centralManager: CBCentralManagerMock)
+    {
         prepareDiscoveredSorc(sorcID, peripheral: peripheral, connectionManager: connectionManager,
                               centralManager: centralManager)
         connectionManager.connectToSorc(sorcID)
@@ -1371,7 +1375,8 @@ class ConnectionManagerTests: XCTestCase {
     }
 
     private func prepareConnectedSorc(_ sorcID: SorcID, peripheral: CBPeripheralMock,
-                                      connectionManager: ConnectionManager, centralManager: CBCentralManagerMock) {
+                                      connectionManager: ConnectionManager, centralManager: CBCentralManagerMock)
+    {
         prepareDiscoveredSorc(sorcID, peripheral: peripheral, connectionManager: connectionManager,
                               centralManager: centralManager)
         connectionManager.connectToSorc(sorcID)

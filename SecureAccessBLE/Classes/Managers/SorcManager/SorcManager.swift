@@ -162,15 +162,16 @@ public class SorcManager: SorcManagerType {
     }
 }
 
-extension SorcManager {
+public extension SorcManager {
     /// Initializer for `SorcManager`
     ///
     /// After initialization keep a strong reference to this instance as long as you need it.
     /// Note: Only use one instance at a time.
     ///
     /// - Parameter configuration: The configuration for the `SorcManager`
-    public convenience init(configuration: SorcManager.Configuration = SorcManager.Configuration(),
-                            queue: DispatchQueue = DispatchQueue.main) {
+    convenience init(configuration: SorcManager.Configuration = SorcManager.Configuration(),
+                     queue: DispatchQueue = DispatchQueue.main)
+    {
         let connectionConfiguration = ConnectionManager.Configuration(
             serviceID: configuration.serviceID,
             notifyCharacteristicID: configuration.notifyCharacteristicID,

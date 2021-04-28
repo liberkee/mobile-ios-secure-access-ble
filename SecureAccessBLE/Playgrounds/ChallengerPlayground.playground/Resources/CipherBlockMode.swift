@@ -83,7 +83,7 @@ private struct CBCMode: BlockMode {
             throw BlockError.MissingInitializationVector
         }
 
-        var out: [UInt8] = [UInt8]()
+        var out = [UInt8]()
         out.reserveCapacity(blocks.count * blocks[0].count)
         var prevCiphertext = iv // for the first time prevCiphertext = iv
         for plaintext in blocks {
@@ -101,7 +101,7 @@ private struct CBCMode: BlockMode {
             throw BlockError.MissingInitializationVector
         }
 
-        var out: [UInt8] = [UInt8]()
+        var out = [UInt8]()
         out.reserveCapacity(blocks.count * blocks[0].count)
         var prevCiphertext = iv // for the first time prevCiphertext = iv
         for ciphertext in blocks {
@@ -126,7 +126,7 @@ private struct CFBMode: BlockMode {
             throw BlockError.MissingInitializationVector
         }
 
-        var out: [UInt8] = [UInt8]()
+        var out = [UInt8]()
         out.reserveCapacity(blocks.count * blocks[0].count)
 
         var lastCiphertext = iv
@@ -151,7 +151,7 @@ private struct ECBMode: BlockMode {
     let needIV = false
 
     func encryptBlocks(blocks: [[UInt8]], iv _: [UInt8]?, cipherOperation: CipherOperationOnBlock) -> [UInt8] {
-        var out: [UInt8] = [UInt8]()
+        var out = [UInt8]()
         out.reserveCapacity(blocks.count * blocks[0].count)
         for plaintext in blocks {
             if let encrypted = cipherOperation(block: plaintext) {
@@ -190,7 +190,7 @@ private struct CTRMode: BlockMode {
         }
 
         var counter: UInt = 0
-        var out: [UInt8] = [UInt8]()
+        var out = [UInt8]()
         out.reserveCapacity(blocks.count * blocks[0].count)
         for plaintext in blocks {
             let nonce = buildNonce(iv, counter: counter++)
@@ -207,7 +207,7 @@ private struct CTRMode: BlockMode {
         }
 
         var counter: UInt = 0
-        var out: [UInt8] = [UInt8]()
+        var out = [UInt8]()
         out.reserveCapacity(blocks.count * blocks[0].count)
         for plaintext in blocks {
             let nonce = buildNonce(iv, counter: counter++)

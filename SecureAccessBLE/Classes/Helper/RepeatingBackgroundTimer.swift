@@ -18,7 +18,8 @@ public class RepeatingBackgroundTimer {
     /// :nodoc:
     public static func scheduledTimer(timeInterval: TimeInterval,
                                       queue: DispatchQueue,
-                                      handler: @escaping () -> Void) -> RepeatingBackgroundTimer {
+                                      handler: @escaping () -> Void) -> RepeatingBackgroundTimer
+    {
         let timer = RepeatingBackgroundTimer(timeInterval: timeInterval, queue: queue)
         timer.eventHandler = handler
         timer.resume()

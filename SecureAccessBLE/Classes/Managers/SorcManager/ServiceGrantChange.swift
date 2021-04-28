@@ -26,9 +26,9 @@ public struct ServiceGrantChange: ChangeType, Equatable {
     }
 }
 
-extension ServiceGrantChange {
+public extension ServiceGrantChange {
     /// The state the service grant request can be in
-    public struct State: Equatable {
+    struct State: Equatable {
         /// Currently requested service grant IDs
         public let requestingServiceGrantIDs: [ServiceGrantID]
 
@@ -39,9 +39,9 @@ extension ServiceGrantChange {
     }
 }
 
-extension ServiceGrantChange {
+public extension ServiceGrantChange {
     /// The action that led to the state
-    public enum Action: Equatable {
+    enum Action: Equatable {
         /// Initial state (automatically sent on `subscribe`)
         case initial
 
@@ -59,7 +59,7 @@ extension ServiceGrantChange {
     }
 
     /// Error which can occur on `requestFailed` case
-    public enum Error: Swift.Error, CustomStringConvertible {
+    enum Error: Swift.Error, CustomStringConvertible {
         /// Sending service grant request failed
         case sendingFailed
 

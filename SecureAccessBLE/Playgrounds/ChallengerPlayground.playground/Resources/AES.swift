@@ -162,10 +162,10 @@ public final class AES {
     }
 
     private func encryptBlock(block: [UInt8]) -> [UInt8]? {
-        var out: [UInt8] = [UInt8]()
+        var out = [UInt8]()
 
         autoreleasepool { () -> Void in
-            var state: [[UInt8]] = [[UInt8]](count: variant.Nb, repeatedValue: [UInt8](count: variant.Nb, repeatedValue: 0))
+            var state = [[UInt8]](count: variant.Nb, repeatedValue: [UInt8](count: variant.Nb, repeatedValue: 0))
             for (i, row) in state.enumerate() {
                 for (j, _) in row.enumerate() {
                     state[j][i] = block[i * row.count + j]
@@ -218,7 +218,7 @@ public final class AES {
     }
 
     private func decryptBlock(block: [UInt8]) -> [UInt8]? {
-        var state: [[UInt8]] = [[UInt8]](count: variant.Nb, repeatedValue: [UInt8](count: variant.Nb, repeatedValue: 0))
+        var state = [[UInt8]](count: variant.Nb, repeatedValue: [UInt8](count: variant.Nb, repeatedValue: 0))
         for (i, row) in state.enumerate() {
             for (j, _) in row.enumerate() {
                 state[j][i] = block[i * row.count + j]
@@ -238,7 +238,7 @@ public final class AES {
         state = invSubBytes(state)
         state = addRoundKey(state, expandedKey, 0)
 
-        var out: [UInt8] = [UInt8]()
+        var out = [UInt8]()
         for i in 0 ..< state.count {
             for j in 0 ..< state[0].count {
                 out.append(state[j][i])
@@ -293,9 +293,9 @@ public final class AES {
     }
 }
 
-extension AES {
+public extension AES {
     // byte substitution with table (S-box)
-    public func subBytes(inout state: [[UInt8]]) {
+    func subBytes(inout state: [[UInt8]]) {
         for (i, row) in state.enumerate() {
             for (j, value) in row.enumerate() {
                 state[i][j] = AES.sBox[Int(value)]
@@ -303,7 +303,7 @@ extension AES {
         }
     }
 
-    public func invSubBytes(state: [[UInt8]]) -> [[UInt8]] {
+    func invSubBytes(state: [[UInt8]]) -> [[UInt8]] {
         var result = state
         for (i, row) in state.enumerate() {
             for (j, value) in row.enumerate() {
@@ -314,7 +314,7 @@ extension AES {
     }
 
     // Applies a cyclic shift to the last 3 rows of a state matrix.
-    public func shiftRows(state: [[UInt8]]) -> [[UInt8]] {
+    func shiftRows(state: [[UInt8]]) -> [[UInt8]] {
         var result = state
         for r in 1 ..< 4 {
             for c in 0 ..< variant.Nb {
@@ -324,7 +324,7 @@ extension AES {
         return result
     }
 
-    public func invShiftRows(state: [[UInt8]]) -> [[UInt8]] {
+    func invShiftRows(state: [[UInt8]]) -> [[UInt8]] {
         var result = state
         for r in 1 ..< 4 {
             for c in 0 ..< variant.Nb {
@@ -335,7 +335,7 @@ extension AES {
     }
 
     // Multiplies two polynomials
-    public func multiplyPolys(a: UInt8, _ b: UInt8) -> UInt8 {
+    func multiplyPolys(a: UInt8, _ b: UInt8) -> UInt8 {
         var a = a, b = b
         var p: UInt8 = 0, hbs: UInt8 = 0
 
@@ -353,8 +353,8 @@ extension AES {
         return p
     }
 
-    public func matrixMultiplyPolys(matrix: [[UInt8]], _ array: [UInt8]) -> [UInt8] {
-        var returnArray: [UInt8] = [UInt8](count: array.count, repeatedValue: 0)
+    func matrixMultiplyPolys(matrix: [[UInt8]], _ array: [UInt8]) -> [UInt8] {
+        var returnArray = [UInt8](count: array.count, repeatedValue: 0)
         for (i, row) in matrix.enumerate() {
             for (j, boxVal) in row.enumerate() {
                 returnArray[i] = multiplyPolys(boxVal, array[j]) ^ returnArray[i]
@@ -363,7 +363,7 @@ extension AES {
         return returnArray
     }
 
-    public func addRoundKey(state: [[UInt8]], _ expandedKeyW: [UInt8], _ round: Int) -> [[UInt8]] {
+    func addRoundKey(state: [[UInt8]], _ expandedKeyW: [UInt8], _ round: Int) -> [[UInt8]] {
         var newState = [[UInt8]](count: state.count, repeatedValue: [UInt8](count: variant.Nb, repeatedValue: 0))
         let idxRow = 4 * variant.Nb * round
         for c in 0 ..< variant.Nb {
@@ -377,7 +377,7 @@ extension AES {
     }
 
     // mixes data (independently of one another)
-    public func mixColumns(state: [[UInt8]]) -> [[UInt8]] {
+    func mixColumns(state: [[UInt8]]) -> [[UInt8]] {
         var state = state
         let colBox: [[UInt8]] = [[2, 3, 1, 1], [1, 2, 3, 1], [1, 1, 2, 3], [3, 1, 1, 2]]
 
@@ -403,7 +403,7 @@ extension AES {
         return state
     }
 
-    public func invMixColumns(state: [[UInt8]]) -> [[UInt8]] {
+    func invMixColumns(state: [[UInt8]]) -> [[UInt8]] {
         var state = state
         let invColBox: [[UInt8]] = [[14, 11, 13, 9], [9, 14, 11, 13], [13, 9, 14, 11], [11, 13, 9, 14]]
 

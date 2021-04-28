@@ -28,9 +28,9 @@ public struct DiscoveryChange: ChangeType {
 
 extension DiscoveryChange: Equatable {}
 
-extension DiscoveryChange {
+public extension DiscoveryChange {
     /// The state a `DiscoveryChange` can be in
-    public struct State: Equatable {
+    struct State: Equatable {
         /// A list of currently discovered SORCs
         public let discoveredSorcs: SorcInfos
 
@@ -52,9 +52,9 @@ extension DiscoveryChange {
     }
 }
 
-extension DiscoveryChange {
+public extension DiscoveryChange {
     /// An action which led to a discovery change
-    public enum Action: Equatable {
+    enum Action: Equatable {
         /// Initial action (sent automatically on `subscribe`)
         case initial
 

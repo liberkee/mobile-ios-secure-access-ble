@@ -82,12 +82,12 @@ public class SATrackingManager {
         }
         if loglevel.rawValue <= logLevel.rawValue {
             // Prefer default parameter, in case the caller wants to overwrite it (e.g. group or message)
-            var trackingParameter = event.defaultParameters.merging(parameters) { (defaultParameter, _) -> Any in
+            var trackingParameter = event.defaultParameters.merging(parameters) { defaultParameter, _ -> Any in
                 defaultParameter
             }
             if event == .interfaceInitialized {
                 // Prefer system parameter to not allow overwriting them
-                trackingParameter.merge(systemParameters) { (_, systemParameter) -> Any in
+                trackingParameter.merge(systemParameters) { _, systemParameter -> Any in
                     systemParameter
                 }
             }

@@ -9,7 +9,7 @@
 import CoreBluetooth
 import Foundation
 
-protocol CBCentralManagerType: class {
+protocol CBCentralManagerType: AnyObject {
     var delegate: CBCentralManagerDelegate? { get set }
 
     var state: CBManagerState { get }
@@ -33,7 +33,7 @@ extension CBCentralManager: CBCentralManagerType {
     }
 }
 
-protocol CBPeripheralType: class {
+protocol CBPeripheralType: AnyObject {
     var delegate: CBPeripheralDelegate? { get set }
 
     var services_: [CBServiceType]? { get }
@@ -69,7 +69,7 @@ extension CBPeripheral: CBPeripheralType {
     }
 }
 
-protocol CBServiceType: class {
+protocol CBServiceType: AnyObject {
     var characteristics_: [CBCharacteristicType]? { get }
 }
 
@@ -79,7 +79,7 @@ extension CBService: CBServiceType {
     }
 }
 
-protocol CBCharacteristicType: class {
+protocol CBCharacteristicType: AnyObject {
     var uuid: CBUUID { get }
     var value: Data? { get }
 }
